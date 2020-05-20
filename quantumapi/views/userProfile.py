@@ -14,7 +14,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'email', 'address', 'picURL')
+        fields = ('id', 'url', 'first_name', 'last_name', 'username', 'address', 'picURL', 'credits')
         depth = 1
 
 
@@ -24,9 +24,11 @@ class UserProfiles(ViewSet):
 
         newuserprofile.first_name = request.data["first_name"]
         newuserprofile.last_name = request.data["last_name"]
-        newuserprofile.email = request.data["email"]
+        newuserprofile.username = request.data["username"]
+        newuserprofile.username = request.data["email"]
         newuserprofile.address = request.data["address"]
         newuserprofile.picURL = request.data["picURL"]
+        newuserprofile.rollerCoaster_credits = request.data["credits"]
 
 
         newuserprofile.save()
@@ -43,13 +45,13 @@ class UserProfiles(ViewSet):
 
     def update(self, request, pk=None):
         userprofile = UserProfile.objects.get(pk=pk)
-
         userprofile.first_name = request.data["first_name"]
         userprofile.last_name = request.data["last_name"]
+        userprofile.username = request.data["username"]
         userprofile.email = request.data["email"]
         userprofile.address = request.data["address"]
         userprofile.picURL = request.data["picURL"]
-
+        newuserprofile.rollerCoaster_credits = request.data["credits"]
 
         userprofile.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)

@@ -9,8 +9,8 @@ from .rollerCoaster import RollerCoaster
 
 class Credit(models.Model):
 
-    rollerCoaster = models.ForeignKey(RollerCoaster, on_delete=models.CASCADE)
-    userProfile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    rollerCoaster = models.ForeignKey(RollerCoaster, related_name="credits", on_delete=models.CASCADE)
+    userProfile = models.ForeignKey(UserProfile, related_name="users", on_delete=models.CASCADE)
 
 
     class Meta:

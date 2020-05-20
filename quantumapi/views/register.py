@@ -58,17 +58,19 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
-    userProfile = UserProfile.objects.create(
+    userprofile = UserProfile.objects.create_userProfile(
         rollerCoaster_credit_id=req_body['rollerCoaster_credit_id'],
         address= req_body['address'],
         user=new_user
     )
 
     # Commit the user to the database by saving it
-    userProfile.save()
+    userprofile.save()
 
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
+
+    
 
     # Return the token to the client
     data = json.dumps({"token": token.key})

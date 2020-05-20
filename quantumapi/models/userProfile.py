@@ -9,14 +9,14 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=50)
+    username = models.CharField(null=True, blank=True, max_length=50)
     address = models.CharField(max_length=50)
-    picURL = models.ImageField()
+    picURL = models.ImageField(null=True, blank=True)
     rollerCoaster_credits = models.ManyToManyField("RollerCoaster", through="Credit", )
 
     class Meta:
-        verbose_name = ("userProfile")
-        verbose_name_plural = ("userProfiles")
+        verbose_name = ("userprofile")
+        verbose_name_plural = ("userprofiles")
         # ordering = (F('user.date_joined').asc(nulls_last=True),)
 
     def __str__(self):
