@@ -15,6 +15,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'first_name', 'last_name', 'email', 'address', 'picURL')
+        depth = 1
 
 
 class UserProfiles(ViewSet):

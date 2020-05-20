@@ -14,7 +14,8 @@ class MessagesSerializer(serializers.HyperlinkedModelSerializer):
             view_name='messages',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'message', 'timestamp', 'user_id')
+        fields = ('id', 'url', 'message', 'timestamp', 'user_id',)
+        depth = 1
 
 
 class Message(ViewSet):
@@ -38,7 +39,6 @@ class Message(ViewSet):
 
     def update(self, request, pk=None):
         message = Messages.objects.get(pk=pk)
-
         message.message = request.data["message"]
         message.timestamp = request.data["timestamp"]
         message.user_id = request.data["user_id"]

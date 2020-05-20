@@ -15,6 +15,7 @@ class RollerCoasterSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'name', 'tracktype', 'max_height', 'max_speed', 'manufacturer', 'park')
+        depth = 1
 
 
 class RollerCoasters(ViewSet):
