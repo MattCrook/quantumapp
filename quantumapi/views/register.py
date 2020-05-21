@@ -76,3 +76,43 @@ def register_user(request):
     # Return the token to the client
     data = json.dumps({"token": token.key})
     return HttpResponse(data, content_type='application/json')
+
+
+# def jwt_create_response_payload(token, user=None, request=None, issued_at=None):
+#     """
+#     Return data ready to be passed to serializer.
+
+#     Override this function if you need to include any additional data for
+#     serializer.
+
+#     Note that we are using `pk` field here - this is for forward compatibility
+#     with drf add-ons that might require `pk` field in order (eg. jsonapi).
+#     """
+
+#     response_payload = namedtuple('ResponsePayload', 'pk token user')
+#     response_payload.pk = issued_at
+#     response_payload.token = token
+#     response_payload.user = user
+
+#     return response_payload
+##############################
+
+# Creating new Toke Manually
+# from rest_framework_jwt.settings import api_settings
+
+# jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+# jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+# payload = jwt_payload_handler(user)
+# token = jwt_encode_handler(payload)
+
+###############################
+
+# Extending / Overiding
+# Right now JSONWebTokenAuthentication assumes that the JWT will come in the header, or a cookie if configured (JWS_AUTH_COOKIE)
+# CAn also come in query string, so can write a custom Authentication class
+
+# class JSONWebTokenAuthenticationQS(JSONWebTokenAuthentication):
+
+#     def get_jwt_value(self, request):
+#         return request.QUERY_PARAMS.get('jwt')
