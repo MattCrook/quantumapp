@@ -51,26 +51,27 @@ def register_user(request):
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
     new_user = User.objects.create_user(
-        username=req_body['username'],
-        email=req_body['email'],
-        password=req_body['password'],
         first_name=req_body['first_name'],
-        last_name=req_body['last_name']
+        last_name=req_body['last_name'],
+        username=req_body['username'],
+        password=req_body['password'],
+        email=req_body['email']
     )
 
-    userprofile = UserProfile.objects.create_userProfile(
+    userprofile = UserProfile.objects.create(
         rollerCoaster_credit_id=req_body['rollerCoaster_credit_id'],
-        address= req_body['address'],
+        address=req_body['address'],
         user=new_user
     )
 
     # Commit the user to the database by saving it
     userprofile.save()
+    # userprofile.save_userProfile()
 
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
 
-    
+    # token = Token.objects.create_userProfile(user=userprofile)
 
     # Return the token to the client
     data = json.dumps({"token": token.key})

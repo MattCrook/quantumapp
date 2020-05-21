@@ -14,7 +14,7 @@ class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
             view_name='tracktype',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'rollercoasters',)
+        fields = ('id', 'url', 'name', 'rollercoasters')
         depth = 1
 
 

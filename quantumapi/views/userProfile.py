@@ -4,28 +4,32 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import UserProfile
+from django.contrib.auth.models import User
+
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserProfile
+        email = User.email
         url = serializers.HyperlinkedIdentityField(
             view_name='userprofile',
-            lookup_field='id'
+            lookup_field='id',
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'username', 'email', 'address', 'picUrl', )
+        fields = ('id', 'url', 'first_name', 'last_name', 'email', 'username', 'address', 'picUrl')
         depth = 1
 
 
 class UserProfiles(ViewSet):
     def create(self, request):
-        newuserprofile = UserProfile()
+        email = UserProfile.objects.get(user=request.auth.user["email"])
 
+        newuserprofile = UserProfile()
         newuserprofile.first_name = request.data["first_name"]
         newuserprofile.last_name = request.data["last_name"]
         newuserprofile.username = request.data["username"]
-        newuserprofile.username = request.data["email"]
+        newuserprofile.email = email
         newuserprofile.address = request.data["address"]
         newuserprofile.picUrl = request.data["picUrl"]
         # newuserprofile.rollerCoaster_credits = request.data["credits"]
@@ -45,10 +49,13 @@ class UserProfiles(ViewSet):
 
     def update(self, request, pk=None):
         userprofile = UserProfile.objects.get(pk=pk)
+        email = UserProfile.objects.get(email=request.auth.user["email"])
+
+
         userprofile.first_name = request.data["first_name"]
         userprofile.last_name = request.data["last_name"]
         userprofile.username = request.data["username"]
-        # userprofile.email = request.data["email"]
+        userprofile.email = email
         userprofile.address = request.data["address"]
         userprofile.picUrl = request.data["picUrl"]
         newuserprofile.rollerCoaster_credits = request.data["credits"]

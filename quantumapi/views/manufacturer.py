@@ -14,7 +14,7 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
             view_name='manufacturer',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'origin_country', 'company_website', 'rollercoasters',)
+        fields = ('id', 'url', 'name', 'origin_country', 'company_website', 'rollercoasters')
         depth = 1
 
 
