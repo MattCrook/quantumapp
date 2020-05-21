@@ -24,13 +24,13 @@ class UserProfile(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 
-@receiver(post_save, sender=User)
-def create_userProfile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
+# @receiver(post_save, sender=User)
+# def create_userProfile(sender, instance, created, **kwargs):
+#     if created:
+#         UserProfile.objects.create(user=instance)
 
-# Every time a `User` is saved, its matching `profile`
-# object will be saved.
-@receiver(post_save, sender=User)
-def save_userProfile(sender, instance, **kwargs):
-    instance.userProfile.save()
+# # Every time a `User` is saved, its matching `profile`
+# # object will be saved.
+# @receiver(post_save, sender=User)
+# def save_userProfile(sender, instance, **kwargs):
+#     instance.userProfile.save()

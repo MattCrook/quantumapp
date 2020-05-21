@@ -45,7 +45,7 @@ REST_FRAMEWORK = {
 
     ),
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
 
     ],
@@ -63,7 +63,7 @@ USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 #         'auth0authorization.utils.jwt_decode_token',
 #     'JWT_ALGORITHM': 'RS256',
 #     'JWT_AUDIENCE': 'YOUR_API_IDENTIFIER',
-#     'JWT_ISSUER': 'https://YOUR_DOMAIN/',
+#     'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
 #     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 # }
 

@@ -28,7 +28,7 @@ class UserProfiles(ViewSet):
     # permission_classes = (IsAuthenticated,)
 
     def create(self, request):
-        email = UserProfile.objects.get(user=request.auth.user["email"])
+        email = User.objects.get(user=request.auth.user["email"])
 
         newuserprofile = UserProfile()
         newuserprofile.first_name = request.data["first_name"]

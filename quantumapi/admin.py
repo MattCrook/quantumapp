@@ -13,8 +13,8 @@ admin.site.register(Manufacturer)
 admin.site.register(Park)
 admin.site.register(RollerCoaster)
 
-User = get_user_model()
+# User = get_user_model()
 
-@admin.register(User)
-class UserAdmin(UserAdmin):
-    pass
+# @admin.register(User)
+# class UserAdmin(UserAdmin):
+#     pass

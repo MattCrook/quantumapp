@@ -1,5 +1,5 @@
 from rest_framework.exceptions import AuthenticationFailed
-from quantumapi.auth.blacklist import gettext_lazy as _
+from quantumapi.auth.compat import gettext_lazy as _
 
 
 class MissingToken(AuthenticationFailed):
