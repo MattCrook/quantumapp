@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import UserProfile
 from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -12,7 +13,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserProfile
-        email = User.email
+        # email = User.email
         url = serializers.HyperlinkedIdentityField(
             view_name='userprofile',
             lookup_field='id',
@@ -22,8 +23,12 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserProfiles(ViewSet):
+
+    # serializer_class = UserProfileSerializer
+    # permission_classes = (IsAuthenticated,)
+
     def create(self, request):
-        email = UserProfile.objects.get(user=request.auth.user["email"])
+        email = User.objects.get(user=request.auth.user["email"])
 
         newuserprofile = UserProfile()
         newuserprofile.first_name = request.data["first_name"]
