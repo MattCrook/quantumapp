@@ -14,7 +14,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'username', 'address', 'picURL', 'credits')
+        fields = ('id', 'url', 'first_name', 'last_name', 'username', 'email', 'address', 'picUrl', )
         depth = 1
 
 
@@ -27,8 +27,8 @@ class UserProfiles(ViewSet):
         newuserprofile.username = request.data["username"]
         newuserprofile.username = request.data["email"]
         newuserprofile.address = request.data["address"]
-        newuserprofile.picURL = request.data["picURL"]
-        newuserprofile.rollerCoaster_credits = request.data["credits"]
+        newuserprofile.picUrl = request.data["picUrl"]
+        # newuserprofile.rollerCoaster_credits = request.data["credits"]
 
 
         newuserprofile.save()
@@ -48,9 +48,9 @@ class UserProfiles(ViewSet):
         userprofile.first_name = request.data["first_name"]
         userprofile.last_name = request.data["last_name"]
         userprofile.username = request.data["username"]
-        userprofile.email = request.data["email"]
+        # userprofile.email = request.data["email"]
         userprofile.address = request.data["address"]
-        userprofile.picURL = request.data["picURL"]
+        userprofile.picUrl = request.data["picUrl"]
         newuserprofile.rollerCoaster_credits = request.data["credits"]
 
         userprofile.save()
