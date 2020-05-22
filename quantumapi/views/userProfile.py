@@ -18,7 +18,6 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserProfile
-        # email = User.email
         url = serializers.HyperlinkedIdentityField(
             view_name='userprofile',
             lookup_field='id',
@@ -28,8 +27,9 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserProfiles(ViewSet):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
+    # authentication_classes = [authentication.TokenAuthentication]
+
 
     # def get(self, request, format=None):
     #     """
