@@ -7,7 +7,7 @@ from quantumapi.models import *
 from quantumapi.views import register_user, login_user
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message
 
-# from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.views import obtain_auth_token
 # from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 from quantumapi.auth.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 

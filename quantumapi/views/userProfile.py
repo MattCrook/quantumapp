@@ -6,6 +6,11 @@ from rest_framework import status
 from quantumapi.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework import authentication, permissions
+
+
 
 
 
@@ -18,17 +23,26 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id',
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'email', 'username', 'address', 'picUrl')
+        fields = ('id', 'url', 'first_name', 'last_name', 'email', 'username', 'address', 'picUrl', 'credits' )
         depth = 1
 
 
 class UserProfiles(ViewSet):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]
 
+    # def get(self, request, format=None):
+    #     """
+    #     Return a list of all users.
+    #     """
+    #     emails = [user.email for user in User.objects.all()]
+    #     return Response(emails)
     # serializer_class = UserProfileSerializer
     # permission_classes = (IsAuthenticated,)
 
     def create(self, request):
-        email = User.objects.get(user=request.auth.user["email"])
+        user = User.objects.get(user=request.auth.user)
+        email = user.email
 
         newuserprofile = UserProfile()
         newuserprofile.first_name = request.data["first_name"]
@@ -39,18 +53,17 @@ class UserProfiles(ViewSet):
         newuserprofile.picUrl = request.data["picUrl"]
         # newuserprofile.rollerCoaster_credits = request.data["credits"]
 
-
         newuserprofile.save()
         serializer = UserProfileSerializer(newuserprofile, context={'request': request})
         return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
-        try:
-            userprofile = UserProfile.objects.get(pk=pk)
-            serializer = UserProfileSerializer(userprofile, context={'request': request})
-            return Response(serializer.data)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+    # def retrieve(self, request, pk=None):
+    #     try:
+    #         userprofile = UserProfile.objects.get(pk=pk)
+    #         serializer = UserProfileSerializer(userprofile, context={'request': request})
+    #         return Response(serializer.data)
+    #     except Exception as ex:
+    #         return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
         userprofile = UserProfile.objects.get(pk=pk)
@@ -79,6 +92,7 @@ class UserProfiles(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     def list(self, request):
         userprofiles = UserProfile.objects.all()

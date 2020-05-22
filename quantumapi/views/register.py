@@ -59,7 +59,7 @@ def register_user(request):
     )
 
     userprofile = UserProfile.objects.create(
-        rollerCoaster_credit_id=req_body['rollerCoaster_credit_id'],
+        rollerCoaster_credits=req_body['rollerCoaster_credits'],
         address=req_body['address'],
         user=new_user
     )
