@@ -6,6 +6,29 @@ from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile
 
+# import http.client
+
+# conn = http.client.HTTPSConnection("")
+
+# payload = "grant_type=client_credentials&client_id=%24%7Baccount.clientId%7D&client_secret=YOUR_CLIENT_SECRET&audience=https%3A%2F%2F%24%7Baccount.namespace%7D%2Fapi%2Fv2%2F"
+
+# headers = { 'content-type': "application/x-www-form-urlencoded" }
+
+# conn.request("POST", "/dev-405n1e6w.auth0.com/oauth/token", payload, headers)
+
+# res = conn.getresponse()
+# data = res.read()
+
+# print(data.decode("utf-8"))
+
+
+
+
+
+
+
+
+
 
 @csrf_exempt
 def login_user(request):
@@ -59,7 +82,7 @@ def register_user(request):
     )
 
     userprofile = UserProfile.objects.create(
-        rollerCoaster_credit_id=req_body['rollerCoaster_credit_id'],
+        rollerCoaster_credits=req_body['rollerCoaster_credits'],
         address=req_body['address'],
         user=new_user
     )

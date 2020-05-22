@@ -6,12 +6,11 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
 
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(null=True, blank=True, max_length=50)
+    last_name = models.CharField(null=True, blank=True, max_length=50)
     username = models.CharField(null=True, blank=True, max_length=50)
-    email = models.OneToOneField(User, on_delete=models.CASCADE)
-    address = models.CharField(max_length=50)
+    owner_email = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    address = models.CharField(null=True, blank=True, max_length=50)
     picUrl = models.ImageField(null=True, blank=True)
     rollerCoaster_credits = models.ManyToManyField("RollerCoaster", through="Credit" )
 

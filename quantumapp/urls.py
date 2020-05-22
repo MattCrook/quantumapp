@@ -7,7 +7,7 @@ from quantumapi.models import *
 from quantumapi.views import register_user, login_user
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message
 
-# from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.views import obtain_auth_token
 # from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 from quantumapi.auth.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 
@@ -29,15 +29,14 @@ router.register(r'messages', Message, 'message')
 
 urlpatterns = [
     path('', include(router.urls)),
-
+    path('admin/', admin.site.urls),
+    # path('accounts/', include('django.contrib.auth.urls')),
     # path('api-token-auth/', obtain_auth_token),
+
     path('api-token-auth/', obtain_jwt_token),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-refresh/', refresh_jwt_token),
     path('api-token-verify/', verify_jwt_token),
-
-    path('admin/', admin.site.urls),
-    # path('accounts/', include('django.contrib.auth.urls')),
 
     path('register/', register_user),
     path('login/', login_user),
