@@ -15,8 +15,8 @@ class UserProfile(models.Model):
     rollerCoaster_credits = models.ManyToManyField("RollerCoaster", through="Credit" )
 
     class Meta:
-        verbose_name = ("userprofile")
-        verbose_name_plural = ("userprofiles")
+        verbose_name = ("userProfile")
+        verbose_name_plural = ("userProfiles")
         # ordering = (F('user.date_joined').asc(nulls_last=True),)
 
     def __str__(self):
