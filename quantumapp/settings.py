@@ -56,14 +56,26 @@ REST_FRAMEWORK = {
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 
 
+# ENV_FILE = find_dotenv()
+# if ENV_FILE:
+#     load_dotenv(ENV_FILE)
+
+# AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+# API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
+
+# if AUTH0_DOMAIN:
+#     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
+
 # JWT_AUTH = {
 #     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
 #         'auth0authorization.utils.jwt_get_username_from_payload_handler',
 #     'JWT_DECODE_HANDLER':
 #         'auth0authorization.utils.jwt_decode_token',
 #     'JWT_ALGORITHM': 'RS256',
-#     'JWT_AUDIENCE': 'YOUR_API_IDENTIFIER',
-#     'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+#     'JWT_AUDIENCE': API_IDENTIFIER,
+#     'JWT_ISSUER': JWT_ISSUER,
 #     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 # }
 
@@ -103,11 +115,11 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     'JWT_RESPONSE_PAYLOAD_HANDLER':
         'rest_framework_jwt.utils.jwt_create_response_payload',
-    # 'JWT_AUTH_COOKIE': None,
-    'JWT_AUTH_COOKIE': 'quantumapp_token',
+    'JWT_AUTH_COOKIE': None,
+    # 'JWT_AUTH_COOKIE': 'quantumapp_token',
 
-    'JWT_AUTH_COOKIE_DOMAIN': 'http://localhost:8000',
-    # 'JWT_AUTH_COOKIE_DOMAIN': None,
+    # 'JWT_AUTH_COOKIE_DOMAIN': 'http://localhost:8000',
+    'JWT_AUTH_COOKIE_DOMAIN': None,
 
     'JWT_AUTH_COOKIE_PATH': '/',
     'JWT_AUTH_COOKIE_SECURE': True,

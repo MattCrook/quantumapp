@@ -3,7 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import UserProfile
+from quantumapi.models import UserProfile, Credit
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
@@ -20,9 +20,9 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
         model = UserProfile
         url = serializers.HyperlinkedIdentityField(
             view_name='userprofile',
-            lookup_field='id',
+            lookup_field='id'
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'email', 'username', 'address', 'picUrl', 'credits' )
+        fields = ('id', 'url', 'first_name', 'last_name', 'username', 'address', 'picUrl', )
         depth = 1
 
 
@@ -41,17 +41,17 @@ class UserProfiles(ViewSet):
     # permission_classes = (IsAuthenticated,)
 
     def create(self, request):
-        user = User.objects.get(user=request.auth.user)
-        email = user.email
+        # user = User.objects.get(user=request.auth.user)
+        # email = user.email
+        rollercoaster_credits = Credit.objects.get(pk="rollercoaster_id")
 
         newuserprofile = UserProfile()
         newuserprofile.first_name = request.data["first_name"]
         newuserprofile.last_name = request.data["last_name"]
         newuserprofile.username = request.data["username"]
-        newuserprofile.email = email
         newuserprofile.address = request.data["address"]
         newuserprofile.picUrl = request.data["picUrl"]
-        # newuserprofile.rollerCoaster_credits = request.data["credits"]
+        newuserprofile.rollerCoaster_credits = request.data["rollercoaster_id"]
 
         newuserprofile.save()
         serializer = UserProfileSerializer(newuserprofile, context={'request': request})
@@ -66,17 +66,19 @@ class UserProfiles(ViewSet):
     #         return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
+        rollercoaster_credits = Credit.objects.get(pk="rollercoaster_id")
+        # email = UserProfile.objects.get(email=request.auth.user["email"])
+
+
+
         userprofile = UserProfile.objects.get(pk=pk)
-        email = UserProfile.objects.get(email=request.auth.user["email"])
-
-
         userprofile.first_name = request.data["first_name"]
         userprofile.last_name = request.data["last_name"]
         userprofile.username = request.data["username"]
-        userprofile.email = email
+        # userprofile.email = email
         userprofile.address = request.data["address"]
         userprofile.picUrl = request.data["picUrl"]
-        newuserprofile.rollerCoaster_credits = request.data["credits"]
+        newuserprofile.rollerCoaster_credits = request.data["rollercoaster_id"]
 
         userprofile.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
