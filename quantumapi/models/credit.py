@@ -16,8 +16,8 @@ class Credit(models.Model):
     class Meta:
         verbose_name = ("credit")
         verbose_name_plural = ("credits")
-        ordering = (F('user.date_joined').asc(nulls_last=True),)
+        # ordering = (F('user.date_joined').asc(nulls_last=True),)
 
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.rollerCoaster} {self.userProfile}'

@@ -25,11 +25,6 @@ from quantumapi.models import UserProfile
 
 
 
-
-
-
-
-
 @csrf_exempt
 def login_user(request):
     '''Handles the authentication of a user
@@ -82,7 +77,7 @@ def register_user(request):
     )
 
     userprofile = UserProfile.objects.create(
-        rollerCoaster_credits=req_body['rollerCoaster_credits'],
+        rollerCoaster_credits=req_body['rollercoaster_id'],
         address=req_body['address'],
         user=new_user
     )
@@ -93,8 +88,7 @@ def register_user(request):
 
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
-
-    # token = Token.objects.create_userProfile(user=userprofile)
+    token = Token.objects.create_userProfile(user=userprofile)
 
     # Return the token to the client
     data = json.dumps({"token": token.key})

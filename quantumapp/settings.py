@@ -34,14 +34,17 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'quantumapi',
+    # 'quantumfrontend',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.renderers.JSONRenderer',
 
     ),
     'DEFAULT_PERMISSION_CLASSES': [
@@ -54,6 +57,15 @@ REST_FRAMEWORK = {
 }
 
 USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
+
+# Custom Serializers for UserProfile to override Django User model
+# REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'users.serializers.UserProfileSerializer' }
+# AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
+# Custom User to Override and tie Django user to UserProfile
+# AUTHENTICATION_BACKENDS = (
+#     'myproject.auth_backends.UserProfileModelBackend',
+# )
 
 
 # ENV_FILE = find_dotenv()

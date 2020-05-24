@@ -6,30 +6,22 @@ from django.dispatch import receiver
 
 class UserProfile(models.Model):
 
-    first_name = models.CharField(null=True, blank=True, max_length=50)
-    last_name = models.CharField(null=True, blank=True, max_length=50)
-    username = models.CharField(null=True, blank=True, max_length=50)
-    owner_email = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, unique=True, related_name="userProfile", null=True, on_delete=models.CASCADE, )
     address = models.CharField(null=True, blank=True, max_length=50)
     picUrl = models.ImageField(null=True, blank=True)
-    rollerCoaster_credits = models.ManyToManyField("RollerCoaster", through="Credit" )
+    rollerCoaster_id = models.ManyToManyField("RollerCoaster", through="Credit", )
 
     class Meta:
-        verbose_name = ("userprofile")
-        verbose_name_plural = ("userprofiles")
+        verbose_name = ("userProfile")
+        verbose_name_plural = ("userProfiles")
         # ordering = (F('user.date_joined').asc(nulls_last=True),)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.user.first_name} {self.user.last_name} {self.user.username} {self.user.email} {self.user.id} {self.rollerCoaster_id}'
 
 
-# @receiver(post_save, sender=User)
-# def create_userProfile(sender, instance, created, **kwargs):
-#     if created:
-#         UserProfile.objects.create(user=instance)
-
-# # Every time a `User` is saved, its matching `profile`
-# # object will be saved.
-# @receiver(post_save, sender=User)
-# def save_userProfile(sender, instance, **kwargs):
-#     instance.userProfile.save()
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         self.userProfile = UserProfile(user=self)
+    #     super(UserProfile, self).save(*args, **kwargs)
+    #     return UserProfile

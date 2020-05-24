@@ -12,8 +12,6 @@ from rest_framework import authentication, permissions
 
 
 
-
-
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -22,7 +20,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'username', 'address', 'picUrl', )
+        fields = ('id', 'url', 'address', 'picUrl', )
         depth = 1
 
 
@@ -41,45 +39,54 @@ class UserProfiles(ViewSet):
     # permission_classes = (IsAuthenticated,)
 
     def create(self, request):
-        # user = User.objects.get(user=request.auth.user)
-        # email = user.email
-        rollercoaster_credits = Credit.objects.get(pk="rollercoaster_id")
+        user = User.objects.get(user=request.auth.user)
+        first_name = user["first_name"]
+        last_name = user["last_name"]
+        username = user["username"]
+        email = user["email"]
+        rollerCoaster_id = Credit.objects.get(pk="credits")
 
         newuserprofile = UserProfile()
-        newuserprofile.first_name = request.data["first_name"]
-        newuserprofile.last_name = request.data["last_name"]
-        newuserprofile.username = request.data["username"]
+        newuserprofile.first_name = first_name
+        newuserprofile.last_name = last_name
+        newuserprofile.username = username
+        newuserprofile.email = email
         newuserprofile.address = request.data["address"]
         newuserprofile.picUrl = request.data["picUrl"]
-        newuserprofile.rollerCoaster_credits = request.data["rollercoaster_id"]
+        newuserprofile.rollerCoaster_id = request.data["rollercoaster_id"]
 
         newuserprofile.save()
         serializer = UserProfileSerializer(newuserprofile, context={'request': request})
         return Response(serializer.data)
 
-    # def retrieve(self, request, pk=None):
-    #     try:
-    #         userprofile = UserProfile.objects.get(pk=pk)
-    #         serializer = UserProfileSerializer(userprofile, context={'request': request})
-    #         return Response(serializer.data)
-    #     except Exception as ex:
-    #         return HttpResponseServerError(ex)
+    def retrieve(self, request, pk=None):
+        try:
+            userprofile = UserProfile.objects.get(pk=pk)
+            serializer = UserProfileSerializer(userprofile, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-        rollercoaster_credits = Credit.objects.get(pk="rollercoaster_id")
-        # email = UserProfile.objects.get(email=request.auth.user["email"])
-
-
-
+        user = User.objects.get(user=request.auth.user)
         userprofile = UserProfile.objects.get(pk=pk)
-        userprofile.first_name = request.data["first_name"]
-        userprofile.last_name = request.data["last_name"]
-        userprofile.username = request.data["username"]
-        # userprofile.email = email
+        rollercoaster_credits = Credit.objects.get(pk=request.data["credits"])
+        first_name = user["first_name"]
+        last_name = user["last_name"]
+        username = user["username"]
+        email = user["email"]
+
+
+        userprofile.first_name = first_name
+        userprofile.last_name = last_name
+        userprofile.username = username
+        userprofile.email = email
         userprofile.address = request.data["address"]
         userprofile.picUrl = request.data["picUrl"]
-        newuserprofile.rollerCoaster_credits = request.data["rollercoaster_id"]
+        userprofile.rollerCoaster_id = rollercoaster_credits
 
+        # saving userprofile should also save and update the User table.
+        # Find on UserProfile models. They are linked together.
         userprofile.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
@@ -98,5 +105,6 @@ class UserProfiles(ViewSet):
 
     def list(self, request):
         userprofiles = UserProfile.objects.all()
+        # userprofiles = UserProfile.objects.filter()
         serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
         return Response(serializer.data)
