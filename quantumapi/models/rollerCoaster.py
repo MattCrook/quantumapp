@@ -15,7 +15,7 @@ class RollerCoaster(models.Model):
     max_speed = models.CharField(max_length=50)
     manufacturer = models.ForeignKey(Manufacturer, related_name='rollercoasters', on_delete=models.CASCADE)
     park = models.ForeignKey(Park, related_name='rollercoasters', on_delete=models.CASCADE)
-    user_credit_id = models.ManyToManyField("UserProfile", through="Credit")
+    user_credit_id = models.ManyToManyField("UserProfile", through="Credit",)
 
     class Meta:
         verbose_name = ("rollerCoaster")

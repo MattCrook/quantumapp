@@ -1,8 +1,8 @@
-from django.apps import AppConfig
+# from django.apps import AppConfig
 
 
-class BlacklistedTokenConfig(AppConfig):
-    name = 'rest_framework_jwt.blacklist'
+# class BlacklistedTokenConfig(AppConfig):
+#     name = 'rest_framework_jwt.blacklist'
 
-    def ready(self):
-        import rest_framework_jwt.blacklist.signals  # noqa
+#     def ready(self):
+#         import rest_framework_jwt.blacklist.signals  # noqa
