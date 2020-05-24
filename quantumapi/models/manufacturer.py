@@ -19,4 +19,4 @@ class Manufacturer(models.Model):
 
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name} -- {self.origin_country} -- {self.company_website}'

@@ -13,23 +13,15 @@ def jwt_get_username_from_payload_handler(payload):
 
 
 # function to fetch the JWKS from Auth0 account to verify and decode the incoming Access Token.
-
 def jwt_decode_token(token):
     header = jwt.get_unverified_header(token)
     auth0_domain = os.environ.get('AUTH0_DOMAIN')
+    print("AUTHODOMAIN", auth0_domain)
     jwks = requests.get('https://{}/.well-known/jwks.json'.format(auth0_domain)).json()
     public_key = None
     for jwk in jwks['keys']:
         if jwk['kid'] == header['kid']:
             public_key = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk))
-
-# def jwt_decode_token(token):
-#     header = jwt.get_unverified_header(token)
-#     jwks = requests.get('https://{}/.well-known/jwks.json'.format('dev-405n1e6w.auth0.com')).json()
-#     public_key = None
-#     for jwk in jwks['keys']:
-#         if jwk['kid'] == header['kid']:
-#             public_key = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk))
 
     if public_key is None:
         raise Exception('Public key not found.')

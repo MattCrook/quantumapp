@@ -6,6 +6,8 @@ from rest_framework.settings import APISettings
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+# import dotenv
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,9 +24,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# PUT THESE IN THE DOTENV FILE
+AUTH0_CLIENT_ID = {"7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"}
+AUTH0_DOMAIN = {"dev-405n1e6w.auth0.com"}
+AUTH0_CLIENT_SECRET = {"yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"}
+API_IDENTIFIER = {"8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft"}
+
+# THEN LOAD THE ENV VARIABLES LIKE BELOW:
+# ENV_FILE = find_dotenv()
+# if ENV_FILE:
+#     load_dotenv(ENV_FILE)
+
+# AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+# API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,6 +54,7 @@ INSTALLED_APPS = [
     'quantumapi',
     # 'quantumfrontend',
     'cloudinary',
+    'rest_framework_jwt',
 ]
 
 REST_FRAMEWORK = {
@@ -71,14 +88,6 @@ USER_SETTINGS = getattr(settings, 'JWT_AUTH', None)
 # )
 
 
-# ENV_FILE = find_dotenv()
-# if ENV_FILE:
-#     load_dotenv(ENV_FILE)
-
-# AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
-# API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
-# PUBLIC_KEY = None
-# JWT_ISSUER = None
 
 # if AUTH0_DOMAIN:
 #     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
@@ -107,18 +116,18 @@ JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
         'rest_framework_jwt.utils.jwt_encode_payload',
 
-    # 'JWT_DECODE_HANDLER':
-    #     'rest_framework_jwt.utils.jwt_decode_token',
     'JWT_DECODE_HANDLER':
-        'auth0authorization.utils.jwt_decode_token',
+        'rest_framework_jwt.utils.jwt_decode_token',
+    # 'JWT_DECODE_HANDLER':
+    #     'quantumapi.utils.jwt_decode_token',
 
     'JWT_PAYLOAD_HANDLER':
         'rest_framework_jwt.utils.jwt_create_payload',
 
-    # 'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-    #     'rest_framework_jwt.utils.jwt_get_username_from_payload_handler',
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-        'auth0authorization.utils.jwt_get_username_from_payload_handler',
+        'rest_framework_jwt.utils.jwt_get_username_from_payload_handler',
+    # 'JWT_PAYLOAD_GET_USERNAME_HANDLER':
+    #     'quantumapi.utils.jwt_get_username_from_payload_handler',
 
     'JWT_PAYLOAD_INCLUDE_USER_ID': True,
     'JWT_VERIFY': True,

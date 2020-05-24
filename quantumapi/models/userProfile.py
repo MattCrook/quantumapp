@@ -13,7 +13,7 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, unique=True, related_name="profile", null=True, on_delete=models.CASCADE, )
     address = models.CharField(null=True, blank=True, max_length=50,)
-    picUrl = cloudinary.models.CloudinaryField('Image', overwrite=True, resource_type="image", transformation={"quality": "auto:eco"}, format="jpg",)
+    picUrl = cloudinary.models.CloudinaryField('Image', overwrite=True, null=True, resource_type="image", transformation={"quality": "auto:eco"}, format="jpg",)
     rollerCoaster_id = models.ManyToManyField("RollerCoaster", through="Credit", )
 
     class Meta:
@@ -22,7 +22,15 @@ class UserProfile(models.Model):
         # ordering = (F('user.date_joined').asc(nulls_last=True),)
 
     def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name} {self.user.username} {self.user.email} {self.user.id} {self.rollerCoaster_id}'
+        # return f'First:{self.user.first_name}, Last:{self.user.last_name}, Username:{self.user.username}, Email:{self.user.email}, Address: {self.address}, PicUrl: {self.picUrl}, UserId:{self.user.id} Credits:{self.rollerCoaster_id}'
+          return f'Name: {self.user.first_name} {self.user.last_name} -- Username: {self.user.username} -- Email: {self.user.email} -- Address: {self.address} -- Credits:{self.rollerCoaster_id}'
+
+    # def get_credits(self):
+    #     credit_dict = list()
+    #     for credit in self.rollerCoaster_id:
+    #         return credit
+
+
 
 
     # def save(self, *args, **kwargs):
