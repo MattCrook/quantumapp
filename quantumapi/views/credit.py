@@ -16,8 +16,7 @@ class CreditsSerializer(serializers.HyperlinkedModelSerializer):
             view_name='credit',
             lookup_field='id'
         )
-        # fields = ('id', 'url', 'userProfile', 'rollerCoaster', 'userprofile_id', 'rollercoaster_id', 'user_profile',)
-        fields = ('id', 'url', 'userProfile', 'rollerCoaster', )
+        fields = ('id', 'url', 'userProfile', 'rollerCoaster', 'profile', )
         depth = 2
 
 
@@ -34,10 +33,14 @@ class Credits(ViewSet):
 
     def list(self, request):
 
+        all_credits = Credit.objects.all()
+        credit = self.request.que
+
         # NoneType has no attribute 'use' if you do user profile
         # Hint: first arg (after get() and filter()) is the field name
-        userprofile = UserProfile.objects.get(pk=request.user.userProfile.id)
-        user_credits = Credit.objects.filter(userProfile=userprofile)
+        userprofile_id = UserProfile.objects.get(pk=request.data["userProfile"])
+        # userprofile = UserProfile.objects.get(pk=request.auth.user)
+        user_credits = Credit.objects.filter(userProfile=userprofile_id)
 
         serializer = CreditsSerializer(user_credits, many=True, context={'request': request})
         return Response(serializer.data)

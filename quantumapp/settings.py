@@ -3,7 +3,9 @@ import datetime
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from rest_framework.settings import APISettings
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'quantumapi',
     # 'quantumfrontend',
+    'cloudinary',
 ]
 
 REST_FRAMEWORK = {
@@ -141,7 +144,6 @@ JWT_AUTH = {
 }
 
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -164,7 +166,6 @@ CORS_ORIGIN_WHITELIST = (
 
 
 ROOT_URLCONF = 'quantumapp.urls'
-
 
 
 TEMPLATES = [
@@ -239,7 +240,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+# MEDIA_ROOT =
 
+CLOUDINARY_URL = "cloudinary://418576712586226:IaXis96Iz93J6NH7PTrU1clKpGM@capstone-project"
+
+
+cloudinary.config(
+    cloud_name="capstone-project",
+    api_key="418576712586226",
+    api_secret="IaXis96Iz93J6NH7PTrU1clKpGM"
+)
 
 
 # List of settings that may be in string import notation.

@@ -3,12 +3,17 @@ from django.db.models import F
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+import cloudinary
+# import cloudinary.uploader
+# from cloudinary.api import delete_resources_by_tag, resources_by_tag
+# from cloudinary.uploader import upload
+# from cloudinary.utils import cloudinary_url
+from cloudinary.models import CloudinaryField
 class UserProfile(models.Model):
 
-    user = models.OneToOneField(User, unique=True, related_name="userProfile", null=True, on_delete=models.CASCADE, )
-    address = models.CharField(null=True, blank=True, max_length=50)
-    picUrl = models.ImageField(null=True, blank=True)
+    user = models.OneToOneField(User, unique=True, related_name="profile", null=True, on_delete=models.CASCADE, )
+    address = models.CharField(null=True, blank=True, max_length=50,)
+    picUrl = cloudinary.models.CloudinaryField('Image', overwrite=True, resource_type="image", transformation={"quality": "auto:eco"}, format="jpg",)
     rollerCoaster_id = models.ManyToManyField("RollerCoaster", through="Credit", )
 
     class Meta:
