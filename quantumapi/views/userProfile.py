@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
+# from django.conf import settings
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,23 +25,14 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'address', 'picUrl',)
+        fields = ('id', 'url', 'address', 'picUrl', 'credits', )
         depth = 1
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserProfiles(ViewSet):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = [authentication.TokenAuthentication]
-
-
-    # def get(self, request, format=None):
-    #     """
-    #     Return a list of all users.
-    #     """
-    #     emails = [user.email for user in User.objects.all()]
-    #     return Response(emails)
-    # serializer_class = UserProfileSerializer
-    # permission_classes = (IsAuthenticated,)
 
     # @csrf_exempt
     def create(self, request):
