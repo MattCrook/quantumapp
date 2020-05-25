@@ -23,4 +23,4 @@ class Messages(models.Model):
 
 
     def __str__(self):
-        return f'{self.message} {self.timestamp}'
+        return f'{self.user}: {self.message} ({self.timestamp})'

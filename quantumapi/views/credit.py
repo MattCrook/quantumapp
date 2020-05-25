@@ -7,7 +7,6 @@ from quantumapi.models import Credit, RollerCoaster, UserProfile
 from django.contrib.auth.models import User
 
 
-
 class CreditsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -16,7 +15,6 @@ class CreditsSerializer(serializers.HyperlinkedModelSerializer):
             view_name='credit',
             lookup_field='id'
         )
-        # fields = ('id', 'url', 'userProfile', 'rollerCoaster', 'userprofile_id', 'rollercoaster_id', 'user_profile',)
         fields = ('id', 'url', 'userProfile', 'rollerCoaster', )
         depth = 2
 
@@ -33,10 +31,27 @@ class Credits(ViewSet):
 
 
     def list(self, request):
+        """Handle GET request to Credits resource.
+        Would be a GET request to UserProfile resource and need to GET all credits the user has."""
+
+        all_credits = list(Credit.objects.all())
+        print("ALLCREDITS", all_credits)
+        all_userprofiles = UserProfile.objects.all()
+
+        # If credits is provided as a query parameter, then filter list of credits by userprofile id
+        # credit = self.request.query_params.get('profile', None)
+
+        # Get the extended table of user with the user profile table
+        user_profile = request.user.profile
+        print("PROFILE", user_profile)
+
+        user_credits = UserProfile.get_credits
+        print("CREDITS", user_credits)
 
         # NoneType has no attribute 'use' if you do user profile
         # Hint: first arg (after get() and filter()) is the field name
-        userprofile = UserProfile.objects.get(pk=request.user.userProfile.id)
+        # userprofile_id = UserProfile.objects.get(pk=request.data)
+        userprofile = UserProfile.objects.get(pk=request.user.profile.id)
         user_credits = Credit.objects.filter(userProfile=userprofile)
 
         serializer = CreditsSerializer(user_credits, many=True, context={'request': request})

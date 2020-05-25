@@ -24,4 +24,4 @@ class RollerCoaster(models.Model):
 
 
     def __str__(self):
-        return f'Name: {self.name}, Speed: {self.max_speed}, Height: {self.max_height}.'
+        return f'Name: {self.name} -- Speed: {self.max_speed} -- Height: {self.max_height} -- Park: {self.park.name} -- Manufacturer: {self.manufacturer.name} -- Tracktype: {self.tracktype.name} ... {self.user_credit_id}'

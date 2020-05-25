@@ -3,14 +3,14 @@ from django.db.models import F
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .userProfile import UserProfile
-from .rollerCoaster import RollerCoaster
+# from .userProfile import UserProfile
+# from .rollerCoaster import RollerCoaster
 
 
 class Credit(models.Model):
 
-    rollerCoaster = models.ForeignKey(RollerCoaster, related_name="credits", on_delete=models.CASCADE)
-    userProfile = models.ForeignKey(UserProfile, related_name="users", on_delete=models.CASCADE)
+    rollerCoaster = models.ForeignKey("RollerCoaster", related_name="credits", on_delete=models.CASCADE, )
+    userProfile = models.ForeignKey("UserProfile", related_name="users", on_delete=models.CASCADE, )
 
 
     class Meta:
@@ -20,4 +20,4 @@ class Credit(models.Model):
 
 
     def __str__(self):
-        return f'{self.rollerCoaster} {self.userProfile}'
+        return f'{self.userProfile.user.first_name} {self.userProfile.user.last_name} - {self.rollerCoaster.name} - {self.rollerCoaster.park.name}'
