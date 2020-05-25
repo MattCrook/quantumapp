@@ -25,7 +25,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'first_name', 'last_name', 'email', 'password', 'username', 'address', 'picUrl',)
+        fields = ('id', 'url', 'address', 'picUrl', 'credits', )
         depth = 1
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -33,16 +33,6 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 class UserProfiles(ViewSet):
     permission_classes = [permissions.AllowAny]
     # authentication_classes = [authentication.TokenAuthentication]
-
-
-    # def get(self, request, format=None):
-    #     """
-    #     Return a list of all users.
-    #     """
-    #     emails = [user.email for user in User.objects.all()]
-    #     return Response(emails)
-    # serializer_class = UserProfileSerializer
-    # permission_classes = (IsAuthenticated,)
 
     # @csrf_exempt
     def create(self, request):

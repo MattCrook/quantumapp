@@ -9,8 +9,8 @@ from django.dispatch import receiver
 
 class Credit(models.Model):
 
-    rollerCoaster = models.ForeignKey("RollerCoaster", related_name="credits", on_delete=models.CASCADE, )
-    userProfile = models.ForeignKey("UserProfile", related_name="users", on_delete=models.CASCADE, )
+    rollerCoaster = models.ForeignKey("RollerCoaster", related_name="users", on_delete=models.CASCADE, )
+    userProfile = models.ForeignKey("UserProfile", related_name="credits", on_delete=models.CASCADE, )
 
 
     class Meta:

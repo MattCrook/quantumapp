@@ -1,5 +1,5 @@
 from django.contrib import admin
-from quantumapi.models import UserProfile, RollerCoaster, Tracktype, Manufacturer, Park, Credit, Messages
+from quantumapi.models import UserProfile, RollerCoaster, Tracktype, Manufacturer, Park, Credit, Messages, User
 
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -14,6 +14,9 @@ admin.site.register(Park)
 admin.site.register(RollerCoaster)
 admin.site.register(Credit)
 admin.site.register(Messages)
+admin.site.register(User)
+
+
 
 
 

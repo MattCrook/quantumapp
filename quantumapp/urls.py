@@ -35,7 +35,7 @@ router.register(r'tracktypes', Tracktypes, 'tracktype')
 router.register(r'manufacturers', Manufacturers, 'manufacturer')
 router.register(r'rollercoasters', RollerCoasters, 'rollercoaster')
 router.register(r'userprofiles', UserProfiles, 'userprofile')
-# router.register(r'credits', Credits, 'credit')
+router.register(r'credits', Credits, 'credit')
 router.register(r'messages', Message, 'messages')
 router.register(r'users', UserViewSet, 'user')
 
@@ -70,7 +70,7 @@ urlpatterns = [
 
 
 
-    # path('', generic.RedirectView.as_view(url='/api/', permanent=False)),
+    path('', generic.RedirectView.as_view(url='/api/', permanent=False)),
     # path('api-token-verify/', verify_jwt_token),
     # path('api-token-auth/', obtain_jwt_token),
     # path('api-token-decode/', jwt_decode_token),
