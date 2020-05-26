@@ -26,23 +26,29 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # PUT THESE IN THE DOTENV FILE
-# AUTH0 Appication Settings
-AUTH0_CLIENT_ID = "7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"
+# AUTH0 Django Application Settings
+# AUTH0_CLIENT_ID = "7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"
+
+#Quantum-Capstone-API clientID
+AUTH0_CLIENT_ID = "kaXZdymNjopdmrlQpOL5mMBQZyvrSry0"
+# MANAGEMENT-API
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
 AUTH0_CLIENT_SECRET = "yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"
-# API_IDENTIFIER = "8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft"
 API_IDENTIFIER = 'https://api.quantumcoasters.com'
+# API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
+PUBLIC_KEY = None
+JWT_ISSUER = None
 
-# AUTH0 APPLICATION SETTINGS
-SOCIAL_AUTH_TRAILING_SLASH = False
-SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-SOCIAL_AUTH_AUTH0_KEY = '7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa'
-SOCIAL_AUTH_AUTH0_SECRET = 'yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS'
-SOCIAL_AUTH_AUTH0_SCOPE = [
-    'openid',
-    'profile',
-    'email'
-]
+# AUTH0 Django APPLICATION SETTINGS
+# SOCIAL_AUTH_TRAILING_SLASH = False
+# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+# SOCIAL_AUTH_AUTH0_KEY = '7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa'
+# SOCIAL_AUTH_AUTH0_SECRET = 'yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS'
+# SOCIAL_AUTH_AUTH0_SCOPE = [
+#     'openid',
+#     'profile',
+#     'email'
+# ]
 
 
 # THEN LOAD THE ENV VARIABLES LIKE BELOW:
@@ -100,79 +106,55 @@ AUTH_USER_MODEL = 'quantumapi.User'
 
 
 
-AUTHENTICATION_BACKENDS = {
-    'quantumapi.auth0backend.Auth0',
-    'django.contrib.auth.backends.ModelBackend',
-    'django.contrib.auth.backends.RemoteUserBackend',
-}
-
-
-
-
 LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'
 
 
 
-
-# if AUTH0_DOMAIN:
-#     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
-
+if AUTH0_DOMAIN:
+    JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
 
 JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-        'auth0authorization.utils.jwt_get_username_from_payload_handler',
+        'quantumapi.utils.jwt_get_username_from_payload_handler',
     'JWT_DECODE_HANDLER':
-        'auth0authorization.utils.jwt_decode_token',
+        'quantumapi.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
-    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+    # 'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+    'JWT_ISSUER': JWT_ISSUER,
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
-
-
-# DJANGO SIMPLEJWT SETTINGS
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': False,
-#     'BLACKLIST_AFTER_ROTATION': True,
-
-#     'ALGORITHM': 'RS256',
-#     'SIGNING_KEY': SECRET_KEY,
-#     'VERIFYING_KEY': None,
-#     'AUDIENCE': None,
-#     'ISSUER': None,
-
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-#     'USER_ID_FIELD': 'id',
-#     'USER_ID_CLAIM': 'user_id',
-
-#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-#     'TOKEN_TYPE_CLAIM': 'token_type',
-
-#     'JTI_CLAIM': 'jti',
-
-#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-# }
 
 
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.auth.middleware.RemoteUserMiddleware',
-
 ]
+
+
+
+
+
+AUTHENTICATION_BACKENDS = {
+    # FOR DJANGO WEB APP BACKEND
+    # 'quantumapi.auth0backend.Auth0',
+    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.RemoteUserBackend',
+}
+
+
+ROOT_URLCONF = 'quantumapp.urls'
+
 
 
 CORS_ORIGIN_WHITELIST = (
@@ -182,8 +164,6 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
 )
 
-
-ROOT_URLCONF = 'quantumapp.urls'
 
 
 TEMPLATES = [
@@ -279,6 +259,39 @@ cloudinary.config(
 # AUTHENTICATION_BACKENDS = (
 #     'myproject.auth_backends.UserProfileModelBackend',
 # )
+
+
+
+
+
+
+# DJANGO SIMPLEJWT SETTINGS
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': False,
+#     'BLACKLIST_AFTER_ROTATION': True,
+
+#     'ALGORITHM': 'RS256',
+#     'SIGNING_KEY': SECRET_KEY,
+#     'VERIFYING_KEY': None,
+#     'AUDIENCE': None,
+#     'ISSUER': None,
+
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+#     'USER_ID_FIELD': 'id',
+#     'USER_ID_CLAIM': 'user_id',
+
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     'TOKEN_TYPE_CLAIM': 'token_type',
+
+#     'JTI_CLAIM': 'jti',
+
+#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+# }
+
 
 
 
