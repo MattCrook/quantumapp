@@ -3,8 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import UserProfile, Credit
-from django.contrib.auth.models import User
+from quantumapi.models import UserProfile, Credit, User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -14,6 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
+from django.conf import settings
+
+
 # from django.conf import settings
 
 
@@ -37,31 +39,33 @@ class UserProfiles(ViewSet):
     # @csrf_exempt
     def create(self, request):
         req_body = json.loads(request.body.decode())
+        print("REQ_BODY", req_body)
+        # user = settings.AUTH_USER_MODEL
 
-        new_user = User.objects.create_user(
+        new_user = User.objects.create(
             first_name=req_body['first_name'],
             last_name=req_body['last_name'],
             username=req_body['username'],
-            password=req_body['password'],
+            # password=req_body['password'],
             email=req_body['email'],
         )
 
         userprofile = UserProfile.objects.create(
             address=req_body['address'],
             picUrl=req_body['picUrl'],
-            rollercoaster_id=req_body['rollercoaster_id'],
+            # credits=req_body['rollerCoaster_id'],
             user=new_user
         )
 
         userprofile.save()
 
+        #calls the manager
         token = Token.objects.create(user=new_user)
         # token = Token.objects.create_userProfile(user=userprofile)
 
         # Return the token to the client
         data = json.dumps({"token": token.key})
         return HttpResponse(data, content_type='application/json')
-
 
 
     # def create(self, request):
@@ -90,20 +94,20 @@ class UserProfiles(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
-            serializer = UserProfileSerializer(userprofile, context={'request': request})
+            serializer = UserProfileSerializer(
+                userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-        user = User.objects.get(user=request.auth.user)
+        user = User.objects.get(user=settings.AUTH_USER_MODEL)
         userprofile = UserProfile.objects.get(pk=pk)
         rollercoaster_credits = Credit.objects.get(pk=request.data["credits"])
         first_name = user["first_name"]
         last_name = user["last_name"]
         username = user["username"]
         email = user["email"]
-
 
         userprofile.first_name = first_name
         userprofile.last_name = last_name
@@ -130,11 +134,11 @@ class UserProfiles(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
     def list(self, request):
         userprofiles = UserProfile.objects.all()
         # userprofiles = UserProfile.objects.filter()
-        serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
+        serializer = UserProfileSerializer(
+            userprofiles, many=True, context={'request': request})
         return Response(serializer.data)
 
     # @csrf_exempt
@@ -148,7 +152,8 @@ class UserProfiles(ViewSet):
             # Use the built-in authenticate method to verify
             username = req_body['username']
             password = req_body['password']
-            authenticated_user = authenticate(username=username, password=password)
+            authenticated_user = authenticate(
+                username=username, password=password)
 
             # If authentication was successful, respond with their token
             if authenticated_user is not None:

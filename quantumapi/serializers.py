@@ -14,16 +14,19 @@ class UserSerializer(serializers.ModelSerializer):
         user.email = validated_data.get('email')
         user.set_password(password)
         user.save()
+        print("USER", user)
         return user
 
     def update(self, instance, validated_data):
         profile = UserProfile(**validated_data)
         profile_data = validated_data
         instance.email = validated_data.get('email', instance.email)
+        instance.password = validated_data.get('password', instance.password)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.username = validated_data.get('username', instance.username)
         profile.address = profile_data.get('address', instance.address)
         profile.picUrl = profile_data.get('picUrl', instance.picUrl)
-        profile.rollerCoaster_id = profile_data.get('rollerCoaster_id', instance.rollerCoaster_id)
+        profile.rollerCoaster_id = profile_data.get('credits', instance.rollerCoaster_id)
+        print("PROFILE", profile)
         profile.save()

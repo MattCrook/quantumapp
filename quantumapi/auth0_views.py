@@ -39,20 +39,20 @@ def requires_scope(required_scope):
 # The @api_view decorator can be added to all endpoints that indicate that the method requires authentication.
 # Lastly, the @permission_classes([AllowAny]) can be added to the public endpoint(s) to accept unauthenticated requests.
 
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def public(request):
-    return JsonResponse({'message': 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'})
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def public(request):
+#     return JsonResponse({'message': 'Hello from a public endpoint! You don\'t need to be authenticated to see this.'})
 
 
-@api_view(['GET'])
-def private(request):
-    return JsonResponse({'message': 'Hello from a private endpoint! You need to be authenticated to see this.'})
+# @api_view(['GET'])
+# def private(request):
+#     return JsonResponse({'message': 'Hello from a private endpoint! You need to be authenticated to see this.'})
 
 
-# Use the requires_scope decorator in the methods that require specific scopes granted. T
-# The method below requires the read:messages scope granted.
-@api_view(['GET'])
-@requires_scope('read:messages')
-def private_scoped(request):
-    return JsonResponse({'message': 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'})
+# # Use the requires_scope decorator in the methods that require specific scopes granted. T
+# # The method below requires the read:messages scope granted.
+# @api_view(['GET'])
+# @requires_scope('read:messages')
+# def private_scoped(request):
+#     return JsonResponse({'message': 'Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.'})

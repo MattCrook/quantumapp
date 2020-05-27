@@ -29,15 +29,30 @@ ALLOWED_HOSTS = []
 # AUTH0 Django Application Settings
 # AUTH0_CLIENT_ID = "7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"
 
-#Quantum-Capstone-API clientID
+# Quantum-Capstone-API clientID
 AUTH0_CLIENT_ID = "kaXZdymNjopdmrlQpOL5mMBQZyvrSry0"
-# MANAGEMENT-API
+
+
+# MANAGEMENT-API - client-id
+# AUTH0_CLIENT_ID = '5e711bac91a8780913c58961'
+
+
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
-AUTH0_CLIENT_SECRET = "yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"
+
+# MANAGEMENT API SECRET
+# AUTH0_CLIENT_SECRET = "yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"
+
+
+# QUANTUMAPI SECRET
+AUTH0_CLIENT_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
+# grant_type":"client_credentials"
+
 API_IDENTIFIER = 'https://api.quantumcoasters.com'
+
+
 # API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
-PUBLIC_KEY = None
-JWT_ISSUER = None
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
 
 # AUTH0 Django APPLICATION SETTINGS
 # SOCIAL_AUTH_TRAILING_SLASH = False
@@ -79,61 +94,12 @@ INSTALLED_APPS = [
     'social_django',
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.auth.middleware.RemoteUserMiddleware',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.renderers.JSONRenderer',
-
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
-
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 20
-}
-
-# USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
-
-AUTH_USER_MODEL = 'quantumapi.User'
-
-
-
-LOGIN_URL = '/login/auth0'
-LOGIN_REDIRECT_URL = '/home'
-
-
-
-if AUTH0_DOMAIN:
-    JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
-
-JWT_AUTH = {
-    'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-        'quantumapi.utils.jwt_get_username_from_payload_handler',
-    'JWT_DECODE_HANDLER':
-        'quantumapi.utils.jwt_decode_token',
-    'JWT_ALGORITHM': 'RS256',
-    'JWT_AUDIENCE': API_IDENTIFIER,
-    # 'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
-    'JWT_ISSUER': JWT_ISSUER,
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-}
-
-
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
@@ -142,7 +108,64 @@ MIDDLEWARE = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.BasicAuthentication',
+#         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+#         'rest_framework.authentication.TokenAuthentication',
+#         # 'rest_framework.renderers.JSONRenderer',
+
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#         'rest_framework.permissions.AllowAny',
+
+#     ),
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+#     'PAGE_SIZE': 20
+# }
+
+# USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
+
+
+
+AUTH_USER_MODEL = 'quantumapi.User'
+
+
+LOGIN_URL = '/login/auth0'
+LOGIN_REDIRECT_URL = '/home'
+
+
+# if AUTH0_DOMAIN:
+#     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
+
+JWT_AUTH = {
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER':
+        'quantumapi.utils.jwt_get_username_from_payload_handler',
+    'JWT_DECODE_HANDLER':
+        'quantumapi.utils.jwt_decode_token',
+    'JWT_ALGORITHM': 'RS256',
+    'JWT_AUDIENCE': API_IDENTIFIER,
+    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
 
 
 AUTHENTICATION_BACKENDS = {
@@ -156,14 +179,12 @@ AUTHENTICATION_BACKENDS = {
 ROOT_URLCONF = 'quantumapp.urls'
 
 
-
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
+    # 'http://localhost:8000',
+    # 'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
 )
-
 
 
 TEMPLATES = [
@@ -183,7 +204,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'quantumapp.wsgi.application'
-
 
 
 # Database
@@ -246,11 +266,6 @@ cloudinary.config(
 )
 
 
-
-
-
-
-
 # Custom Serializers for UserProfile to override Django User model
 # REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'users.serializers.UserProfileSerializer' }
 # AUTH_PROFILE_MODULE = 'accounts.UserProfile'
@@ -259,10 +274,6 @@ cloudinary.config(
 # AUTHENTICATION_BACKENDS = (
 #     'myproject.auth_backends.UserProfileModelBackend',
 # )
-
-
-
-
 
 
 # DJANGO SIMPLEJWT SETTINGS
@@ -291,10 +302,6 @@ cloudinary.config(
 #     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
 #     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 # }
-
-
-
-
 
 
 # DJANGO REST JWT SETTINGS
@@ -339,9 +346,6 @@ cloudinary.config(
 #     'JWT_IMPERSONATION_COOKIE': None,
 #     'JWT_DELETE_STALE_BLACKLISTED_TOKENS': False,
 # }
-
-
-
 
 
 # List of settings that may be in string import notation.
