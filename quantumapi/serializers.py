@@ -7,9 +7,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username', 'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', )
         extra_kwargs = {'password': {'write_only': True}}
+        # url=serializers.EmailField
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
+        # password was .pop()...need the password for the DB...was loosing it at registration.
+        password = validated_data.get('password') 
         user = User(**validated_data)
         user.email = validated_data.get('email')
         user.set_password(password)

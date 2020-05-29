@@ -54,8 +54,6 @@ urlpatterns = [
     path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
 
-
-
     path('', generic.RedirectView.as_view(url='/api/', permanent=False)),
     # path('api-token-verify/', verify_jwt_token),
     # path('api-token-auth/', obtain_jwt_token),
