@@ -8,6 +8,7 @@ from quantumapi.permissions import IsLoggedIUserOrAdmin, IsAdminUser
 from rest_framework.views import APIView
 from quantumapi.auth0_views import get_token_auth_header, requires_scope
 from django.http import HttpResponseServerError
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 import sqlite3
@@ -16,8 +17,6 @@ from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from quantumapi.views.connection import Connection
 from quantumapi.models.model_factory import model_factory
-from django_filters.rest_framework import DjangoFilterBackend
-
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -26,10 +25,6 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['email']
 
-    def list(self, request):
-        queryset = User.objects.all()
-        serializer = UserSerializer(queryset, many=True, context={'request': request})
-        return Response(serializer.data)
 
     # def get_permissions(self):
     #     permission_classes = []
@@ -42,27 +37,12 @@ class UserViewSet(viewsets.ModelViewSet):
     #     return [permission() for permission in permission_classes]
 
 
-
-    # def retrieve(self, request, email='matt@matt.com'):
-
-        # try:
-        #     queryset = User.objects.all().filter(email=request.data['email'])
-
-
-            # Returns email (specified as look up field)
-            # users = User.objects.all()
-            # email = users.objects.filter(email=email)
-            # user = User.objects.all().filter(email='matt@matt.com')
-            # print("EMAIL", queryset)
-            # email = User.objects.filter(email__lte=email)
+    # def list(self, request):
+    #     queryset = User.objects.all()
+    #     serializer = UserSerializer(queryset, many=True, context={'request': request})
+    #     return Response(serializer.data)
 
 
-
-        #     serializer = UserSerializer(queryset, context={'request': request})
-        #     return Response(serializer.data)
-
-        # except Exception as ex: 
-        #     return HttpResponseServerError(ex)
 
 
 #############################################
