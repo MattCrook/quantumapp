@@ -10,7 +10,8 @@ urlpatterns = [
     # path('api/private', auth0_views.private),
     # path('api/private-scoped', auth0_views.private_scoped),
     # path('users/<email>/', UserProfiles, name='userProfile'),
-    # path('users/<email>/', UserViewSet, name='user-list'),
+    
+    # path('users/<str:email>/', get_user_email),
     # path('register/', register_user),
     # path('login/', login_user),
 

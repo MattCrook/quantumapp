@@ -27,7 +27,7 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'address', 'picUrl', 'credits', )
+        fields = ('id', 'url', 'address', 'picUrl', 'credits', 'user', )
         depth = 1
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -36,7 +36,7 @@ class UserProfiles(ViewSet):
     # permission_classes = [permissions.AllowAny]
     # authentication_classes = [authentication.TokenAuthentication]
 
-    # @csrf_exempt
+    @csrf_exempt
     def create(self, request):
         req_body = json.loads(request.body.decode())
         print("REQ_BODY", req_body)
@@ -71,8 +71,9 @@ class UserProfiles(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
-            serializer = UserProfileSerializer(
-                userprofile, context={'request': request})
+            # email = User.objects.get(pk=request.data["email"])
+            # userprofile = UserProfile.objects.filter(email=email)
+            serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -114,9 +115,13 @@ class UserProfiles(ViewSet):
 
     def list(self, request):
         userprofiles = UserProfile.objects.all()
-        # userprofiles = UserProfile.objects.filter()
-        serializer = UserProfileSerializer(
-            userprofiles, many=True, context={'request': request})
+        
+        # userprofiles = UserProfile.objects.filter(address__lte='123456Testing')
+        print("USERPROFILES", userprofiles)
+        print("REQUEST", request)
+
+
+        serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
         return Response(serializer.data)
 
 # @csrf_exempt

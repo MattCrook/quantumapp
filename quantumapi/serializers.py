@@ -1,13 +1,20 @@
 from rest_framework import serializers
 from quantumapi.models import User, UserProfile
+from rest_framework.serializers import ModelSerializer
+# from drf_queryfields import QueryFieldsMixin
+
+# Base model serializer for QueryFields
+# class MyModelSerializer(QueryFieldsMixin, ModelSerializer):
+#     pass
+
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        email=serializers.SerializerMethodField()
         fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username', 'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', )
         extra_kwargs = {'password': {'write_only': True}}
-        # url=serializers.EmailField
 
     def create(self, validated_data):
         # password was .pop()...need the password for the DB...was loosing it at registration.
@@ -32,3 +39,6 @@ class UserSerializer(serializers.ModelSerializer):
         profile.rollerCoaster_id = profile_data.get('credits', instance.rollerCoaster_id)
         print("PROFILE", profile)
         profile.save()
+    
+    # def get_email(self, obj):
+    #     return obj.email

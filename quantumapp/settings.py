@@ -88,10 +88,11 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'quantumapi',
-    # 'quantumfrontend',
     'cloudinary',
     'rest_framework_jwt',
     'social_django',
+    # 'drf_queryfields',
+    'django_filters',
 ]
 
 
@@ -109,6 +110,8 @@ MIDDLEWARE = [
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAuthenticated',
@@ -143,7 +146,6 @@ REST_FRAMEWORK = {
 # }
 
 # USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
-
 
 
 AUTH_USER_MODEL = 'quantumapi.User'

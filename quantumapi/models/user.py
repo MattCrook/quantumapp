@@ -15,8 +15,8 @@ import django.utils.timezone
 class User(AbstractUser):
     first_name = models.CharField(('first name'), max_length=30, blank=True)
     last_name = models.CharField(('last name'), max_length=30, blank=True)
-    username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(('email address'), unique=True)
+    username = models.CharField(('username'), max_length=50, unique=True)
+    email = models.EmailField(('email_address'), unique=True)
     password = models.CharField(('password'), max_length=50, unique=True)
 
     # USERNAME_FIELD = A string describing the name of the field on the User model that is used as the unique identifier.
