@@ -16,7 +16,7 @@ class CreditsSerializer(serializers.HyperlinkedModelSerializer):
             lookup_field='id'
         )
         fields = ('id', 'url', 'userProfile', 'rollerCoaster', )
-        depth = 1
+        depth = 0
 
 
 class Credits(ViewSet):

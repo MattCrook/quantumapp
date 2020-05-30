@@ -10,6 +10,7 @@ defusedxml==0.7.0rc1
 Django==3.0.6
 django-cors-headers==3.3.0
 djangorestframework==3.11.0
+djangorestframework-queryfields==1.0.0
 djangorestframework-simplejwt==4.4.0
 drf-jwt==1.13.4
 ecdsa==0.15
@@ -41,3 +42,4 @@ toml==0.10.1
 typed-ast==1.4.1
 urllib3==1.25.9
 wrapt==1.12.1
+django-filter==2.2.0

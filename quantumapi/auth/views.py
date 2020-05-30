@@ -1,107 +1,46 @@
-# from django.shortcuts import render
-# from rest_framework.generics import GenericAPIView
-# from rest_framework.response import Response
-# from .compat import set_cookie_with_token
-# from .permissions import IsSuperUser
-# from .authentication import JSONWebTokenAuthentication
-# from .serializers import \
-#     JSONWebTokenSerializer, RefreshAuthTokenSerializer, \
-#     VerifyAuthTokenSerializer, ImpersonateAuthTokenSerializer
-# from quantumapp.settings import api_settings
+# from quantumapp.settings import LOGIN_REDIRECT_URL
+## REPLACE REDNDER WITH HTTP RESPONSE TO PASS THE CREDENTIALS
+## OR INJECT THE REACT APP INSIDE AN INDEX.HTML DJANGO TEMPLATE
+
+from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+import json
+
+from django.contrib.auth import logout as log_out
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
+
+@login_required
+def home(request):
+    user = request.user
+    auth0user = user.social_auth.get(provider='auth0')
+    userdata = {
+        'user_id': auth0user.uid,
+        'name': user.first_name,
+        'picture': auth0user.extra_data['picture'],
+        'email': auth0user.extra_data['email'],
+    }
+
+    return render(request, 'home.html', {
+        'auth0User': auth0user,
+        'userdata': json.dumps(userdata, indent=4)
+    })
 
 
-# class BaseJSONWebTokenAPIView(GenericAPIView):
-#     """Base JWT auth view used for all other JWT views (verify/refresh)."""
-
-#     permission_classes = ()
-#     authentication_classes = ()
-
-#     serializer_class = JSONWebTokenSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-
-#         serializer.is_valid(raise_exception=True)
-
-#         user = serializer.validated_data.get('user') or request.user
-#         token = serializer.validated_data.get('token')
-#         issued_at = serializer.validated_data.get('issued_at')
-#         response_data = JSONWebTokenAuthentication. \
-#             jwt_create_response_payload(token, user, request, issued_at)
-
-#         response = Response(response_data)
-
-#         if api_settings.JWT_AUTH_COOKIE:
-#             set_cookie_with_token(response, api_settings.JWT_AUTH_COOKIE, token)
-
-#         return response
+def index(request):
+    user = request.user
+    if user.is_authenticated:
+        return redirect(home)
+    else:
+        return render(request, 'index.html')
 
 
-# class ObtainJSONWebTokenView(BaseJSONWebTokenAPIView):
-#     """
-#     API View that receives a POST with a user's username and password.
 
-#     Returns a JSON Web Token that can be used for authenticated requests.
-#     """
-
-#     serializer_class = JSONWebTokenSerializer
-
-
-# class VerifyJSONWebTokenView(BaseJSONWebTokenAPIView):
-#     """
-#     API View that checks the validity of a token, returning the token if it
-#     is valid.
-#     """
-
-#     serializer_class = VerifyAuthTokenSerializer
-
-
-# class RefreshJSONWebTokenView(BaseJSONWebTokenAPIView):
-#     """
-#     API View that returns a refreshed token (with new expiration) based on
-#     existing token
-
-#     If 'orig_iat' field (original issued-at-time) is found it will first check
-#     if it's within expiration window, then copy it to the new token.
-#     """
-
-#     serializer_class = RefreshAuthTokenSerializer
-
-
-# class ImpersonateJSONWebTokenView(GenericAPIView):
-#     """
-#     Impersonate the user by retrieving its JWT.
-
-#     By default, the view permits this action only to superusers in order to
-#     be backwards-compatible as much as possible. If you need to customize
-#     the permission handling process, override the `permission_classes` attribute
-#     using `djangorestframework`'s permission system.
-
-#     Returns:
-#         dict: {"token": user's JWT}
-#     """
-
-#     permission_classes = (IsSuperUser, )
-#     serializer_class = ImpersonateAuthTokenSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-
-#         serializer.is_valid(raise_exception=True)
-
-#         token = serializer.validated_data.get("token")
-#         response = Response({"token": token})
-
-#         if api_settings.JWT_IMPERSONATION_COOKIE:
-#             set_cookie_with_token(
-#                 response,
-#                 api_settings.JWT_IMPERSONATION_COOKIE,
-#                 token)
-
-#         return response
-
-
-# obtain_jwt_token = ObtainJSONWebTokenView.as_view()
-# verify_jwt_token = VerifyJSONWebTokenView.as_view()
-# refresh_jwt_token = RefreshJSONWebTokenView.as_view()
-# impersonate_jwt_token = ImpersonateJSONWebTokenView.as_view()
+def logout(request):
+    log_out(request)
+    return_to = urlencode({'returnTo': request.build_absolute_uri('/')})
+    logout_url = 'https://%s/v2/logout?client_id=%s&%s' % \
+                 (settings.SOCIAL_AUTH_AUTH0_DOMAIN, settings.SOCIAL_AUTH_AUTH0_KEY, return_to)
+    return HttpResponseRedirect(logout_url)

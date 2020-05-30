@@ -12,7 +12,7 @@ class RollerCoasterSerializer(serializers.HyperlinkedModelSerializer):
         model = RollerCoaster
         url = serializers.HyperlinkedIdentityField(
             view_name='rollercoaster',
-            lookup_field='id'
+            lookup_field='id',
         )
         fields = ('id', 'url', 'name', 'tracktype', 'max_height', 'max_speed', 'manufacturer', 'park')
         depth = 1

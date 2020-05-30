@@ -8,3 +8,5 @@ from .credit import Credits
 from .user import UserViewSet
 # from .register import register_user
 # from .register import login_user
+# from .connection import Connection
+# from .user import get_user, get_user_email

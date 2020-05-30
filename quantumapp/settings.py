@@ -26,10 +26,45 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # PUT THESE IN THE DOTENV FILE
-AUTH0_CLIENT_ID = {"7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"}
-AUTH0_DOMAIN = {"dev-405n1e6w.auth0.com"}
-AUTH0_CLIENT_SECRET = {"yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"}
-API_IDENTIFIER = {"8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft"}
+# AUTH0 Django Application Settings
+# AUTH0_CLIENT_ID = "7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"
+
+# Quantum-Capstone-API clientID
+AUTH0_CLIENT_ID = "kaXZdymNjopdmrlQpOL5mMBQZyvrSry0"
+
+
+# MANAGEMENT-API - client-id
+# AUTH0_CLIENT_ID = '5e711bac91a8780913c58961'
+
+
+AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
+
+# MANAGEMENT API SECRET
+# AUTH0_CLIENT_SECRET = "yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"
+
+
+# QUANTUMAPI SECRET
+AUTH0_CLIENT_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
+# grant_type":"client_credentials"
+
+API_IDENTIFIER = 'https://api.quantumcoasters.com'
+
+
+# API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
+
+# AUTH0 Django APPLICATION SETTINGS
+# SOCIAL_AUTH_TRAILING_SLASH = False
+# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+# SOCIAL_AUTH_AUTH0_KEY = '7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa'
+# SOCIAL_AUTH_AUTH0_SECRET = 'yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS'
+# SOCIAL_AUTH_AUTH0_SCOPE = [
+#     'openid',
+#     'profile',
+#     'email'
+# ]
+
 
 # THEN LOAD THE ENV VARIABLES LIKE BELOW:
 # ENV_FILE = find_dotenv()
@@ -53,160 +88,105 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'quantumapi',
-    # 'quantumfrontend',
     'cloudinary',
     'rest_framework_jwt',
+    'social_django',
+    # 'drf_queryfields',
+    'django_filters',
 ]
 
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.renderers.JSONRenderer',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-        'rest_framework.permissions.IsAuthenticated',
-
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 20
+        # 'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
 }
+
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework.authentication.BasicAuthentication',
+#         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+#         'rest_framework.authentication.TokenAuthentication',
+#         # 'rest_framework.renderers.JSONRenderer',
+
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',
+#         'rest_framework.permissions.AllowAny',
+
+#     ),
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+#     'PAGE_SIZE': 20
+# }
 
 # USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
 
+
 AUTH_USER_MODEL = 'quantumapi.User'
 
-# Custom Serializers for UserProfile to override Django User model
-# REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'users.serializers.UserProfileSerializer' }
-# AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
-# Custom User to Override and tie Django user to UserProfile
-# AUTHENTICATION_BACKENDS = (
-#     'myproject.auth_backends.UserProfileModelBackend',
-# )
-
+LOGIN_URL = '/login/auth0'
+LOGIN_REDIRECT_URL = '/home'
 
 
 # if AUTH0_DOMAIN:
 #     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
 
-# JWT_AUTH = {
-#     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-#         'auth0authorization.utils.jwt_get_username_from_payload_handler',
-#     'JWT_DECODE_HANDLER':
-#         'auth0authorization.utils.jwt_decode_token',
-#     'JWT_ALGORITHM': 'RS256',
-#     'JWT_AUDIENCE': API_IDENTIFIER,
-#     'JWT_ISSUER': JWT_ISSUER,
-#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-# }
-
-
-
-# DJANGO REST JWT SETTINGS
-# JWT_AUTH = {
-#     'JWT_SECRET_KEY': settings.SECRET_KEY,
-#     'JWT_GET_USER_SECRET_KEY': None,
-#     'JWT_PRIVATE_KEY': None,
-#     'JWT_PUBLIC_KEY': None,
-#     'JWT_ALGORITHM': 'HS256',
-#     # 'JWT_ALGORITHM': 'RS256',
-#     'JWT_AUDIENCE': None,
-#     'JWT_ISSUER': None,
-#     'JWT_ENCODE_HANDLER':
-#         'rest_framework_jwt.utils.jwt_encode_payload',
-#     'JWT_DECODE_HANDLER':
-#         'rest_framework_jwt.utils.jwt_decode_token',
-#     'JWT_PAYLOAD_HANDLER':
-#         'rest_framework_jwt.utils.jwt_create_payload',
-
-#     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-#         'rest_framework_jwt.utils.jwt_get_username_from_payload_handler',
-#     # 'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-#     #     'quantumapi.utils.jwt_get_username_from_payload_handler',
-
-#     'JWT_PAYLOAD_INCLUDE_USER_ID': True,
-#     'JWT_VERIFY': True,
-#     'JWT_VERIFY_EXPIRATION': True,
-#     'JWT_LEEWAY': 0,
-#     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
-#     'JWT_ALLOW_REFRESH': True,
-#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-#     'JWT_RESPONSE_PAYLOAD_HANDLER':
-#         'rest_framework_jwt.utils.jwt_create_response_payload',
-#     'JWT_AUTH_COOKIE': None,
-#     # 'JWT_AUTH_COOKIE': 'quantumapp_token',
-#     # 'JWT_AUTH_COOKIE_DOMAIN': 'http://localhost:8000',
-#     'JWT_AUTH_COOKIE_DOMAIN': None,
-#     'JWT_AUTH_COOKIE_PATH': '/',
-#     'JWT_AUTH_COOKIE_SECURE': True,
-#     'JWT_AUTH_COOKIE_SAMESITE': 'Lax',
-#     'JWT_IMPERSONATION_COOKIE': None,
-#     'JWT_DELETE_STALE_BLACKLISTED_TOKENS': False,
-# }
-
-
-
-
-# DJANGO SIMPLEJWT SETTINGS
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': False,
-    'BLACKLIST_AFTER_ROTATION': True,
-
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-
-    'JTI_CLAIM': 'jti',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+JWT_AUTH = {
+    'JWT_PAYLOAD_GET_USERNAME_HANDLER':
+        'quantumapi.utils.jwt_get_username_from_payload_handler',
+    'JWT_DECODE_HANDLER':
+        'quantumapi.utils.jwt_decode_token',
+    'JWT_ALGORITHM': 'RS256',
+    'JWT_AUDIENCE': API_IDENTIFIER,
+    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 
 
-
-
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.auth.middleware.RemoteUserMiddleware',
-]
-
-
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
-)
+AUTHENTICATION_BACKENDS = {
+    # FOR DJANGO WEB APP BACKEND
+    # 'quantumapi.auth0backend.Auth0',
+    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.RemoteUserBackend',
+}
 
 
 ROOT_URLCONF = 'quantumapp.urls'
+
+
+CORS_ORIGIN_WHITELIST = (
+    # 'http://localhost:8000',
+    # 'http://127.0.0.1:8000',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+)
 
 
 TEMPLATES = [
@@ -227,11 +207,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'quantumapp.wsgi.application'
 
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'django.contrib.auth.backends.RemoteUserBackend',
-]
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -293,6 +268,86 @@ cloudinary.config(
 )
 
 
+# Custom Serializers for UserProfile to override Django User model
+# REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'users.serializers.UserProfileSerializer' }
+# AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
+# Custom User to Override and tie Django user to UserProfile
+# AUTHENTICATION_BACKENDS = (
+#     'myproject.auth_backends.UserProfileModelBackend',
+# )
+
+
+# DJANGO SIMPLEJWT SETTINGS
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': False,
+#     'BLACKLIST_AFTER_ROTATION': True,
+
+#     'ALGORITHM': 'RS256',
+#     'SIGNING_KEY': SECRET_KEY,
+#     'VERIFYING_KEY': None,
+#     'AUDIENCE': None,
+#     'ISSUER': None,
+
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+#     'USER_ID_FIELD': 'id',
+#     'USER_ID_CLAIM': 'user_id',
+
+#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+#     'TOKEN_TYPE_CLAIM': 'token_type',
+
+#     'JTI_CLAIM': 'jti',
+
+#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+# }
+
+
+# DJANGO REST JWT SETTINGS
+# JWT_AUTH = {
+#     'JWT_SECRET_KEY': settings.SECRET_KEY,
+#     'JWT_GET_USER_SECRET_KEY': None,
+#     'JWT_PRIVATE_KEY': None,
+#     'JWT_PUBLIC_KEY': None,
+#     'JWT_ALGORITHM': 'HS256',
+#     # 'JWT_ALGORITHM': 'RS256',
+#     'JWT_AUDIENCE': None,
+#     'JWT_ISSUER': None,
+#     'JWT_ENCODE_HANDLER':
+#         'rest_framework_jwt.utils.jwt_encode_payload',
+#     'JWT_DECODE_HANDLER':
+#         'rest_framework_jwt.utils.jwt_decode_token',
+#     'JWT_PAYLOAD_HANDLER':
+#         'rest_framework_jwt.utils.jwt_create_payload',
+
+#     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
+#         'rest_framework_jwt.utils.jwt_get_username_from_payload_handler',
+#     # 'JWT_PAYLOAD_GET_USERNAME_HANDLER':
+#     #     'quantumapi.utils.jwt_get_username_from_payload_handler',
+
+#     'JWT_PAYLOAD_INCLUDE_USER_ID': True,
+#     'JWT_VERIFY': True,
+#     'JWT_VERIFY_EXPIRATION': True,
+#     'JWT_LEEWAY': 0,
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+#     'JWT_ALLOW_REFRESH': True,
+#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+#     'JWT_RESPONSE_PAYLOAD_HANDLER':
+#         'rest_framework_jwt.utils.jwt_create_response_payload',
+#     'JWT_AUTH_COOKIE': None,
+#     # 'JWT_AUTH_COOKIE': 'quantumapp_token',
+#     # 'JWT_AUTH_COOKIE_DOMAIN': 'http://localhost:8000',
+#     'JWT_AUTH_COOKIE_DOMAIN': None,
+#     'JWT_AUTH_COOKIE_PATH': '/',
+#     'JWT_AUTH_COOKIE_SECURE': True,
+#     'JWT_AUTH_COOKIE_SAMESITE': 'Lax',
+#     'JWT_IMPERSONATION_COOKIE': None,
+#     'JWT_DELETE_STALE_BLACKLISTED_TOKENS': False,
+# }
 
 
 # List of settings that may be in string import notation.

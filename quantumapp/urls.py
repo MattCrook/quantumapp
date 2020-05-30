@@ -25,7 +25,7 @@ from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, U
 
 # Auth0 Paths
 from quantumapi.utils import jwt_decode_token, jwt_get_username_from_payload_handler
-
+from quantumapi import urls
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -41,26 +41,12 @@ router.register(r'users', UserViewSet, 'user')
 
 
 
-
-
-
-#echo API endpoint, to test calls from our front-end...when we would be authorized.
-# class MessageSerializer(serializers.Serializer):
-#     message = serializers.CharField()
-# class EchoView(views.APIView):
-#     def post(self, request, *args, **kwargs):
-#         serializer = MessageSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('', include('quantumapi.urls')),
 
-    # path('', include('quantumapi.urls')),
     path('', include(router.urls)),
 
     path('api/auth/', include('rest_framework.urls', namespace='rest_framework')),
@@ -68,9 +54,8 @@ urlpatterns = [
     path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
 
-
-
     path('', generic.RedirectView.as_view(url='/api/', permanent=False)),
+
     # path('api-token-verify/', verify_jwt_token),
     # path('api-token-auth/', obtain_jwt_token),
     # path('api-token-decode/', jwt_decode_token),

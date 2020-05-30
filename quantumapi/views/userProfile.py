@@ -3,8 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import UserProfile, Credit
-from django.contrib.auth.models import User
+from quantumapi.models import UserProfile, Credit, User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -14,6 +13,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
+from django.conf import settings
+
+
 # from django.conf import settings
 
 
@@ -25,36 +27,39 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'address', 'picUrl', 'credits', )
+        fields = ('id', 'url', 'address', 'picUrl', 'credits', 'user', )
         depth = 1
         extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserProfiles(ViewSet):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     # authentication_classes = [authentication.TokenAuthentication]
 
-    # @csrf_exempt
+    @csrf_exempt
     def create(self, request):
         req_body = json.loads(request.body.decode())
+        print("REQ_BODY", req_body)
+        # user = settings.AUTH_USER_MODEL
 
-        new_user = User.objects.create_user(
+        new_user = User.objects.create(
             first_name=req_body['first_name'],
             last_name=req_body['last_name'],
             username=req_body['username'],
-            password=req_body['password'],
+            # password=req_body['password'],
             email=req_body['email'],
         )
 
         userprofile = UserProfile.objects.create(
             address=req_body['address'],
             picUrl=req_body['picUrl'],
-            rollercoaster_id=req_body['rollercoaster_id'],
+            # credits=req_body['rollerCoaster_id'],
             user=new_user
         )
 
         userprofile.save()
 
+        #calls the manager
         token = Token.objects.create(user=new_user)
         # token = Token.objects.create_userProfile(user=userprofile)
 
@@ -63,47 +68,25 @@ class UserProfiles(ViewSet):
         return HttpResponse(data, content_type='application/json')
 
 
-
-    # def create(self, request):
-    #     # user = User.objects.get(user=request.auth.user)
-    #     user = User.objects.create_user(user=request.auth.user)
-
-    #     first_name = user["first_name"]
-    #     last_name = user["last_name"]
-    #     username = user["username"]
-    #     email = user["email"]
-    #     rollerCoaster_id = Credit.objects.get(pk="credits")
-
-    #     newuserprofile = UserProfile()
-    #     newuserprofile.first_name = first_name
-    #     newuserprofile.last_name = last_name
-    #     newuserprofile.username = username
-    #     newuserprofile.email = email
-    #     newuserprofile.address = request.data["address"]
-    #     newuserprofile.picUrl = request.data["picUrl"]
-    #     newuserprofile.rollerCoaster_id = request.data["rollercoaster_id"]
-
-    #     newuserprofile.save()
-    #     serializer = UserProfileSerializer(newuserprofile, context={'request': request})
-    #     return Response(serializer.data)
-
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
+            # email = User.objects.get(pk=request.data["email"])
+            # userprofile = UserProfile.objects.filter(email=email)
             serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+
     def update(self, request, pk=None):
-        user = User.objects.get(user=request.auth.user)
+        user = User.objects.get(user=settings.AUTH_USER_MODEL)
         userprofile = UserProfile.objects.get(pk=pk)
         rollercoaster_credits = Credit.objects.get(pk=request.data["credits"])
         first_name = user["first_name"]
         last_name = user["last_name"]
         username = user["username"]
         email = user["email"]
-
 
         userprofile.first_name = first_name
         userprofile.last_name = last_name
@@ -130,33 +113,64 @@ class UserProfiles(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
     def list(self, request):
         userprofiles = UserProfile.objects.all()
-        # userprofiles = UserProfile.objects.filter()
+        
+        # userprofiles = UserProfile.objects.filter(address__lte='123456Testing')
+        print("USERPROFILES", userprofiles)
+        print("REQUEST", request)
+
+
         serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
         return Response(serializer.data)
 
-    # @csrf_exempt
-    def login_user(self, request):
+# @csrf_exempt
+# def login_user(self, request):
 
-        req_body = json.loads(request.body.decode())
+#     req_body = json.loads(request.body.decode())
 
-        # If the request is a HTTP POST, try to pull out the relevant information.
-        if request.method == 'POST':
+#     # If the request is a HTTP POST, try to pull out the relevant information.
+#     if request.method == 'POST':
 
-            # Use the built-in authenticate method to verify
-            username = req_body['username']
-            password = req_body['password']
-            authenticated_user = authenticate(username=username, password=password)
+#         # Use the built-in authenticate method to verify
+#         username = req_body['username']
+#         password = req_body['password']
+#         authenticated_user = authenticate(
+#             username=username, password=password)
 
-            # If authentication was successful, respond with their token
-            if authenticated_user is not None:
-                token = Token.objects.get(user=authenticated_user)
-                data = json.dumps({"valid": True, "token": token.key})
-                return HttpResponse(data, content_type='application/json')
+#         # If authentication was successful, respond with their token
+#         print("AUTHENTIATED USER", authenticated_user)
+#         if authenticated_user is not None:
+#             token = Token.objects.get(user=authenticated_user)
+#             data = json.dumps({"valid": True, "token": token.key})
+#             return HttpResponse(data, content_type='application/json')
 
-            else:
-                # Bad login details were provided. So we can't log the user in.
-                data = json.dumps({"valid": False})
-                return HttpResponse(data, content_type='application/json')
+#         else:
+#             # Bad login details were provided. So we can't log the user in.
+#             data = json.dumps({"valid": False})
+#             return HttpResponse(data, content_type='application/json')
+
+
+
+    # def create(self, request):
+    #     # user = User.objects.get(user=request.auth.user)
+    #     user = User.objects.create_user(user=request.auth.user)
+
+    #     first_name = user["first_name"]
+    #     last_name = user["last_name"]
+    #     username = user["username"]
+    #     email = user["email"]
+    #     rollerCoaster_id = Credit.objects.get(pk="credits")
+
+    #     newuserprofile = UserProfile()
+    #     newuserprofile.first_name = first_name
+    #     newuserprofile.last_name = last_name
+    #     newuserprofile.username = username
+    #     newuserprofile.email = email
+    #     newuserprofile.address = request.data["address"]
+    #     newuserprofile.picUrl = request.data["picUrl"]
+    #     newuserprofile.rollerCoaster_id = request.data["rollercoaster_id"]
+
+    #     newuserprofile.save()
+    #     serializer = UserProfileSerializer(newuserprofile, context={'request': request})
+    #     return Response(serializer.data)
