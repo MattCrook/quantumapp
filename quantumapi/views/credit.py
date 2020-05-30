@@ -51,12 +51,13 @@ class Credits(ViewSet):
 
 
     def create(self, request):
-        rollercoaster = RollerCoaster.objects.get(pk=request.data["rollercoaster_id"])
-        userprofile = UserProfile.objects.get(pk=request.data["userprofile_id"])
-
+        print("REQDATA", request.data)
         new_credit = Credit()
-        new_credit.userprofile = userprofile
-        new_credit.rollercoaster = rollercoaster
+        rollercoaster = RollerCoaster.objects.get(pk=request.data["rollerCoaster_id"])
+        userprofile = UserProfile.objects.get(pk=request.data["userProfile_id"])
+
+        new_credit.userProfile = userprofile
+        new_credit.rollerCoaster = rollercoaster
 
         new_credit.save()
         serializer = CreditsSerializer(new_credit, context={'request': request})
@@ -64,16 +65,16 @@ class Credits(ViewSet):
         return Response(serializer.data)
 
 
-    def update(self, request):
-        credit = Credit.objects.get(pk=pk)
-        rollercoaster = RollerCoaster.objects.get(pk=request.data["rollercoaster_id"])
-        userprofile = UserProfile.objects.get(pk=request.data["userprofile_id"])
+    # def update(self, request):
+    #     credit = Credit.objects.get(pk=pk)
+    #     rollercoaster = RollerCoaster.objects.get(pk=request.data["rollercoaster_id"])
+    #     userprofile = UserProfile.objects.get(pk=request.data["userprofile_id"])
 
-        credit.userprofile = userprofile
-        credit.rollercoaster = rollercoaster
+    #     credit.userprofile = userprofile
+    #     credit.rollercoaster = rollercoaster
 
-        credit.save()
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+    #     credit.save()
+    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
     def destroy(self, request, pk=None):

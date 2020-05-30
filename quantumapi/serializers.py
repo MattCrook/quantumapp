@@ -13,8 +13,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         email=serializers.SerializerMethodField()
-        fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username', 'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', )
+        fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username', 'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'userprofile', )
         extra_kwargs = {'password': {'write_only': True}}
+        depth = 1
 
     def create(self, validated_data):
         # password was .pop()...need the password for the DB...was loosing it at registration.
