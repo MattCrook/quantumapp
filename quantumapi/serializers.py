@@ -3,10 +3,6 @@ from quantumapi.models import User, UserProfile
 from rest_framework.serializers import ModelSerializer
 # from drf_queryfields import QueryFieldsMixin
 
-# Base model serializer for QueryFields
-# class MyModelSerializer(QueryFieldsMixin, ModelSerializer):
-#     pass
-
 
 
 class UserSerializer(serializers.ModelSerializer):

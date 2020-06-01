@@ -20,10 +20,11 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
 
 class Manufacturers(ViewSet):
     def create(self, request):
+        print("MANREQDATA", request.data)
         newmanufacturer = Manufacturer()
         newmanufacturer.name = request.data["name"]
         newmanufacturer.origin_country = request.data["origin_country"]
-        newmanufacturer.company_website = request.data["company_website"]
+        newmanufacturer.company_website = request.data["manufacture_url"]
 
         newmanufacturer.save()
         serializer = ManufacturerSerializer(newmanufacturer, context={'request': request})
@@ -61,5 +62,8 @@ class Manufacturers(ViewSet):
 
     def list(self, request):
         manufacturers = Manufacturer.objects.all()
+        name = self.request.query_params.get('name', None)
+        if name is not None:
+            manufacturers = manufacturers.filter(name=name)
         serializer = ManufacturerSerializer(manufacturers, many=True, context={'request': request})
         return Response(serializer.data)

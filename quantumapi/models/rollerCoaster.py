@@ -10,11 +10,11 @@ from .trackType import Tracktype
 class RollerCoaster(models.Model):
 
     name = models.CharField(max_length=50)
-    tracktype = models.ForeignKey(Tracktype, related_name='rollercoasters', on_delete=models.CASCADE)
+    tracktype = models.ForeignKey(Tracktype, related_name='rollercoasters', null=True, blank=True, on_delete=models.CASCADE)
     max_height = models.CharField(max_length=50)
     max_speed = models.CharField(max_length=50)
-    manufacturer = models.ForeignKey(Manufacturer, related_name='rollercoasters', on_delete=models.CASCADE)
-    park = models.ForeignKey(Park, related_name='rollercoasters', on_delete=models.CASCADE)
+    manufacturer = models.ForeignKey(Manufacturer, related_name='rollercoasters', null=True, on_delete=models.CASCADE)
+    park = models.ForeignKey(Park, related_name='rollercoasters', null=True, on_delete=models.CASCADE)
     user_credit_id = models.ManyToManyField("UserProfile", through="Credit",)
 
     class Meta:

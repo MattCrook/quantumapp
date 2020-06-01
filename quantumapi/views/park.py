@@ -28,6 +28,7 @@ class Parks(ViewSet):
         serializer = ParkSerializer(newpark, context={'request': request})
         return Response(serializer.data)
 
+
     def retrieve(self, request, pk=None):
         try:
             park = Park.objects.get(pk=pk)
@@ -36,6 +37,7 @@ class Parks(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+
     def update(self, request, pk=None):
         park = Park.objects.get(pk=pk)
         park.name = request.data["name"]
@@ -43,6 +45,7 @@ class Parks(ViewSet):
         park.parkCountry = request.data["parkCountry"]
         park.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
     def destroy(self, request, pk=None):
         try:
@@ -56,8 +59,12 @@ class Parks(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
     def list(self, request):
         parks = Park.objects.all()
+        name = self.request.query_params.get('name', None)
+        if name is not None:
+            parks = parks.filter(name=name)
         serializer = ParkSerializer(
             parks, many=True, context={'request': request})
         return Response(serializer.data)
