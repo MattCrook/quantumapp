@@ -61,5 +61,8 @@ class Manufacturers(ViewSet):
 
     def list(self, request):
         manufacturers = Manufacturer.objects.all()
+        name = self.request.query_params.get('name', None)
+        if name is not None:
+            manufacturers = manufacturers.filter(name=name)
         serializer = ManufacturerSerializer(manufacturers, many=True, context={'request': request})
         return Response(serializer.data)

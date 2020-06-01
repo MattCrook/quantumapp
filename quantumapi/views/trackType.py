@@ -1,9 +1,11 @@
 from django.http import HttpResponseServerError
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Tracktype
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 
 class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -19,6 +21,11 @@ class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Tracktypes(ViewSet):
+    # queryset = Tracktype.objects.all()
+    # serializer_class = TracktypeSerializer
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['name']
+
     def create(self, request):
         newtracktype = Tracktype()
         newtracktype.name = request.data["name"]
@@ -56,5 +63,12 @@ class Tracktypes(ViewSet):
 
     def list(self, request):
         tracktypes = Tracktype.objects.all()
+
+        # If name is provided as a query parameter, then filter list by track name
+        name = self.request.query_params.get('name', None)
+        if name is not None:
+            tracktypes = tracktypes.filter(name=name)
+
+
         serializer = TracktypeSerializer(tracktypes, many=True, context={'request': request})
         return Response(serializer.data)
