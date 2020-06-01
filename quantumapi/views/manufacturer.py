@@ -20,10 +20,11 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
 
 class Manufacturers(ViewSet):
     def create(self, request):
+        print("MANREQDATA", request.data)
         newmanufacturer = Manufacturer()
         newmanufacturer.name = request.data["name"]
         newmanufacturer.origin_country = request.data["origin_country"]
-        newmanufacturer.company_website = request.data["company_website"]
+        newmanufacturer.company_website = request.data["manufacture_url"]
 
         newmanufacturer.save()
         serializer = ManufacturerSerializer(newmanufacturer, context={'request': request})

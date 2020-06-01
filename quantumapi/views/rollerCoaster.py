@@ -3,7 +3,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import RollerCoaster
+from quantumapi.models import RollerCoaster, Manufacturer, Tracktype, Park
 
 
 class RollerCoasterSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,13 +20,20 @@ class RollerCoasterSerializer(serializers.HyperlinkedModelSerializer):
 
 class RollerCoasters(ViewSet):
     def create(self, request):
+        print("REQDATA", request.data)
         newrollercoaster = RollerCoaster()
+        manufacturer = Manufacturer.objects.get(pk=request.data["manufacturerId"])
+        tracktype = Tracktype.objects.get(pk=request.data["trackTypeId"])
+        park = Park.objects.get(pk=request.data["parkId"])
+
         newrollercoaster.name = request.data["name"]
-        newrollercoaster.trackType = request.data["name"]
+        newrollercoaster.tracktype = tracktype
         newrollercoaster.max_height = request.data["max_height"]
         newrollercoaster.max_speed = request.data["max_speed"]
-        newrollercoaster.manufacturer = request.data["manufacturer"]
-        newrollercoaster.park = request.data["park"]
+        newrollercoaster.manufacturer = manufacturer
+        newrollercoaster.park = park
+
+        
 
 
 
@@ -42,18 +49,18 @@ class RollerCoasters(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-    def update(self, request, pk=None):
-        rollercoaster = RollerCoaster.objects.get(pk=pk)
+    # def update(self, request, pk=None):
+    #     rollercoaster = RollerCoaster.objects.get(pk=pk)
 
-        rollercoaster.name = request.data["name"]
-        rollercoaster.trackType = request.data["name"]
-        rollercoaster.max_height = request.data["max_height"]
-        rollercoaster.max_speed = request.data["max_speed"]
-        rollercoaster.manufacturer = request.data["manufacturer"]
-        rollercoaster.park = request.data["park"]
+    #     rollercoaster.name = request.data["name"]
+    #     rollercoaster.trackType = request.data["name"]
+    #     rollercoaster.max_height = request.data["max_height"]
+    #     rollercoaster.max_speed = request.data["max_speed"]
+    #     rollercoaster.manufacturer = request.data["manufacturer"]
+    #     rollercoaster.park = request.data["park"]
 
-        rollercoaster.save()
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+    #     rollercoaster.save()
+    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         try:

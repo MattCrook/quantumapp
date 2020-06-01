@@ -8,7 +8,7 @@ from django.dispatch import receiver
 class Manufacturer(models.Model):
 
     name = models.CharField(max_length=50)
-    origin_country = models.CharField(max_length=50)
+    origin_country = models.CharField(max_length=50, null=True, blank=True)
     company_website = models.CharField(null=True, blank=True, max_length=50)
 
 
