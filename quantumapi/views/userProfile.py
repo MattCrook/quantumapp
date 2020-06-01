@@ -19,15 +19,15 @@ from django.conf import settings
 # from django.conf import settings
 
 
-class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        url = serializers.HyperlinkedIdentityField(
-            view_name='userprofile',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'address', 'picUrl', 'credits', 'user', )
+        # url = serializers.HyperlinkedIdentityField(
+        #     view_name='userprofile',
+        #     lookup_field='id'
+        # )
+        fields = ('id', 'address', 'picUrl', 'credits', 'user', )
         depth = 1
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -39,7 +39,6 @@ class UserProfiles(ViewSet):
     @csrf_exempt
     def create(self, request):
         req_body = json.loads(request.body.decode())
-        print("REQ_BODY", req_body)
         # user = settings.AUTH_USER_MODEL
 
         new_user = User.objects.create(
@@ -72,8 +71,7 @@ class UserProfiles(ViewSet):
             userprofile = UserProfile.objects.get(pk=pk)
             # email = User.objects.get(pk=request.data["email"])
             # userprofile = UserProfile.objects.filter(email=email)
-            serializer = UserProfileSerializer(
-                userprofile, context={'request': request})
+            serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -117,8 +115,7 @@ class UserProfiles(ViewSet):
         userprofiles = UserProfile.objects.all()
 
         # userprofiles = UserProfile.objects.filter(address__lte='123456Testing')
-        print("USERPROFILES", userprofiles)
-        print("REQUEST", request)
+
         serializer = UserProfileSerializer(
             userprofiles, many=True, context={'request': request})
         return Response(serializer.data)
