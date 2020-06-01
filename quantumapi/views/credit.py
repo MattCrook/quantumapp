@@ -6,16 +6,19 @@ from rest_framework import status
 from quantumapi.models import Credit, RollerCoaster, UserProfile
 from django.contrib.auth.models import User
 
+from django.http.response import JsonResponse
 
-class CreditsSerializer(serializers.HyperlinkedModelSerializer):
+
+
+class CreditsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Credit
-        url = serializers.HyperlinkedIdentityField(
-            view_name='credit',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'userProfile', 'rollerCoaster', )
+        # url = serializers.HyperlinkedIdentityField(
+        #     view_name='credit',
+        #     lookup_field='id'
+        # )
+        fields = ('id', 'userProfile', 'rollerCoaster', )
         depth = 0
 
 
@@ -31,32 +34,25 @@ class Credits(ViewSet):
 
 
     # Handle GET request to Credits resource.
-    # Would be a GET request to UserProfile resource and need to GET all credits the user has."""
     def list(self, request):
 
-        # all_credits = list(Credit.objects.all())
-        # print("ALLCREDITS", all_credits)
-        # all_userprofiles = UserProfile.objects.all()
+        all_credits = Credit.objects.all()
 
         # If credits is provided as a query parameter, then filter list of credits by userprofile id
         # credit = self.request.query_params.get('profile', None)
         # Get the extended table of user with the user profile table
-        # user_profile = request.user.profile
 
-        userprofile = UserProfile.objects.get(pk=request.user.profile.id)
-        user_credits = Credit.objects.filter(userProfile=userprofile)
-
-        serializer = CreditsSerializer(user_credits, many=True, context={'request': request})
+        serializer = CreditsSerializer(all_credits, many=True, context={'request': request})
         return Response(serializer.data)
 
 
     def create(self, request):
-        rollercoaster = RollerCoaster.objects.get(pk=request.data["rollercoaster_id"])
-        userprofile = UserProfile.objects.get(pk=request.data["userprofile_id"])
-
         new_credit = Credit()
-        new_credit.userprofile = userprofile
-        new_credit.rollercoaster = rollercoaster
+        rollercoaster = RollerCoaster.objects.get(pk=request.data["rollerCoaster_id"])
+        userprofile = UserProfile.objects.get(pk=request.data["userProfile_id"])
+
+        new_credit.userProfile = userprofile
+        new_credit.rollerCoaster = rollercoaster
 
         new_credit.save()
         serializer = CreditsSerializer(new_credit, context={'request': request})
@@ -64,16 +60,16 @@ class Credits(ViewSet):
         return Response(serializer.data)
 
 
-    def update(self, request):
-        credit = Credit.objects.get(pk=pk)
-        rollercoaster = RollerCoaster.objects.get(pk=request.data["rollercoaster_id"])
-        userprofile = UserProfile.objects.get(pk=request.data["userprofile_id"])
+    # def update(self, request):
+    #     credit = Credit.objects.get(pk=pk)
+    #     rollercoaster = RollerCoaster.objects.get(pk=request.data["rollercoaster_id"])
+    #     userprofile = UserProfile.objects.get(pk=request.data["userprofile_id"])
 
-        credit.userprofile = userprofile
-        credit.rollercoaster = rollercoaster
+    #     credit.userprofile = userprofile
+    #     credit.rollercoaster = rollercoaster
 
-        credit.save()
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+    #     credit.save()
+    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
     def destroy(self, request, pk=None):

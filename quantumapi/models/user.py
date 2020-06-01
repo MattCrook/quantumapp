@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 import django.utils.timezone
 
 # from django.contrib.auth.models import PermissionsMixin
-# from .userProfile import UserProfile
 # from quantumapi.usermanager import UserManager
 
 
@@ -18,6 +17,7 @@ class User(AbstractUser):
     username = models.CharField(('username'), max_length=50, unique=True)
     email = models.CharField(('email'), unique=True, max_length=50)
     password = models.CharField(('password'), max_length=50, unique=True)
+    userprofile = models.OneToOneField("UserProfile", related_name="authuser", null=True, on_delete=models.CASCADE, )
 
     # USERNAME_FIELD = A string describing the name of the field on the User model that is used as the unique identifier.
     # The field must be unique (i.e., have unique=True set in its definition);
