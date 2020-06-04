@@ -33,10 +33,6 @@ class RollerCoasters(ViewSet):
         newrollercoaster.manufacturer = manufacturer
         newrollercoaster.park = park
 
-        
-
-
-
         newrollercoaster.save()
         serializer = RollerCoasterSerializer(newrollercoaster, context={'request': request})
         return Response(serializer.data)
