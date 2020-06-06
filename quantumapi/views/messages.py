@@ -21,9 +21,9 @@ class MessagesSerializer(serializers.HyperlinkedModelSerializer):
 class Message(ViewSet):
     def create(self, request):
         newmessage = Messages()
+        newmessage.user_id = request.data["user_id"]
         newmessage.message = request.data["message"]
         newmessage.timestamp = request.data["timestamp"]
-        newmessage.user_id = request.data["user_id"]
 
         newmessage.save()
         serializer = MessagesSerializer(newmessage, context={'request': request})
@@ -39,9 +39,9 @@ class Message(ViewSet):
 
     def update(self, request, pk=None):
         message = Messages.objects.get(pk=pk)
+        message.user_id = request.data["user_id"]
         message.message = request.data["message"]
         message.timestamp = request.data["timestamp"]
-        message.user_id = request.data["user_id"]
 
         message.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)

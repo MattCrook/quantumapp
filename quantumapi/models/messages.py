@@ -9,11 +9,10 @@ from .userProfile import UserProfile
 class Messages(models.Model):
 
     message = models.CharField(max_length=50)
-    timestamp = models.DateField()
+    timestamp = models.DateField(null=True)
     user = models.ForeignKey(
         UserProfile,
         null=True,
-        blank=True,
         on_delete=models.CASCADE)
 
     class Meta:

@@ -73,3 +73,27 @@ class UserViewSet(viewsets.ModelViewSet):
 #             "user_email": user_email,
 #         }
 #         return Response(context)
+
+
+
+       # this loop will count how many products are in the order_product table specifically ones where the paymenttypeid is not null
+        # meaning the user has paid for the product.
+        # for product in products:
+
+        #     productsSold = OrderProduct.objects.raw('''SELECT
+        #     op.id opId,
+        #     op.order_id,
+        #     op.product_id,
+        #     o.id,
+        #     o.created_at
+        #     from ecommerceapi_orderproduct op
+        #     left join ecommerceapi_order o on  op.order_id = o.id
+        #     where o.payment_type_id Not NULL and product_id = %s
+        #     order by product_id''',
+        #         [product.id])
+
+        #     count = len(list(productsSold))
+        #     product.amount_sold = count
+
+        # serializer = ProductSerializer(
+        #     products, many=True, context={"request": request})
