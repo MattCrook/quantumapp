@@ -13,7 +13,6 @@ class Messages(models.Model):
     user = models.ForeignKey(
         UserProfile,
         null=True,
-        blank=True,
         on_delete=models.CASCADE)
 
     class Meta:
