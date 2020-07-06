@@ -11,8 +11,6 @@ from django.http import HttpResponseServerError
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 
-
-
 import sqlite3
 import datetime
 from django.urls import reverse
@@ -51,6 +49,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user.email = validated_data.get('email')
         user.set_password(password)
         user.save()
+        print("USER", user)
         return user
 
 

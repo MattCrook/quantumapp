@@ -39,15 +39,17 @@ class UserProfiles(ViewSet):
     @csrf_exempt
     def create(self, request):
         req_body = json.loads(request.body.decode())
+        print("REqBODY", req_body)
         # user = settings.AUTH_USER_MODEL
 
         new_user = User.objects.create(
             first_name=req_body['first_name'],
             last_name=req_body['last_name'],
             username=req_body['username'],
-            # password=req_body['password'],
+            # password=,
             email=req_body['email'],
         )
+
 
         userprofile = UserProfile.objects.create(
             address=req_body['address'],
@@ -55,7 +57,7 @@ class UserProfiles(ViewSet):
             # credits=req_body['rollerCoaster_id'],
             user=new_user
         )
-        userprofile.save()
+        new_user.save()
 
         # calls the manager
         token = Token.objects.create(user=new_user)
