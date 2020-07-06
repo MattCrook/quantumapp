@@ -23,10 +23,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        # url = serializers.HyperlinkedIdentityField(
-        #     view_name='userprofile',
-        #     lookup_field='id'
-        # )
+        url = serializers.HyperlinkedIdentityField(
+            view_name='userprofile',
+            lookup_field='id'
+        )
         fields = ('id', 'address', 'picUrl', 'credits', 'user', )
         depth = 1
         extra_kwargs = {'password': {'write_only': True}}
@@ -39,15 +39,17 @@ class UserProfiles(ViewSet):
     @csrf_exempt
     def create(self, request):
         req_body = json.loads(request.body.decode())
+        print("REqBODY", req_body)
         # user = settings.AUTH_USER_MODEL
 
         new_user = User.objects.create(
             first_name=req_body['first_name'],
             last_name=req_body['last_name'],
             username=req_body['username'],
-            # password=req_body['password'],
+            # password=,
             email=req_body['email'],
         )
+
 
         userprofile = UserProfile.objects.create(
             address=req_body['address'],
@@ -55,8 +57,7 @@ class UserProfiles(ViewSet):
             # credits=req_body['rollerCoaster_id'],
             user=new_user
         )
-
-        userprofile.save()
+        new_user.save()
 
         # calls the manager
         token = Token.objects.create(user=new_user)
@@ -77,26 +78,16 @@ class UserProfiles(ViewSet):
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-        print("REQDATA", request.data)
-        # user = User.objects.get(user=settings.AUTH_USER_MODEL)
-        # userprofile = UserProfile.objects.get(pk=pk)
-        # rollercoaster_credits = Credit.objects.get(pk=request.data["credits"])
-        # user.first_name = request.data["first_name"]
-        # user.last_name = request.data["last_name"]
-        # user.username = request.data["username"]
-        # user.email = request.data["email"]
+        userprofile = UserProfile.objects.get(pk=pk)
+        # user = User.objects.get(user=userprofile)
 
-        # user.first_name = first_name
-        # user.last_name = last_name
-        # user.username = username
-        # user.email = email
-        # userprofile.address = request.data["address"]
-        # userprofile.picUrl = request.data["picUrl"]
-        # userprofile.rollerCoaster_id = rollercoaster_credits
+        userprofile.address = request.data["address"]
+        userprofile.picUrl = request.data["picUrl"]
+        # userprofile.user = request.data["profile"]
 
         # # saving userprofile should also save and update the User table.
         # # Find on UserProfile models. They are linked together.
-        # userprofile.save()
+        userprofile.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
