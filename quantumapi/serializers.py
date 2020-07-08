@@ -1,17 +1,17 @@
-from rest_framework import serializers
-from quantumapi.models import User, UserProfile
-from rest_framework.serializers import ModelSerializer
-# from drf_queryfields import QueryFieldsMixin
+# from rest_framework import serializers
+# from quantumapi.models import User, UserProfile
+# from rest_framework.serializers import ModelSerializer
+# # from drf_queryfields import QueryFieldsMixin
 
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        email=serializers.SerializerMethodField()
-        fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username', 'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'userprofile', )
-        extra_kwargs = {'password': {'write_only': True}}
-        depth = 1
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         email=serializers.SerializerMethodField()
+#         fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username', 'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'userprofile', )
+#         # extra_kwargs = {'password': {'write_only': True}}
+#         depth = 1
 
     # def create(self, validated_data):
     #     # password was .pop()...need the password for the DB...was loosing it at registration.

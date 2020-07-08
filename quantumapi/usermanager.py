@@ -1,6 +1,6 @@
-from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.base_user import BaseUserManager
-from quantumapi.models import UserProfile, User
+# from django.utils.translation import ugettext_lazy as _
+# from django.contrib.auth.base_user import BaseUserManager
+# from quantumapi.models import UserProfile, User
 
 
 

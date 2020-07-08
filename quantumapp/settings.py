@@ -3,9 +3,9 @@ import datetime
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 # from rest_framework.settings import APISettings
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
 from datetime import timedelta
 # import dotenv
 
@@ -88,7 +88,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'quantumapi',
-    'cloudinary',
     'rest_framework_jwt',
     'social_django',
     # 'drf_queryfields',
@@ -147,9 +146,8 @@ REST_FRAMEWORK = {
 
 # USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
 
-
-AUTH_USER_MODEL = 'quantumapi.User'
-
+# Custom User Model - models.User/ views.UserViewset
+# AUTH_USER_MODEL = 'quantumapi.User'
 
 LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'
@@ -182,8 +180,7 @@ ROOT_URLCONF = 'quantumapp.urls'
 
 
 CORS_ORIGIN_WHITELIST = (
-    # 'http://localhost:8000',
-    # 'http://127.0.0.1:8000',
+    'http://localhost:8000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
 )
@@ -256,17 +253,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-# MEDIA_ROOT =
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-CLOUDINARY_URL = "cloudinary://418576712586226:IaXis96Iz93J6NH7PTrU1clKpGM@capstone-project"
 
 
-cloudinary.config(
-    cloud_name="capstone-project",
-    api_key="418576712586226",
-    api_secret="IaXis96Iz93J6NH7PTrU1clKpGM"
-)
 
+
+
+
+
+# CLOUDINARY_URL = "cloudinary://418576712586226:IaXis96Iz93J6NH7PTrU1clKpGM@capstone-project"
+
+
+# cloudinary.config(
+#     cloud_name="capstone-project",
+#     api_key="418576712586226",
+#     api_secret="IaXis96Iz93J6NH7PTrU1clKpGM"
+# )
 
 # Custom Serializers for UserProfile to override Django User model
 # REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'users.serializers.UserProfileSerializer' }
