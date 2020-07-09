@@ -6,8 +6,10 @@
 # from django.core.mail import send_mail
 # import django.utils.timezone
 
+# from django.contrib.auth.models import UserManager
+# from django.contrib.auth.models import User
+
 # # from django.contrib.auth.models import PermissionsMixin
-# # from quantumapi.usermanager import UserManager
 
 
 

@@ -9,6 +9,8 @@
 # from rest_framework.schemas import get_schema_view
 
 from django.contrib import admin
+# from django.contrib.auth.views import UserModel
+
 from rest_framework import routers
 from django.conf.urls import url, include
 from django.urls import path
@@ -40,7 +42,7 @@ router.register(r'rollercoasters', RollerCoasters, 'rollercoaster')
 router.register(r'userprofiles', UserProfiles, 'userprofile')
 router.register(r'credits', Credits, 'credit')
 router.register(r'messages', Message, 'messages')
-# router.register(r'users', Users, 'user')
+router.register(r'users', Users, 'user')
 
 
 

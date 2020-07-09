@@ -15,7 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.conf import settings
-
+from django.contrib.auth.models import User
+from .user import UserSerializer
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
@@ -25,7 +26,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'address', 'picUrl', 'credits', 'user', )
+        fields = ('id', 'address', 'image', 'credits', 'user', )
         depth = 1
         # extra_kwargs = {'password': {'write_only': True}}
 
@@ -35,11 +36,17 @@ class UserProfiles(ViewSet):
     # authentication_classes = [authentication.TokenAuthentication]
 
     def list(self, request):
-        userprofiles = UserProfile.objects.all()
-
-        serializer = UserProfileSerializer(
-            userprofiles, many=True, context={'request': request})
-        return Response(serializer.data)
+        try:
+            userprofiles = UserProfile.objects.all()
+            email = self.request.query_params.get('email', None)
+            if email is not None:
+                auth_user = User.objects.filter(email=email)
+                serializer = UserSerializer(auth_user, many=True, context={'request': request})
+            else:
+                serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
 
     def retrieve(self, request, pk=None):
