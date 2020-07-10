@@ -8,6 +8,7 @@ from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN
 
 
 def jwt_get_username_from_payload_handler(payload):
+    print("PAY", payload)
     username = payload.get('sub').replace('|', '.')
     authenticate(remote_user=username)
     return username

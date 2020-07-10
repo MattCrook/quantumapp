@@ -25,7 +25,7 @@ from rest_framework import views, serializers, status
 from rest_framework.response import Response
 from quantumapi.models import *
 
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images
 from quantumapi.views import login_user, register_user, get_user
 # from quantumapi import urls
 
@@ -43,6 +43,7 @@ router.register(r'userprofiles', UserProfiles, 'userprofile')
 router.register(r'credits', Credits, 'credit')
 router.register(r'messages', Message, 'messages')
 router.register(r'users', Users, 'user')
+router.register(r'images', Images, 'image')
 
 
 
@@ -54,7 +55,8 @@ urlpatterns = [
     path('register/', register_user),
     path('login/', login_user),
     path('get_user/', get_user),
-    # path('', include('quantumapi.urls')),
+    path('', include('quantumapi.urls')),
+    # path('auth/', include('rest_auth.urls')),
 
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # path('api-token-auth/', obtain_auth_token),
@@ -64,7 +66,6 @@ urlpatterns = [
     path('api/login/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify', jwt_views.TokenVerifyView.as_view(), name='token_verify'),
-
     path('', generic.RedirectView.as_view(url='/api/', permanent=False)),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

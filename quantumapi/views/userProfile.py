@@ -17,6 +17,8 @@ from django.contrib.auth import login, authenticate
 from django.conf import settings
 from django.contrib.auth.models import User
 from .user import UserSerializer
+# from quantumapi.models import ImageForm
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
@@ -28,7 +30,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         )
         fields = ('id', 'address', 'image', 'credits', 'user', )
         depth = 1
-        # extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserProfiles(ViewSet):
@@ -39,11 +41,17 @@ class UserProfiles(ViewSet):
         try:
             userprofiles = UserProfile.objects.all()
             email = self.request.query_params.get('email', None)
+            user_id = self.request.query_params.get('userId', None)
+
             if email is not None:
                 auth_user = User.objects.filter(email=email)
                 serializer = UserSerializer(auth_user, many=True, context={'request': request})
+            elif user_id is not None:
+                userprofile = UserProfile.objects.filter(user_id=user_id)
+                serializer = UserProfileSerializer(userprofile, many=True, context={'request': request})
             else:
                 serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
+
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -59,27 +67,136 @@ class UserProfiles(ViewSet):
 
 
     def update(self, request, pk=None):
+
         userprofile = UserProfile.objects.get(pk=pk)
-        user_id = userprofile.user_id
+        userprofile_user_id = userprofile.user_id
         image_id = userprofile.image_id
-
         image = Image.objects.get(pk=image_id)
-        user = User.objects.get(pk=user_id)
+        # email = self.request.query_params.get('email', None)
 
-        userprofile.address = request.data["address"]
-        userprofile.save()
+        # Checking url if email is passed in then we are looking at the auth user resource
+        # if email is not None:
 
-        image.image = request.data["picUrl"]
-        image.save()
-
+        user = User.objects.get(pk=userprofile_user_id)
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
         user.username = request.data["username"]
         user.save()
 
+        image.image = request.FILES["image"]
+        image.save()
+
+        userprofile.address = request.data["address"]
+        userprofile.image = image.id
+        userprofile.user = user
+        # userprofile.image_id = image_id
+        userprofile.save()
+
+        # image.image = request.data["picUrl"]
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+    def create(self, request):
+        print("REQ", request.data)
+        print(request.user)
+        # new_image = Image.objects.get(pk=request.data["image"])
+
+
+        new_userprofile = UserProfile()
+        new_userprofile.address = request.data["address"]
+        new_userprofile.credits = request.data["credits"]
+        # new_userprofile.image = new_image
+        new_userprofile.save()
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        # elif request.method == 'POST':
+        #     form_data = request.POST
+        #     if ('actual_method' in form_data and form_data['actual_method'] == 'PUT'):
+        #         userprofile = UserProfile.objects.get(pk=pk)
+        #         userprofile_user_id = userprofile.user_id
+        #         image_id = userprofile.image_id
+        #         user = User.objects.get(pk=userprofile_user_id)
+        #         email = self.request.query_params.get('email', None)
+
+        #         # if request.FILES:
+        #         #     userprofile.image_path = request.FILES["image_path"]
+        #         image = ImageForm(request.POST, request.FILES)
+        #         user.first_name = form_data["first_name"]
+        #         user.last_name = form_data["last_name"]
+        #         user.username = form_data["username"]
+        #         userprofile.address = form_data["address"]
+        #         image.save()
+
+        #         img_obj = image.instance
+        #         img_obj.image = request.FILES["image"]
+        #         image.save()
+
+        #         userprofile.image_id = img_obj.id
+        #         user.save()
+        #         userprofile.save()
+
+        #     return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+        # If we have an image(profile pic)
+        # if userprofile.image_id is not None:
+        #     image_id = userprofile.image_id
+        #     image = Image.objects.get(pk=image_id)
+        #     user = User.objects.get(pk=user_id)
+
+        #     userprofile.address = request.data["address"]
+        #     userprofile.image_id = image_id
+        #     userprofile.save()
+
+        #     image.image = request.data["picUrl"]
+        #     image.save()
+
+        #     if email is not None:
+        #         user.first_name = request.data["first_name"]
+        #         user.last_name = request.data["last_name"]
+        #         user.username = request.data["username"]
+        #         user.save()
+        # else:
+        #     user = User.objects.get(pk=user_id)
+        #     print("ELSE")
+
+
+            # image = ImageForm(request.POST, request.FILES)
+            # image.save()
+
+            # img_obj = image.instance
+            # img_obj.image = request.FILES["image"]
+            # image.save()
+
+            # userprofile.image_id = img_obj.id
+            # user.save()
+            # userprofile.save()
+
+            ###########
+            # image = Image()
+            # image.image = request.data["picUrl"]
+            # image.save()
+
+            # userprofile.address = request.data["address"]
+            # userprofile.image = image.id
+            # userprofile.user_id = user.id
+            # userprofile.save()
+
+            # if email is not None:
+            #     print("IFEMAIL")
+            #     user.first_name = request.data["first_name"]
+            #     user.last_name = request.data["last_name"]
+            #     user.username = request.data["username"]
+            #     user.save()
+
         # # saving userprofile should also save and update the User table.
         # # Find on UserProfile models. They are linked together.
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        # return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
     def destroy(self, request, pk=None):

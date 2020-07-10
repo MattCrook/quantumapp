@@ -23,19 +23,23 @@ def register_user(request):
             first_name=req_body['first_name'],
             last_name=req_body['last_name']
         )
+        new_user.save()
 
-        new_image = Image.objects.create(
-            image=req_body["picUrl"]
-        )
+        new_image = Image()
+        new_image.image = request.data["image"]
+        new_image.save()
 
-        new_userprofile = UserProfile.objects.create(
-            user=new_user,
-            address=req_body['address'],
-            image=new_image.image
-        )
+        new_userprofile = UserProfile()
+        new_userprofile.address=req_body['address'],
+        new_userprofile.image=new_image
+        new_userprofile.user=new_user,
 
         # Commit the user to the database by saving it
         new_userprofile.save()
+        print(new_userprofile)
+        print(new_image)
+        print(new_user)
+
 
         # Use the REST Framework's token generator on the new user account
         token = Token.objects.create(user=new_user)

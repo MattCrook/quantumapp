@@ -27,7 +27,7 @@ class UserProfile(models.Model):
         verbose_name_plural = ("userProfiles")
 
     def __str__(self):
-          return f'Name: {self.user.first_name} {self.user.last_name} -- Username: {self.user.username} -- Email: {self.user.email} -- Address: {self.address} -- Credits:{self.rollerCoaster_id} - PicUrl: {self.image.image.url}'
+          return f'Name: {self.user.first_name} {self.user.last_name} -- Username: {self.user.username} -- Email: {self.user.email} -- Address: {self.address} -- Credits:{self.rollerCoaster_id}'
 
 
 @receiver(post_save, sender=User)

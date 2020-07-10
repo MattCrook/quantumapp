@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    # 'rest_auth',
     'corsheaders',
     'quantumapi',
     'rest_framework_jwt',
@@ -124,6 +125,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+REST_USE_JWT = True
 
 # REST_FRAMEWORK = {
 #     'DEFAULT_AUTHENTICATION_CLASSES': (
