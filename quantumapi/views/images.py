@@ -15,46 +15,47 @@ class ImageSerializer(serializers.ModelSerializer):
         image = serializers.ImageField(max_length=None, use_url=True)
         fields = ('id', 'image', )
 
-    def create(self, validated_data):
-        return Image.objects.create(**validated_data)
+    # def create(self, validated_data):
+    #     return Image.objects.create(**validated_data)
 
 
 
-class Images(ModelViewSet):
-    queryset = Image.objects.all()
-    serializer_class = ImageSerializer
+class Images(ViewSet):
+    # queryset = Image.objects.all()
+    # serializer_class = ImageSerializer
 
-    # def list(self, request):
-    #     images = Image.objects.all()
-    #     serializer = ImageSerializer(images, many=True, context={'request': request})
-    #     return Response(serializer.data)
-
-
-    # def create(self, request):
-    #     new_image = Image()
-    #     new_image.image = request.data["image"]
-    #     new_image.save()
-    #     serializer = ImageSerializer(new_image, context={'request': request})
-    #     return Response(serializer.data)
+    def list(self, request):
+        images = Image.objects.all()
+        serializer = ImageSerializer(images, many=True, context={'request': request})
+        return Response(serializer.data)
 
 
-    # def retreive(self, request, pk=None):
-    #     try:
-    #         image = Image.objects.get(pk=pk)
-    #         serializer = ImageSerializer(image, context={'request': request})
-    #         return Response(serializer.data)
-    #     except Exception as ex:
-    #         return HttpResponseServerError(ex)
+    def create(self, request):
+        new_image = Image()
+        new_image.image = request.FILES["image"]
+        new_image.save()
+        print("NEWIMAGE", new_image)
+        serializer = ImageSerializer(new_image, context={'request': request})
+        return Response(serializer.data)
 
-    # def update(self, request, pk=None):
-    #     try:
-    #         image = Image.objects.get(pk=pk)
-    #         image.image = request.data["image"]
-    #         image.save()
-    #         serializer = ImageSerializer(image, context={'request': request})
-    #         return Response(serializer.data)
-    #     except Exception as ex:
-    #         return HttpResponseServerError(ex)
 
-    # def destroy(self, request):
-    #     pass
+    def retreive(self, request, pk=None):
+        try:
+            image = Image.objects.get(pk=pk)
+            serializer = ImageSerializer(image, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+    def update(self, request, pk=None):
+        try:
+            image = Image.objects.get(pk=pk)
+            image.image = request.FILES["image"]
+            image.save()
+            serializer = ImageSerializer(image, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+    def destroy(self, request):
+        pass

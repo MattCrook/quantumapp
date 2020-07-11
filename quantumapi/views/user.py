@@ -23,58 +23,58 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         )
 
         fields = ('id', 'url', 'email', 'first_name', 'last_name', 'username',
-                  'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'profile', )
+                  'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', )
         extra_kwargs = {'password': {'write_only': True}}
 
-    def create(self, validated_data):
-        print("VAL", validated_data)
-        profile_data = validated_data.pop('profile')
-        print("profiledata", profile_data)
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-        UserProfile.objects.create(user=user, **profile_data)
-        return user
-
-    def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile')
-        profile = instance.profile
-
-        instance.email = validated_data.get('email', instance.email)
-        instance.save()
-
-        profile.address = profile_data.get('address', profile.address)
-        profile.image = profile_data.get('image', profile.image)
-        profile.save()
-
-        return instance
-
-
-class Users(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    # def retrieve(self, request, pk=None):
-    #     try:
-    #         user = User.objects.get(pk=pk)
-    #         serializer = UserSerializer(user, context={'request': request})
-    #         return Response(serializer.data)
-    #     except Exception as ex:
-    #         return HttpResponseServerError(ex)
-
-    # def update(self, request, pk=None):
-    #     user = User.objects.get(pk=pk)
-    #     user.username = request.data["username"]
-    #     # Changing passwords has been tabled:
-    #     # it will require password hashing...
-    #     # user.password = request.data["password"]
-    #     user.first_name = request.data["first_name"]
-    #     user.last_name = request.data["last_name"]
-    #     user.email = request.data["email"]
+    # def create(self, validated_data):
+    #     print("VAL", validated_data)
+    #     profile_data = validated_data.pop('profile')
+    #     print("profiledata", profile_data)
+    #     password = validated_data.pop('password')
+    #     user = User(**validated_data)
+    #     user.set_password(password)
     #     user.save()
+    #     UserProfile.objects.create(user=user, **profile_data)
+    #     return user
 
-    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
+    # def update(self, instance, validated_data):
+    #     profile_data = validated_data.pop('profile')
+    #     profile = instance.profile
+
+    #     instance.email = validated_data.get('email', instance.email)
+    #     instance.save()
+
+    #     profile.address = profile_data.get('address', profile.address)
+    #     profile.image = profile_data.get('image', profile.image)
+    #     profile.save()
+
+    #     return instance
+
+
+class Users(ViewSet):
+    # queryset = User.objects.all()
+    # serializer_class = UserSerializer
+
+    def retrieve(self, request, pk=None):
+        try:
+            user = User.objects.get(pk=pk)
+            serializer = UserSerializer(user, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
+    def update(self, request, pk=None):
+        user = User.objects.get(pk=pk)
+        user.username = request.data["username"]
+        # Changing passwords has been tabled:
+        # it will require password hashing...
+        # user.password = request.data["password"]
+        user.first_name = request.data["first_name"]
+        user.last_name = request.data["last_name"]
+        user.email = request.data["email"]
+        user.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
 @csrf_exempt

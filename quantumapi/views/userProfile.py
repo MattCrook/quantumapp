@@ -69,26 +69,27 @@ class UserProfiles(ViewSet):
     def update(self, request, pk=None):
 
         userprofile = UserProfile.objects.get(pk=pk)
-        userprofile_user_id = userprofile.user_id
-        image_id = userprofile.image_id
-        image = Image.objects.get(pk=image_id)
+        # userprofile_user_id = userprofile.user_id
+        # image_id = userprofile.image_id
+        # image = Image.objects.get(pk=image_id)
         # email = self.request.query_params.get('email', None)
 
         # Checking url if email is passed in then we are looking at the auth user resource
         # if email is not None:
 
-        user = User.objects.get(pk=userprofile_user_id)
-        user.first_name = request.data["first_name"]
-        user.last_name = request.data["last_name"]
-        user.username = request.data["username"]
-        user.save()
+        # user = User.objects.get(pk=userprofile_user_id)
+        # user.first_name = request.data["first_name"]
+        # user.last_name = request.data["last_name"]
+        # user.username = request.data["username"]
+        # user.save()
 
-        image.image = request.FILES["image"]
-        image.save()
+        # image.image = request.FILES["image"]
+        # image.save()
 
         userprofile.address = request.data["address"]
-        userprofile.image = image.id
-        userprofile.user = user
+        userprofile.credits = request.data["credits"]
+        # userprofile.image = image.id
+        # userprofile.user = user
         # userprofile.image_id = image_id
         userprofile.save()
 
@@ -97,18 +98,29 @@ class UserProfiles(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
-    def create(self, request):
-        print("REQ", request.data)
-        print(request.user)
-        # new_image = Image.objects.get(pk=request.data["image"])
+    def destroy(self, request, pk=None):
+        try:
+            userprofile = UserProfile.objects.get(pk=pk)
+            userprofile.delete()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        except UserProfile.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-        new_userprofile = UserProfile()
-        new_userprofile.address = request.data["address"]
-        new_userprofile.credits = request.data["credits"]
-        # new_userprofile.image = new_image
-        new_userprofile.save()
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+    # def create(self, request):
+    #     print("REQ", request.data)
+    #     print(request.user)
+    #     # new_image = Image.objects.get(pk=request.data["image"])
+
+
+    #     new_userprofile = UserProfile()
+    #     new_userprofile.address = request.data["address"]
+    #     new_userprofile.credits = request.data["credits"]
+    #     # new_userprofile.image = new_image
+    #     new_userprofile.save()
+    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         # elif request.method == 'POST':
         #     form_data = request.POST
@@ -197,16 +209,3 @@ class UserProfiles(ViewSet):
         # # saving userprofile should also save and update the User table.
         # # Find on UserProfile models. They are linked together.
         # return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-
-    def destroy(self, request, pk=None):
-        try:
-            userprofile = UserProfile.objects.get(pk=pk)
-            userprofile.delete()
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        except UserProfile.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
-        except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

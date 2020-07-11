@@ -8,24 +8,24 @@ from django.db.models.signals import post_save
 
 
 
-def scramble_uploaded_filename(instance, filename):
-    extension = filename.split(".")[-1]
-    return "{}.{}".format(uuid.uuid4(), extension)
+# def scramble_uploaded_filename(instance, filename):
+#     extension = filename.split(".")[-1]
+#     return "{}.{}".format(uuid.uuid4(), extension)
 
 class Image(models.Model):
-    image = models.ImageField(ClearableFileInput, upload_to=scramble_uploaded_filename, blank=True, null=True)
+    image = models.ImageField(ClearableFileInput, upload_to='media', blank=True, null=True)
 
     def __str__(self):
         return self.image.url
 
-@receiver(post_save, sender="quantumapi.UserProfile")
-def create_image(sender, instance, created, **kwargs):
-    if created:
-        Image.objects.create(image=instance)
+# @receiver(post_save, sender="quantumapi.UserProfile")
+# def create_image(sender, instance, created, **kwargs):
+#     if created:
+#         Image.objects.create(image=instance)
 
-@receiver(post_save, sender="quantumapi.UserProfile")
-def save_image(sender, instance, **kwargs):
-    instance.image.save()
+# @receiver(post_save, sender="quantumapi.UserProfile")
+# def save_image(sender, instance, **kwargs):
+#     instance.image.save()
 
 
 
