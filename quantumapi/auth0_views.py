@@ -9,17 +9,22 @@ from rest_framework.permissions import AllowAny
 # Obtains the Access Token from the Authorization Header
 def get_token_auth_header(request):
     auth = request.META.get("HTTP_AUTHORIZATION", None)
+    print("auth", auth)
     parts = auth.split()
+    print("parts", parts)
     token = parts[1]
+    print("token", token)
     return token
 
 
 # Determines if the required scope is present in the Access Token
 # Args: required_scope (str): The scope required to access the resource
 def requires_scope(required_scope):
+    print("scope", required_scope)
     def require_scope(f):
         @wraps(f)
         def decorated(*args, **kwargs):
+            print(args)
             token = get_token_auth_header(args[0])
             decoded = jwt.decode(token, verify=False)
             if decoded.get("scope"):

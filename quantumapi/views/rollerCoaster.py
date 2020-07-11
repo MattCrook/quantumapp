@@ -20,7 +20,6 @@ class RollerCoasterSerializer(serializers.HyperlinkedModelSerializer):
 
 class RollerCoasters(ViewSet):
     def create(self, request):
-        print("REQDATA", request.data)
         newrollercoaster = RollerCoaster()
         manufacturer = Manufacturer.objects.get(pk=request.data["manufacturerId"])
         tracktype = Tracktype.objects.get(pk=request.data["trackTypeId"])

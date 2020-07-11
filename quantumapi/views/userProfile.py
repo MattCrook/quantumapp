@@ -1,22 +1,23 @@
+import json
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import UserProfile, Credit, User
+from quantumapi.models import UserProfile, Credit, Image
+from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework import authentication, permissions
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
-import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.conf import settings
-
-
-# from django.conf import settings
+from django.contrib.auth.models import User
+from .user import UserSerializer
+# from quantumapi.models import ImageForm
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -27,7 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             view_name='userprofile',
             lookup_field='id'
         )
-        fields = ('id', 'address', 'picUrl', 'credits', 'user', )
+        fields = ('id', 'address', 'image', 'credits', 'user', )
         depth = 1
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -36,126 +37,175 @@ class UserProfiles(ViewSet):
     # permission_classes = [permissions.AllowAny]
     # authentication_classes = [authentication.TokenAuthentication]
 
-    @csrf_exempt
-    def create(self, request):
-        req_body = json.loads(request.body.decode())
-        print("REqBODY", req_body)
-        # user = settings.AUTH_USER_MODEL
+    def list(self, request):
+        try:
+            userprofiles = UserProfile.objects.all()
+            email = self.request.query_params.get('email', None)
+            user_id = self.request.query_params.get('userId', None)
 
-        new_user = User.objects.create(
-            first_name=req_body['first_name'],
-            last_name=req_body['last_name'],
-            username=req_body['username'],
-            # password=,
-            email=req_body['email'],
-        )
+            if email is not None:
+                auth_user = User.objects.filter(email=email)
+                serializer = UserSerializer(auth_user, many=True, context={'request': request})
+            elif user_id is not None:
+                userprofile = UserProfile.objects.filter(user_id=user_id)
+                serializer = UserProfileSerializer(userprofile, many=True, context={'request': request})
+            else:
+                serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
 
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
-        userprofile = UserProfile.objects.create(
-            address=req_body['address'],
-            picUrl=req_body['picUrl'],
-            # credits=req_body['rollerCoaster_id'],
-            user=new_user
-        )
-        new_user.save()
-
-        # calls the manager
-        token = Token.objects.create(user=new_user)
-        # token = Token.objects.create_userProfile(user=userprofile)
-
-        # Return the token to the client
-        data = json.dumps({"token": token.key})
-        return HttpResponse(data, content_type='application/json')
 
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
-            # email = User.objects.get(pk=request.data["email"])
-            # userprofile = UserProfile.objects.filter(email=email)
             serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+
     def update(self, request, pk=None):
+
         userprofile = UserProfile.objects.get(pk=pk)
-        # user = User.objects.get(user=userprofile)
+        # userprofile_user_id = userprofile.user_id
+        # image_id = userprofile.image_id
+        # image = Image.objects.get(pk=image_id)
+        # email = self.request.query_params.get('email', None)
+
+        # Checking url if email is passed in then we are looking at the auth user resource
+        # if email is not None:
+
+        # user = User.objects.get(pk=userprofile_user_id)
+        # user.first_name = request.data["first_name"]
+        # user.last_name = request.data["last_name"]
+        # user.username = request.data["username"]
+        # user.save()
+
+        # image.image = request.FILES["image"]
+        # image.save()
 
         userprofile.address = request.data["address"]
-        userprofile.picUrl = request.data["picUrl"]
-        # userprofile.user = request.data["profile"]
-
-        # # saving userprofile should also save and update the User table.
-        # # Find on UserProfile models. They are linked together.
+        userprofile.credits = request.data["credits"]
+        # userprofile.image = image.id
+        # userprofile.user = user
+        # userprofile.image_id = image_id
         userprofile.save()
+
+        # image.image = request.data["picUrl"]
+
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
     def destroy(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
             userprofile.delete()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
-
         except UserProfile.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def list(self, request):
-        userprofiles = UserProfile.objects.all()
-
-        # userprofiles = UserProfile.objects.filter(address__lte='123456Testing')
-
-        serializer = UserProfileSerializer(
-            userprofiles, many=True, context={'request': request})
-        return Response(serializer.data)
-
-# @csrf_exempt
-# def login_user(self, request):
-
-#     req_body = json.loads(request.body.decode())
-
-#     # If the request is a HTTP POST, try to pull out the relevant information.
-#     if request.method == 'POST':
-
-#         # Use the built-in authenticate method to verify
-#         username = req_body['username']
-#         password = req_body['password']
-#         authenticated_user = authenticate(
-#             username=username, password=password)
-
-#         # If authentication was successful, respond with their token
-#         print("AUTHENTIATED USER", authenticated_user)
-#         if authenticated_user is not None:
-#             token = Token.objects.get(user=authenticated_user)
-#             data = json.dumps({"valid": True, "token": token.key})
-#             return HttpResponse(data, content_type='application/json')
-
-#         else:
-#             # Bad login details were provided. So we can't log the user in.
-#             data = json.dumps({"valid": False})
-#             return HttpResponse(data, content_type='application/json')
 
     # def create(self, request):
-    #     # user = User.objects.get(user=request.auth.user)
-    #     user = User.objects.create_user(user=request.auth.user)
+    #     print("REQ", request.data)
+    #     print(request.user)
+    #     # new_image = Image.objects.get(pk=request.data["image"])
 
-    #     first_name = user["first_name"]
-    #     last_name = user["last_name"]
-    #     username = user["username"]
-    #     email = user["email"]
-    #     rollerCoaster_id = Credit.objects.get(pk="credits")
 
-    #     newuserprofile = UserProfile()
-    #     newuserprofile.first_name = first_name
-    #     newuserprofile.last_name = last_name
-    #     newuserprofile.username = username
-    #     newuserprofile.email = email
-    #     newuserprofile.address = request.data["address"]
-    #     newuserprofile.picUrl = request.data["picUrl"]
-    #     newuserprofile.rollerCoaster_id = request.data["rollercoaster_id"]
+    #     new_userprofile = UserProfile()
+    #     new_userprofile.address = request.data["address"]
+    #     new_userprofile.credits = request.data["credits"]
+    #     # new_userprofile.image = new_image
+    #     new_userprofile.save()
+    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-    #     newuserprofile.save()
-    #     serializer = UserProfileSerializer(newuserprofile, context={'request': request})
-    #     return Response(serializer.data)
+        # elif request.method == 'POST':
+        #     form_data = request.POST
+        #     if ('actual_method' in form_data and form_data['actual_method'] == 'PUT'):
+        #         userprofile = UserProfile.objects.get(pk=pk)
+        #         userprofile_user_id = userprofile.user_id
+        #         image_id = userprofile.image_id
+        #         user = User.objects.get(pk=userprofile_user_id)
+        #         email = self.request.query_params.get('email', None)
+
+        #         # if request.FILES:
+        #         #     userprofile.image_path = request.FILES["image_path"]
+        #         image = ImageForm(request.POST, request.FILES)
+        #         user.first_name = form_data["first_name"]
+        #         user.last_name = form_data["last_name"]
+        #         user.username = form_data["username"]
+        #         userprofile.address = form_data["address"]
+        #         image.save()
+
+        #         img_obj = image.instance
+        #         img_obj.image = request.FILES["image"]
+        #         image.save()
+
+        #         userprofile.image_id = img_obj.id
+        #         user.save()
+        #         userprofile.save()
+
+        #     return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+        # If we have an image(profile pic)
+        # if userprofile.image_id is not None:
+        #     image_id = userprofile.image_id
+        #     image = Image.objects.get(pk=image_id)
+        #     user = User.objects.get(pk=user_id)
+
+        #     userprofile.address = request.data["address"]
+        #     userprofile.image_id = image_id
+        #     userprofile.save()
+
+        #     image.image = request.data["picUrl"]
+        #     image.save()
+
+        #     if email is not None:
+        #         user.first_name = request.data["first_name"]
+        #         user.last_name = request.data["last_name"]
+        #         user.username = request.data["username"]
+        #         user.save()
+        # else:
+        #     user = User.objects.get(pk=user_id)
+        #     print("ELSE")
+
+
+            # image = ImageForm(request.POST, request.FILES)
+            # image.save()
+
+            # img_obj = image.instance
+            # img_obj.image = request.FILES["image"]
+            # image.save()
+
+            # userprofile.image_id = img_obj.id
+            # user.save()
+            # userprofile.save()
+
+            ###########
+            # image = Image()
+            # image.image = request.data["picUrl"]
+            # image.save()
+
+            # userprofile.address = request.data["address"]
+            # userprofile.image = image.id
+            # userprofile.user_id = user.id
+            # userprofile.save()
+
+            # if email is not None:
+            #     print("IFEMAIL")
+            #     user.first_name = request.data["first_name"]
+            #     user.last_name = request.data["last_name"]
+            #     user.username = request.data["username"]
+            #     user.save()
+
+        # # saving userprofile should also save and update the User table.
+        # # Find on UserProfile models. They are linked together.
+        # return Response({}, status=status.HTTP_204_NO_CONTENT)
