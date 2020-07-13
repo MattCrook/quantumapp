@@ -9,58 +9,44 @@ from quantumapi.models import UserProfile, Image, ImageForm
 
 @csrf_exempt
 def register_user(request):
-    print("IN REGISTER", request)
-    form_data = request.POST
-    print("FORMDATA", form_data)
 
     # Load the JSON string of the request body into a dict
-    # req_body = json.loads(request.body.decode())
-    # print(req_body)
+    req_body = json.loads(request.body.decode())
 
     # Create a new user by invoking the `create_user` helper method
     # on Django's built-in User model
     try:
         new_user = User.objects.create_user(
-            username=form_data['username'],
-            email=form_data['email'],
-            password=form_data['password'],
-            first_name=form_data['first_name'],
-            last_name=form_data['last_name']
+            username=req_body['username'],
+            email=req_body['email'],
+            password=req_body['password'],
+            first_name=req_body['first_name'],
+            last_name=req_body['last_name']
         )
-        new_user.save()
 
-        image = ImageForm()
-        img_obj = image.instance
-        img_obj.image = request.FILES["image"]
-        img_obj.save()
+        # new_image = ImageForm(request.POST, request.FILES)
+        # img_obj = new_image.instance
+        # img_obj.image = request.FILES["image"]
 
-        new_userprofile = UserProfile()
-        new_userprofile.user_id = new_user.id
-        new_userprofile.image_id = img_obj.id
-        new_userprofile.credits = form_data["credits"],
-        new_userprofile.address = form_data["address"]
 
-        new_userprofile.save()
-
-        # new_userprofile = UserProfile.objects.create(
-        #     user=new_user,
-        #     image=image,
-        #     credits=req_body["credits"],
-        #     address=req_body["address"]
+        # new_image = Image.objects.create(
+        #     image=request.FILES["image"]
         # )
 
-        # Commit the user to the database by saving it
-        # new_userprofile.save()
-        print("NEWUSERPROFILE", new_userprofile)
-        print("NEWUSER2", new_user)
-        print("IMAGEOBJ", image)
 
+        new_userprofile = UserProfile.objects.create(
+            address=req_body["address"],
+            user=new_user
+        )
+
+        # Commit the user to the database by saving it
+        new_userprofile.save()
 
         # Use the REST Framework's token generator on the new user account
         token = Token.objects.create(user=new_user)
 
         # Return the token to the client
-        data = json.dumps({"token": token.key})
+        data = json.dumps({"QuantumToken": token.key})
         return HttpResponse(data, content_type='application/json')
 
     except Exception as x:
