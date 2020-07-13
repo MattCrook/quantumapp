@@ -32,7 +32,11 @@ class Images(ViewSet):
 
     def create(self, request):
         new_image = Image()
-        new_image.image = request.FILES["image"]
+        if request.FILES:
+            new_image.image = request.FILES["image"]
+        else:
+            new_image.image = request.data["image"]
+
         new_image.save()
         print("NEWIMAGE", new_image)
         serializer = ImageSerializer(new_image, context={'request': request})

@@ -109,18 +109,6 @@ class UserProfiles(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-    # def create(self, request):
-    #     print("REQ", request.data)
-    #     print(request.user)
-    #     # new_image = Image.objects.get(pk=request.data["image"])
-
-
-    #     new_userprofile = UserProfile()
-    #     new_userprofile.address = request.data["address"]
-    #     new_userprofile.credits = request.data["credits"]
-    #     # new_userprofile.image = new_image
-    #     new_userprofile.save()
-    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         # elif request.method == 'POST':
         #     form_data = request.POST

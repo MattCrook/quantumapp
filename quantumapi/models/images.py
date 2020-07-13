@@ -13,7 +13,7 @@ from django.db.models.signals import post_save
 #     return "{}.{}".format(uuid.uuid4(), extension)
 
 class Image(models.Model):
-    image = models.ImageField(ClearableFileInput, upload_to='media', blank=True, null=True)
+    image = models.ImageField(ClearableFileInput, upload_to='images', blank=True, null=True)
 
     def __str__(self):
         return self.image.url
