@@ -21,10 +21,6 @@ class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Tracktypes(ViewSet):
-    # queryset = Tracktype.objects.all()
-    # serializer_class = TracktypeSerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['name']
 
     def create(self, request):
         newtracktype = Tracktype()

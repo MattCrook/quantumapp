@@ -4,18 +4,17 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import UserProfile, Credit, Image
-from django.contrib.auth.models import User
+from quantumapi.models import UserProfile, Credit, Image, User
+# from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from rest_framework import authentication, permissions
+# from rest_framework import authentication, permissions
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-from django.contrib.auth import login, authenticate
+# from django.contrib.auth import login, authenticate
 from django.conf import settings
-from django.contrib.auth.models import User
 from .user import UserSerializer
 # from quantumapi.models import ImageForm
 
@@ -70,9 +69,9 @@ class UserProfiles(ViewSet):
 
         userprofile = UserProfile.objects.get(pk=pk)
         # userprofile_user_id = userprofile.user_id
-        # image_id = userprofile.image_id
-        # image = Image.objects.get(pk=image_id)
-        # email = self.request.query_params.get('email', None)
+        image_id = userprofile.image_id
+        image = Image.objects.get(pk=image_id)
+        email = self.request.query_params.get('email', None)
 
         # Checking url if email is passed in then we are looking at the auth user resource
         # if email is not None:
@@ -87,7 +86,6 @@ class UserProfiles(ViewSet):
         # image.save()
 
         userprofile.address = request.data["address"]
-        userprofile.credits = request.data["credits"]
         # userprofile.image = image.id
         # userprofile.user = user
         # userprofile.image_id = image_id
