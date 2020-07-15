@@ -68,54 +68,42 @@ class UserProfiles(ViewSet):
             return HttpResponseServerError(ex)
 
     def update(self, request, pk=None):
-
         userprofile = UserProfile.objects.get(pk=pk)
         userprofile_user_id = userprofile.user_id
         user = User.objects.get(pk=userprofile_user_id)
         email = self.request.query_params.get('email', None)
 
+        userprofile.address = request.data["address"]
+        userprofile.image_id = request.data["image_id"]
+        userprofile.save()
+
+
         # If image_id is not none meaning there is an image this is an edit where there is already a photo
-        if userprofile.image_id is not None:
-            image_id = userprofile.image_id
-            image = Image.objects.get(pk=image_id)
-            image.image = request.FILES["image"]
-            image.save()
+        # if userprofile.image_id is not None:
+        #     image_id = userprofile.image_id
+        #     image = Image.objects.get(pk=image_id)
+        #     image.image = request.FILES["image_id"]
+        #     image.save()
 
-            userprofile.address = request.data["address"]
-            userprofile.image_id = image.id
-            userprofile.user_id = userprofile_user_id
+        #     userprofile.address = request.data["address"]
+        #     userprofile.image_id = request.data["image_id"]
+        #     userprofile.user_id = userprofile_user_id
+        #     userprofile.save()
+        #     print("userprofileISNOTNONE", userprofile)
 
-        else:
-            userprofile.address = request.data["address"]
-            new_image = Image()
-            new_image.image = request.FILES["image"]
-            new_image.save()
+        # elif userprofile.image_id is None:
+        #     userprofile.address = request.data["address"]
+        #     new_image = Image()
+        #     new_image.image = request.FILES["image"]
+        #     new_image.save()
 
-            userprofile.image_id = new_image.id
-            userprofile.user_id = userprofile_user_id
-            userprofile.save()
+        #     userprofile.image_id = new_image.id
+        #     userprofile.user_id = userprofile_user_id
+        #     userprofile.save()
+        #     print("userprofileNONE", userprofile)
+
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        # Checking url if email is passed in then we are looking at the auth user resource
-        # if email is not None:
-
-        # user.first_name = request.data["first_name"]
-        # user.last_name = request.data["last_name"]
-        # user.username = request.data["username"]
-        # user.save()
-
-        # image.image = request.FILES["image"]
-        # image.save()
-        # image = ImageForm(request.POST, request.FILES)
-
-        # userprofile.image = image.id
-        # userprofile.user = user
-        # userprofile.image_id = image_id
-
-        # image.image = request.data["picUrl"]
-
-        # return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         try:
@@ -126,85 +114,3 @@ class UserProfiles(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        # elif request.method == 'POST':
-        #     form_data = request.POST
-        #     if ('actual_method' in form_data and form_data['actual_method'] == 'PUT'):
-        #         userprofile = UserProfile.objects.get(pk=pk)
-        #         userprofile_user_id = userprofile.user_id
-        #         image_id = userprofile.image_id
-        #         user = User.objects.get(pk=userprofile_user_id)
-        #         email = self.request.query_params.get('email', None)
-
-        #         # if request.FILES:
-        #         #     userprofile.image_path = request.FILES["image_path"]
-        #         image = ImageForm(request.POST, request.FILES)
-        #         user.first_name = form_data["first_name"]
-        #         user.last_name = form_data["last_name"]
-        #         user.username = form_data["username"]
-        #         userprofile.address = form_data["address"]
-        #         image.save()
-
-        #         img_obj = image.instance
-        #         img_obj.image = request.FILES["image"]
-        #         image.save()
-
-        #         userprofile.image_id = img_obj.id
-        #         user.save()
-        #         userprofile.save()
-
-        #     return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-        # If we have an image(profile pic)
-        # if userprofile.image_id is not None:
-        #     image_id = userprofile.image_id
-        #     image = Image.objects.get(pk=image_id)
-        #     user = User.objects.get(pk=user_id)
-
-        #     userprofile.address = request.data["address"]
-        #     userprofile.image_id = image_id
-        #     userprofile.save()
-
-        #     image.image = request.data["picUrl"]
-        #     image.save()
-
-        #     if email is not None:
-        #         user.first_name = request.data["first_name"]
-        #         user.last_name = request.data["last_name"]
-        #         user.username = request.data["username"]
-        #         user.save()
-        # else:
-        #     user = User.objects.get(pk=user_id)
-        #     print("ELSE")
-
-            # image = ImageForm(request.POST, request.FILES)
-            # image.save()
-
-            # img_obj = image.instance
-            # img_obj.image = request.FILES["image"]
-            # image.save()
-
-            # userprofile.image_id = img_obj.id
-            # user.save()
-            # userprofile.save()
-
-            ###########
-            # image = Image()
-            # image.image = request.data["picUrl"]
-            # image.save()
-
-            # userprofile.address = request.data["address"]
-            # userprofile.image = image.id
-            # userprofile.user_id = user.id
-            # userprofile.save()
-
-            # if email is not None:
-            #     print("IFEMAIL")
-            #     user.first_name = request.data["first_name"]
-            #     user.last_name = request.data["last_name"]
-            #     user.username = request.data["username"]
-            #     user.save()
-
-        # # saving userprofile should also save and update the User table.
-        # # Find on UserProfile models. They are linked together.
-        # return Response({}, status=status.HTTP_204_NO_CONTENT)

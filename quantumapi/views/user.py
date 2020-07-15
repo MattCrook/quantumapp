@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
 from quantumapi.models import User, UserProfile, ImageForm
 from rest_framework.serializers import ModelSerializer
-# from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import Token
 
 
 
@@ -73,7 +73,7 @@ class Users(viewsets.ModelViewSet):
             # token = Token.objects.create(user=new_user)
             # key = token.key
 
-            # Specifying the response that the API sends back From making a POST to Users. (the .then() from client side.
+            # Specifying the response that the API sends back From making a POST to Users. (the .then() from client side.)
             userdict = {
                 "first": new_user.first_name,
                 "last": new_user.last_name,
@@ -88,10 +88,7 @@ class Users(viewsets.ModelViewSet):
             return HttpResponse(x, content_type='application/json')
 
     def update(self, request, pk=None):
-        print("REQUEST", request.data)
         user = User.objects.get(pk=pk)
-        user_id = user.id
-        userprofile = UserProfile.objects.get(user_id=user_id)
 
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
