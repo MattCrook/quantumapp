@@ -127,24 +127,7 @@ REST_FRAMEWORK = {
 
 REST_USE_JWT = True
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication',
-#         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-#         'rest_framework.authentication.TokenAuthentication',
-#         # 'rest_framework.renderers.JSONRenderer',
 
-#     ),
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#         'rest_framework.permissions.AllowAny',
-
-#     ),
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-#     'PAGE_SIZE': 20
-# }
 
 # USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
 
@@ -158,15 +141,17 @@ LOGIN_REDIRECT_URL = '/home'
 # if AUTH0_DOMAIN:
 #     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
 
+# apiexample/settings.py
+
 JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-        'quantumapi.utils.jwt_get_username_from_payload_handler',
+        'auth0authorization.utils.jwt_get_username_from_payload_handler',
     'JWT_DECODE_HANDLER':
-        'quantumapi.utils.jwt_decode_token',
+        'auth0authorization.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
     'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
 

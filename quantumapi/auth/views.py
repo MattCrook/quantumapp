@@ -2,45 +2,45 @@
 ## REPLACE REDNDER WITH HTTP RESPONSE TO PASS THE CREDENTIALS
 ## OR INJECT THE REACT APP INSIDE AN INDEX.HTML DJANGO TEMPLATE
 
-from django.shortcuts import render, redirect
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-import json
+# from django.shortcuts import render, redirect
+# from django.shortcuts import render, redirect
+# from django.contrib.auth.decorators import login_required
+# import json
 
-from django.contrib.auth import logout as log_out
-from django.conf import settings
-from django.http import HttpResponseRedirect
-from urllib.parse import urlencode
+# from django.contrib.auth import logout as log_out
+# from django.conf import settings
+# from django.http import HttpResponseRedirect
+# from urllib.parse import urlencode
 
-@login_required
-def home(request):
-    user = request.user
-    auth0user = user.social_auth.get(provider='auth0')
-    userdata = {
-        'user_id': auth0user.uid,
-        'name': user.first_name,
-        'picture': auth0user.extra_data['picture'],
-        'email': auth0user.extra_data['email'],
-    }
+# @login_required
+# def home(request):
+#     user = request.user
+#     auth0user = user.social_auth.get(provider='auth0')
+#     userdata = {
+#         'user_id': auth0user.uid,
+#         'name': user.first_name,
+#         'picture': auth0user.extra_data['picture'],
+#         'email': auth0user.extra_data['email'],
+#     }
 
-    return render(request, 'home.html', {
-        'auth0User': auth0user,
-        'userdata': json.dumps(userdata, indent=4)
-    })
-
-
-def index(request):
-    user = request.user
-    if user.is_authenticated:
-        return redirect(home)
-    else:
-        return render(request, 'index.html')
+#     return render(request, 'home.html', {
+#         'auth0User': auth0user,
+#         'userdata': json.dumps(userdata, indent=4)
+#     })
 
 
+# def index(request):
+#     user = request.user
+#     if user.is_authenticated:
+#         return redirect(home)
+#     else:
+#         return render(request, 'index.html')
 
-def logout(request):
-    log_out(request)
-    return_to = urlencode({'returnTo': request.build_absolute_uri('/')})
-    logout_url = 'https://%s/v2/logout?client_id=%s&%s' % \
-                 (settings.SOCIAL_AUTH_AUTH0_DOMAIN, settings.SOCIAL_AUTH_AUTH0_KEY, return_to)
-    return HttpResponseRedirect(logout_url)
+
+
+# def logout(request):
+#     log_out(request)
+#     return_to = urlencode({'returnTo': request.build_absolute_uri('/')})
+#     logout_url = 'https://%s/v2/logout?client_id=%s&%s' % \
+#                  (settings.SOCIAL_AUTH_AUTH0_DOMAIN, settings.SOCIAL_AUTH_AUTH0_KEY, return_to)
+#     return HttpResponseRedirect(logout_url)

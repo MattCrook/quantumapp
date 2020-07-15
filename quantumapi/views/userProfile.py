@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import UserProfile, Credit, Image, User
-# from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -17,6 +16,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from .user import UserSerializer
 # from quantumapi.models import ImageForm
+from quantumapi.auth0_views import requires_scope
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -35,6 +35,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfiles(ViewSet):
     # permission_classes = [permissions.AllowAny]
     # authentication_classes = [authentication.TokenAuthentication]
+
 
     def list(self, request):
         try:
@@ -58,6 +59,8 @@ class UserProfiles(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+
+
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
@@ -66,6 +69,7 @@ class UserProfiles(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
 
     def update(self, request, pk=None):
         userprofile = UserProfile.objects.get(pk=pk)
@@ -76,34 +80,8 @@ class UserProfiles(ViewSet):
         userprofile.address = request.data["address"]
         userprofile.image_id = request.data["image_id"]
         userprofile.save()
-
-
-        # If image_id is not none meaning there is an image this is an edit where there is already a photo
-        # if userprofile.image_id is not None:
-        #     image_id = userprofile.image_id
-        #     image = Image.objects.get(pk=image_id)
-        #     image.image = request.FILES["image_id"]
-        #     image.save()
-
-        #     userprofile.address = request.data["address"]
-        #     userprofile.image_id = request.data["image_id"]
-        #     userprofile.user_id = userprofile_user_id
-        #     userprofile.save()
-        #     print("userprofileISNOTNONE", userprofile)
-
-        # elif userprofile.image_id is None:
-        #     userprofile.address = request.data["address"]
-        #     new_image = Image()
-        #     new_image.image = request.FILES["image"]
-        #     new_image.save()
-
-        #     userprofile.image_id = new_image.id
-        #     userprofile.user_id = userprofile_user_id
-        #     userprofile.save()
-        #     print("userprofileNONE", userprofile)
-
-
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
     def destroy(self, request, pk=None):
         try:
