@@ -26,7 +26,7 @@ from rest_framework.response import Response
 from quantumapi.models import *
 
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images
-from quantumapi.views import login_user, register_user, get_user
+from quantumapi.views import login_user, register_user
 # from quantumapi import urls
 
 # Auth0 Paths
@@ -54,7 +54,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', register_user),
     path('login/', login_user),
-    path('get_user/', get_user),
+    # path('get_user/', get_user),
     path('', include('quantumapi.urls')),
     # path('auth/', include('rest_auth.urls')),
 

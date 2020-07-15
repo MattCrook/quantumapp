@@ -149,7 +149,7 @@ REST_USE_JWT = True
 # USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
 
 # Custom User Model - models.User/ views.UserViewset
-# AUTH_USER_MODEL = 'quantumapi.User'
+AUTH_USER_MODEL = 'quantumapi.User'
 
 LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'

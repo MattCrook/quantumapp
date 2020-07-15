@@ -11,9 +11,7 @@ def get_token_auth_header(request):
     auth = request.META.get("HTTP_AUTHORIZATION", None)
     print("auth", auth)
     parts = auth.split()
-    print("parts", parts)
     token = parts[1]
-    print("token", token)
     return token
 
 
