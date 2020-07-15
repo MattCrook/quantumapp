@@ -44,39 +44,62 @@ class UserProfiles(ViewSet):
 
             if email is not None:
                 auth_user = User.objects.filter(email=email)
-                serializer = UserSerializer(auth_user, many=True, context={'request': request})
+                serializer = UserSerializer(
+                    auth_user, many=True, context={'request': request})
             elif user_id is not None:
                 userprofile = UserProfile.objects.filter(user_id=user_id)
-                serializer = UserProfileSerializer(userprofile, many=True, context={'request': request})
+                serializer = UserProfileSerializer(
+                    userprofile, many=True, context={'request': request})
             else:
-                serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
+                serializer = UserProfileSerializer(
+                    userprofiles, many=True, context={'request': request})
 
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
-
 
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
-            serializer = UserProfileSerializer(userprofile, context={'request': request})
+            serializer = UserProfileSerializer(
+                userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-
     def update(self, request, pk=None):
 
         userprofile = UserProfile.objects.get(pk=pk)
-        # userprofile_user_id = userprofile.user_id
-        image_id = userprofile.image_id
-        image = Image.objects.get(pk=image_id)
+        userprofile_user_id = userprofile.user_id
+        user = User.objects.get(pk=userprofile_user_id)
         email = self.request.query_params.get('email', None)
+
+        # If image_id is not none meaning there is an image this is an edit where there is already a photo
+        if userprofile.image_id is not None:
+            image_id = userprofile.image_id
+            image = Image.objects.get(pk=image_id)
+            image.image = request.FILES["image"]
+            image.save()
+
+            userprofile.address = request.data["address"]
+            userprofile.image_id = image.id
+            userprofile.user_id = userprofile_user_id
+
+        else:
+            userprofile.address = request.data["address"]
+            new_image = Image()
+            new_image.image = request.FILES["image"]
+            new_image.save()
+
+            userprofile.image_id = new_image.id
+            userprofile.user_id = userprofile_user_id
+            userprofile.save()
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         # Checking url if email is passed in then we are looking at the auth user resource
         # if email is not None:
 
-        # user = User.objects.get(pk=userprofile_user_id)
         # user.first_name = request.data["first_name"]
         # user.last_name = request.data["last_name"]
         # user.username = request.data["username"]
@@ -84,17 +107,15 @@ class UserProfiles(ViewSet):
 
         # image.image = request.FILES["image"]
         # image.save()
+        # image = ImageForm(request.POST, request.FILES)
 
-        userprofile.address = request.data["address"]
         # userprofile.image = image.id
         # userprofile.user = user
         # userprofile.image_id = image_id
-        userprofile.save()
 
         # image.image = request.data["picUrl"]
 
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
-
+        # return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def destroy(self, request, pk=None):
         try:
@@ -105,8 +126,6 @@ class UserProfiles(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
 
         # elif request.method == 'POST':
         #     form_data = request.POST
@@ -136,11 +155,6 @@ class UserProfiles(ViewSet):
 
         #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-
-
-
-
-
         # If we have an image(profile pic)
         # if userprofile.image_id is not None:
         #     image_id = userprofile.image_id
@@ -162,7 +176,6 @@ class UserProfiles(ViewSet):
         # else:
         #     user = User.objects.get(pk=user_id)
         #     print("ELSE")
-
 
             # image = ImageForm(request.POST, request.FILES)
             # image.save()

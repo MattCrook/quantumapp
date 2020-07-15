@@ -13,9 +13,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from quantumapi.models.model_factory import model_factory
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import serializers
-from quantumapi.models import User, UserProfile
+from quantumapi.models import User, UserProfile, ImageForm
 from rest_framework.serializers import ModelSerializer
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
+
 
 
 
@@ -81,7 +82,6 @@ class Users(viewsets.ModelViewSet):
                 "is_staff": new_user.is_staff
                 # "token": key
             }
-
             data = json.dumps({"QuantumUserData": userdict})
             return HttpResponse(data, content_type='application/json')
         except Exception as x:
@@ -90,13 +90,13 @@ class Users(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         print("REQUEST", request.data)
         user = User.objects.get(pk=pk)
-        userprofile = UserProfile.objects.get(user=user)
-        print("UP", userprofile)
+        user_id = user.id
+        userprofile = UserProfile.objects.get(user_id=user_id)
 
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
         user.username = request.data["username"]
-        user.userprofile = userprofile
+        user.email = request.data["email"]
 
         user.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
