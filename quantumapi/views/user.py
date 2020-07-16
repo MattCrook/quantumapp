@@ -17,6 +17,10 @@ from quantumapi.models import User, UserProfile, ImageForm
 from rest_framework.serializers import ModelSerializer
 from rest_framework.authtoken.models import Token
 
+from quantumapi.auth0_views import requires_scope
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+
 
 
 
@@ -47,13 +51,14 @@ class Users(viewsets.ModelViewSet):
     #         permission_classes = [IsLoggedIUserOrAdmin]
     #     return [permission() for permission in permission_classes]
 
+
     def list(self, request):
         queryset = User.objects.all()
         serializer = UserSerializer(
             queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
-    @csrf_exempt
+    # @csrf_exempt
     def create(self, request):
         try:
             req_body = json.loads(request.body.decode())

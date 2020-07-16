@@ -6,9 +6,9 @@ import os
 from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN
 
 
-
+# function that maps the sub field from the access_token to the username.
+# Then, the authenticate method from RemoteUserBackend will create a remote user in the Django authentication system and return a User object for the username.
 def jwt_get_username_from_payload_handler(payload):
-    print("PAY", payload)
     username = payload.get('sub').replace('|', '.')
     authenticate(remote_user=username)
     return username
@@ -26,6 +26,5 @@ def jwt_decode_token(token):
     if public_key is None:
         raise Exception('Public key not found.')
 
-    api_identifier = API_IDENTIFIER
     issuer = 'https://{}/'.format('dev-405n1e6w.auth0.com')
-    return jwt.decode(token, public_key, audience=api_identifier, issuer=issuer, algorithms=['RS256'])
+    return jwt.decode(token, public_key, audience=API_IDENTIFIER, issuer=issuer, algorithms=['RS256'])

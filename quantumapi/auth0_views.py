@@ -9,7 +9,6 @@ from rest_framework.permissions import AllowAny
 # Obtains the Access Token from the Authorization Header
 def get_token_auth_header(request):
     auth = request.META.get("HTTP_AUTHORIZATION", None)
-    print("auth", auth)
     parts = auth.split()
     token = parts[1]
     return token
@@ -18,7 +17,7 @@ def get_token_auth_header(request):
 # Determines if the required scope is present in the Access Token
 # Args: required_scope (str): The scope required to access the resource
 def requires_scope(required_scope):
-    print("scope", required_scope)
+    print("scopeprint", required_scope)
     def require_scope(f):
         @wraps(f)
         def decorated(*args, **kwargs):
@@ -53,7 +52,7 @@ def requires_scope(required_scope):
 #     return JsonResponse({'message': 'Hello from a private endpoint! You need to be authenticated to see this.'})
 
 
-# # Use the requires_scope decorator in the methods that require specific scopes granted. T
+# # Use the requires_scope decorator in the methods that require specific scopes granted. 
 # # The method below requires the read:messages scope granted.
 # @api_view(['GET'])
 # @requires_scope('read:messages')

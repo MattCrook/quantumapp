@@ -95,7 +95,3 @@ urlpatterns = [
     # path('api/$', get_schema_view()),
     # path('api/auth/token/obtain/$', TokenObtainPairView.as_view()),
     # path('api/auth/token/refresh/$', TokenRefreshView.as_view()),
-
-
-    # path('register/', register_user),
-    # path('login/', login_user),
