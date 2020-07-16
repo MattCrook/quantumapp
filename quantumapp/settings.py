@@ -145,9 +145,9 @@ LOGIN_REDIRECT_URL = '/home'
 
 JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-        'auth0authorization.utils.jwt_get_username_from_payload_handler',
+        'quantumapi.utils.jwt_get_username_from_payload_handler',
     'JWT_DECODE_HANDLER':
-        'auth0authorization.utils.jwt_decode_token',
+        'quantumapi.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
     'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
