@@ -103,6 +103,14 @@ class Users(viewsets.ModelViewSet):
         user.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
+    def retrieve(self, request, pk=None):
+        try:
+            user = User.objects.get(pk=pk)
+            serializer = UserSerializer(user, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
 @csrf_exempt
 def get_user(request):
 

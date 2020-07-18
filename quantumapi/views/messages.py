@@ -14,8 +14,8 @@ class MessagesSerializer(serializers.HyperlinkedModelSerializer):
             view_name='messages',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'message', 'timestamp', 'user_id')
-        depth = 1
+        fields = ('id', 'url', 'message', 'timestamp', 'user_id', 'user', )
+        depth = 2
 
 
 class Message(ViewSet):
