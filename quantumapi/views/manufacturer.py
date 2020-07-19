@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Manufacturer
+from urllib.parse import urlencode
 
 
 class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,7 +15,8 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
             view_name='manufacturer',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'name', 'origin_country', 'company_website', 'rollercoasters')
+        fields = ('id', 'url', 'name', 'origin_country',
+                  'company_website', 'rollercoasters')
         depth = 1
 
 
@@ -32,6 +34,10 @@ class Manufacturers(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             manufacturer = Manufacturer.objects.get(pk=pk)
+            name = self.request.query_params.get('name', None)
+            if name is not None:
+                manufacturer = manufacturer.filter(name=name)
+
             serializer = ManufacturerSerializer(manufacturer, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
@@ -64,5 +70,6 @@ class Manufacturers(ViewSet):
         name = self.request.query_params.get('name', None)
         if name is not None:
             manufacturers = manufacturers.filter(name=name)
+
         serializer = ManufacturerSerializer(manufacturers, many=True, context={'request': request})
         return Response(serializer.data)
