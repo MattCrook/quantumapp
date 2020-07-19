@@ -71,6 +71,9 @@ class RollerCoasters(ViewSet):
 
     def list(self, request):
         rollercoasters = RollerCoaster.objects.all()
-        serializer = RollerCoasterSerializer(
-            rollercoasters, many=True, context={'request': request})
+        park_id = self.request.query_params.get("park_id", None);
+
+        if park_id is not None:
+            rollercoasters = rollercoasters.filter(park_id=park_id)
+        serializer = RollerCoasterSerializer(rollercoasters, many=True, context={'request': request})
         return Response(serializer.data)
