@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         email = serializers.SerializerMethodField()
         fields = ('id', 'url', 'email', 'first_name', 'last_name', 'password', 'username',
-                  'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', )
+                  'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'auth0_identifier', )
         extra_kwargs = {'password': {'write_only': True}}
         depth = 1
 
@@ -54,29 +54,33 @@ class Users(viewsets.ModelViewSet):
 
     def list(self, request):
         queryset = User.objects.all()
-        serializer = UserSerializer(
-            queryset, many=True, context={'request': request})
+        serializer = UserSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
-    # @csrf_exempt
+    @csrf_exempt
     def create(self, request):
         try:
             req_body = json.loads(request.body.decode())
 
             new_user = User.objects.create_user(
+                first_name=req_body['first_name'],
+                last_name=req_body['last_name'],
                 username=req_body['username'],
                 email=req_body['email'],
                 password=req_body['password'],
-                first_name=req_body['first_name'],
-                last_name=req_body['last_name']
+                auth0_identifier=req_body['auth0_identifier']
             )
+
             new_userprofile = UserProfile.objects.create(
                 address=req_body["address"],
                 user=new_user
             )
+
             new_userprofile.save()
-            # token = Token.objects.create(user=new_user)
-            # key = token.key
+            print(new_userprofile)
+            token = Token.objects.create(user=new_user)
+            print(token)
+            key = token.key
 
             # Specifying the response that the API sends back From making a POST to Users. (the .then() from client side.)
             userdict = {
@@ -84,13 +88,16 @@ class Users(viewsets.ModelViewSet):
                 "last": new_user.last_name,
                 "email": new_user.email,
                 "username": new_user.username,
-                "is_staff": new_user.is_staff
-                # "token": key
+                "is_staff": new_user.is_staff,
+                "auth0_identifier": auth0_identifier,
+                "QuantumToken": key
             }
-            data = json.dumps({"QuantumUserData": userdict})
+            print("USERDICT", userdict)
+            data = json.dumps({"QuantumUserDict": userdict})
             return HttpResponse(data, content_type='application/json')
         except Exception as x:
             return HttpResponse(x, content_type='application/json')
+
 
     def update(self, request, pk=None):
         user = User.objects.get(pk=pk)
@@ -102,6 +109,7 @@ class Users(viewsets.ModelViewSet):
 
         user.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
     def retrieve(self, request, pk=None):
         try:

@@ -45,27 +45,32 @@ class UserProfiles(ViewSet):
 
             if email is not None:
                 auth_user = User.objects.filter(email=email)
-                serializer = UserSerializer(
-                    auth_user, many=True, context={'request': request})
+                serializer = UserSerializer(auth_user, many=True, context={'request': request})
+
             elif user_id is not None:
                 userprofile = UserProfile.objects.filter(user_id=user_id)
-                serializer = UserProfileSerializer(
-                    userprofile, many=True, context={'request': request})
+                serializer = UserProfileSerializer(userprofile, many=True, context={'request': request})
+
             else:
-                serializer = UserProfileSerializer(
-                    userprofiles, many=True, context={'request': request})
+                serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
 
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    # def create(self, request):
+    #     new_userprofile = UserProfile()
+    #     new_userprofile.address = request.data["address"]
+    #     new_userprofile.save()
+    #     serializer = UserProfileSerializer(userprofile, context={'request': request})
+    #     return Response(serializer.data)
 
 
 
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
-            serializer = UserProfileSerializer(
-                userprofile, context={'request': request})
+            serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)

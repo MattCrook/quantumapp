@@ -24,16 +24,6 @@ def register_user(request):
             last_name=req_body['last_name']
         )
 
-        # new_image = ImageForm(request.POST, request.FILES)
-        # img_obj = new_image.instance
-        # img_obj.image = request.FILES["image"]
-
-
-        # new_image = Image.objects.create(
-        #     image=request.FILES["image"]
-        # )
-
-
         new_userprofile = UserProfile.objects.create(
             address=req_body["address"],
             user=new_user

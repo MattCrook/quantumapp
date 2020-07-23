@@ -18,6 +18,7 @@ class User(AbstractUser):
     username = models.CharField(('username'), max_length=50, unique=True)
     email = models.CharField(('email'), unique=True, max_length=50)
     password = models.CharField(('password'), max_length=50, unique=True)
+    auth0_identifier = models.CharField(('auth0_identifier'), max_length=50, null=True, blank=True)
 
     # USERNAME_FIELD = A string describing the name of the field on the User model that is used as the unique identifier.
     # The field must be unique (i.e., have unique=True set in its definition);
