@@ -7,3 +7,7 @@ from .credit import Credit
 from .messages import Messages
 from .images import Image, ImageForm
 from .user import User
+from .forms import  CustomUserChangeForm, CustomUserCreationForm
+from .usermanager import CustomUserManager
+from .UserAdmin import UserAdmin
+# from .forms import SignUpForm
