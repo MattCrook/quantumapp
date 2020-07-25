@@ -1,7 +1,8 @@
 # from rest_framework import serializers
-# from quantumapi.models import User, UserProfile
+# from quantumapi.models import User
 # from rest_framework.serializers import ModelSerializer
 # # from drf_queryfields import QueryFieldsMixin
+
 
 
 
