@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Messages
+from django.contrib.auth.decorators import login_required
+
 
 
 class MessagesSerializer(serializers.HyperlinkedModelSerializer):
@@ -59,6 +61,7 @@ class Message(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def list(self, request):
+        print("MESSAGELIST", request.user)
         messages = Messages.objects.all()
         serializer = MessagesSerializer(messages, many=True, context={'request': request})
         return Response(serializer.data)

@@ -1,14 +1,19 @@
 import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
-from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile
+from rest_auth.models import TokenModel
+# from rest_framework.authtoken.models import Token
+
+
+
 
 @csrf_exempt
 def login_user(request):
 
     req_body = json.loads(request.body.decode())
+    print("LOGIN", req_body)
 
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
@@ -23,7 +28,7 @@ def login_user(request):
             token = Token.objects.get(user=authenticated_user)
             data = json.dumps(
                 {
-                    "valid": True, 
+                    "valid": True,
                     "user_id": authenticated_user.id,
                     "token": token.key
                 }

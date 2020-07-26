@@ -15,7 +15,7 @@ from django.conf import settings
 
 from quantumapi.models import *
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images
-from quantumapi.views import login_user, register_user
+from quantumapi.views import login_user, register_user, get_user
 # from quantumapi import urls
 
 
@@ -38,9 +38,15 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/login/', login_user),
     path('rest-auth/registration/', register_user),
-    # path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
     url(r'^accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
+    path('get_user/', get_user),
+    path('rest-auth/logout/', include('rest_auth.registration.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+    # path('rest-auth/registration/', include('rest_auth.registration.urls')),
