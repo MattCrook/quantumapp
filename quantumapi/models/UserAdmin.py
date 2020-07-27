@@ -4,14 +4,14 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .user import User
 
 
-class UserAdmin(UserAdmin):
+class QuantumUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
     list_display = ('first_name', 'last_name', 'username', 'auth0_identifier', 'email', 'is_staff', 'is_active', 'is_superuser', 'date_joined', )
     list_filter = ('first_name', 'last_name', 'email', 'is_staff', 'is_active',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'first_name', 'last_name', 'username')}),
         ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser')}),
     )
     add_fieldsets = (

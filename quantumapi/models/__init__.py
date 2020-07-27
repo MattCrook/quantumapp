@@ -9,5 +9,5 @@ from .images import Image, ImageForm
 from .user import User
 from .forms import  CustomUserChangeForm, CustomUserCreationForm
 from .usermanager import CustomUserManager
-from .UserAdmin import UserAdmin
+from .UserAdmin import QuantumUserAdmin
 # from .forms import SignUpForm

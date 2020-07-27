@@ -14,7 +14,8 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         image = serializers.ImageField(max_length=None, use_url=True)
-        fields = ('id', 'image', )
+        fields = ('id', 'image',)
+
 
     def create(self, validated_data):
         return Image.objects.create(**validated_data)

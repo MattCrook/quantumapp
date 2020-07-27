@@ -1,15 +1,16 @@
 import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
-# from rest_auth.models import DefaultTokenModel
 from rest_auth.models import TokenModel
 from rest_auth.serializers import TokenSerializer
 from rest_auth.utils import default_create_token
 from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile, Image, ImageForm, User
 from ..user import UserSerializer
+from .login import login_user
 # from rest_auth.app_settings import DefaultTokenSerializer
 # from rest_framework.authtoken.models import Token
+# from rest_auth.models import DefaultTokenModel
 
 
 
@@ -39,28 +40,35 @@ def register_user(request):
         # Commit the user to the database by saving it
         new_userprofile.save()
 
-        # Use the REST_AUTH'S token generator on the new user account
-        # token = DefaultTokenModel.objects.create(user=new_user)
-        token = default_create_token(TokenModel, new_user, TokenSerializer)
-        print("TOKEN", token)
-        key = token.key
-        print("KEY", token.key)
+        # Login the newly created user to register with admin site, create a session, and return the user dict and token
+        email = req_body['email']
+        password = req_body['password']
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            login(request, user)
 
-        # token = Token.objects.create(user=new_user)
-        # key = token.key
-        user_obj = {
-            "first": new_user.first_name,
-            "last": new_user.last_name,
-            "email": new_user.email,
-            "username": new_user.username,
-            "is_staff": new_user.is_staff,
-            "auth0_identifier": new_user.auth0_identifier,
-            "QuantumToken": key
-        }
+            # Use the REST_AUTH'S token generator on the new user account
+            # token = DefaultTokenModel.objects.create(user=new_user)
+            token = default_create_token(TokenModel, new_user, TokenSerializer)
+            key = token.key
 
-        # Return the response object of choice (with the token) to the client
-        data = json.dumps({"DjangoUser": user_obj})
-        return HttpResponse(data, content_type='application/json')
+
+            # token = Token.objects.create(user=new_user)
+            # key = token.key
+            user_obj = {
+                "id": new_user.id,
+                "first_name": new_user.first_name,
+                "last_name": new_user.last_name,
+                "email": new_user.email,
+                "username": new_user.username,
+                "is_staff": new_user.is_staff,
+                "auth0_identifier": new_user.auth0_identifier,
+                "QuantumToken": key
+            }
+
+            # Return the response object of choice (with the token) to the client
+            data = json.dumps({"DjangoUser": user_obj})
+            return HttpResponse(data, content_type='application/json')
 
     except Exception as x:
         return HttpResponse(x, content_type='application/json')

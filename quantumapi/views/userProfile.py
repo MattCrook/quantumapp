@@ -68,8 +68,13 @@ class UserProfiles(ViewSet):
         user = User.objects.get(pk=userprofile_user_id)
         email = self.request.query_params.get('email', None)
 
+        image_instance = request.data['image']
+        image = Image.objects.get(pk=image_instance['id'])
+
+
         userprofile.address = request.data["address"]
-        userprofile.image_id = request.data["image_id"]
+        userprofile.image = image
+
         userprofile.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
