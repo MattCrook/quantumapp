@@ -56,8 +56,9 @@ def register_user(request):
             # token = Token.objects.create(user=new_user)
             # key = token.key
             user_obj = {
-                "first": new_user.first_name,
-                "last": new_user.last_name,
+                "id": new_user.id,
+                "first_name": new_user.first_name,
+                "last_name": new_user.last_name,
                 "email": new_user.email,
                 "username": new_user.username,
                 "is_staff": new_user.is_staff,
