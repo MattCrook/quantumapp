@@ -63,20 +63,26 @@ class UserProfiles(ViewSet):
 
 
     def update(self, request, pk=None):
-        userprofile = UserProfile.objects.get(pk=pk)
-        userprofile_user_id = userprofile.user_id
-        user = User.objects.get(pk=userprofile_user_id)
-        email = self.request.query_params.get('email', None)
+        try:
+            userprofile = UserProfile.objects.get(pk=pk)
+            userprofile_user_id = userprofile.user_id
+            user = User.objects.get(pk=userprofile_user_id)
+            email = self.request.query_params.get('email', None)
 
-        image_instance = request.data['image']
-        image = Image.objects.get(pk=image_instance['id'])
+            image_instance = request.data['image']
+            if image_instance is not None:
+                image = Image.objects.get(pk=image_instance['id'])
+                userprofile.image = image
 
+            userprofile.address = request.data["address"]
+            userprofile.user = user
 
-        userprofile.address = request.data["address"]
-        userprofile.image = image
-
-        userprofile.save()
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+            userprofile.save()
+            return Response({'UserProfile Updated Successfully'}, status=status.HTTP_204_NO_CONTENT)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def destroy(self, request, pk=None):

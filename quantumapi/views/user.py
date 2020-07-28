@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
         token = serializers.SerializerMethodField()
         fields = ('id', 'email', 'first_name', 'last_name', 'password', 'username',
                   'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'auth0_identifier', 'is_superuser', 'is_active',  )
-        extra_kwargs = {'password': {'write_only': True}}
+        # extra_kwargs = {'password': {'write_only': True}}
         depth = 1
 
 

@@ -2,10 +2,6 @@ import os
 import datetime
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-# from rest_framework.settings import APISettings
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
 from datetime import timedelta
 # import dotenv
 
@@ -255,30 +251,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 # Django All-Auth Settings
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_CONFIRM_EMAIL_ON_GET = False
-
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
-
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'none'
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'none'
+# ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'None'
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'None'
 
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-
 REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'quantumapi.views.UserSerializer' }
-
-FIXTURE_DIRS = (
-   '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures',
-)
+# FIXTURE_DIRS = ('/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures', )
 
 
 

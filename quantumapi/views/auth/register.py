@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile, Image, ImageForm, User
 from ..user import UserSerializer
 from .login import login_user
+
+# from allauth.account.forms import LoginForm
 # from rest_auth.app_settings import DefaultTokenSerializer
 # from rest_framework.authtoken.models import Token
 # from rest_auth.models import DefaultTokenModel
@@ -49,7 +51,7 @@ def register_user(request):
 
             # Use the REST_AUTH'S token generator on the new user account
             # token = DefaultTokenModel.objects.create(user=new_user)
-            token = default_create_token(TokenModel, new_user, TokenSerializer)
+            token = default_create_token(TokenModel, user, TokenSerializer)
             key = token.key
 
 

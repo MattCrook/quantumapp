@@ -9,7 +9,6 @@ from .usermanager import CustomUserManager
 # from django.contrib.auth.models import UserManager
 # from django.contrib.auth.models import User
 # from quantumapi.models import Image
-
 # from django.contrib.auth.models import PermissionsMixin
 
 
@@ -19,7 +18,7 @@ class User(AbstractUser):
     last_name = models.CharField(('last name'), max_length=30, blank=True)
     username = models.CharField(('username'), max_length=50, unique=True)
     email = models.CharField(('email'), unique=True, max_length=50)
-    password = models.CharField(('password'), max_length=50, unique=True)
+    password = models.CharField(('password'), max_length=150, unique=True)
     auth0_identifier = models.CharField(('auth0_identifier'), max_length=50, null=True, blank=True)
 
 
