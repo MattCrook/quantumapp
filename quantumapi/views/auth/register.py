@@ -49,7 +49,7 @@ def register_user(request):
 
             # Use the REST_AUTH'S token generator on the new user account
             # token = DefaultTokenModel.objects.create(user=new_user)
-            token = default_create_token(TokenModel, new_user, TokenSerializer)
+            token = default_create_token(TokenModel, user, TokenSerializer)
             key = token.key
 
 

@@ -9,13 +9,12 @@ from rest_framework.response import Response
 
 from django.conf.urls import url, include
 from django.urls import path
-# from django.views import generic
 from django.conf.urls.static import static
 from django.conf import settings
-
 from quantumapi.models import *
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images
 from quantumapi.views import login_user, register_user, get_user
+# from django.views import generic
 # from quantumapi import urls
 
 
