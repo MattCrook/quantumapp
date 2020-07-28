@@ -8,6 +8,8 @@ from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile, Image, ImageForm, User
 from ..user import UserSerializer
 from .login import login_user
+
+# from allauth.account.forms import LoginForm
 # from rest_auth.app_settings import DefaultTokenSerializer
 # from rest_framework.authtoken.models import Token
 # from rest_auth.models import DefaultTokenModel
