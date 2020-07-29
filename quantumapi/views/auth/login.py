@@ -21,9 +21,9 @@ def login_user(request):
     if request.method == 'POST':
 
         # Use the built-in authenticate method to verify
-        username = req_body['username']
+        email = req_body['email']
         password = req_body['password']
-        authenticated_user = authenticate(username=username, password=password)
+        authenticated_user = authenticate(email=email, password=password)
         print("authUser", authenticated_user)
 
         # If authentication was successful, respond with their token

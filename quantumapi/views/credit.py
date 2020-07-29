@@ -35,9 +35,7 @@ class Credits(ViewSet):
 
     # Handle GET request to Credits resource.
     def list(self, request):
-
         all_credits = Credit.objects.all()
-
         # If credits is provided as a query parameter, then filter list of credits by userprofile id
         # credit = self.request.query_params.get('profile', None)
         # Get the extended table of user with the user profile table
@@ -65,7 +63,7 @@ class Credits(ViewSet):
             credit = Credit.objects.get(pk=pk)
             credit.delete()
 
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'Deleted': credit.id}, status=status.HTTP_204_NO_CONTENT)
 
         except Credit.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
