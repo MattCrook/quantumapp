@@ -1,0 +1,119 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Management</title>
+    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'styles/base.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'styles/app.css' %}" type="text/css" />
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'styles/employees/employee_list.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'styles/parks/park_list.css' %}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="{% static 'styles/parks/park_details.css' %}" type="text/css" media="screen" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'public/favicon-32x32.png'%}"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'public/favicon-16x16.png'%}"/>
+    <link rel="icon" type="image/png" href="{% static 'public/favicon.ico'%}"/> {% endcomment %}
+
+
+    {% comment %} <link rel="stylesheet" href="{% static 'styles/modal.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/parks/add_attraction.css' %}" /> {% endcomment %}
+
+</head>
+
+<body>
+
+
+  <div class="new_park_form_container">
+        <div class="add_new_park_title">Add New Park</div>
+
+        {% comment %} <div>
+            <a href="#modal-2" data-micromodal-trigger="modal-2" class="delete_attraction_btn">Delete Attraction</a><i class="far fa-trash-alt"></i>
+        </div> {% endcomment %}
+
+        {% comment %} <div class="add_park_back_button">
+            <button class="add_park_b_btn"><i class="fas fa-backward"></i><a class="add_employee"
+                    href="{% url 'quantummanagementapp:park' park.id %}">Back</a></button>
+        </div>
+    </div> {% endcomment %}
+
+  {% if park.id is not None %}
+      <form class="new_form" id="form_container" action="{% url 'quantumapp:add_new_park' park.id %}" method="POST">
+    {% csrf_token %}
+    {% else %}
+        <form class="new_form" id="form_container" action="{% url 'quantumapp:add_new_park' park.id %}" method="POST">
+        {% csrf_token %}
+
+            <div class="fieldset_container">
+                <fieldset class="new_form">
+                    <label class="new_form" for="name">Park Name: </label>
+                    <input required class="new_form" id="name" type="text" name="name" value="{{ park.name }}" />
+                </fieldset>
+            </div>
+
+           <div class="fieldset_container">
+                <fieldset class="new_form">
+                    <label class="new_form" for="parkLocation">Park State/Providence: </label>
+                    <input required class="new_form" id="parkLocation" type="text" name="parkLocation" value="{{ park.parkLocation }}" />
+                </fieldset>
+            </div>
+
+           <div class="fieldset_container">
+                <fieldset class="new_form">
+                    <label class="new_form" for="country">Park Country: </label>
+                    <input required class="new_form" id="country" type="text" name="country" value="{{ park.country }}" />
+                </fieldset>
+            </div>
+
+            <input class="new_form" id="create_park_btn" type="submit" value="Create" />
+        </form>
+    </form>
+    {% endif %}
+
+
+<div class="signature">
+        <p>Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a> <i class="far fa-copyright"></i>
+        </p>
+    </div>
+</div>
+
+</body>
+
+</html>
+
+
+
+            {% comment %} <div class="fieldset_container">
+                <fieldset class="new_form">
+                    <label class="new_form" for="tyoe">Attraction Type: </label>
+                    <select class="new_form" id="tyoe" type="text" name="type">
+                        {% for type in attraction_types %}
+                        <option value="{{ type.id }}">{{ type }}</option>
+                        {% endfor %}
+                    </select>
+                    <a href="#modal-1" data-micromodal-trigger="modal-1" class="btn6">Create new type</a>
+
+                </fieldset>
+            </div>
+
+            <div class="fieldset_container">
+                <fieldset class="new_form">
+                    <label class="new_form" for="capacity">Capacity: </label>
+                    <input required class="new_form" id="capacity" type="text" name="capacity" value="{{ attraction.capacity }}"/>
+            </div>
+
+            <div class="fieldset_container">
+                <fieldset class="new_form">
+                    <section class="form_admin_note"><strong>Admin User:</strong> {{user.first_name}} {{user.last_name}}
+                        -
+                        {{user.email}}</section>
+                    <div class="p2">*Currently adding this attraction to <strong>{{park.name}}</strong>
+                </fieldset>
+            </div> {% endcomment %}
