@@ -13,7 +13,7 @@ class Park(models.Model):
     class Meta:
         verbose_name = ("park")
         verbose_name_plural = ("parks")
-        ordering = ("parkCountry", )
+        ordering = ("name", )
 
 
     def __str__(self):

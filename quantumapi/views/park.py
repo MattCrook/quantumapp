@@ -68,3 +68,24 @@ class Parks(ViewSet):
         serializer = ParkSerializer(
             parks, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+
+# def add_new_park(request):
+#     if request.method == 'GET':
+#         parks = Park.objects.all()
+
+#         template = 'parks/add_park.html'
+#         context = {
+#             'parks': parks,
+#         }
+#         return render(request, template, context)
+#     elif request.method == 'POST':
+#         form_data = request.POST
+
+#         newpark = Park()
+#         newpark.name = request.data["name"]
+#         newpark.parkLocation = request.data["parkLocation"]
+#         newpark.parkCountry = request.data["parkCountry"]
+#         newpark.save()
+#         return redirect(reverse('quantumapi:park'))

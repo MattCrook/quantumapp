@@ -1,12 +1,7 @@
 from django.contrib import admin
 from allauth.account.views import confirm_email
-
-from rest_framework import routers
-# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
-# from rest_framework_simplejwt import views as jwt_views
 from rest_framework.response import Response
-# from rest_framework.authtoken.views import obtain_auth_token
-
+from rest_framework import routers
 from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
@@ -14,6 +9,10 @@ from django.conf import settings
 from quantumapi.models import *
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images
 from quantumapi.views import login_user, register_user, get_user
+
+# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+# from rest_framework.authtoken.views import obtain_auth_token
+# from rest_framework_simplejwt import views as jwt_views
 # from django.views import generic
 # from quantumapi import urls
 
@@ -37,15 +36,18 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/login/', login_user),
     path('rest-auth/registration/', register_user),
+    path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
-    # path('rest-auth/registration/verify-email/<slug:key>/', confirm_email, name='account_confirm_email'),
-    # url(r'^rest-auth/registration/verify-email/', confirm_email, name='account_confirm_email'),
     path('get_user/', get_user),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
+
+    # path('rest-auth/registration/verify-email/<slug:key>/', confirm_email, name='account_confirm_email'),
+    # url(r'^rest-auth/registration/verify-email/', confirm_email, name='account_confirm_email'),
+    # path('', include('quantumapi.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
