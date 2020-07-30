@@ -1,13 +1,13 @@
-from django.urls import path
+# from django.urls import path
 # from . import auth0_views
-from quantumapi import views
-from . import views
+# from quantumapi import views
+# from . import views
 # # from quantumapi.views.register import login_user
 
 
-urlpatterns = [
-    path('new/rollercoaster/parks/create/', views.Parks.as_view({'post': 'create', 'get': 'list'})),
-]
+# urlpatterns = [
+#     path('new/rollercoaster/parks/create/', views.Parks.as_view({'post': 'create', 'get': 'list'})),
+# ]
 
 
 
