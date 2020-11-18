@@ -1,5 +1,9 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth import get_user_model
+
+
+
 # from quantumapi.models import User
 # from .userProfile import UserProfile
 
@@ -12,6 +16,7 @@ from django.contrib.auth.base_user import BaseUserManager
 
 class CustomUserManager(BaseUserManager):
     use_in_migrations = True
+    # User = get_user_model()
 
     def create_user(self, email, password, **extra_fields):
         if not email:

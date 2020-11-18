@@ -14,8 +14,6 @@ from rest_auth.models import DefaultTokenModel
 def login_user(request):
 
     req_body = json.loads(request.body.decode())
-    print("REQODY", req_body)
-
 
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
@@ -29,7 +27,7 @@ def login_user(request):
         # If authentication was successful, respond with their token
         if authenticated_user is not None:
             token = DefaultTokenModel.objects.get(user=authenticated_user)
-            print(token)
+            print("restauthtoken", token)
             data = json.dumps(
                 {
                     "valid": True,

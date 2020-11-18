@@ -1,5 +1,6 @@
 from django.contrib import admin
-from allauth.account.views import confirm_email
+# from allauth.account.views import confirm_email
+from rest_auth.registration.views import ConfirmEmailView
 from rest_framework.response import Response
 from rest_framework import routers
 from django.conf.urls import url, include
@@ -39,10 +40,11 @@ urlpatterns = [
     path('rest-auth/login/', login_user),
     path('rest-auth/registration/', register_user),
     path('rest-auth/', include('rest_auth.urls')),
-    path('account/', include('allauth.urls')),
-    url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
+    # path('account/', include('allauth.urls')),
+    url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
     path('get_user/', get_user),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
+    path('social-auth/', include('social_django.urls', namespace="social")),
 
     # path('rest-auth/registration/verify-email/<slug:key>/', confirm_email, name='account_confirm_email'),
     # url(r'^rest-auth/registration/verify-email/', confirm_email, name='account_confirm_email'),

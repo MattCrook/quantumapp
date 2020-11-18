@@ -27,23 +27,15 @@ ALLOWED_HOSTS = []
 
 # Quantum-Capstone-API clientID
 AUTH0_CLIENT_ID = "kaXZdymNjopdmrlQpOL5mMBQZyvrSry0"
-
-
-# MANAGEMENT-API - client-id
-# AUTH0_CLIENT_ID = '5e711bac91a8780913c58961'
-
-
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
+AUTH0_CLIENT_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
+API_IDENTIFIER = 'https://api.quantumcoasters.com'
 
-# MANAGEMENT API SECRET
-# AUTH0_CLIENT_SECRET = "yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS"
 
 
 # QUANTUMAPI SECRET
-AUTH0_CLIENT_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
 # grant_type":"client_credentials"
 
-API_IDENTIFIER = 'https://api.quantumcoasters.com'
 
 
 # API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
@@ -60,6 +52,18 @@ API_IDENTIFIER = 'https://api.quantumcoasters.com'
 #     'profile',
 #     'email'
 # ]
+
+
+##### Auth0
+SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+SOCIAL_AUTH_AUTH0_KEY = 'kaXZdymNjopdmrlQpOL5mMBQZyvrSry0'
+SOCIAL_AUTH_AUTH0_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
+SOCIAL_AUTH_AUTH0_SCOPE = [
+    'openid',
+    'profile',
+    'email'
+]
 
 
 # THEN LOAD THE ENV VARIABLES LIKE BELOW:
@@ -81,21 +85,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-
     'rest_framework.authtoken',
     'rest_auth',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'rest_auth.registration',
-
     'corsheaders',
-    'quantumapi',
     'rest_framework_jwt',
     'social_django',
+    'quantumapi',
     'django_filters',
+    'django.contrib.sessions.middleware',
 ]
 # 'drf_queryfields',
+
 
 
 MIDDLEWARE = [
@@ -117,8 +121,9 @@ REST_FRAMEWORK = {
     #     'rest_framework.renderers.JSONRenderer',
     # ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
@@ -136,9 +141,6 @@ REST_FRAMEWORK = {
 
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
-
-LOGIN_URL = '/login/auth0'
-LOGIN_REDIRECT_URL = '/home'
 
 
 # if AUTH0_DOMAIN:
@@ -163,6 +165,7 @@ AUTHENTICATION_BACKENDS = {
     # 'quantumapi.auth0backend.Auth0',
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
+    'quantumapi.auth0_views.Auth0',
 }
 
 
@@ -187,6 +190,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -255,6 +260,16 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 
+LOGIN_URL = '/login/auth0'
+LOGIN_REDIRECT_URL = '/home'
+LOGOUT_URL = 'logout/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/authorize'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+
 # Django All-Auth Settings
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 
@@ -275,8 +290,61 @@ SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'}
-# FIXTURE_DIRS = ('/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures', )
 
+
+FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
+
+
+
+
+
+
+
+
+
+
+# QUANTUMAPI SECRET
+# grant_type":"client_credentials"
+
+
+
+# API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
+
+# AUTH0 Django APPLICATION SETTINGS
+# SOCIAL_AUTH_TRAILING_SLASH = False
+# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+# SOCIAL_AUTH_AUTH0_KEY = '7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa'
+# SOCIAL_AUTH_AUTH0_SECRET = 'yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS'
+# SOCIAL_AUTH_AUTH0_SCOPE = [
+#     'openid',
+#     'profile',
+#     'email'
+# ]
+
+
+##### Auth0
+# SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+# SOCIAL_AUTH_AUTH0_KEY = 'kaXZdymNjopdmrlQpOL5mMBQZyvrSry0'
+# SOCIAL_AUTH_AUTH0_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
+# SOCIAL_AUTH_AUTH0_SCOPE = [
+#     'openid',
+#     'profile',
+#     'email'
+# ]
+
+
+# THEN LOAD THE ENV VARIABLES LIKE BELOW:
+# ENV_FILE = find_dotenv()
+# if ENV_FILE:
+#     load_dotenv(ENV_FILE)
+
+# AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+# API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
+# PUBLIC_KEY = None
+# JWT_ISSUER = None
 
 # CLOUDINARY_URL = "cloudinary://418576712586226:IaXis96Iz93J6NH7PTrU1clKpGM@capstone-project"
 
