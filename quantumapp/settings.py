@@ -73,7 +73,6 @@ API_IDENTIFIER = 'https://api.quantumcoasters.com'
 # JWT_ISSUER = None
 
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -96,8 +95,7 @@ INSTALLED_APPS = [
     'social_django',
     'django_filters',
 ]
-    # 'drf_queryfields',
-
+# 'drf_queryfields',
 
 
 MIDDLEWARE = [
@@ -132,7 +130,6 @@ REST_FRAMEWORK = {
 }
 
 # REST_USE_JWT = True
-
 
 
 # USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
@@ -205,6 +202,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'quantumcoastersdb',
+        'USER': 'matthewcrook',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -268,9 +273,9 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
 
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'quantumapi.views.UserSerializer' }
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'}
 # FIXTURE_DIRS = ('/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures', )
-
 
 
 # CLOUDINARY_URL = "cloudinary://418576712586226:IaXis96Iz93J6NH7PTrU1clKpGM@capstone-project"
