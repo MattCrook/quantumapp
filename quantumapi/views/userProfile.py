@@ -5,7 +5,6 @@ from rest_framework import serializers, status, authentication, permissions
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
-
 from .user import UserSerializer
 from quantumapi.models import UserProfile, Credit, Image, User
 

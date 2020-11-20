@@ -9,6 +9,10 @@ from .auth import login_user, register_user
 from .user import Users, UserSerializer, get_user
 from .images import Images
 from .auth import register_user
+from .auth0data import Auth0Data
+from .credentials import Credentials
+
+
 # from .user import get_user, get_user_email
 # from .userProfile import UserProfileSerializer
 # from .forms import register_user
