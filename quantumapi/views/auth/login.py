@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile
-# from rest_auth.models import TokenModel
 from rest_auth.models import DefaultTokenModel
+# from rest_auth.models import TokenModel
 # from rest_framework.authtoken.models import Token
 
 
@@ -22,12 +22,12 @@ def login_user(request):
         email = req_body['email']
         password = req_body['password']
         authenticated_user = authenticate(email=email, password=password)
-        print("authUser", authenticated_user)
+        print("Login: authUser", authenticated_user)
 
         # If authentication was successful, respond with their token
         if authenticated_user is not None:
             token = DefaultTokenModel.objects.get(user=authenticated_user)
-            print("restauthtoken", token)
+            print("Login: restauthtoken", token)
             data = json.dumps(
                 {
                     "valid": True,

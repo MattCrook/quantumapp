@@ -3,7 +3,7 @@ from quantumapi.models import User
 from django.db import models
 
 
-class Auth0Data(models.Model):
+class Credential(models.Model):
 
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     user_sub = models.CharField(max_length=50, null=True, blank=True)
@@ -15,12 +15,14 @@ class Auth0Data(models.Model):
     transactions = models.CharField(max_length=100, null=True, blank=True)
     nonce = models.CharField(max_length=100, null=True, blank=True)
     access_token = models.CharField(max_length=200, null=True, blank=True)
+    django_token = models.CharField(max_length=100, null=True, blank=True)
+    quantum_session = models.CharField(max_length=200, null=True, blank=True)
     updated_at = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-        verbose_name = ("auth0data")
-        verbose_name_plural = ("auth0data")
+        verbose_name = ("credential")
+        verbose_name_plural = ("credentials")
         ordering = ("user", )
 
     def __str__(self):
-        return f'{self.user.username} -- {self.client_id} -- {self.audience}'
+        return f'{self.user.username} -- {self.user_sub} -- {self.quantum_session}'

@@ -10,8 +10,9 @@ from .user import User
 from .forms import  CustomUserChangeForm, CustomUserCreationForm
 from .usermanager import CustomUserManager
 from .UserAdmin import QuantumUserAdmin
-from .auth0data import Auth0Data
-from .credential import Credential
+from .auth0data import Credential
+from .news import NewsArticle
 
 
+# from .credential import Credential
 # from .forms import SignUpForm

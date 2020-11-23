@@ -6,9 +6,9 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, Credentials
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News
 from quantumapi.views import login_user, register_user, get_user
-from quantumapi.views import Auth0Data as Auth0DataView
+from quantumapi.views import Credentials as CredentialsView
 
 
 # from quantumapi.models import *
@@ -32,8 +32,9 @@ router.register(r'credits', Credits, 'credit')
 router.register(r'messages', Message, 'messages')
 router.register(r'users', Users, 'user')
 router.register(r'images', Images, 'image')
-router.register(r'auth0data', Auth0DataView, 'auth0data')
-router.register(r'credentials', Credentials, 'credentials')
+router.register(r'credentials', CredentialsView, 'credentials')
+router.register(r'news', News, 'news')
+
 
 
 

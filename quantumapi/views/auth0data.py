@@ -6,29 +6,30 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
 from quantumapi.models import User
-from quantumapi.models import Auth0Data as Auth0DataModel
 from quantumapi.models import Credential as CredentialModel
+# from quantumapi.models import Auth0Data as Auth0DataModel
 
 
 
-class Auth0DataSerializer(serializers.ModelSerializer):
+class CredentialsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Auth0DataModel
-        url = serializers.HyperlinkedIdentityField(view_name='auth0data', lookup_field='id')
-        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'updated_at')
+        model = CredentialModel
+        url = serializers.HyperlinkedIdentityField(view_name='credentials', lookup_field='id')
+        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'quantum_session', 'updated_at')
         depth = 1
 
 
 
-class Auth0Data(ViewSet):
+class Credentials(ViewSet):
     def list(self, request):
-        data = Auth0DataModel.objects.all()
+        data = CredentialModel.objects.all()
         user_id = self.request.query_params.get("user_id", None);
 
         if user_id is not None:
-            data = data.filter(user_id=user_id)
-        serializer = Auth0DataSerializer(data, many=True, context={'request': request})
+            data = CredentialModel.objects.filter(user_id=user_id)
+
+        serializer = CredentialsSerializer(data, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -36,14 +37,14 @@ class Auth0Data(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             if pk is not None:
-                auth0data = Auth0DataModel.objects.get(pk=pk)
+                auth0data = CredentialModel.objects.get(pk=pk)
 
             user_id = self.request.query_params.get("user_id", None);
 
             if user_id is not None:
-                auth0data = auth0data.filter(user_id=user_id)
+                auth0data = CredentialModel.objects.filter(user_id=user_id)
 
-            serializer = Auth0DataSerializer(auth0data, context={'request': request})
+            serializer = CredentialsSerializer(auth0data, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -53,11 +54,12 @@ class Auth0Data(ViewSet):
         try:
             if "user_sub" in request.data and request.data['user_sub']:
                 user_sub = request.data['user_sub']
+                session = request.session.get('session_key')
                 user = User.objects.get(auth0_identifier=user_sub)
-                is_auth0data = Auth0DataModel.objects.filter(user_id=user.id).exists()
+                is_auth0data = CredentialModel.objects.filter(user_id=user.id).exists()
 
                 if is_auth0data:
-                    auth0data = Auth0DataModel.objects.get(user_id=user.id)
+                    auth0data = CredentialModel.objects.get(user_id=user.id)
                     auth0data.user = user
                     auth0data.user_sub = request.data['user_sub']
                     auth0data.domain = request.data["domain"]
@@ -68,12 +70,14 @@ class Auth0Data(ViewSet):
                     auth0data.transactions = request.data["transactions"]
                     auth0data.nonce = request.data["nonce"]
                     auth0data.access_token = request.data["access_token"]
+                    auth0data.django_token = request.data["django_token"]
+                    auth0data.quantum_session = session
                     auth0data.updated_at = request.data["updated_at"]
                     auth0data.save()
-                    serializer = Auth0DataSerializer(auth0data, context={'request': request})
+                    serializer = CredentialsSerializer(auth0data, context={'request': request})
                     return Response(serializer.data)
                 else:
-                    newAuth0data = Auth0DataModel()
+                    newAuth0data = CredentialModel()
                     newAuth0data.user = user
                     newAuth0data.user_sub = request.data['user_sub']
                     newAuth0data.domain = request.data["domain"]
@@ -84,9 +88,11 @@ class Auth0Data(ViewSet):
                     newAuth0data.transactions = request.data["transactions"]
                     newAuth0data.nonce = request.data["nonce"]
                     newAuth0data.access_token = request.data["access_token"]
+                    newAuth0data.django_token = request.data["django_token"]
+                    newAuth0data.quantum_session = session
                     newAuth0data.updated_at = request.data["updated_at"]
                     newAuth0data.save()
-                    serializer = Auth0DataSerializer(newAuth0data, context={'request': request})
+                    serializer = CredentialsSerializer(newAuth0data, context={'request': request})
                     return Response(serializer.data)
 
         except Exception as ex:
@@ -99,10 +105,10 @@ class Auth0Data(ViewSet):
         try:
             if request.method == "PATCH":
                 req_data = request.data
-                print('REQDATA', req_data)
+                print('Auth0Data: REQDATA', req_data)
                 current_user_id = req_data['user_id']
                 current_auth0data_id = req_data['id']
-                auth0data = Auth0DataModel.objects.get(pk=current_auth0data_id)
+                auth0data = CredentialModel.objects.get(pk=current_auth0data_id)
 
                 if 'nonce' in req_data:
                     auth0data.nonce = req_data['nonce']
@@ -113,7 +119,20 @@ class Auth0Data(ViewSet):
                 if 'updated_at' in req_data:
                     auth0data.updated_at = req_data['updated_at']
 
+                if 'quantum_session' in req_data:
+                    auth0data.quantum_session = req_data['quantum_session']
+
+                if 'django_token' in req_data:
+                    auth0data.django_token = req_data['django_token']
+
                 auth0data.save()
+
+            elif request.method == 'PUT':
+                data = CredentialModel.objects.get(pk=pk)
+                if 'django_token' in request.data:
+                    data.django_token = request.data['django_token']
+
+                data.save()
             return Response({"Success": "Data successfully updated"}, status=status.HTTP_204_NO_CONTENT)
 
         except Exception as ex:
