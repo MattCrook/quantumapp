@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile
-# from rest_auth.models import TokenModel
 from rest_auth.models import DefaultTokenModel
+# from rest_auth.models import TokenModel
 # from rest_framework.authtoken.models import Token
 
 
@@ -14,8 +14,6 @@ from rest_auth.models import DefaultTokenModel
 def login_user(request):
 
     req_body = json.loads(request.body.decode())
-    print("REQODY", req_body)
-
 
     # If the request is a HTTP POST, try to pull out the relevant information.
     if request.method == 'POST':
@@ -24,12 +22,12 @@ def login_user(request):
         email = req_body['email']
         password = req_body['password']
         authenticated_user = authenticate(email=email, password=password)
-        print("authUser", authenticated_user)
+        print("Login: authUser", authenticated_user)
 
         # If authentication was successful, respond with their token
         if authenticated_user is not None:
             token = DefaultTokenModel.objects.get(user=authenticated_user)
-            print(token)
+            print("Login: restauthtoken", token)
             data = json.dumps(
                 {
                     "valid": True,
