@@ -12,6 +12,7 @@ from .usermanager import CustomUserManager
 from .UserAdmin import QuantumUserAdmin
 from .auth0data import Credential
 from .news import NewsArticle
+from .blog_application import BlogContributorApplication
 
 
 # from .credential import Credential

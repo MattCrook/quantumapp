@@ -11,6 +11,7 @@ from .images import Images
 from .auth import register_user
 from .auth0data import Credentials
 from .news_view import News
+from .blog_applications import BlogContributorApplications
 
 
 # from .credentials import Credentials
