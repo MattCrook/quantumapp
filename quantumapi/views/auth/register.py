@@ -4,19 +4,19 @@ from django.contrib.auth import login, authenticate
 from rest_auth.models import TokenModel
 from rest_auth.serializers import TokenSerializer
 from rest_auth.utils import default_create_token
+# from rest_auth.views import django_login
 from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile, Image, ImageForm, User
 from ..user import UserSerializer
 from .login import login_user
+from rest_framework.authtoken.models import Token
 
 # from allauth.account.forms import LoginForm
 # from rest_auth.app_settings import DefaultTokenSerializer
-# from rest_framework.authtoken.models import Token
 # from rest_auth.models import DefaultTokenModel
 
 
 
-@csrf_exempt
 def register_user(request):
 
     # Load the JSON string of the request body into a dict
@@ -45,18 +45,16 @@ def register_user(request):
         # Login the newly created user to register with admin site, create a session, and return the user dict and token
         email = req_body['email']
         password = req_body['password']
-        user = authenticate(email=email, password=password)
-        if user is not None:
-            login(request, user)
+        authenticated_user = authenticate(email=email, password=password)
 
+        if authenticated_user is not None:
             # Use the REST_AUTH'S token generator on the new user account
             # token = DefaultTokenModel.objects.create(user=new_user)
-            token = default_create_token(TokenModel, user, TokenSerializer)
+            # token = default_create_token(TokenModel, authenticated_user, TokenSerializer)
+            # key = token.key
+            token = Token.objects.create(user=new_user)
             key = token.key
 
-
-            # token = Token.objects.create(user=new_user)
-            # key = token.key
             user_obj = {
                 "id": new_user.id,
                 "first_name": new_user.first_name,
@@ -70,6 +68,7 @@ def register_user(request):
 
             # Return the response object of choice (with the token) to the client
             data = json.dumps({"DjangoUser": user_obj})
+            login(request, authenticated_user)
             return HttpResponse(data, content_type='application/json')
 
     except Exception as x:

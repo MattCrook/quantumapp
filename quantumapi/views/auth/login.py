@@ -5,48 +5,48 @@ from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile
 from rest_auth.models import DefaultTokenModel
 # from rest_auth.models import TokenModel
-# from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework import status
 
 
 
-
-@csrf_exempt
 def login_user(request):
+    try:
+        req_body = json.loads(request.body.decode())
 
-    req_body = json.loads(request.body.decode())
+        # If the request is a HTTP POST, try to pull out the relevant information.
+        if request.method == 'POST':
 
-    # If the request is a HTTP POST, try to pull out the relevant information.
-    if request.method == 'POST':
+            # Use the built-in authenticate method to verify
+            email = req_body['email']
+            password = req_body['password']
+            authenticated_user = authenticate(email=email, password=password)
+            print("Login: authUser", authenticated_user)
 
-        # Use the built-in authenticate method to verify
-        email = req_body['email']
-        password = req_body['password']
-        authenticated_user = authenticate(email=email, password=password)
-        print("Login: authUser", authenticated_user)
+            # If authentication was successful, respond with their token
+            if authenticated_user is not None:
+                token = Token.objects.get(user=authenticated_user)
+                print("Login: restauthtoken", token)
+                data = json.dumps(
+                    {
+                        "valid": True,
+                        "id": authenticated_user.id,
+                        "first_name": authenticated_user.first_name,
+                        "last_name": authenticated_user.last_name,
+                        "email": authenticated_user.email,
+                        "username": authenticated_user.username,
+                        "auth0_identifier": authenticated_user.auth0_identifier,
+                        "QuantumToken": token.key
+                    }
+                )
+                login(request, authenticated_user)
+                return HttpResponse(data, content_type='application/json')
 
-        # If authentication was successful, respond with their token
-        if authenticated_user is not None:
-            token = DefaultTokenModel.objects.get(user=authenticated_user)
-            print("Login: restauthtoken", token)
-            data = json.dumps(
-                {
-                    "valid": True,
-                    "id": authenticated_user.id,
-                    "first_name": authenticated_user.first_name,
-                    "last_name": authenticated_user.last_name,
-                    "email": authenticated_user.email,
-                    "username": authenticated_user.username,
-                    "auth0_identifier": authenticated_user.auth0_identifier,
-                    "QuantumToken": token.key
-                }
-            )
-            return HttpResponse(data, content_type='application/json')
+            else:
+                # Bad login details were provided. So we can't log the user in.
+                data = json.dumps({"valid": False, "Error": 'Unable to Authenticate Credentials'})
+                return HttpResponse(data, content_type='application/json')
 
-        else:
-            # Bad login details were provided. So we can't log the user in.
-            data = json.dumps({"valid": False, "Error": 'Unable to Authenticate Credentials'})
-            return HttpResponse(data, content_type='application/json')
-
-                    # "valid": True,
-                    # "user_id": authenticated_user.id,
-                    # "token": token.key
+    except Exception as ex:
+        return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

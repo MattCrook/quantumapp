@@ -15,5 +15,4 @@ from .news import NewsArticle
 from .blog_application import BlogContributorApplication
 
 
-# from .credential import Credential
 # from .forms import SignUpForm

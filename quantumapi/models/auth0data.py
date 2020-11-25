@@ -16,7 +16,9 @@ class Credential(models.Model):
     nonce = models.CharField(max_length=100, null=True, blank=True)
     access_token = models.CharField(max_length=200, null=True, blank=True)
     django_token = models.CharField(max_length=100, null=True, blank=True)
-    quantum_session = models.CharField(max_length=200, null=True, blank=True)
+    session_id = models.CharField(max_length=200, null=True, blank=True)
+    session = models.CharField(max_length=200, null=True, blank=True)
+    csrf_token = models.CharField(max_length=200, null=True, blank=True)
     updated_at = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
@@ -25,4 +27,4 @@ class Credential(models.Model):
         ordering = ("user", )
 
     def __str__(self):
-        return f'{self.user.username} -- {self.user_sub} -- {self.quantum_session}'
+        return f'{self.user.username} -- {self.user_sub} -- {self.session}'

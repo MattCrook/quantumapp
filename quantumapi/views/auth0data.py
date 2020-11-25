@@ -16,7 +16,7 @@ class CredentialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CredentialModel
         url = serializers.HyperlinkedIdentityField(view_name='credentials', lookup_field='id')
-        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'quantum_session', 'updated_at')
+        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'updated_at')
         depth = 1
 
 
@@ -54,11 +54,13 @@ class Credentials(ViewSet):
         try:
             if "user_sub" in request.data and request.data['user_sub']:
                 user_sub = request.data['user_sub']
-                session = request.session.get('session_key')
+                session = request.session.keys()
+                print("SESSION", session)
+                print(request.user.is_authenticated)
                 user = User.objects.get(auth0_identifier=user_sub)
                 is_auth0data = CredentialModel.objects.filter(user_id=user.id).exists()
 
-                if is_auth0data:
+                if is_auth0data and user_sub == user.auth0_identifier:
                     auth0data = CredentialModel.objects.get(user_id=user.id)
                     auth0data.user = user
                     auth0data.user_sub = request.data['user_sub']
@@ -71,7 +73,9 @@ class Credentials(ViewSet):
                     auth0data.nonce = request.data["nonce"]
                     auth0data.access_token = request.data["access_token"]
                     auth0data.django_token = request.data["django_token"]
-                    auth0data.quantum_session = session
+                    auth0data.session = request.data["session"]
+                    auth0data.session_id = request.data["session_id"]
+                    auth0data.csrf_token = request.data["csrf_token"]
                     auth0data.updated_at = request.data["updated_at"]
                     auth0data.save()
                     serializer = CredentialsSerializer(auth0data, context={'request': request})
@@ -89,7 +93,9 @@ class Credentials(ViewSet):
                     newAuth0data.nonce = request.data["nonce"]
                     newAuth0data.access_token = request.data["access_token"]
                     newAuth0data.django_token = request.data["django_token"]
-                    newAuth0data.quantum_session = session
+                    newAuth0data.session = request.data["session"]
+                    newAuth0data.session_id = request.data["session_id"]
+                    newAuth0data.csrf_token = request.data["csrf_token"]
                     newAuth0data.updated_at = request.data["updated_at"]
                     newAuth0data.save()
                     serializer = CredentialsSerializer(newAuth0data, context={'request': request})
@@ -119,8 +125,8 @@ class Credentials(ViewSet):
                 if 'updated_at' in req_data:
                     auth0data.updated_at = req_data['updated_at']
 
-                if 'quantum_session' in req_data:
-                    auth0data.quantum_session = req_data['quantum_session']
+                if 'session' in req_data:
+                    auth0data.quantum_session = req_data['session']
 
                 if 'django_token' in req_data:
                     auth0data.django_token = req_data['django_token']
