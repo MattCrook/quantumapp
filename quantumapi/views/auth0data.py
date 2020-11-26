@@ -7,6 +7,10 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
 from quantumapi.models import User
 from quantumapi.models import Credential as CredentialModel
+from django.middleware.csrf import get_token
+
+
+from django.views.decorators.csrf import csrf_protect
 # from quantumapi.models import Auth0Data as Auth0DataModel
 
 
@@ -49,12 +53,14 @@ class Credentials(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
-
+    # @csrf_protect
     def create(self, request):
         try:
             if "user_sub" in request.data and request.data['user_sub']:
                 user_sub = request.data['user_sub']
                 session = request.session.keys()
+                csrftoken = get_token(request)
+                print(csrftoken)
                 print("SESSION", session)
                 print(request.user.is_authenticated)
                 user = User.objects.get(auth0_identifier=user_sub)
@@ -75,7 +81,7 @@ class Credentials(ViewSet):
                     auth0data.django_token = request.data["django_token"]
                     auth0data.session = request.data["session"]
                     auth0data.session_id = request.data["session_id"]
-                    auth0data.csrf_token = request.data["csrf_token"]
+                    auth0data.csrf_token = csrftoken
                     auth0data.updated_at = request.data["updated_at"]
                     auth0data.save()
                     serializer = CredentialsSerializer(auth0data, context={'request': request})
@@ -95,7 +101,7 @@ class Credentials(ViewSet):
                     newAuth0data.django_token = request.data["django_token"]
                     newAuth0data.session = request.data["session"]
                     newAuth0data.session_id = request.data["session_id"]
-                    newAuth0data.csrf_token = request.data["csrf_token"]
+                    newAuth0data.csrf_token = csrftoken
                     newAuth0data.updated_at = request.data["updated_at"]
                     newAuth0data.save()
                     serializer = CredentialsSerializer(newAuth0data, context={'request': request})

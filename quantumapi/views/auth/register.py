@@ -9,15 +9,18 @@ from django.views.decorators.csrf import csrf_exempt
 from quantumapi.models import UserProfile, Image, ImageForm, User
 from ..user import UserSerializer
 from .login import login_user
-from rest_framework.authtoken.models import Token
+from django.middleware.csrf import get_token
+# from rest_framework.authtoken.models import Token
 
 # from allauth.account.forms import LoginForm
 # from rest_auth.app_settings import DefaultTokenSerializer
 # from rest_auth.models import DefaultTokenModel
 
 
-
+@csrf_exempt
 def register_user(request):
+    # csrftoken = get_token(request)
+    # print(csrftoken)
 
     # Load the JSON string of the request body into a dict
     req_body = json.loads(request.body.decode())
@@ -52,7 +55,7 @@ def register_user(request):
             # token = DefaultTokenModel.objects.create(user=new_user)
             # token = default_create_token(TokenModel, authenticated_user, TokenSerializer)
             # key = token.key
-            token = Token.objects.create(user=new_user)
+            token = TokenModel.objects.create(user=authenticated_user)
             key = token.key
 
             user_obj = {
