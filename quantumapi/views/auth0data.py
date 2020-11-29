@@ -12,7 +12,7 @@ from django.contrib.sessions.models import Session
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 import psycopg2
-# from django.views.decorators.csrf import csrf_protect
+
 
 
 
@@ -60,19 +60,16 @@ class Credentials(ViewSet):
             if "user_sub" in request.data and request.data['user_sub']:
                 user_sub = request.data['user_sub']
 
-                if 'csrf_token' in request.data and request.data['csrf_token'] != '':
+                if 'csrf_token' in request.data and request.data['csrf_token']:
                     csrftoken = request.data['csrf_token']
                 else:
                     csrftoken = get_token(request)
 
-                if 'session_id' in request.data and request.data['session_id'] != '':
+                if 'session_id' in request.data and request.data['session_id']:
                     print('HERE?')
                     session_id = request.data['session_id']
                     session = Session.objects.get(session_key=session_id)
-                    print(session)
                     decoded_session = session.get_decoded()
-                    print(decoded_session)
-
                 else:
                     print("Session Error: No Session tied to user.")
                     session_id = ''

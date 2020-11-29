@@ -10,16 +10,17 @@ from django.middleware.csrf import get_token
 from rest_auth.models import TokenModel
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
+from rest_framework.decorators import api_view, renderer_classes
+
 # from rest_framework.authtoken.models import Token
 
 
-@csrf_exempt
+# @csrf_exempt
+@api_view(('GET', 'POST'))
 def register_user(request):
-    print(request.user)
-
-    req_body = json.loads(request.body.decode())
-
     try:
+        req_body = json.loads(request.body.decode())
+
         UserModel = get_user_model()
         user = UserModel.objects.get(auth0_identifier=req_body['auth0_identifier'])
 
@@ -27,7 +28,8 @@ def register_user(request):
         user.last_name = req_body['last_name']
         user.username = req_body['username']
         user.email = req_body['email']
-        user.password = req_body['password']
+        password = req_body['password']
+        user.set_password(password)
         user.save()
 
         new_userprofile = UserProfile.objects.create(
@@ -36,14 +38,20 @@ def register_user(request):
         )
         new_userprofile.save()
 
+        # password already defined above
+        # password = req_body['password']
         email = req_body['email']
-        password = req_body['password']
         authenticated_user = authenticate(email=email, password=password)
-
         token = TokenModel.objects.create(user=user)
         key = token.key
         login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
-        session = request.session
+        session_user = request.session
+        is_session = Session.objects.filter(session_key=session_user.session_key).exists()
+        if is_session:
+            session = is_session
+        else:
+            session = request.session
+
 
         user_obj = {
             "id": user.id,
