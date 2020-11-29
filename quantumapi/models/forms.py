@@ -1,4 +1,4 @@
-from quantumapi.models import User
+from quantumapi.models import User as UserModel
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
@@ -7,13 +7,13 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
-        model = User
+        model = UserModel
         fields = ('username', 'email', 'password', 'first_name', 'last_name', 'auth0_identifier', )
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
-        model = User
+        model = UserModel
         fields = ('username', 'email', 'password', 'first_name', 'last_name', 'auth0_identifier', )
 
 

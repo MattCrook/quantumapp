@@ -21,61 +21,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# PUT THESE IN THE DOTENV FILE
-# AUTH0 Django Application Settings
-# AUTH0_CLIENT_ID = "7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa"
-
-# Quantum-Capstone-API clientID
-AUTH0_CLIENT_ID = "kaXZdymNjopdmrlQpOL5mMBQZyvrSry0"
-AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
-AUTH0_CLIENT_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
-API_IDENTIFIER = 'https://api.quantumcoasters.com'
-
-
-
-# QUANTUMAPI SECRET
-# grant_type":"client_credentials"
-
-
-
-# API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
-# PUBLIC_KEY = None
-# JWT_ISSUER = None
-
-# AUTH0 Django APPLICATION SETTINGS
-# SOCIAL_AUTH_TRAILING_SLASH = False
-# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-# SOCIAL_AUTH_AUTH0_KEY = '7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa'
-# SOCIAL_AUTH_AUTH0_SECRET = 'yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS'
-# SOCIAL_AUTH_AUTH0_SCOPE = [
-#     'openid',
-#     'profile',
-#     'email'
-# ]
-
-
-##### Auth0
-SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-SOCIAL_AUTH_AUTH0_KEY = 'kaXZdymNjopdmrlQpOL5mMBQZyvrSry0'
-SOCIAL_AUTH_AUTH0_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
-SOCIAL_AUTH_AUTH0_SCOPE = [
-    'openid',
-    'profile',
-    'email'
-]
-
-
-# THEN LOAD THE ENV VARIABLES LIKE BELOW:
-# ENV_FILE = find_dotenv()
-# if ENV_FILE:
-#     load_dotenv(ENV_FILE)
-
-# AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
-# API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
-# PUBLIC_KEY = None
-# JWT_ISSUER = None
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,19 +32,19 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
-    'corsheaders',
     'rest_framework_jwt',
+    'django.contrib.sites',
+    'rest_auth.registration',
+    'allauth',
+    'allauth.socialaccount',
+    'corsheaders',
     'social_django',
-    'quantumapi',
     'django_filters',
+    'quantumapi',
     'django.contrib.sessions.middleware',
 ]
-# 'drf_queryfields',
 
+# 'drf_queryfields',
 
 
 MIDDLEWARE = [
@@ -110,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
+    # 'django.contrib.auth.middleware.PersistentRemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -120,31 +66,56 @@ REST_FRAMEWORK = {
     # 'DEFAULT_RENDERER_CLASSES': (
     #     'rest_framework.renderers.JSONRenderer',
     # ),
-    'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        # 'rest_framework.permissions.IsAuthenticated',
-    ),
+    ],
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',
+    #     'rest_framework.permissions.AllowAny',
+    #     # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
-# REST_USE_JWT = True
+
+# Quantum API - Auth0 Credentials
+AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
+AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
+AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
+API_IDENTIFIER = 'https://api.quantumcoasters.com'
 
 
-# USER_SETTINGS = getattr(settings, 'SIMPLE_JWT', None)
+# Auth0 Credentials for Quantum Application
+SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
+SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
+SOCIAL_AUTH_AUTH0_SCOPE = [
+    'openid',
+    'profile',
+    'email'
+]
+
+# For Testing, to persist session cookies between redirect when redirecting user from login page.
+# SESSION_COOKIE_SECURE = True
+# # USe with Ngnix configuration
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
+# CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTPONLY = False
 
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
 
-
-# if AUTH0_DOMAIN:
-#     JWT_ISSUER = 'https://' + AUTH0_DOMAIN + '/'
 
 JWT_AUTH = {
     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
@@ -159,11 +130,10 @@ JWT_AUTH = {
 
 
 AUTHENTICATION_BACKENDS = {
-    # FOR DJANGO WEB APP BACKEND
-    # 'quantumapi.auth0backend.Auth0',
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
-    'quantumapi.auth0_views.Auth0',
+    # FOR DJANGO WEB APP BACKEND
+    # 'quantumapi.auth0_views.Auth0',
 }
 
 
@@ -171,9 +141,9 @@ ROOT_URLCONF = 'quantumapp.urls'
 
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',
     'http://127.0.0.1:3000',
     'http://localhost:3000',
+    'http://localhost:8000',
 )
 
 
@@ -202,11 +172,11 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'postgres': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'quantumcoastersdb',
         'USER': 'matthewcrook',
@@ -265,7 +235,10 @@ LOGOUT_REDIRECT_URL = '/'
 SOCIAL_AUTH_LOGIN_URL = '/authorize'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
 
+
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
+    'username', 'first_name', 'last_name', 'email']
 
 
 # Django All-Auth Settings
@@ -289,176 +262,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'}
 
+# Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.
+SESSION_SAVE_EVERY_REQUEST = True
 
-# FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
-
-
-
-
-
-
-
-
-
-
-# QUANTUMAPI SECRET
-# grant_type":"client_credentials"
-
-
-
-# API_IDENTIFIER = 'https://dev-405n1e6w.auth0.com/api/v2/'
-# PUBLIC_KEY = None
-# JWT_ISSUER = None
-
-# AUTH0 Django APPLICATION SETTINGS
-# SOCIAL_AUTH_TRAILING_SLASH = False
-# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-# SOCIAL_AUTH_AUTH0_KEY = '7ECrruuGVEjBOGcGyTqbRPvg4hQFXqRa'
-# SOCIAL_AUTH_AUTH0_SECRET = 'yJj0SzZCHm5s9WeAOCPOyjMjW9Rg9x7wtb6qqTMeqq7mcOpuN91vnbZ1lqKJ-fJS'
-# SOCIAL_AUTH_AUTH0_SCOPE = [
-#     'openid',
-#     'profile',
-#     'email'
-# ]
-
-
-##### Auth0
-# SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-# SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-# SOCIAL_AUTH_AUTH0_KEY = 'kaXZdymNjopdmrlQpOL5mMBQZyvrSry0'
-# SOCIAL_AUTH_AUTH0_SECRET = 'krWJ-Lb5wYIVJtXvNSluSbj6dLTYW1hODutzoeAlZl9Km2rAtMM9QhN_sWLzIQ33'
-# SOCIAL_AUTH_AUTH0_SCOPE = [
-#     'openid',
-#     'profile',
-#     'email'
-# ]
-
-
-# THEN LOAD THE ENV VARIABLES LIKE BELOW:
-# ENV_FILE = find_dotenv()
-# if ENV_FILE:
-#     load_dotenv(ENV_FILE)
-
-# AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
-# API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
-# PUBLIC_KEY = None
-# JWT_ISSUER = None
-
-# CLOUDINARY_URL = "cloudinary://418576712586226:IaXis96Iz93J6NH7PTrU1clKpGM@capstone-project"
-
-
-# cloudinary.config(
-#     cloud_name="capstone-project",
-#     api_key="418576712586226",
-#     api_secret="IaXis96Iz93J6NH7PTrU1clKpGM"
-# )
-
-# Custom Serializers for UserProfile to override Django User model
-# REST_AUTH_SERIALIZERS = { 'USER_DETAILS_SERIALIZER':'users.serializers.UserProfileSerializer' }
-# AUTH_PROFILE_MODULE = 'accounts.UserProfile'
-
-# Custom User to Override and tie Django user to UserProfile
-# AUTHENTICATION_BACKENDS = (
-#     'myproject.auth_backends.UserProfileModelBackend',
-# )
-
-
-# DJANGO SIMPLEJWT SETTINGS
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': False,
-#     'BLACKLIST_AFTER_ROTATION': True,
-
-#     'ALGORITHM': 'RS256',
-#     'SIGNING_KEY': SECRET_KEY,
-#     'VERIFYING_KEY': None,
-#     'AUDIENCE': None,
-#     'ISSUER': None,
-
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-#     'USER_ID_FIELD': 'id',
-#     'USER_ID_CLAIM': 'user_id',
-
-#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-#     'TOKEN_TYPE_CLAIM': 'token_type',
-
-#     'JTI_CLAIM': 'jti',
-
-#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-# }
-
-
-# DJANGO REST JWT SETTINGS
-# JWT_AUTH = {
-#     'JWT_SECRET_KEY': settings.SECRET_KEY,
-#     'JWT_GET_USER_SECRET_KEY': None,
-#     'JWT_PRIVATE_KEY': None,
-#     'JWT_PUBLIC_KEY': None,
-#     'JWT_ALGORITHM': 'HS256',
-#     # 'JWT_ALGORITHM': 'RS256',
-#     'JWT_AUDIENCE': None,
-#     'JWT_ISSUER': None,
-#     'JWT_ENCODE_HANDLER':
-#         'rest_framework_jwt.utils.jwt_encode_payload',
-#     'JWT_DECODE_HANDLER':
-#         'rest_framework_jwt.utils.jwt_decode_token',
-#     'JWT_PAYLOAD_HANDLER':
-#         'rest_framework_jwt.utils.jwt_create_payload',
-
-#     'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-#         'rest_framework_jwt.utils.jwt_get_username_from_payload_handler',
-#     # 'JWT_PAYLOAD_GET_USERNAME_HANDLER':
-#     #     'quantumapi.utils.jwt_get_username_from_payload_handler',
-
-#     'JWT_PAYLOAD_INCLUDE_USER_ID': True,
-#     'JWT_VERIFY': True,
-#     'JWT_VERIFY_EXPIRATION': True,
-#     'JWT_LEEWAY': 0,
-#     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
-#     'JWT_ALLOW_REFRESH': True,
-#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-#     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-#     'JWT_RESPONSE_PAYLOAD_HANDLER':
-#         'rest_framework_jwt.utils.jwt_create_response_payload',
-#     'JWT_AUTH_COOKIE': None,
-#     # 'JWT_AUTH_COOKIE': 'quantumapp_token',
-#     # 'JWT_AUTH_COOKIE_DOMAIN': 'http://localhost:8000',
-#     'JWT_AUTH_COOKIE_DOMAIN': None,
-#     'JWT_AUTH_COOKIE_PATH': '/',
-#     'JWT_AUTH_COOKIE_SECURE': True,
-#     'JWT_AUTH_COOKIE_SAMESITE': 'Lax',
-#     'JWT_IMPERSONATION_COOKIE': None,
-#     'JWT_DELETE_STALE_BLACKLISTED_TOKENS': False,
-# }
-
-
-# List of settings that may be in string import notation.
-# IMPORT_STRINGS = (
-#     'JWT_ENCODE_HANDLER',
-#     'JWT_DECODE_HANDLER',
-#     'JWT_PAYLOAD_HANDLER',
-#     'JWT_PAYLOAD_GET_USERNAME_HANDLER',
-#     'JWT_RESPONSE_PAYLOAD_HANDLER',
-#     'JWT_GET_USER_SECRET_KEY',
-# )
-
-
-# api_settings = APISettings(USER_SETTINGS, SIMPLE_JWT, IMPORT_STRINGS)
-
-
-# # check if settings have valid values
-# if not isinstance(api_settings.JWT_EXPIRATION_DELTA, datetime.timedelta):  # pragma: no cover
-
-#     raise ImproperlyConfigured(
-#         '`JWT_EXPIRATION_DELTA` setting must be instance of '
-#         '`datetime.timedelta`')
-
-# if not isinstance(
-#         api_settings.JWT_REFRESH_EXPIRATION_DELTA, datetime.timedelta):  # pragma: no cover
-
-#     raise ImproperlyConfigured(
-#         '`JWT_REFRESH_EXPIRATION_DELTA` setting must be instance of '
-#         '`datetime.timedelta`')
+# When doing dumpdata, specifies fixture dir to put fixture in. *Comment out when running loaddata or will throw error bc it duplicates.
+FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
