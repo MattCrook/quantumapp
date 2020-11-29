@@ -46,7 +46,7 @@ class BlogContributorApplications(ViewSet):
         try:
             new_submission = BlogContributorApplicationModel()
             user = UserModel.objects.get(pk=request.data['user_id'])
-            date = datetime.datetime.utcnow()
+            date = datetime.datetime.now()
 
             new_submission.user = user
             new_submission.first_name = request.data["firstName"]

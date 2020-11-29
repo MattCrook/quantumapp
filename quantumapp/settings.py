@@ -32,17 +32,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'rest_auth.registration',
-    'corsheaders',
     'rest_framework_jwt',
+    'django.contrib.sites',
+    'rest_auth.registration',
+    'allauth',
+    'allauth.socialaccount',
+    'corsheaders',
     'social_django',
-    'quantumapi',
     'django_filters',
+    'quantumapi',
     'django.contrib.sessions.middleware',
 ]
+
 # 'drf_queryfields',
 
 
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
+    # 'django.contrib.auth.middleware.PersistentRemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -76,10 +78,10 @@ REST_FRAMEWORK = {
     #     # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -104,12 +106,12 @@ SOCIAL_AUTH_AUTH0_SCOPE = [
 ]
 
 # For Testing, to persist session cookies between redirect when redirecting user from login page.
-SESSION_COOKIE_SECURE = False
+# SESSION_COOKIE_SECURE = True
 # # USe with Ngnix configuration
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
-CSRF_COOKIE_SECURE = False
-CSRF_COOKIE_HTTPONLY = False
+# CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTPONLY = False
 
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
@@ -131,7 +133,7 @@ AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
     # FOR DJANGO WEB APP BACKEND
-    'quantumapi.auth0_views.Auth0',
+    # 'quantumapi.auth0_views.Auth0',
 }
 
 
@@ -141,6 +143,7 @@ ROOT_URLCONF = 'quantumapp.urls'
 CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
+    'http://localhost:8000',
 )
 
 
@@ -169,11 +172,11 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     },
-    'postgres': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'quantumcoastersdb',
         'USER': 'matthewcrook',
@@ -259,5 +262,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'}
 
+# Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.
+SESSION_SAVE_EVERY_REQUEST = True
 
-# FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
+# When doing dumpdata, specifies fixture dir to put fixture in. *Comment out when running loaddata or will throw error bc it duplicates.
+FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'

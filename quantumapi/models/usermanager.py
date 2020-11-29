@@ -1,10 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth import get_user_model
-
-
-
-# from quantumapi.models import User
+from quantumapp.settings import AUTH_USER_MODEL
 # from .userProfile import UserProfile
 
 
@@ -15,19 +12,24 @@ from django.contrib.auth import get_user_model
 
 
 class CustomUserManager(BaseUserManager):
+    print("IN USER MANAGER")
     use_in_migrations = True
-    # User = get_user_model()
+    User = AUTH_USER_MODEL
 
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, request, email, password, **extra_fields):
+        print("in create_user")
+        print("REQ_USER", request.user)
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
+        print("CREATEUSER_USER", user)
         user.set_password(password)
         user.save()
         return user
 
     def create(self, validated_data):
+        print("in Create")
         return User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],

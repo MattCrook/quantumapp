@@ -14,12 +14,12 @@ from .usermanager import CustomUserManager
 
 
 class User(AbstractUser):
-    first_name = models.CharField(('first name'), max_length=30, blank=True)
-    last_name = models.CharField(('last name'), max_length=30, blank=True)
-    username = models.CharField(('username'), max_length=50, unique=True)
-    email = models.CharField(('email'), unique=True, max_length=50)
+    first_name = models.CharField(('first name'), max_length=50, blank=True, null=True)
+    last_name = models.CharField(('last name'), max_length=50, blank=True)
+    username = models.CharField(('username'), max_length=50, blank=True, null=True)
+    email = models.CharField(('email'), max_length=50, blank=True)
     password = models.CharField(('password'), max_length=150, unique=True)
-    auth0_identifier = models.CharField(('auth0_identifier'), max_length=50, null=True, blank=True)
+    auth0_identifier = models.CharField(('auth0_identifier'), max_length=150, unique=True)
 
 
     # USERNAME_FIELD = A string describing the name of the field on the User model that is used as the unique identifier.
@@ -29,7 +29,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'auth0_identifier'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
 
