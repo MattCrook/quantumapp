@@ -66,7 +66,6 @@ class Credentials(ViewSet):
                     csrftoken = get_token(request)
 
                 if 'session_id' in request.data and request.data['session_id']:
-                    print('HERE?')
                     session_id = request.data['session_id']
                     session = Session.objects.get(session_key=session_id)
                     decoded_session = session.get_decoded()
@@ -77,11 +76,8 @@ class Credentials(ViewSet):
 
                 user = User.objects.get(auth0_identifier=user_sub)
                 is_auth0data = CredentialModel.objects.filter(user_id=user.id).exists()
-                print(request.user)
-                print(is_auth0data)
 
                 if is_auth0data and user_sub == user.auth0_identifier:
-                    print("HERE2?")
                     auth0data = CredentialModel.objects.get(user_id=user.id)
                     auth0data.user = user
                     auth0data.user_sub = request.data['user_sub']
@@ -102,8 +98,6 @@ class Credentials(ViewSet):
                     serializer = CredentialsSerializer(auth0data, context={'request': request})
                     return Response(serializer.data)
                 else:
-                    print("Here3")
-                    print(request.data)
                     newAuth0data = CredentialModel()
                     newAuth0data.user = user
                     newAuth0data.user_sub = request.data['user_sub']

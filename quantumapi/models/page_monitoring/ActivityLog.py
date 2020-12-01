@@ -6,7 +6,7 @@ from django.utils import timezone
 
 class ActivityLog(models.Model):
     user = models.ForeignKey(UserModel, null=True, blank=True, on_delete=models.CASCADE)
-    action = models.TextField(null=True, blank=True)
+    action = models.TextField(null=True, blank=True, default=[])
     date = models.DateTimeField(default=timezone.now)
 
     class Meta:
