@@ -6,21 +6,13 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView
 from quantumapi.views import login_user, register_user, get_user, auth0_logout
 from quantumapi.views import Credentials as CredentialsView
 from rest_framework.authtoken.views import obtain_auth_token
-
-
-# from quantumapi.models import *
-# from allauth.account.views import confirm_email
-# from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
-# from rest_framework.authtoken.views import obtain_auth_token
-# from rest_framework_simplejwt import views as jwt_views
-# from django.views import generic
-# from quantumapi import urls
-
 # python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json
+
+
 
 router = routers.DefaultRouter(trailing_slash=False)
 
@@ -36,10 +28,11 @@ router.register(r'images', Images, 'image')
 router.register(r'credentials', CredentialsView, 'credentials')
 router.register(r'news', News, 'news')
 router.register(r'contributor_applications', BlogContributorApplications, 'contributor_application')
+router.register(r'activity_log', ActivityLogView, 'activity_log')
+router.register(r'login_info', LoginInfoView, 'login_info')
 
 
 urlpatterns = [
-
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -52,37 +45,3 @@ urlpatterns = [
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-# urlpatterns = [
-#     path('', include(router.urls)),
-#     path('admin/', admin.site.urls),
-#     path('accounts/', include('django.contrib.auth.urls')),
-#     # path('accounts/login/', login_user),
-#     # path('register/', register_user),
-#     path('rest-auth/', include('rest_auth.urls')),
-#     path('rest-auth/login/', login_user),
-#     path('rest-auth/registration/', register_user),
-
-#     path('api-token-auth/', obtain_auth_token),
-#     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-#     path('logout/', auth0_logout),
-
-#     # path('rest-auth/login/', login_user),
-#     # path('rest-auth/registration/', register_user),
-#     # path('rest-auth/', include('rest_auth.urls')),
-#     # path('account/', include('allauth.urls')),
-#     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
-#     path('get_user/', get_user),
-#     path('rest-auth/logout/', include('rest_auth.registration.urls')),
-#     path('social-auth/', include('social_django.urls', namespace="social")),
-
-#     # path('rest-auth/registration/verify-email/<slug:key>/', confirm_email, name='account_confirm_email'),
-#     # url(r'^rest-auth/registration/verify-email/', confirm_email, name='account_confirm_email'),
-#     # path('', include('quantumapi.urls')),
-
-# ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-
-    # path('rest-auth/registration/', include('rest_auth.registration.urls')),

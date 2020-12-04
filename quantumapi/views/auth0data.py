@@ -12,7 +12,7 @@ from django.contrib.sessions.models import Session
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 import psycopg2
-# from django.views.decorators.csrf import csrf_protect
+
 
 
 
@@ -60,19 +60,15 @@ class Credentials(ViewSet):
             if "user_sub" in request.data and request.data['user_sub']:
                 user_sub = request.data['user_sub']
 
-                if 'csrf_token' in request.data and request.data['csrf_token'] != '':
+                if 'csrf_token' in request.data and request.data['csrf_token']:
                     csrftoken = request.data['csrf_token']
                 else:
                     csrftoken = get_token(request)
 
-                if 'session_id' in request.data and request.data['session_id'] != '':
-                    print('HERE?')
+                if 'session_id' in request.data and request.data['session_id']:
                     session_id = request.data['session_id']
                     session = Session.objects.get(session_key=session_id)
-                    print(session)
                     decoded_session = session.get_decoded()
-                    print(decoded_session)
-
                 else:
                     print("Session Error: No Session tied to user.")
                     session_id = ''
@@ -80,11 +76,8 @@ class Credentials(ViewSet):
 
                 user = User.objects.get(auth0_identifier=user_sub)
                 is_auth0data = CredentialModel.objects.filter(user_id=user.id).exists()
-                print(request.user)
-                print(is_auth0data)
 
                 if is_auth0data and user_sub == user.auth0_identifier:
-                    print("HERE2?")
                     auth0data = CredentialModel.objects.get(user_id=user.id)
                     auth0data.user = user
                     auth0data.user_sub = request.data['user_sub']
@@ -105,8 +98,6 @@ class Credentials(ViewSet):
                     serializer = CredentialsSerializer(auth0data, context={'request': request})
                     return Response(serializer.data)
                 else:
-                    print("Here3")
-                    print(request.data)
                     newAuth0data = CredentialModel()
                     newAuth0data.user = user
                     newAuth0data.user_sub = request.data['user_sub']

@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from django.contrib.sessions.models import Session
+
 # from rest_framework.authtoken.models import Token
 # from rest_auth.models import DefaultTokenModel
 
@@ -20,7 +22,6 @@ def login_user(request):
     try:
         req_body = json.loads(request.body.decode())
 
-        # If the request is a HTTP POST, try to pull out the relevant information.
         if request.method == 'POST':
             user = request.user
 
@@ -28,10 +29,15 @@ def login_user(request):
                 email = req_body['email']
                 password = req_body['password']
                 authenticated_user = authenticate(email=email, password=password)
-
                 token = TokenModel.objects.get(user=user)
                 login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
-                session = request.session
+
+                session_user = request.session
+                is_session = Session.objects.filter(session_key=session_user.session_key).exists()
+                if is_session:
+                    session = Session.objects.get(session_key=session_user.session_key)
+                else:
+                    session = request.session
 
                 data = json.dumps(
                     {
@@ -47,6 +53,11 @@ def login_user(request):
                     }
                 )
                 return HttpResponse(data, content_type='application/json')
+
+            else:
+                data = json.dumps({"valid": False, "Error": 'Email did not match email we have for this accout.'})
+                return HttpResponse(data, content_type='application/json')
+
 
         else:
             data = json.dumps({"valid": False, "Error": 'Unable to Authenticate Credentials'})
