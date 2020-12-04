@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import LoginHistory as LoginHistoryModel
 import socket
+import os
 
 
 class LoginInfoSerializer(serializers.ModelSerializer):
@@ -47,7 +48,14 @@ class LoginInfoView(ViewSet):
     def create(self, request):
         try:
             hostname = socket.gethostname()
+            ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+            host_ip = socket.getfqdn()
+            host_ipv4 = ipv4s[-1]
             IPAddr = socket.gethostbyname(hostname)
+            print(ipv4s[-1])
+            print(host_ip)
+            print(IPAddr)
+
             user_id = request.data['user_id']
             is_user = LoginHistoryModel.objects.filter(user_id=user_id).exists()
 
@@ -67,7 +75,7 @@ class LoginInfoView(ViewSet):
             login_info.email = request.data["email"]
             login_info.recent_attempts = request.data["recent_attempts"]
             login_info.total_logins = logins
-            login_info.ip_address = IPAddr
+            login_info.ip_address = ipv4s
             login_info.browser = request.data["browser"]
             login_info.version = request.data["version"]
             login_info.platform = request.data["platform"]
