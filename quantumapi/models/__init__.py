@@ -14,6 +14,7 @@ from .auth0data import Credential
 from .news import NewsArticle
 from .blog_application import BlogContributorApplication
 from .page_monitoring import ActivityLog, LoginHistory
+from .CalendarEvent import CalendarEvent
 
 
 # from .forms import SignUpForm

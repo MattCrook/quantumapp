@@ -12,6 +12,7 @@ from .auth0data import Credentials
 from .news_view import News
 from .blog_applications import BlogContributorApplications
 from .page_monitoring_views import LoginInfoView, ActivityLogView
+from .calendar_events import CalendarEvents
 
 
 # from .user import get_user, get_user_email
