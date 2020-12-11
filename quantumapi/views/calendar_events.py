@@ -6,7 +6,10 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from quantumapi.models import CalendarEvent as CalendarEventModel
 from quantumapi.models import User as UserModel
+from django.contrib.sessions.models import Session
+
 import datetime
+
 
 
 
@@ -42,7 +45,9 @@ class CalendarEvents(ViewSet):
     def create(self, request):
         try:
             new_calendar_event = CalendarEventModel()
-            user = UserModel.objects.get(pk=request.data['user_id'])
+            user = request.user
+            session = request.stream.session
+            auth = request.auth
 
             new_calendar_event.user = user
             new_calendar_event.title = request.data["title"]
@@ -50,8 +55,8 @@ class CalendarEvents(ViewSet):
             new_calendar_event.description = request.data["description"]
             new_calendar_event.time = request.data["time"]
             new_calendar_event.date = request.data["date"]
-            new_calendar_event.is_reminder_set = request.data["is_reminder_set"]
-            new_calendar_event.reminder_value = request.data["reminder_value"]
+            new_calendar_event.is_reminder_set = request.data["isReminderSet"]
+            new_calendar_event.reminder_value = request.data["reminderValue"]
 
             new_calendar_event.save()
 
