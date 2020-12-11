@@ -17,7 +17,7 @@ class CalendarEventSerializer(serializers.ModelSerializer):
                 view_name='calendarevent',
                 lookup_field='id'
             )
-            fields = ('id', 'user', 'title', 'location', 'description', 'time', 'date')
+            fields = ('id', 'user', 'title', 'location', 'description', 'time', 'date', 'is_reminder_set', 'reminder_value')
             depth = 1
 
 class CalendarEvents(ViewSet):
@@ -50,6 +50,9 @@ class CalendarEvents(ViewSet):
             new_calendar_event.description = request.data["description"]
             new_calendar_event.time = request.data["time"]
             new_calendar_event.date = request.data["date"]
+            new_calendar_event.is_reminder_set = request.data["is_reminder_set"]
+            new_calendar_event.reminder_value = request.data["reminder_value"]
+
             new_calendar_event.save()
 
             serializer = CalendarEventSerializer(new_calendar_event, context={'request': request})

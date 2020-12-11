@@ -9,6 +9,8 @@ class CalendarEvent(models.Model):
     title = models.CharField(max_length=100, null=True, blank=True)
     location = models.CharField(max_length=100, null=True, blank=True)
     description = models.CharField(max_length=500, null=True, blank=True)
+    is_reminder_set = models.CharField(max_length=10, null=True, blank=True)
+    reminder_value = models.CharField(max_length=30, null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
 
