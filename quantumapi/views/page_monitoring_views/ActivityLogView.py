@@ -131,7 +131,7 @@ def add_action_to_existing_actions(request, activity_log_action):
 
         if isinstance(events, list) and len(events) > 1:
             events_list = events
-            print("Events 2", events_list)
+            # print("Events 2", events_list)
             events_list.append(new_action)
         else:
             events_list.append(events)
