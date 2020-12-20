@@ -13,10 +13,10 @@ ENV DJANGO_CORS_ORIGIN_WHITELIST $DJANGO_CORS_ORIGIN_WHITELIST
 
 # RUN mkdir /quantumApi
 
-WORKDIR /api
-COPY requirements.txt /api/
+WORKDIR /app
+COPY requirements.txt /app/
 EXPOSE 8000
 RUN pip install -r requirements.txt
-COPY . /api/
+COPY . /app/
 RUN python manage.py makemigrations
 RUN python manage.py migrate
