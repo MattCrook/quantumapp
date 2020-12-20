@@ -75,7 +75,7 @@ class LoginInfoView(ViewSet):
             login_info.email = request.data["email"]
             login_info.recent_attempts = request.data["recent_attempts"]
             login_info.total_logins = logins
-            login_info.ip_address = ipv4s
+            login_info.ip_address = ipv4s[-1]
             login_info.browser = request.data["browser"]
             login_info.version = request.data["version"]
             login_info.platform = request.data["platform"]
