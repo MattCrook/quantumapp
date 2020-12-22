@@ -56,6 +56,18 @@ class LoginInfoView(ViewSet):
             print(host_ip)
             print(IPAddr)
 
+            successful_authenticator = request.successful_authenticator
+            get_token_from_auth_header = successful_authenticator.get_token_from_authorization_header
+            token_from_cookies = successful_authenticator.get_token_from_cookies
+            token_from_request = successful_authenticator.get_token_from_request
+            print(successful_authenticator)
+            print(token_from_cookies)
+            print(get_token_from_auth_header)
+            print(token_from_request)
+
+            print(request.data)
+
+
             user_id = request.data['user_id']
             is_user = LoginHistoryModel.objects.filter(user_id=user_id).exists()
 

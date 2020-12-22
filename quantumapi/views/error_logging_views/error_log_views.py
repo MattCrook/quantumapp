@@ -4,6 +4,7 @@ from rest_framework import serializers, status, authentication, permissions
 from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import ErrorLog as ErrorLogModel
+from django.contrib.sessions.models import Session
 import json
 import datetime
 
@@ -34,13 +35,15 @@ class ErrorLogView(ViewSet):
                 data = ErrorLogModel.objects.filter(component=component)
 
             if calling_function is not None:
-                data = ErrorLogModel.objects.filter(calling_function=calling_function)
+                data = ErrorLogModel.objects.filter(
+                    calling_function=calling_function)
 
             if key is not None:
                 data = ErrorLogModel.objects.filter(key=key)
 
             if error_message is not None:
-                data = ErrorLogModel.objects.filter(error_message=error_message)
+                data = ErrorLogModel.objects.filter(
+                    error_message=error_message)
 
             serializer = ErrorLogViewSerializer(
                 data, many=True, context={'request': request})
@@ -52,8 +55,7 @@ class ErrorLogView(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             data = ErrorLogModel.objects.get(pk=pk)
-            serializer = ErrorLogViewSerializer(
-                data, context={'request': request})
+            serializer = ErrorLogViewSerializer(data, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -64,61 +66,150 @@ class ErrorLogView(ViewSet):
             incoming_req_time = request.data['time']
             date_string = str(incoming_req_time)
             current_hour_and_seconds = date_string.split(" ")[4]
-
             time = datetime.datetime.utcnow()
             date_strftime = time.strftime("%H:%M:%S")
             date_strftime_string = date_strftime.split(" ")
-            print(current_hour_and_seconds)
-            print(date_strftime)
 
-            if current_hour_and_seconds != date_strftime:
-                user = request.user
-                key = request.auth
-                authenticators = request.authenticators
-                headers = request.stream.headers
-                session = request.session
-
-                if session.session_key is None:
-                    session = session.cycle_key()
-                    print("SESSION", session)
-
-                host_ip = request.META['REMOTE_ADDR']
-                environment = request.stream.environ
-                resolver_match = request.stream.resolver_match
-
-                new_error_log = ErrorLogModel()
-                new_error_log.user = user
-                new_error_log.environment = environment
-                new_error_log.error_message = request.data['message']
-                new_error_log.stack = request.data['stack']
-                new_error_log.component = request.data['component']
-                new_error_log.calling_function = request.data['callingFunction']
-                new_error_log.key = key
-                new_error_log.session = session
-                new_error_log.request_data = request.data
-                new_error_log.headers = headers
-                new_error_log.date = datetime.datetime.utcnow()
-
-                new_error_log.save()
-                serializer = ErrorLogViewSerializer(new_error_log, context={'request': request})
-                return Response(serializer.data)
-
+            if request.session.session_key is None:
+                session = Session.objects.get(session_key=request.data['sessionId'])
             else:
-                user = request.user
-                error_message = request.data['message']
-                stack = request.data['stack']
-                component = request.data['component']
-                calling_function = request.data['callingFunction']
-                error_logs = ErrorLogModel.objects.filter(user_id=user.id)
+                session = request.session.session_key
 
-                for entry in error_logs:
-                    existing_message = entry.error_message
-                    existing_stack = entry.stack
-                    existing_component = entry.component
-                    existing_calling_function = entry.calling_function
+            try:
+                if current_hour_and_seconds != date_strftime:
+                    try:
+                        user = request.user
+                        key = request.auth
+                        authenticators = request.authenticators
+                        headers = request.stream.headers
 
-                    if existing_message == error_message and existing_stack == stack and existing_component == component and existing_calling_function == calling_function:
-                        return Response({}, status=status.HTTP_200_OK)
+                        req_data_message = request.data['message']
+                        req_data_stack = request.data['stack']
+                        req_data_component = request.data['component']
+                        req_data_calling_function = request.data['callingFunction']
+                        user_has_logs = ErrorLogModel.objects.filter(user_id=user.id).exists()
+
+                        if user_has_logs:
+                            user_logs = ErrorLogModel.objects.filter(user_id=user.id)
+                            duplicates = []
+                            none_duplicates = []
+
+                            for log_entry in user_logs:
+                                existing_message = log_entry.error_message
+                                existing_stack = log_entry.stack
+                                existing_component = log_entry.component
+                                existing_calling_function = log_entry.calling_function
+                                existing_date = log_entry.date
+
+                                if existing_message == req_data_message and existing_stack == req_data_stack and existing_component == req_data_component and existing_calling_function == req_data_calling_function:
+                                    log_entry_date = log_entry.date.strftime("%H:%M:%S")
+
+                                    if  date_strftime == log_entry_date:
+                                        duplicates.append(log_entry)
+                                    else:
+                                        none_duplicates.append(log_entry)
+
+                            if len(duplicates) > 0:
+                                new_error_log = ErrorLogModel.objects.get(pk=duplicates[0].id)
+                                new_error_log.user = user
+                                new_error_log.environment = request.stream.environ
+                                new_error_log.error_message = request.data['message']
+                                new_error_log.stack = request.data['stack']
+                                new_error_log.component = request.data['component']
+                                new_error_log.calling_function = request.data['callingFunction']
+                                new_error_log.key = key
+                                new_error_log.session = session.session_key
+                                new_error_log.request_data = request.data
+                                new_error_log.headers = headers
+                                new_error_log.host_ip = request.META['REMOTE_ADDR']
+                                new_error_log.date = datetime.datetime.utcnow()
+                                new_error_log.save()
+
+                                serializer = ErrorLogViewSerializer(new_error_log, context={'request': request})
+                                return Response(serializer.data)
+
+                            elif len(none_duplicates) > 0:
+                                for item in none_duplicates:
+                                    new_error_log = ErrorLogModel()
+                                    new_error_log.user = user
+                                    new_error_log.environment = request.stream.environ
+                                    new_error_log.error_message = request.data['message']
+                                    new_error_log.stack = request.data['stack']
+                                    new_error_log.component = request.data['component']
+                                    new_error_log.calling_function = request.data['callingFunction']
+                                    new_error_log.key = key
+                                    new_error_log.session = session.session_key
+                                    new_error_log.request_data = request.data
+                                    new_error_log.headers = headers
+                                    new_error_log.host_ip = request.META['REMOTE_ADDR']
+                                    new_error_log.date = datetime.datetime.utcnow()
+                                    new_error_log.save()
+
+                                    serializer = ErrorLogViewSerializer(new_error_log, context={'request': request})
+                                    return Response(serializer.data)
+
+                        else:
+                            resolver_match = request.stream.resolver_match
+                            new_error_log = ErrorLogModel()
+                            new_error_log.user = user
+                            new_error_log.environment = request.stream.environ
+                            new_error_log.error_message = request.data['message']
+                            new_error_log.stack = request.data['stack']
+                            new_error_log.component = request.data['component']
+                            new_error_log.calling_function = request.data['callingFunction']
+                            new_error_log.key = key
+                            new_error_log.session = session.session_key
+                            new_error_log.request_data = request.data
+                            new_error_log.headers = headers
+                            new_error_log.host_ip = request.META['REMOTE_ADDR']
+                            new_error_log.date = datetime.datetime.utcnow()
+
+                            new_error_log.save()
+                            serializer = ErrorLogViewSerializer(new_error_log, context={'request': request})
+                            return Response(serializer.data)
+
+                    except Exception as ex:
+                        return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+                else:
+                    user = request.user
+                    key = request.auth
+                    error_message = request.data['message']
+                    stack = request.data['stack']
+                    component = request.data['component']
+                    calling_function = request.data['callingFunction']
+                    error_logs = ErrorLogModel.objects.filter(user_id=user.id)
+                    duplicates = []
+
+                    for entry in error_logs:
+                        existing_message = entry.error_message
+                        existing_stack = entry.stack
+                        existing_component = entry.component
+                        existing_calling_function = entry.calling_function
+
+                        if existing_message == error_message and existing_stack == stack and existing_component == component and existing_calling_function == calling_function:
+                            duplicates.append(entry)
+
+                    existing_log_entry = ErrorLogModel.objects.get(pk=duplicates[0].id)
+                    existing_log_entry.user = user
+                    existing_log_entry.environment = request.stream.environ
+                    existing_log_entry.error_message = request.data['message']
+                    existing_log_entry.stack = request.data['stack']
+                    existing_log_entry.component = request.data['component']
+                    existing_log_entry.calling_function = request.data['callingFunction']
+                    existing_log_entry.key = key
+                    existing_log_entry.session = session.session_key
+                    existing_log_entry.request_data = request.data
+                    existing_log_entry.headers = request.stream.headers
+                    existing_log_entry.host_ip = request.META['REMOTE_ADDR']
+                    existing_log_entry.date = datetime.datetime.utcnow()
+                    existing_log_entry.save()
+
+                    serializer = ErrorLogViewSerializer(existing_log_entry, context={'request': request})
+                    return Response(serializer.data)
+
+            except Exception as ex:
+                return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as ex:
             return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

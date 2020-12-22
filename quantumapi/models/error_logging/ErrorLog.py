@@ -23,4 +23,4 @@ class ErrorLog(models.Model):
         ordering = ("user", )
 
     def __str__(self):
-        return f'{self.user.email} -- {self.error} -- {self.date}'
+        return f'{self.user.email} -- {self.error_message} -- {self.date}'
