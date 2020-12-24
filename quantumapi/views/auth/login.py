@@ -1,4 +1,3 @@
-import json
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate
 from django.views.decorators.csrf import csrf_exempt
@@ -9,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from django.contrib.sessions.models import Session
-
+import json
 # from rest_framework.authtoken.models import Token
 # from rest_auth.models import DefaultTokenModel
 
@@ -30,14 +29,23 @@ def login_user(request):
                 password = req_body['password']
                 authenticated_user = authenticate(email=email, password=password)
                 token = TokenModel.objects.get(user=user)
+
+                if token is not None:
+                    token = TokenModel.objects.get(user=user)
+                else:
+                    token = TokenModel.objects.create(user=user)
+
                 login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
 
                 session_user = request.session
                 is_session = Session.objects.filter(session_key=session_user.session_key).exists()
+
                 if is_session:
                     session = Session.objects.get(session_key=session_user.session_key)
+                    session.save()
                 else:
                     session = request.session
+                    session.save()
 
                 data = json.dumps(
                     {

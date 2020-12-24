@@ -1,4 +1,3 @@
-import json
 from django.http import HttpResponse, HttpResponseServerError
 from django.contrib.auth import login, authenticate
 from django.views.decorators.csrf import csrf_exempt
@@ -11,7 +10,7 @@ from rest_auth.models import TokenModel
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.models import Session
 from rest_framework.decorators import api_view, renderer_classes
-
+import json
 # from rest_framework.authtoken.models import Token
 
 
@@ -38,19 +37,25 @@ def register_user(request):
         )
         new_userprofile.save()
 
-        # password already defined above
+        ## password already defined above
         # password = req_body['password']
+
         email = req_body['email']
         authenticated_user = authenticate(email=email, password=password)
         token = TokenModel.objects.create(user=user)
         key = token.key
+
         login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
+
         session_user = request.session
         is_session = Session.objects.filter(session_key=session_user.session_key).exists()
+
         if is_session:
-            session = is_session
+            session = session_user
+            session.save()
         else:
-            session = request.session
+            session = Session.objects.create(user=user)
+            session.save()
 
 
         user_obj = {
