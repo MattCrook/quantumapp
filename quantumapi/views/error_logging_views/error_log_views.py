@@ -35,8 +35,7 @@ class ErrorLogView(ViewSet):
                 data = ErrorLogModel.objects.filter(component=component)
 
             if calling_function is not None:
-                data = ErrorLogModel.objects.filter(
-                    calling_function=calling_function)
+                data = ErrorLogModel.objects.filter(calling_function=calling_function)
 
             if key is not None:
                 data = ErrorLogModel.objects.filter(key=key)
@@ -44,8 +43,7 @@ class ErrorLogView(ViewSet):
             if error_message is not None:
                 data = ErrorLogModel.objects.filter(error_message=error_message)
 
-            serializer = ErrorLogViewSerializer(
-                data, many=True, context={'request': request})
+            serializer = ErrorLogViewSerializer(data, many=True, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -258,8 +256,8 @@ def create_new_error_log_entry(request, session, time):
         new_error_log.date = time
 
         new_error_log.save()
-        serializer = ErrorLogViewSerializer(new_error_log, context={'request': request})
-        return serializer
+        serialized_data = ErrorLogViewSerializer(new_error_log, context={'request': request})
+        return serialized_data
     except Exception as ex:
         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -267,14 +265,21 @@ def create_new_error_log_entry(request, session, time):
 
 def update_or_create(request, data, session, time):
     try:
-        if 'existing_logs_matched' in data and len(data['existing_logs_matched']) > 0:
+        if 'existing_logs_matched' in data and data['existing_logs_matched'] and len(data['existing_logs_matched']) > 0:
             existing_logs_matched = data['existing_logs_matched']
-            serializer = update_existing_entry_with_latest_data(request, existing_logs_matched, session, time)
+            serialized_data = update_existing_entry_with_latest_data(request, existing_logs_matched, session, time)
 
-        elif 'unique_times' in data and len(data['unique_times']) > 0:
-            serializer = create_new_error_log_entry(request, session, time)
+        elif 'unique_times' in data and data['unique_times'] and len(data['unique_times']) > 0:
+            serialized_data = create_new_error_log_entry(request, session, time)
 
-        return serializer
+        else:
+            empty_response = return_empty_response(data)
+            serialized_data = empty_response
 
+        return serialized_data
     except Exception as ex:
         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def return_empty_response(data):
+    return Response(data, status=status.HTTP_200_OK)
