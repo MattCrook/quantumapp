@@ -33,10 +33,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'rest_framework_jwt',
+    'rest_framework_jwt.blacklist',
     'django.contrib.sites',
     'rest_auth.registration',
     'allauth',
     'allauth.socialaccount',
+    'allauth.account',
     'corsheaders',
     'social_django',
     'django_filters',
@@ -55,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.RemoteUserMiddleware',
-    # 'django.contrib.auth.middleware.PersistentRemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -72,11 +73,6 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated',
-    #     'rest_framework.permissions.AllowAny',
-    #     # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
@@ -92,6 +88,7 @@ AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
 AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
 API_IDENTIFIER = 'https://api.quantumcoasters.com'
+AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
 
 
 # Auth0 Credentials for Quantum Application
@@ -132,9 +129,9 @@ JWT_AUTH = {
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
-    # FOR DJANGO WEB APP BACKEND
-    # 'quantumapi.auth0_views.Auth0',
 }
+# FOR DJANGO WEB APP BACKEND
+# 'quantumapi.auth0_views.Auth0',
 
 
 ROOT_URLCONF = 'quantumapp.urls'
@@ -232,14 +229,34 @@ LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# Social Auth Configs
+# https://readthedocs.org/projects/python-social-auth/downloads/pdf/latest/
 SOCIAL_AUTH_LOGIN_URL = '/authorize'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
 
-
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
-    'username', 'first_name', 'last_name', 'email']
+    'username', 'first_name', 'last_name', 'email'
+]
 
+SOCIAL_AUTH_USER_MODEL = 'quantumapi.User'
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_CLEAN_USERNAMES = True
+SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_PIPELINE = (
+'social_core.pipeline.social_auth.social_details',
+'social_core.pipeline.social_auth.social_uid',
+'social_core.pipeline.social_auth.social_user',
+'social_core.pipeline.user.get_username',
+'social_core.pipeline.social_auth.associate_by_email',
+'social_core.pipeline.user.create_user',
+'social_core.pipeline.social_auth.associate_user',
+'social_core.pipeline.social_auth.load_extra_data',
+'social_core.pipeline.user.user_details',
+)
 
 # Django All-Auth Settings
 # https://django-allauth.readthedocs.io/en/latest/configuration.html

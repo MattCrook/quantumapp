@@ -67,10 +67,12 @@ class ErrorLogView(ViewSet):
             date_strftime = time.strftime("%H:%M:%S")
             date_strftime_string = date_strftime.split(" ")
 
-            if request.session.session_key is None:
+            if request.session is not None:
+                session = request.session.session_key
+            elif Session.objects.get(session_key=request.data['sessionId']).exists():
                 session = Session.objects.get(session_key=request.data['sessionId'])
             else:
-                session = request.session.session_key
+                session = ""
 
             try:
                 # if incoming date (from client) does not match current date (set on backend) then skip.
@@ -137,6 +139,7 @@ class ErrorLogView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 
@@ -221,7 +224,7 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
             error_log.component = request.data['component']
             error_log.calling_function = request.data['callingFunction']
             error_log.key = request.auth
-            error_log.session = session.session_key
+            error_log.session = session
             error_log.request_data = request.data
             error_log.headers = request.stream.headers
             error_log.host_ip = request.META['REMOTE_ADDR']
@@ -249,7 +252,7 @@ def create_new_error_log_entry(request, session, time):
         new_error_log.component = request.data['component']
         new_error_log.calling_function = request.data['callingFunction']
         new_error_log.key = request.auth
-        new_error_log.session = session.session_key
+        new_error_log.session = session
         new_error_log.request_data = request.data
         new_error_log.headers = request.stream.headers
         new_error_log.host_ip = request.META['REMOTE_ADDR']
@@ -283,3 +286,5 @@ def update_or_create(request, data, session, time):
 
 def return_empty_response(data):
     return Response(data, status=status.HTTP_200_OK)
+
+# python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json

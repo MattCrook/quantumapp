@@ -11,6 +11,8 @@ from django.middleware.csrf import get_token
 from django.contrib.sessions.models import Session
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework_jwt.blacklist.models import BlacklistedToken
+import datetime
 import psycopg2
 
 
@@ -119,6 +121,7 @@ class Credentials(ViewSet):
                     return Response(serializer.data)
 
         except Exception as ex:
+            black_listed_token = BlacklistedToken(token=request.auth, blacklisted_at=datetime.datetime.now(), user_id=request.user.id)
             return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except AssertionError as ass:
             return HttpResponse({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
