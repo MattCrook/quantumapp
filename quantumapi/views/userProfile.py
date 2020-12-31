@@ -1,4 +1,3 @@
-import json
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status, authentication, permissions
@@ -7,6 +6,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
 from .user import UserSerializer
 from quantumapi.models import UserProfile, Credit, Image, User
+import json
 
 # from rest_framework.decorators import api_view, permission_classes
 # from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -38,18 +38,19 @@ class UserProfiles(ViewSet):
             user_id = self.request.query_params.get('userId', None)
 
             if email is not None:
-                auth_user = User.objects.filter(email=email)
-                serializer = UserSerializer(auth_user, many=True, context={'request': request})
+                auth_user_data = User.objects.get(email=email)
+                userprofiles = UserProfile.objects.get(user_id=auth_user_data.id)
+                serializer = UserProfileSerializer(userprofiles, context={'request': request})
 
             elif user_id is not None:
-                userprofile = UserProfile.objects.filter(user_id=user_id)
-                serializer = UserProfileSerializer(userprofile, many=True, context={'request': request})
+                userprofiles = UserProfile.objects.get(user_id=user_id)
+                serializer = UserProfileSerializer(userprofiles, context={'request': request})
 
             else:
                 serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return HttpResponseServerError(ex)
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def retrieve(self, request, pk=None):
@@ -58,19 +59,20 @@ class UserProfiles(ViewSet):
             serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return HttpResponseServerError(ex)
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def update(self, request, pk=None):
         try:
+            print(request.data)
             userprofile = UserProfile.objects.get(pk=pk)
             userprofile_user_id = userprofile.user_id
             user = User.objects.get(pk=userprofile_user_id)
             email = self.request.query_params.get('email', None)
 
-            image_instance = request.data['image']
-            if image_instance is not None:
-                image = Image.objects.get(pk=image_instance['id'])
+            if 'image' in request.data and request.data['image']:
+                new_image = request.data['image']
+                image = Image.objects.get(pk=new_image['id'])
                 userprofile.image = image
 
             userprofile.address = request.data["address"]
@@ -78,10 +80,9 @@ class UserProfiles(ViewSet):
 
             userprofile.save()
             return Response({'UserProfile Updated Successfully'}, status=status.HTTP_204_NO_CONTENT)
+
         except Exception as ex:
-            return HttpResponseServerError(ex)
-        except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def destroy(self, request, pk=None):
@@ -93,9 +94,3 @@ class UserProfiles(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-    # def save(self, *args, **kwargs):
-    #     if not self.pk:
-    #         self.profile = UserProfile(user=self)
-    #     super(UserProfile, self).save(*args, **kwargs)
