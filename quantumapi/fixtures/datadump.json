@@ -1,0 +1,1872 @@
+[
+  { "model": "contenttypes.contenttype", "pk": 1, "fields": { "app_label": "admin", "model": "logentry" } },
+  { "model": "contenttypes.contenttype", "pk": 2, "fields": { "app_label": "auth", "model": "permission" } },
+  { "model": "contenttypes.contenttype", "pk": 3, "fields": { "app_label": "auth", "model": "group" } },
+  { "model": "contenttypes.contenttype", "pk": 4, "fields": { "app_label": "contenttypes", "model": "contenttype" } },
+  { "model": "contenttypes.contenttype", "pk": 5, "fields": { "app_label": "sessions", "model": "session" } },
+  { "model": "contenttypes.contenttype", "pk": 6, "fields": { "app_label": "authtoken", "model": "token" } },
+  { "model": "contenttypes.contenttype", "pk": 7, "fields": { "app_label": "sites", "model": "site" } },
+  { "model": "contenttypes.contenttype", "pk": 8, "fields": { "app_label": "allauth", "model": "socialapp" } },
+  { "model": "contenttypes.contenttype", "pk": 9, "fields": { "app_label": "allauth", "model": "socialaccount" } },
+  { "model": "contenttypes.contenttype", "pk": 10, "fields": { "app_label": "allauth", "model": "socialtoken" } },
+  { "model": "contenttypes.contenttype", "pk": 11, "fields": { "app_label": "account", "model": "emailaddress" } },
+  { "model": "contenttypes.contenttype", "pk": 12, "fields": { "app_label": "account", "model": "emailconfirmation" } },
+  { "model": "contenttypes.contenttype", "pk": 13, "fields": { "app_label": "social_django", "model": "association" } },
+  { "model": "contenttypes.contenttype", "pk": 14, "fields": { "app_label": "social_django", "model": "code" } },
+  { "model": "contenttypes.contenttype", "pk": 15, "fields": { "app_label": "social_django", "model": "nonce" } },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 16,
+    "fields": { "app_label": "social_django", "model": "usersocialauth" }
+  },
+  { "model": "contenttypes.contenttype", "pk": 17, "fields": { "app_label": "social_django", "model": "partial" } },
+  { "model": "contenttypes.contenttype", "pk": 18, "fields": { "app_label": "quantumapi", "model": "user" } },
+  { "model": "contenttypes.contenttype", "pk": 19, "fields": { "app_label": "quantumapi", "model": "credit" } },
+  { "model": "contenttypes.contenttype", "pk": 20, "fields": { "app_label": "quantumapi", "model": "image" } },
+  { "model": "contenttypes.contenttype", "pk": 21, "fields": { "app_label": "quantumapi", "model": "manufacturer" } },
+  { "model": "contenttypes.contenttype", "pk": 22, "fields": { "app_label": "quantumapi", "model": "newsarticle" } },
+  { "model": "contenttypes.contenttype", "pk": 23, "fields": { "app_label": "quantumapi", "model": "park" } },
+  { "model": "contenttypes.contenttype", "pk": 24, "fields": { "app_label": "quantumapi", "model": "rollercoaster" } },
+  { "model": "contenttypes.contenttype", "pk": 25, "fields": { "app_label": "quantumapi", "model": "tracktype" } },
+  { "model": "contenttypes.contenttype", "pk": 26, "fields": { "app_label": "quantumapi", "model": "userprofile" } },
+  { "model": "contenttypes.contenttype", "pk": 27, "fields": { "app_label": "quantumapi", "model": "messages" } },
+  { "model": "contenttypes.contenttype", "pk": 28, "fields": { "app_label": "quantumapi", "model": "credential" } },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 29,
+    "fields": { "app_label": "quantumapi", "model": "blogcontributorapplication" }
+  },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 30,
+    "fields": { "app_label": "rest_framework_jwt", "model": "blacklistedtoken" }
+  },
+  { "model": "contenttypes.contenttype", "pk": 31, "fields": { "app_label": "allauth", "model": "emailaddress" } },
+  { "model": "contenttypes.contenttype", "pk": 32, "fields": { "app_label": "allauth", "model": "emailconfirmation" } },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 33,
+    "fields": { "app_label": "socialaccount", "model": "socialaccount" }
+  },
+  { "model": "contenttypes.contenttype", "pk": 34, "fields": { "app_label": "socialaccount", "model": "socialapp" } },
+  { "model": "contenttypes.contenttype", "pk": 35, "fields": { "app_label": "socialaccount", "model": "socialtoken" } },
+  { "model": "contenttypes.contenttype", "pk": 36, "fields": { "app_label": "quantumapi", "model": "loginhistory" } },
+  { "model": "contenttypes.contenttype", "pk": 37, "fields": { "app_label": "quantumapi", "model": "activitylog" } },
+  { "model": "contenttypes.contenttype", "pk": 38, "fields": { "app_label": "quantumapi", "model": "calendarevent" } },
+  { "model": "contenttypes.contenttype", "pk": 39, "fields": { "app_label": "quantumapi", "model": "errorlog" } },
+  {
+    "model": "contenttypes.contenttype",
+    "pk": 40,
+    "fields": { "app_label": "blacklist", "model": "blacklistedtoken" }
+  },
+  { "model": "sites.site", "pk": 1, "fields": { "domain": "example.com", "name": "example.com" } },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 1,
+    "fields": {
+      "name": "Intamin Worldwide",
+      "origin_country": "Sweden",
+      "company_website": "https://www.intaminworldwide.com/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 2,
+    "fields": {
+      "name": "Bolliger & Mabillard",
+      "origin_country": "Switzerland",
+      "company_website": "https://www.bolliger-mabillard.com/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 3,
+    "fields": {
+      "name": "Rocky Mountain Construction",
+      "origin_country": "USA",
+      "company_website": "https://rockymtnconstruction.com/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 4,
+    "fields": { "name": "Mack Rides", "origin_country": "Germany", "company_website": "https://mack-rides.com/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 5,
+    "fields": {
+      "name": "Gerstlauer",
+      "origin_country": "Germany",
+      "company_website": "https://www.gerstlauer-rides.de/home/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 6,
+    "fields": {
+      "name": "Great Coasters International",
+      "origin_country": "USA",
+      "company_website": "https://greatcoasters.com/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 7,
+    "fields": {
+      "name": "Arrow Dynamics",
+      "origin_country": "USA",
+      "company_website": "https://en.wikipedia.org/wiki/Arrow_Dynamics"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 8,
+    "fields": { "name": "S&S Technologies", "origin_country": "USA", "company_website": "http://s-s.com/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 9,
+    "fields": { "name": "Premier Rides", "origin_country": "USA", "company_website": "http://premier-rides.com/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 10,
+    "fields": { "name": "Vekoma", "origin_country": "Netherlands", "company_website": "https://www.vekoma.com/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 11,
+    "fields": {
+      "name": "The Gravity Group, LLC",
+      "origin_country": "USA",
+      "company_website": "https://thegravitygroup.com/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 12,
+    "fields": {
+      "name": "Philadelphia Toboggan Coasters",
+      "origin_country": "USA",
+      "company_website": "https://www.philadelphiatoboggancoastersinc.com/"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 13,
+    "fields": {
+      "name": "Giovanola",
+      "origin_country": "Switzerland",
+      "company_website": "https://en.wikipedia.org/wiki/Giovanola"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 14,
+    "fields": { "name": "Maurer AG", "origin_country": "Germany", "company_website": "https://maurer-rides.de/en/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 15,
+    "fields": {
+      "name": "Custom Coasters International",
+      "origin_country": "USA",
+      "company_website": "https://en.wikipedia.org/wiki/Custom_Coasters_International"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 16,
+    "fields": { "name": "Triotech", "origin_country": "Canada", "company_website": "https://www.trio-tech.com/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 17,
+    "fields": { "name": "Zamperla", "origin_country": "Italy", "company_website": "https://www.zamperla.com/" }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 18,
+    "fields": {
+      "name": "Taft Broadcasting Company",
+      "origin_country": "USA",
+      "company_website": "https://en.wikipedia.org/wiki/Taft_Broadcasting"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 19,
+    "fields": {
+      "name": "John A Miller & Charles Paige",
+      "origin_country": "UK",
+      "company_website": "https://en.wikipedia.org/wiki/William_Strickler"
+    }
+  },
+  {
+    "model": "quantumapi.manufacturer",
+    "pk": 20,
+    "fields": {
+      "name": "EF Miller Industries",
+      "origin_country": "USA",
+      "company_website": "http://www.miler-ind.com/"
+    }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 1,
+    "fields": { "name": "Cedar Point", "parkLocation": "Ohio", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 2,
+    "fields": { "name": "King's Island", "parkLocation": "Ohio", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 3,
+    "fields": { "name": "Six Flags Magic Mountain", "parkLocation": "California", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 4,
+    "fields": { "name": "Alton Towers", "parkLocation": "Staffordshire", "parkCountry": "UK" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 5,
+    "fields": { "name": "Blackpool Pleasure Beach", "parkLocation": "Lancashire", "parkCountry": "UK" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 6,
+    "fields": { "name": "Canada's Wonderland", "parkLocation": "Ontario", "parkCountry": "Canada" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 7,
+    "fields": { "name": "King's Dominion", "parkLocation": "Virginia", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 8,
+    "fields": { "name": "Knott's Berry Farm", "parkLocation": "California", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 9,
+    "fields": { "name": "Carowinds", "parkLocation": "North Carolina", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 10,
+    "fields": { "name": "Europa Park", "parkLocation": "Rust", "parkCountry": "Germany" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 11,
+    "fields": { "name": "Universal Islands of Adventure", "parkLocation": "Florida", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 12,
+    "fields": { "name": "Six Flags Over Texas", "parkLocation": "Texas", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 13,
+    "fields": { "name": "Six Flags Great Adventure", "parkLocation": "New Jersey", "parkCountry": "USA" }
+  },
+  {
+    "model": "quantumapi.park",
+    "pk": 14,
+    "fields": { "name": "Holiday World", "parkLocation": "Indiana", "parkCountry": "USA" }
+  },
+  { "model": "quantumapi.tracktype", "pk": 1, "fields": { "name": "Steel Accelerator" } },
+  { "model": "quantumapi.tracktype", "pk": 2, "fields": { "name": "Steel Giga Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 3, "fields": { "name": "Steel Hyper Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 4, "fields": { "name": "Wood/ Steel Hybrid Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 5, "fields": { "name": "Steel Inverted" } },
+  { "model": "quantumapi.tracktype", "pk": 6, "fields": { "name": "Wooden Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 7, "fields": { "name": "Pre Fabricated Wooden Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 8, "fields": { "name": "Steel Winged Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 9, "fields": { "name": "Boomerang Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 10, "fields": { "name": "Steel Floorless Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 11, "fields": { "name": "Steel Stand-Up Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 12, "fields": { "name": "Steel Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 13, "fields": { "name": "Family Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 14, "fields": { "name": "LIM Launched Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 15, "fields": { "name": "LSM Launched Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 16, "fields": { "name": "Air Powered Launched Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 17, "fields": { "name": "Inverted Swinging Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 18, "fields": { "name": "Infinity Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 19, "fields": { "name": "Mine Train Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 20, "fields": { "name": "Vertical Dive Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 21, "fields": { "name": "Corkscrew Roller Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 22, "fields": { "name": "Steel Flying Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 23, "fields": { "name": "Drop Track Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 24, "fields": { "name": "Bobsled Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 25, "fields": { "name": "Steel Multi Launch Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 26, "fields": { "name": "Steeplechase - Steel - Racing" } },
+  { "model": "quantumapi.tracktype", "pk": 27, "fields": { "name": "Steel Suspended Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 28, "fields": { "name": "Interactive 4D Dark Ride" } },
+  { "model": "quantumapi.tracktype", "pk": 29, "fields": { "name": "Steel Inverted Family Coaster" } },
+  { "model": "quantumapi.tracktype", "pk": 30, "fields": { "name": "Wooden Jr Coaster" } },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 1,
+    "fields": {
+      "name": "Top Thrill Dragster",
+      "tracktype": 1,
+      "max_height": "420",
+      "max_speed": "120",
+      "manufacturer": 1,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 2,
+    "fields": {
+      "name": "Millenium Force",
+      "tracktype": 2,
+      "max_height": "310",
+      "max_speed": "92",
+      "manufacturer": 1,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 3,
+    "fields": {
+      "name": "Steel Vengence",
+      "tracktype": 4,
+      "max_height": "205",
+      "max_speed": "81",
+      "manufacturer": 3,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 4,
+    "fields": { "name": "Raptor", "tracktype": 5, "max_height": "137", "max_speed": "57", "manufacturer": 2, "park": 1 }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 5,
+    "fields": {
+      "name": "GateKeeper",
+      "tracktype": 8,
+      "max_height": "170",
+      "max_speed": "67",
+      "manufacturer": 2,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 6,
+    "fields": {
+      "name": "Maverick",
+      "tracktype": 12,
+      "max_height": "105",
+      "max_speed": "57",
+      "manufacturer": 1,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 7,
+    "fields": {
+      "name": "Magnum XL 200",
+      "tracktype": 3,
+      "max_height": "205",
+      "max_speed": "72",
+      "manufacturer": 7,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 8,
+    "fields": { "name": "Gemini", "tracktype": 4, "max_height": "125", "max_speed": "60", "manufacturer": 7, "park": 1 }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 9,
+    "fields": {
+      "name": "Wicked Twister",
+      "tracktype": 9,
+      "max_height": "215",
+      "max_speed": "72",
+      "manufacturer": 1,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 10,
+    "fields": {
+      "name": "Rougarou",
+      "tracktype": 10,
+      "max_height": "145",
+      "max_speed": "60",
+      "manufacturer": 2,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 11,
+    "fields": {
+      "name": "Iron Dragon",
+      "tracktype": 17,
+      "max_height": "76",
+      "max_speed": "40",
+      "manufacturer": 7,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 12,
+    "fields": {
+      "name": "Cedar Creek Mine Ride",
+      "tracktype": 19,
+      "max_height": "48",
+      "max_speed": "42",
+      "manufacturer": 7,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 13,
+    "fields": {
+      "name": "Blue Streak",
+      "tracktype": 6,
+      "max_height": "78",
+      "max_speed": "40",
+      "manufacturer": 12,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 14,
+    "fields": {
+      "name": "Valravin",
+      "tracktype": 20,
+      "max_height": "223",
+      "max_speed": "75",
+      "manufacturer": 2,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 15,
+    "fields": {
+      "name": "Corkscrew",
+      "tracktype": 21,
+      "max_height": "85",
+      "max_speed": "48",
+      "manufacturer": 7,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 16,
+    "fields": {
+      "name": "Woodstock Express",
+      "tracktype": 13,
+      "max_height": "43",
+      "max_speed": "28",
+      "manufacturer": 10,
+      "park": 1
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 17,
+    "fields": { "name": "Orion", "tracktype": 3, "max_height": "305", "max_speed": "91", "manufacturer": 2, "park": 2 }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 18,
+    "fields": {
+      "name": "Banshee",
+      "tracktype": 5,
+      "max_height": "167",
+      "max_speed": "68",
+      "manufacturer": 2,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 19,
+    "fields": {
+      "name": "Diamondback",
+      "tracktype": 3,
+      "max_height": "230",
+      "max_speed": "80",
+      "manufacturer": 2,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 20,
+    "fields": {
+      "name": "Flight of Fear",
+      "tracktype": 14,
+      "max_height": "74",
+      "max_speed": "54",
+      "manufacturer": 9,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 21,
+    "fields": {
+      "name": "The Racer",
+      "tracktype": 6,
+      "max_height": "88",
+      "max_speed": "53",
+      "manufacturer": 12,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 22,
+    "fields": {
+      "name": "The Bat",
+      "tracktype": 17,
+      "max_height": "78",
+      "max_speed": "51",
+      "manufacturer": 7,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 23,
+    "fields": {
+      "name": "Invertigo",
+      "tracktype": 9,
+      "max_height": "131",
+      "max_speed": "50",
+      "manufacturer": 10,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 24,
+    "fields": {
+      "name": "Adventure Express",
+      "tracktype": 19,
+      "max_height": "63",
+      "max_speed": "35",
+      "manufacturer": 7,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 25,
+    "fields": {
+      "name": "The Smiler",
+      "tracktype": 18,
+      "max_height": "100",
+      "max_speed": "53",
+      "manufacturer": 5,
+      "park": 4
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 26,
+    "fields": {
+      "name": "Oblivion",
+      "tracktype": 20,
+      "max_height": "180",
+      "max_speed": "68",
+      "manufacturer": 2,
+      "park": 4
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 27,
+    "fields": {
+      "name": "Nemesis",
+      "tracktype": 5,
+      "max_height": "104",
+      "max_speed": "50",
+      "manufacturer": 2,
+      "park": 4
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 28,
+    "fields": { "name": "Rita", "tracktype": 1, "max_height": "60", "max_speed": "61", "manufacturer": 1, "park": 4 }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 29,
+    "fields": {
+      "name": "Galactica",
+      "tracktype": 22,
+      "max_height": "66",
+      "max_speed": "47",
+      "manufacturer": 2,
+      "park": 4
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 30,
+    "fields": {
+      "name": "Wicker Man",
+      "tracktype": 6,
+      "max_height": "72",
+      "max_speed": "44",
+      "manufacturer": 6,
+      "park": 4
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 31,
+    "fields": {
+      "name": "Th13teen",
+      "tracktype": 12,
+      "max_height": "65",
+      "max_speed": "42",
+      "manufacturer": 1,
+      "park": 4
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 47,
+    "fields": {
+      "name": "Mystic Timbers",
+      "tracktype": 6,
+      "max_height": "109",
+      "max_speed": "53",
+      "manufacturer": 6,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 48,
+    "fields": {
+      "name": "FireHawk (X-Flight)",
+      "tracktype": 22,
+      "max_height": "115",
+      "max_speed": "50",
+      "manufacturer": 10,
+      "park": 2
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 49,
+    "fields": {
+      "name": "Avalache",
+      "tracktype": 24,
+      "max_height": "59",
+      "max_speed": "45",
+      "manufacturer": 4,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 50,
+    "fields": {
+      "name": "Big Dipper",
+      "tracktype": 6,
+      "max_height": "65",
+      "max_speed": "40",
+      "manufacturer": 19,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 51,
+    "fields": {
+      "name": "The Big One",
+      "tracktype": 3,
+      "max_height": "235",
+      "max_speed": "74",
+      "manufacturer": 7,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 52,
+    "fields": {
+      "name": "Grand National",
+      "tracktype": 6,
+      "max_height": "62",
+      "max_speed": "40",
+      "manufacturer": 19,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 53,
+    "fields": { "name": "Icon", "tracktype": 25, "max_height": "88", "max_speed": "55", "manufacturer": 4, "park": 5 }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 54,
+    "fields": {
+      "name": "Infusion",
+      "tracktype": 5,
+      "max_height": "109",
+      "max_speed": "50",
+      "manufacturer": 10,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 55,
+    "fields": {
+      "name": "Revolution",
+      "tracktype": 21,
+      "max_height": "50",
+      "max_speed": "45",
+      "manufacturer": 7,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 56,
+    "fields": {
+      "name": "Steeplechase",
+      "tracktype": 26,
+      "max_height": "50",
+      "max_speed": "25",
+      "manufacturer": 7,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 57,
+    "fields": {
+      "name": "Blue Flyer",
+      "tracktype": 6,
+      "max_height": "15",
+      "max_speed": "10",
+      "manufacturer": 12,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 58,
+    "fields": {
+      "name": "Nickelodeon Streak",
+      "tracktype": 6,
+      "max_height": "61",
+      "max_speed": "35",
+      "manufacturer": 19,
+      "park": 5
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 59,
+    "fields": {
+      "name": "Yukon Striker",
+      "tracktype": 20,
+      "max_height": "223",
+      "max_speed": "82",
+      "manufacturer": 2,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 60,
+    "fields": {
+      "name": "Leviathan",
+      "tracktype": 2,
+      "max_height": "306",
+      "max_speed": "92",
+      "manufacturer": 2,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 61,
+    "fields": {
+      "name": "Thunder Run",
+      "tracktype": 19,
+      "max_height": "33",
+      "max_speed": "40",
+      "manufacturer": 4,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 62,
+    "fields": { "name": "Vortex", "tracktype": 27, "max_height": "91", "max_speed": "55", "manufacturer": 4, "park": 6 }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 63,
+    "fields": {
+      "name": "Backlot Stunt Coaster",
+      "tracktype": 14,
+      "max_height": "42",
+      "max_speed": "40",
+      "manufacturer": 9,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 64,
+    "fields": {
+      "name": "Behemoth",
+      "tracktype": 3,
+      "max_height": "230",
+      "max_speed": "77",
+      "manufacturer": 2,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 65,
+    "fields": {
+      "name": "Flight Deck",
+      "tracktype": 5,
+      "max_height": "109",
+      "max_speed": "50",
+      "manufacturer": 10,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 66,
+    "fields": {
+      "name": "Time Warp",
+      "tracktype": 22,
+      "max_height": "50",
+      "max_speed": "25",
+      "manufacturer": 17,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 67,
+    "fields": {
+      "name": "The Bat",
+      "tracktype": 9,
+      "max_height": "70",
+      "max_speed": "45",
+      "manufacturer": 10,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 68,
+    "fields": {
+      "name": "Dragon Fyre",
+      "tracktype": 21,
+      "max_height": "78",
+      "max_speed": "50",
+      "manufacturer": 7,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 69,
+    "fields": {
+      "name": "Wilde Beast",
+      "tracktype": 6,
+      "max_height": "82",
+      "max_speed": "56",
+      "manufacturer": 18,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 70,
+    "fields": {
+      "name": "Silver Streak",
+      "tracktype": 29,
+      "max_height": "48",
+      "max_speed": "26",
+      "manufacturer": 10,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 71,
+    "fields": {
+      "name": "Ghoster Coaster",
+      "tracktype": 30,
+      "max_height": "41",
+      "max_speed": "35",
+      "manufacturer": 12,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.rollercoaster",
+    "pk": 72,
+    "fields": {
+      "name": "Taxi Jam",
+      "tracktype": 30,
+      "max_height": "40",
+      "max_speed": "30",
+      "manufacturer": 20,
+      "park": 6
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 1,
+    "fields": {
+      "date": "2020-11-24T04:09:00Z",
+      "title": "5 Scariest First Drops",
+      "type": "recent",
+      "image": "Screen_Shot_2020-11-23_at_4.34.14_PM.png",
+      "article": "https://www.cnn.com/travel/article/scariest-roller-coaster-drops-world/index.html"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 2,
+    "fields": {
+      "date": "2020-11-24T05:00:50Z",
+      "title": "Lightening Rod To Receive New Track in 2021",
+      "type": "recent",
+      "image": "Screen_Shot_2020-11-23_at_5.01.31_PM.png",
+      "article": "https://www.coaster101.com/2020/11/15/lightning-rod-dollywood-retracking-2021/"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 3,
+    "fields": {
+      "date": "2020-11-24T05:04:25Z",
+      "title": "Cedar Fair Appoints Louis Carr to Board of Directors",
+      "type": "corporate",
+      "image": "Screen_Shot_2020-11-23_at_5.05.36_PM.png",
+      "article": "https://www.cedarfair.com/news/article/2020-1117-louis-carr"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 4,
+    "fields": {
+      "date": "2020-11-24T05:06:29Z",
+      "title": "Cedar Fair 3Q 2020 Results",
+      "type": "corporate",
+      "image": "Screen_Shot_2020-11-23_at_5.06.25_PM.png",
+      "article": "https://www.cedarfair.com/news/article/2020-1012-cedar-fair-to-announce-2020-3rd-quarter-results"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 5,
+    "fields": {
+      "date": "2020-11-24T05:16:02Z",
+      "title": "2021 Will Be the Year of Roller Coasters in Central Florida",
+      "type": "insights",
+      "image": "Screen_Shot_2020-11-23_at_5.15.57_PM.png",
+      "article": "https://www.fool.com/investing/2020/09/29/2021-will-be-the-year-of-roller-coasters-in-centra/"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 6,
+    "fields": {
+      "date": "2020-11-24T05:17:11Z",
+      "title": "New flight-themed roller coaster coming to Silverwood in 2021",
+      "type": "insights",
+      "image": "Screen_Shot_2020-11-23_at_5.17.22_PM.png",
+      "article": "https://www.kxly.com/new-flight-themed-roller-coaster-coming-to-silverwood-in-2021/"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 7,
+    "fields": {
+      "date": "2020-11-24T23:02:25Z",
+      "title": "Planet Coaster",
+      "type": "recent",
+      "image": "Screen_Shot_2020-11-24_at_11.02.18_AM.png",
+      "article": "https://www.frontier.co.uk/our-games/planet-coaster"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 8,
+    "fields": {
+      "date": "2020-11-24T23:03:05Z",
+      "title": "Coaster Critic Blog",
+      "type": "user_articles",
+      "image": "Screen_Shot_2020-11-24_at_11.03.53_AM.png",
+      "article": "https://coastercritic.com/"
+    }
+  },
+  {
+    "model": "quantumapi.newsarticle",
+    "pk": 9,
+    "fields": {
+      "date": "2019-09-25T22:03:05Z",
+      "title": "Iron Gwazi Annouced For Busch Gardens Tampa, Florida",
+      "type": "insights",
+      "image": "Screen_Shot_2020-11-27_at_10.29.20_AM.png",
+      "article": "https://coastercritic.com/2019/09/iron-gwazi-roller-coaster-announced-for-busch-gardens-tampa/"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": { "name": "Can add log entry", "content_type": 1, "codename": "add_logentry" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": { "name": "Can change log entry", "content_type": 1, "codename": "change_logentry" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": { "name": "Can delete log entry", "content_type": 1, "codename": "delete_logentry" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 4,
+    "fields": { "name": "Can view log entry", "content_type": 1, "codename": "view_logentry" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 5,
+    "fields": { "name": "Can add permission", "content_type": 2, "codename": "add_permission" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 6,
+    "fields": { "name": "Can change permission", "content_type": 2, "codename": "change_permission" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 7,
+    "fields": { "name": "Can delete permission", "content_type": 2, "codename": "delete_permission" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 8,
+    "fields": { "name": "Can view permission", "content_type": 2, "codename": "view_permission" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 9,
+    "fields": { "name": "Can add group", "content_type": 3, "codename": "add_group" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 10,
+    "fields": { "name": "Can change group", "content_type": 3, "codename": "change_group" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 11,
+    "fields": { "name": "Can delete group", "content_type": 3, "codename": "delete_group" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 12,
+    "fields": { "name": "Can view group", "content_type": 3, "codename": "view_group" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 13,
+    "fields": { "name": "Can add content type", "content_type": 4, "codename": "add_contenttype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 14,
+    "fields": { "name": "Can change content type", "content_type": 4, "codename": "change_contenttype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 15,
+    "fields": { "name": "Can delete content type", "content_type": 4, "codename": "delete_contenttype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 16,
+    "fields": { "name": "Can view content type", "content_type": 4, "codename": "view_contenttype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 17,
+    "fields": { "name": "Can add session", "content_type": 5, "codename": "add_session" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 18,
+    "fields": { "name": "Can change session", "content_type": 5, "codename": "change_session" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 19,
+    "fields": { "name": "Can delete session", "content_type": 5, "codename": "delete_session" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 20,
+    "fields": { "name": "Can view session", "content_type": 5, "codename": "view_session" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 21,
+    "fields": { "name": "Can add Token", "content_type": 6, "codename": "add_token" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 22,
+    "fields": { "name": "Can change Token", "content_type": 6, "codename": "change_token" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 23,
+    "fields": { "name": "Can delete Token", "content_type": 6, "codename": "delete_token" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 24,
+    "fields": { "name": "Can view Token", "content_type": 6, "codename": "view_token" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 25,
+    "fields": { "name": "Can add site", "content_type": 7, "codename": "add_site" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 26,
+    "fields": { "name": "Can change site", "content_type": 7, "codename": "change_site" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 27,
+    "fields": { "name": "Can delete site", "content_type": 7, "codename": "delete_site" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 28,
+    "fields": { "name": "Can view site", "content_type": 7, "codename": "view_site" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 29,
+    "fields": { "name": "Can add social application", "content_type": 8, "codename": "add_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 30,
+    "fields": { "name": "Can change social application", "content_type": 8, "codename": "change_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 31,
+    "fields": { "name": "Can delete social application", "content_type": 8, "codename": "delete_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 32,
+    "fields": { "name": "Can view social application", "content_type": 8, "codename": "view_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 33,
+    "fields": { "name": "Can add social account", "content_type": 9, "codename": "add_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 34,
+    "fields": { "name": "Can change social account", "content_type": 9, "codename": "change_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 35,
+    "fields": { "name": "Can delete social account", "content_type": 9, "codename": "delete_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 36,
+    "fields": { "name": "Can view social account", "content_type": 9, "codename": "view_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 37,
+    "fields": { "name": "Can add social application token", "content_type": 10, "codename": "add_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 38,
+    "fields": { "name": "Can change social application token", "content_type": 10, "codename": "change_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 39,
+    "fields": { "name": "Can delete social application token", "content_type": 10, "codename": "delete_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 40,
+    "fields": { "name": "Can view social application token", "content_type": 10, "codename": "view_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 41,
+    "fields": { "name": "Can add email address", "content_type": 11, "codename": "add_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 42,
+    "fields": { "name": "Can change email address", "content_type": 11, "codename": "change_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 43,
+    "fields": { "name": "Can delete email address", "content_type": 11, "codename": "delete_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 44,
+    "fields": { "name": "Can view email address", "content_type": 11, "codename": "view_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 45,
+    "fields": { "name": "Can add email confirmation", "content_type": 12, "codename": "add_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 46,
+    "fields": { "name": "Can change email confirmation", "content_type": 12, "codename": "change_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 47,
+    "fields": { "name": "Can delete email confirmation", "content_type": 12, "codename": "delete_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 48,
+    "fields": { "name": "Can view email confirmation", "content_type": 12, "codename": "view_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 49,
+    "fields": { "name": "Can add association", "content_type": 13, "codename": "add_association" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 50,
+    "fields": { "name": "Can change association", "content_type": 13, "codename": "change_association" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 51,
+    "fields": { "name": "Can delete association", "content_type": 13, "codename": "delete_association" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 52,
+    "fields": { "name": "Can view association", "content_type": 13, "codename": "view_association" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 53,
+    "fields": { "name": "Can add code", "content_type": 14, "codename": "add_code" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 54,
+    "fields": { "name": "Can change code", "content_type": 14, "codename": "change_code" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 55,
+    "fields": { "name": "Can delete code", "content_type": 14, "codename": "delete_code" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 56,
+    "fields": { "name": "Can view code", "content_type": 14, "codename": "view_code" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 57,
+    "fields": { "name": "Can add nonce", "content_type": 15, "codename": "add_nonce" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 58,
+    "fields": { "name": "Can change nonce", "content_type": 15, "codename": "change_nonce" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 59,
+    "fields": { "name": "Can delete nonce", "content_type": 15, "codename": "delete_nonce" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 60,
+    "fields": { "name": "Can view nonce", "content_type": 15, "codename": "view_nonce" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 61,
+    "fields": { "name": "Can add user social auth", "content_type": 16, "codename": "add_usersocialauth" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 62,
+    "fields": { "name": "Can change user social auth", "content_type": 16, "codename": "change_usersocialauth" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 63,
+    "fields": { "name": "Can delete user social auth", "content_type": 16, "codename": "delete_usersocialauth" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 64,
+    "fields": { "name": "Can view user social auth", "content_type": 16, "codename": "view_usersocialauth" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 65,
+    "fields": { "name": "Can add partial", "content_type": 17, "codename": "add_partial" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 66,
+    "fields": { "name": "Can change partial", "content_type": 17, "codename": "change_partial" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 67,
+    "fields": { "name": "Can delete partial", "content_type": 17, "codename": "delete_partial" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 68,
+    "fields": { "name": "Can view partial", "content_type": 17, "codename": "view_partial" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 69,
+    "fields": { "name": "Can add user", "content_type": 18, "codename": "add_user" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 70,
+    "fields": { "name": "Can change user", "content_type": 18, "codename": "change_user" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 71,
+    "fields": { "name": "Can delete user", "content_type": 18, "codename": "delete_user" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 72,
+    "fields": { "name": "Can view user", "content_type": 18, "codename": "view_user" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 73,
+    "fields": { "name": "Can add credit", "content_type": 19, "codename": "add_credit" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 74,
+    "fields": { "name": "Can change credit", "content_type": 19, "codename": "change_credit" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 75,
+    "fields": { "name": "Can delete credit", "content_type": 19, "codename": "delete_credit" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 76,
+    "fields": { "name": "Can view credit", "content_type": 19, "codename": "view_credit" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 77,
+    "fields": { "name": "Can add image", "content_type": 20, "codename": "add_image" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 78,
+    "fields": { "name": "Can change image", "content_type": 20, "codename": "change_image" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 79,
+    "fields": { "name": "Can delete image", "content_type": 20, "codename": "delete_image" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 80,
+    "fields": { "name": "Can view image", "content_type": 20, "codename": "view_image" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 81,
+    "fields": { "name": "Can add manufacturer", "content_type": 21, "codename": "add_manufacturer" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 82,
+    "fields": { "name": "Can change manufacturer", "content_type": 21, "codename": "change_manufacturer" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 83,
+    "fields": { "name": "Can delete manufacturer", "content_type": 21, "codename": "delete_manufacturer" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 84,
+    "fields": { "name": "Can view manufacturer", "content_type": 21, "codename": "view_manufacturer" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 85,
+    "fields": { "name": "Can add newsarticle", "content_type": 22, "codename": "add_newsarticle" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 86,
+    "fields": { "name": "Can change newsarticle", "content_type": 22, "codename": "change_newsarticle" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 87,
+    "fields": { "name": "Can delete newsarticle", "content_type": 22, "codename": "delete_newsarticle" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 88,
+    "fields": { "name": "Can view newsarticle", "content_type": 22, "codename": "view_newsarticle" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 89,
+    "fields": { "name": "Can add park", "content_type": 23, "codename": "add_park" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 90,
+    "fields": { "name": "Can change park", "content_type": 23, "codename": "change_park" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 91,
+    "fields": { "name": "Can delete park", "content_type": 23, "codename": "delete_park" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 92,
+    "fields": { "name": "Can view park", "content_type": 23, "codename": "view_park" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 93,
+    "fields": { "name": "Can add rollerCoaster", "content_type": 24, "codename": "add_rollercoaster" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 94,
+    "fields": { "name": "Can change rollerCoaster", "content_type": 24, "codename": "change_rollercoaster" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 95,
+    "fields": { "name": "Can delete rollerCoaster", "content_type": 24, "codename": "delete_rollercoaster" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 96,
+    "fields": { "name": "Can view rollerCoaster", "content_type": 24, "codename": "view_rollercoaster" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 97,
+    "fields": { "name": "Can add tracktype", "content_type": 25, "codename": "add_tracktype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 98,
+    "fields": { "name": "Can change tracktype", "content_type": 25, "codename": "change_tracktype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 99,
+    "fields": { "name": "Can delete tracktype", "content_type": 25, "codename": "delete_tracktype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 100,
+    "fields": { "name": "Can view tracktype", "content_type": 25, "codename": "view_tracktype" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 101,
+    "fields": { "name": "Can add userProfile", "content_type": 26, "codename": "add_userprofile" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 102,
+    "fields": { "name": "Can change userProfile", "content_type": 26, "codename": "change_userprofile" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 103,
+    "fields": { "name": "Can delete userProfile", "content_type": 26, "codename": "delete_userprofile" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 104,
+    "fields": { "name": "Can view userProfile", "content_type": 26, "codename": "view_userprofile" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 105,
+    "fields": { "name": "Can add message", "content_type": 27, "codename": "add_messages" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 106,
+    "fields": { "name": "Can change message", "content_type": 27, "codename": "change_messages" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 107,
+    "fields": { "name": "Can delete message", "content_type": 27, "codename": "delete_messages" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 108,
+    "fields": { "name": "Can view message", "content_type": 27, "codename": "view_messages" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 109,
+    "fields": { "name": "Can add credential", "content_type": 28, "codename": "add_credential" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 110,
+    "fields": { "name": "Can change credential", "content_type": 28, "codename": "change_credential" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 111,
+    "fields": { "name": "Can delete credential", "content_type": 28, "codename": "delete_credential" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 112,
+    "fields": { "name": "Can view credential", "content_type": 28, "codename": "view_credential" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 113,
+    "fields": {
+      "name": "Can add blogcontributorapplication",
+      "content_type": 29,
+      "codename": "add_blogcontributorapplication"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 114,
+    "fields": {
+      "name": "Can change blogcontributorapplication",
+      "content_type": 29,
+      "codename": "change_blogcontributorapplication"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 115,
+    "fields": {
+      "name": "Can delete blogcontributorapplication",
+      "content_type": 29,
+      "codename": "delete_blogcontributorapplication"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 116,
+    "fields": {
+      "name": "Can view blogcontributorapplication",
+      "content_type": 29,
+      "codename": "view_blogcontributorapplication"
+    }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 117,
+    "fields": { "name": "Can add blacklisted token", "content_type": 30, "codename": "add_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 118,
+    "fields": { "name": "Can change blacklisted token", "content_type": 30, "codename": "change_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 119,
+    "fields": { "name": "Can delete blacklisted token", "content_type": 30, "codename": "delete_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 120,
+    "fields": { "name": "Can view blacklisted token", "content_type": 30, "codename": "view_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 121,
+    "fields": { "name": "Can add email address", "content_type": 31, "codename": "add_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 122,
+    "fields": { "name": "Can change email address", "content_type": 31, "codename": "change_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 123,
+    "fields": { "name": "Can delete email address", "content_type": 31, "codename": "delete_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 124,
+    "fields": { "name": "Can view email address", "content_type": 31, "codename": "view_emailaddress" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 125,
+    "fields": { "name": "Can add email confirmation", "content_type": 32, "codename": "add_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 126,
+    "fields": { "name": "Can change email confirmation", "content_type": 32, "codename": "change_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 127,
+    "fields": { "name": "Can delete email confirmation", "content_type": 32, "codename": "delete_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 128,
+    "fields": { "name": "Can view email confirmation", "content_type": 32, "codename": "view_emailconfirmation" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 129,
+    "fields": { "name": "Can add social account", "content_type": 33, "codename": "add_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 130,
+    "fields": { "name": "Can change social account", "content_type": 33, "codename": "change_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 131,
+    "fields": { "name": "Can delete social account", "content_type": 33, "codename": "delete_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 132,
+    "fields": { "name": "Can view social account", "content_type": 33, "codename": "view_socialaccount" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 133,
+    "fields": { "name": "Can add social application", "content_type": 34, "codename": "add_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 134,
+    "fields": { "name": "Can change social application", "content_type": 34, "codename": "change_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 135,
+    "fields": { "name": "Can delete social application", "content_type": 34, "codename": "delete_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 136,
+    "fields": { "name": "Can view social application", "content_type": 34, "codename": "view_socialapp" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 137,
+    "fields": { "name": "Can add social application token", "content_type": 35, "codename": "add_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 138,
+    "fields": { "name": "Can change social application token", "content_type": 35, "codename": "change_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 139,
+    "fields": { "name": "Can delete social application token", "content_type": 35, "codename": "delete_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 140,
+    "fields": { "name": "Can view social application token", "content_type": 35, "codename": "view_socialtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 141,
+    "fields": { "name": "Can add loginhistory", "content_type": 36, "codename": "add_loginhistory" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 142,
+    "fields": { "name": "Can change loginhistory", "content_type": 36, "codename": "change_loginhistory" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 143,
+    "fields": { "name": "Can delete loginhistory", "content_type": 36, "codename": "delete_loginhistory" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 144,
+    "fields": { "name": "Can view loginhistory", "content_type": 36, "codename": "view_loginhistory" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 145,
+    "fields": { "name": "Can add activitylog", "content_type": 37, "codename": "add_activitylog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 146,
+    "fields": { "name": "Can change activitylog", "content_type": 37, "codename": "change_activitylog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 147,
+    "fields": { "name": "Can delete activitylog", "content_type": 37, "codename": "delete_activitylog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 148,
+    "fields": { "name": "Can view activitylog", "content_type": 37, "codename": "view_activitylog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 149,
+    "fields": { "name": "Can add calendar event", "content_type": 38, "codename": "add_calendarevent" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 150,
+    "fields": { "name": "Can change calendar event", "content_type": 38, "codename": "change_calendarevent" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 151,
+    "fields": { "name": "Can delete calendar event", "content_type": 38, "codename": "delete_calendarevent" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 152,
+    "fields": { "name": "Can view calendar event", "content_type": 38, "codename": "view_calendarevent" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 153,
+    "fields": { "name": "Can add error log", "content_type": 39, "codename": "add_errorlog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 154,
+    "fields": { "name": "Can change error log", "content_type": 39, "codename": "change_errorlog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 155,
+    "fields": { "name": "Can delete error log", "content_type": 39, "codename": "delete_errorlog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 156,
+    "fields": { "name": "Can view error log", "content_type": 39, "codename": "view_errorlog" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 157,
+    "fields": { "name": "Can add blacklisted token", "content_type": 40, "codename": "add_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 158,
+    "fields": { "name": "Can change blacklisted token", "content_type": 40, "codename": "change_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 159,
+    "fields": { "name": "Can delete blacklisted token", "content_type": 40, "codename": "delete_blacklistedtoken" }
+  },
+  {
+    "model": "auth.permission",
+    "pk": 160,
+    "fields": { "name": "Can view blacklisted token", "content_type": 40, "codename": "view_blacklistedtoken" }
+  }
+]

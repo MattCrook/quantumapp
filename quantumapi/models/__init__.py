@@ -10,7 +10,7 @@ from .user import User
 from .forms import  CustomUserChangeForm, CustomUserCreationForm
 from .usermanager import CustomUserManager
 from .UserAdmin import QuantumUserAdmin
-from .auth0data import Credential
+from .Credential import Credential
 from .news import NewsArticle
 from .blog_application import BlogContributorApplication
 from .page_monitoring import ActivityLog, LoginHistory

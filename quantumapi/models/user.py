@@ -26,7 +26,7 @@ class User(AbstractUser):
     # REQUIRED_FIELD =  A list of the field names that will be prompted for when creating a user via the createsuperuser management command;
 
     USERNAME_FIELD = 'auth0_identifier'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['email', 'username', 'first_name', 'last_name']
 
 
     # Specifiesthat all objects for the class come from the CustomUserManager

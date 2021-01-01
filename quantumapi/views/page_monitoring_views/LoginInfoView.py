@@ -12,7 +12,7 @@ class LoginInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginHistoryModel
         url = serializers.HyperlinkedIdentityField(view_name='loginhistory', lookup_field='id')
-        fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'date')
+        fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'date')
         depth = 1
 
 
@@ -52,20 +52,20 @@ class LoginInfoView(ViewSet):
             host_ip = socket.getfqdn()
             host_ipv4 = ipv4s[-1]
             IPAddr = socket.gethostbyname(hostname)
-            print(ipv4s[-1])
-            print(host_ip)
-            print(IPAddr)
+            # print(ipv4s[-1])
+            # print(host_ip)
+            # print(IPAddr)
 
             successful_authenticator = request.successful_authenticator
             get_token_from_auth_header = successful_authenticator.get_token_from_authorization_header
             token_from_cookies = successful_authenticator.get_token_from_cookies
             token_from_request = successful_authenticator.get_token_from_request
-            print(successful_authenticator)
-            print(token_from_cookies)
-            print(get_token_from_auth_header)
-            print(token_from_request)
+            # print(successful_authenticator)
+            # print(token_from_cookies)
+            # print(get_token_from_auth_header)
+            # print(token_from_request)
 
-            print(request.data)
+            # print(request.data)
 
 
             user_id = request.data['user_id']
@@ -93,12 +93,13 @@ class LoginInfoView(ViewSet):
             login_info.platform = request.data["platform"]
             login_info.app_codename = request.data["app_code_name"]
             login_info.host_computer_name = hostname
+            login_info.id_token = request.data['id_token']
 
             login_info.save()
             serializer = LoginInfoSerializer(login_info, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def destroy(self, request, pk=None):

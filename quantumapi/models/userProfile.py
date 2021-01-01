@@ -1,12 +1,10 @@
 from django.db import models
 from django.db.models import F
+from .user import User
+from .images import Image
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver
 # from django.conf import settings
-from .user import User
-from .images import Image
-
-
 
 
 class UserProfile(models.Model):

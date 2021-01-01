@@ -14,7 +14,7 @@ class CustomUserManager(BaseUserManager):
     use_in_migrations = True
     User = AUTH_USER_MODEL
 
-    def create_user(self, request, email, password, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
@@ -37,7 +37,6 @@ class CustomUserManager(BaseUserManager):
 
     # Create and save a SuperUser with the given email and password.
     def create_superuser(self, email, password, **extra_fields):
-
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)

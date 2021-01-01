@@ -8,7 +8,12 @@ from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from django.contrib.sessions.models import Session
+from allauth.account.models import EmailAddress
+from social_django.admin import Association, UserSocialAuth
 import json
+
+# from allauth.account.models import EmailConfirmation
+
 # from rest_framework.authtoken.models import Token
 # from rest_auth.models import DefaultTokenModel
 
@@ -38,7 +43,20 @@ def login_user(request):
                 login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
 
                 session_user = request.session
+                is_account_email = EmailAddress.objects.filter(user_id=user.id).exists()
                 is_session = Session.objects.filter(session_key=session_user.session_key).exists()
+                extra_data = req_body['id_token']
+                provider = req_body['provider']
+
+                # Get social auth login for user
+                user_social_auth = UserSocialAuth.get_user(req_body['uid'])
+                user_association = Association.objects.create(user=user)
+
+                if is_account_email:
+                    account_email = EmailAddress.objects.get(user_id=user.id)
+                else:
+                    account_email = EmailAddress.objects.create(user=user)
+
 
                 if is_session:
                     session = Session.objects.get(session_key=session_user.session_key)

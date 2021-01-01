@@ -15,11 +15,12 @@ class LoginHistory(models.Model):
     version = models.CharField(max_length=200, null=True, blank=True)
     platform = models.CharField(max_length=200, null=True, blank=True)
     app_codename = models.CharField(max_length=50, null=True, blank=True)
+    id_token = models.TextField(null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        verbose_name = ("loginhistory")
-        verbose_name_plural = ("loginhistories")
+        verbose_name = ("login history")
+        verbose_name_plural = ("login history")
         ordering = ("user", )
 
     def __str__(self):

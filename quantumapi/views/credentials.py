@@ -1,18 +1,19 @@
-import json
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status, authentication, permissions
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseServerError
+from rest_framework.serializers import Serializer
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.http import HttpResponse
 from django.conf import settings
-from quantumapi.models import User
 from quantumapi.models import Credential as CredentialModel
 from django.middleware.csrf import get_token
 from django.contrib.sessions.models import Session
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from rest_framework_jwt.blacklist.models import BlacklistedToken
+import datetime
 import psycopg2
-
+import json
 
 
 
@@ -20,22 +21,25 @@ class CredentialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CredentialModel
         url = serializers.HyperlinkedIdentityField(view_name='credentials', lookup_field='id')
-        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'updated_at')
+        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'cookies', 'updated_at')
+        # fields = '__all__'
         depth = 1
-
 
 
 class Credentials(ViewSet):
 
     def list(self, request):
-        data = CredentialModel.objects.all()
-        user_id = self.request.query_params.get("user_id", None);
+        try:
+            data = CredentialModel.objects.all()
+            user_id = self.request.query_params.get("user_id", None);
 
-        if user_id is not None:
-            data = CredentialModel.objects.filter(user_id=user_id)
+            if user_id is not None:
+                data = CredentialModel.objects.filter(user_id=user_id)
 
-        serializer = CredentialsSerializer(data, many=True, context={'request': request})
-        return Response(serializer.data)
+            serializer = CredentialsSerializer(data, many=True, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -52,7 +56,7 @@ class Credentials(ViewSet):
             serializer = CredentialsSerializer(auth0data, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return HttpResponseServerError(ex)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def create(self, request):
@@ -63,18 +67,29 @@ class Credentials(ViewSet):
                 if 'csrf_token' in request.data and request.data['csrf_token']:
                     csrftoken = request.data['csrf_token']
                 else:
+                    print('Created csrf token on backend - none was set.')
                     csrftoken = get_token(request)
 
                 if 'session_id' in request.data and request.data['session_id']:
                     session_id = request.data['session_id']
                     session = Session.objects.get(session_key=session_id)
                     decoded_session = session.get_decoded()
+
+                elif request.session and 'session_key' in request.session:
+                    session = Session.objects.get(session_key=request.session.session_key)
+                    decoded_session = session.get_decoded()
+
                 else:
                     print("Session Error: No Session tied to user.")
                     session_id = ''
                     decoded_session = ''
+                    # session = Session.objects.create()
 
-                user = User.objects.get(auth0_identifier=user_sub)
+                if 'transactions' in request.data and request.data['transactions']:
+                    transactions = json.dumps(request.data['transactions'])
+
+
+                user = request.user
                 is_auth0data = CredentialModel.objects.filter(user_id=user.id).exists()
 
                 if is_auth0data and user_sub == user.auth0_identifier:
@@ -86,40 +101,68 @@ class Credentials(ViewSet):
                     auth0data.redirect_uri = request.data["redirect_uri"]
                     auth0data.audience = request.data["audience"]
                     auth0data.scope = request.data["scope"]
-                    auth0data.transactions = request.data["transactions"]
+                    auth0data.transactions = transactions
                     auth0data.nonce = request.data["nonce"]
                     auth0data.access_token = request.data["access_token"]
                     auth0data.django_token = request.data["django_token"]
                     auth0data.session = decoded_session
                     auth0data.session_id = session_id
                     auth0data.csrf_token = csrftoken
+                    auth0data.cookies = json.dumps(request.data["cookies"])
                     auth0data.updated_at = request.data["updated_at"]
                     auth0data.save()
-                    serializer = CredentialsSerializer(auth0data, context={'request': request})
+                    # serializer.is_valid()
+                    # serializer.save()
+                    serializer = CredentialsSerializer(auth0data , context={'request': request})
                     return Response(serializer.data)
                 else:
-                    newAuth0data = CredentialModel()
-                    newAuth0data.user = user
-                    newAuth0data.user_sub = request.data['user_sub']
-                    newAuth0data.domain = request.data["domain"]
-                    newAuth0data.client_id = request.data["client_id"]
-                    newAuth0data.redirect_uri = request.data["redirect_uri"]
-                    newAuth0data.audience = request.data["audience"]
-                    newAuth0data.scope = request.data["scope"]
-                    newAuth0data.transactions = request.data["transactions"]
-                    newAuth0data.nonce = request.data["nonce"]
-                    newAuth0data.access_token = request.data["access_token"]
-                    newAuth0data.django_token = request.data["django_token"]
-                    newAuth0data.session = decoded_session
-                    newAuth0data.session_id = session_id
-                    newAuth0data.csrf_token = csrftoken
-                    newAuth0data.updated_at = request.data["updated_at"]
-                    newAuth0data.save()
-                    serializer = CredentialsSerializer(newAuth0data, context={'request': request})
-                    return Response(serializer.data)
+                    try:
+                        newAuth0data = CredentialModel()
+                        newAuth0data.user = user
+                        newAuth0data.user_sub = request.data['user_sub']
+                        newAuth0data.domain = request.data["domain"]
+                        newAuth0data.client_id = request.data["client_id"]
+                        newAuth0data.redirect_uri = request.data["redirect_uri"]
+                        newAuth0data.audience = request.data["audience"]
+                        newAuth0data.scope = request.data["scope"]
+                        newAuth0data.transactions = transactions
+                        newAuth0data.nonce = request.data["nonce"]
+                        newAuth0data.access_token = request.data["access_token"]
+                        newAuth0data.django_token = request.data["django_token"]
+                        newAuth0data.session = decoded_session
+                        newAuth0data.session_id = session_id
+                        newAuth0data.csrf_token = csrftoken
+                        newAuth0data.cookies = json.dumps(request.data["cookies"])
+                        newAuth0data.updated_at = request.data["updated_at"]
+                        newAuth0data.save()
+                        # credentials = {
+                        #     'user': user,
+                        #     'user_sub': user_sub,
+                        #     'domain': request.data["domain"],
+                        #     'client_id': request.data["client_id"],
+                        #     'redirect_uri': request.data["redirect_uri"],
+                        #     'audience': request.data["audience"],
+                        #     'scope': request.data["scope"],
+                        #     'transactions': transactions,
+                        #     'nonce': request.data["nonce"],
+                        #     'access_token': request.data["access_token"],
+                        #     'django_token': request.data["django_token"],
+                        #     'session': json.dumps(decoded_session),
+                        #     'session_id': session_id,
+                        #     'csrf_token': csrftoken,
+                        #     'cookies': json.dumps(request.data["cookies"]),
+                        #     'updated_at': request.data["updated_at"],
+                        # }
+                        serializer = CredentialsSerializer(newAuth0data , context={'request': request})
+                        # serializer.is_valid()
+                        # serializer.save()
+                        return Response(serializer.data)
+                    except:
+                        return Response({'message': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as ex:
-            return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # black_listed_token = BlacklistedToken(token=request.auth, blacklisted_at=datetime.datetime.now(), user_id=request.user.id)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except AssertionError as ass:
             return HttpResponse({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -157,9 +200,9 @@ class Credentials(ViewSet):
 
                 data.save()
             return Response({"Success": "Data successfully updated"}, status=status.HTTP_204_NO_CONTENT)
-
         except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 @api_view(('GET', 'POST'))
