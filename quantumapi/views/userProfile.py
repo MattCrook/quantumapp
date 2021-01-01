@@ -64,7 +64,7 @@ class UserProfiles(ViewSet):
 
     def update(self, request, pk=None):
         try:
-            print(request.data)
+            print("In userprofile", request.data)
             userprofile = UserProfile.objects.get(pk=pk)
             userprofile_user_id = userprofile.user_id
             user = User.objects.get(pk=userprofile_user_id)

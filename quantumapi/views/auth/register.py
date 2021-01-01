@@ -78,7 +78,7 @@ def register_user(request):
         is_user_social_auth = UserSocialAuth.objects.filter(user_id=user.id).exists()
 
         if is_session:
-            session = request.session
+            session = Session.objects.get(session_key=session_user.session_key)
             session.save()
         else:
             session = Session.objects.create(user=user)

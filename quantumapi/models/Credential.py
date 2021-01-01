@@ -3,6 +3,7 @@ from quantumapi.models import User
 from django.db import models
 
 
+
 class Credential(models.Model):
 
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -19,7 +20,8 @@ class Credential(models.Model):
     session_id = models.CharField(max_length=500, null=True, blank=True)
     session = models.TextField(null=True, blank=True)
     csrf_token = models.CharField(max_length=900, null=True, blank=True)
-    updated_at = models.DateTimeField()
+    cookies = models.TextField(null=True, blank=True)
+    updated_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = ("credential")

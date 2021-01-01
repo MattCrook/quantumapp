@@ -99,7 +99,7 @@ class LoginInfoView(ViewSet):
             serializer = LoginInfoSerializer(login_info, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def destroy(self, request, pk=None):
