@@ -46,7 +46,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions.middleware',
 ]
 
-# 'drf_queryfields',
+# Config/ routing for Websockets/ chat
+ASGI_APPLICATION = "quantumapi.views.websockets.routing.application"
+CHANNEL_LAYERS = {
+  "default": {
+    "BACKEND": "channels_redis.core.RedisChannelLayer",
+    "CONFIG": {
+      "hosts": [("127.0.0.1", 6379)],
+    },
+  },
+}
 
 
 MIDDLEWARE = [
