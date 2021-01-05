@@ -277,7 +277,9 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'}
+    'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'
+    }
+# REST_SESSION_LOGIN = True
 
 # Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.
 SESSION_SAVE_EVERY_REQUEST = True

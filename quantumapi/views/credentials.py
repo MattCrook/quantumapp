@@ -111,6 +111,7 @@ class Credentials(ViewSet):
                     auth0data.cookies = json.dumps(request.data["cookies"])
                     auth0data.updated_at = request.data["updated_at"]
                     auth0data.save()
+                    # serializer = CredentialsSerializer(data=request.data)
                     # serializer.is_valid()
                     # serializer.save()
                     serializer = CredentialsSerializer(auth0data , context={'request': request})
