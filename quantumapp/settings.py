@@ -42,19 +42,21 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'django_filters',
-    'quantumapi',
     'django.contrib.sessions.middleware',
+    'channels',
+    'quantumapi',
+    'quantumforum',
 ]
 
 # Config/ routing for Websockets/ chat
-ASGI_APPLICATION = "quantumapi.views.websockets.routing.application"
+ASGI_APPLICATION = "quantumapp.asgi.application"
 CHANNEL_LAYERS = {
-  "default": {
-    "BACKEND": "channels_redis.core.RedisChannelLayer",
-    "CONFIG": {
-      "hosts": [("127.0.0.1", 6379)],
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
-  },
 }
 
 
@@ -150,6 +152,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
+    'ws://127.0.0.1:8000',
 )
 
 
@@ -178,11 +181,14 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'sqlite3': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
+        }
     },
-    'default': {
+    'postgres': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'quantumcoastersdb',
         'USER': 'matthewcrook',
@@ -253,18 +259,19 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
 SOCIAL_AUTH_USER_MODEL = 'quantumapi.User'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 SOCIAL_AUTH_CLEAN_USERNAMES = True
-SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
+SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
+    'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_PIPELINE = (
-'social_core.pipeline.social_auth.social_details',
-'social_core.pipeline.social_auth.social_uid',
-'social_core.pipeline.social_auth.social_user',
-'social_core.pipeline.user.get_username',
-'social_core.pipeline.social_auth.associate_by_email',
-'social_core.pipeline.user.create_user',
-'social_core.pipeline.social_auth.associate_user',
-'social_core.pipeline.social_auth.load_extra_data',
-'social_core.pipeline.user.user_details',
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
 )
 
 # Django All-Auth Settings
@@ -287,7 +294,7 @@ SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'
-    }
+}
 # REST_SESSION_LOGIN = True
 
 # Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.

@@ -49,8 +49,11 @@ class UserProfiles(ViewSet):
             else:
                 serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
             return Response(serializer.data)
+
+        except UserProfile.DoesNotExist as ex:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
         except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def retrieve(self, request, pk=None):
@@ -59,12 +62,11 @@ class UserProfiles(ViewSet):
             serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def update(self, request, pk=None):
         try:
-            print("In userprofile", request.data)
             userprofile = UserProfile.objects.get(pk=pk)
             userprofile_user_id = userprofile.user_id
             user = User.objects.get(pk=userprofile_user_id)

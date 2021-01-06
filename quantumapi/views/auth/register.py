@@ -111,6 +111,21 @@ def register_user(request):
                 lifetime=exp,
                 assoc_type=assoc_type
                 )
+            # social_user = UserSocialAuth.create_social_auth(user, user.id, 'quantummanagement')
+            # credential = {
+            #     'username': user.username,
+            #     'password': user.password,
+            # }
+            # credentials = CredentialsModel(user=user, credentials=credential)
+            # django_token = Token.objects.get(user=user)
+
+            # extra_data = {
+            #     "token": django_token.key,
+            #     # "credentials": credentials,
+            # }
+            # social_user.extra_data = extra_data
+            # social_user.save()
+            # credentials.save()
 
         management_token = get_management_api_config(AUTH0_DOMAIN)
         management_api_token = json.loads(management_token)

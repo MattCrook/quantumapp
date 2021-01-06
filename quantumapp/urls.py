@@ -38,6 +38,7 @@ router.register(r'error_logs', ErrorLogView, 'error_logs')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('chat/', include('quantumforum.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('rest-auth/login/', login_user),
