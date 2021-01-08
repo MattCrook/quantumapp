@@ -22,21 +22,35 @@ class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
 
 class Tracktypes(ViewSet):
 
-    def create(self, request):
-        newtracktype = Tracktype()
-        newtracktype.name = request.data["name"]
+    def list(self, request):
+        tracktypes = Tracktype.objects.all()
+        name = self.request.query_params.get('name', None)
 
-        newtracktype.save()
-        serializer = TracktypeSerializer(newtracktype, context={'request': request})
+        if name is not None:
+            tracktypes = tracktypes.filter(name=name)
+
+        serializer = TracktypeSerializer(tracktypes, many=True, context={'request': request})
         return Response(serializer.data)
+
+
+    def create(self, request):
+        serializer = TracktypeSerializer(data=request.data, context={'request': request})
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None):
         try:
             tracktype = Tracktype.objects.get(pk=pk)
             serializer = TracktypeSerializer(tracktype, context={'request': request})
             return Response(serializer.data)
+
+        except Tracktype.DoesNotExist as ex:
+            return Response({'message': ex.args}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
-            return HttpResponseServerError(ex)
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     def update(self, request, pk=None):
         tracktype = Tracktype.objects.get(pk=pk)
@@ -44,6 +58,7 @@ class Tracktypes(ViewSet):
         tracktype.name = request.data["name"]
         tracktype.save()
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
     def destroy(self, request, pk=None):
         try:
@@ -56,15 +71,3 @@ class Tracktypes(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def list(self, request):
-        tracktypes = Tracktype.objects.all()
-
-        # If name is provided as a query parameter, then filter list by track name
-        name = self.request.query_params.get('name', None)
-        if name is not None:
-            tracktypes = tracktypes.filter(name=name)
-
-
-        serializer = TracktypeSerializer(tracktypes, many=True, context={'request': request})
-        return Response(serializer.data)

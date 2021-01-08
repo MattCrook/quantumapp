@@ -22,14 +22,11 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
 
 class Manufacturers(ViewSet):
     def create(self, request):
-        newmanufacturer = Manufacturer()
-        newmanufacturer.name = request.data["name"]
-        newmanufacturer.origin_country = request.data["origin_country"]
-        newmanufacturer.company_website = request.data["manufacture_url"]
-
-        newmanufacturer.save()
-        serializer = ManufacturerSerializer(newmanufacturer, context={'request': request})
+        serializer = ManufacturerSerializer(data=request.data, context={'request': request})
+        serializer.is_valid()
+        serializer.save()
         return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None):
         try:
@@ -40,8 +37,11 @@ class Manufacturers(ViewSet):
 
             serializer = ManufacturerSerializer(manufacturer, context={'request': request})
             return Response(serializer.data)
+
+        except Manufacturer.DoesNotExist as ex:
+            return Response({'message': ex.args}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
-            return HttpResponseServerError(ex)
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
         manufacturer = Manufacturer.objects.get(pk=pk)

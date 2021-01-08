@@ -1,9 +1,10 @@
-from django.http import HttpResponseServerError
+from django.http import HttpResponseServerError, JsonResponse
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import RollerCoaster, Manufacturer, Tracktype, Park
+import json
 
 
 class RollerCoasterSerializer(serializers.HyperlinkedModelSerializer):
@@ -31,21 +32,49 @@ class RollerCoasters(ViewSet):
 
 
     def create(self, request):
-        newrollercoaster = RollerCoaster()
-        manufacturer = Manufacturer.objects.get(pk=request.data["manufacturerId"])
-        tracktype = Tracktype.objects.get(pk=request.data["trackTypeId"])
-        park = Park.objects.get(pk=request.data["parkId"])
+        try:
+            if 'isBulk' in request.data and request.data['isBulk']:
+                incoming_queryset = request.data['data']
+                all_serialized_data = []
+                for new_entry in incoming_queryset:
+                    newrollercoaster = RollerCoaster()
+                    manufacturer = Manufacturer.objects.get(pk=new_entry["manufacturerId"])
+                    tracktype = Tracktype.objects.get(pk=new_entry["trackTypeId"])
+                    park = Park.objects.get(pk=new_entry["parkId"])
 
-        newrollercoaster.name = request.data["name"]
-        newrollercoaster.tracktype = tracktype
-        newrollercoaster.max_height = request.data["max_height"]
-        newrollercoaster.max_speed = request.data["max_speed"]
-        newrollercoaster.manufacturer = manufacturer
-        newrollercoaster.park = park
+                    newrollercoaster.name = new_entry["name"]
+                    newrollercoaster.tracktype = tracktype
+                    newrollercoaster.max_height = new_entry["max_height"]
+                    newrollercoaster.max_speed = new_entry["max_speed"]
+                    newrollercoaster.manufacturer = manufacturer
+                    newrollercoaster.park = park
+                    newrollercoaster.save()
+                    serialized_data = RollerCoasterSerializer(data=new_entry, context={'request': request})
+                    serialized_data.is_valid()
+                    all_serialized_data.append(serialized_data.data)
+                return JsonResponse(all_serialized_data, safe=False)
+        except Exception as ex:
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        newrollercoaster.save()
-        serializer = RollerCoasterSerializer(newrollercoaster, context={'request': request})
-        return Response(serializer.data)
+        else:
+            try:
+                newrollercoaster = RollerCoaster()
+                manufacturer = Manufacturer.objects.get(pk=request.data["manufacturerId"])
+                tracktype = Tracktype.objects.get(pk=request.data["trackTypeId"])
+                park = Park.objects.get(pk=request.data["parkId"])
+
+                newrollercoaster.name = request.data["name"]
+                newrollercoaster.tracktype = tracktype
+                newrollercoaster.max_height = request.data["max_height"]
+                newrollercoaster.max_speed = request.data["max_speed"]
+                newrollercoaster.manufacturer = manufacturer
+                newrollercoaster.park = park
+
+                newrollercoaster.save()
+                serializer = RollerCoasterSerializer(newrollercoaster, context={'request': request})
+                return Response(serializer.data)
+            except Exception as ex:
+                return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def retrieve(self, request, pk=None):
         try:
