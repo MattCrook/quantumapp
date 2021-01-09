@@ -1,22 +1,19 @@
-from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import Tracktype
+from quantumapi.models import Tracktype, RollerCoaster
 from django_filters.rest_framework import DjangoFilterBackend
-
 
 
 class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
 
+    name = serializers.CharField()
+    rollercoasters = serializers.PrimaryKeyRelatedField(queryset=RollerCoaster.objects.all(), many=True)
     class Meta:
         model = Tracktype
-        url = serializers.HyperlinkedIdentityField(
-            view_name='tracktype',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'name', 'rollercoasters')
+        # url = serializers.HyperlinkedIdentityField(view_name='tracktype', lookup_field='id')
+        fields = ('id', 'name', 'rollercoasters')
         depth = 1
 
 
@@ -27,7 +24,7 @@ class Tracktypes(ViewSet):
         name = self.request.query_params.get('name', None)
 
         if name is not None:
-            tracktypes = tracktypes.filter(name=name)
+            tracktypes = Tracktype.objects.filter(name=name)
 
         serializer = TracktypeSerializer(tracktypes, many=True, context={'request': request})
         return Response(serializer.data)

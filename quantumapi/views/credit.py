@@ -5,21 +5,19 @@ from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Credit, RollerCoaster, UserProfile
 from django.contrib.auth.models import User
+# from .rollerCoaster import RollerCoasterSerializer
 
-from django.http.response import JsonResponse
 
 
 
 class CreditsSerializer(serializers.ModelSerializer):
 
+    # rollerCoaster = RollerCoasterSerializer()
+
     class Meta:
         model = Credit
-        # url = serializers.HyperlinkedIdentityField(
-        #     view_name='credit',
-        #     lookup_field='id'
-        # )
-        fields = ('id', 'userProfile', 'rollerCoaster', )
-        depth = 0
+        fields = ['id', 'userProfile', 'rollerCoaster']
+        depth = 1
 
 
 class Credits(ViewSet):
@@ -35,13 +33,20 @@ class Credits(ViewSet):
 
     # Handle GET request to Credits resource.
     def list(self, request):
-        all_credits = Credit.objects.all()
-        # If credits is provided as a query parameter, then filter list of credits by userprofile id
-        # credit = self.request.query_params.get('profile', None)
-        # Get the extended table of user with the user profile table
+        try:
+            all_credits = Credit.objects.all()
+            # If credits is provided as a query parameter, then filter list of credits by userprofile id
+            # credit = self.request.query_params.get('profile', None)
+            # Get the extended table of user with the user profile table
 
-        serializer = CreditsSerializer(all_credits, many=True, context={'request': request})
-        return Response(serializer.data)
+            serializer = CreditsSerializer(all_credits, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        except Credit.DoesNotExist as ex:
+            return Response({'message': ex.args}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def create(self, request):
@@ -62,11 +67,10 @@ class Credits(ViewSet):
         try:
             credit = Credit.objects.get(pk=pk)
             credit.delete()
-
             return Response({'Deleted': credit.id}, status=status.HTTP_204_NO_CONTENT)
 
         except Credit.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': ex.args}, status=status.HTTP_404_NOT_FOUND)
 
         except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

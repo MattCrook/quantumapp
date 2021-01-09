@@ -3,18 +3,19 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import Park
+from quantumapi.models import Park, RollerCoaster
 
 
 class ParkSerializer(serializers.HyperlinkedModelSerializer):
 
+    name = serializers.CharField()
+    parkCountry = serializers.CharField()
+    parkLocation = serializers.CharField()
+    rollercoasters = serializers.PrimaryKeyRelatedField(queryset=RollerCoaster.objects.all(), many=True)
     class Meta:
         model = Park
-        url = serializers.HyperlinkedIdentityField(
-            view_name='park',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'name', 'parkCountry', 'parkLocation', 'rollercoasters')
+        # url = serializers.HyperlinkedIdentityField(view_name='park', lookup_field='id')
+        fields = ('id', 'name', 'parkCountry', 'parkLocation', 'rollercoasters')
         depth = 1
 
 
