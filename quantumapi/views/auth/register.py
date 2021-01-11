@@ -15,12 +15,13 @@ from allauth.account.models import EmailConfirmation
 from social_django.models import UserSocialAuth, Association
 from social_core.pipeline.social_auth import associate_user
 from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_OPEN_ID_SERVER_URL
-from jose import jwt
-# import requests as req
-import json
-import datetime
 import http.client
 from social_django.context_processors import backends
+from .management_api_services import get_management_api_config, get_management_api_user
+from jose import jwt
+import datetime
+import json
+# import requests as req
 # from social_django.admin import Association, UserSocialAuth
 # from django.views.decorators.csrf import csrf_exempt
 # from rest_framework.authtoken.models import Token
@@ -31,8 +32,8 @@ from social_django.context_processors import backends
 def register_user(request):
     try:
         req_body = json.loads(request.body.decode())
-        backend = backends(request)
-        print("BACKENDS", backends)
+        # backend = backends(request)
+        # print("BACKENDS", backends)
 
         UserModel = get_user_model()
         user = UserModel.objects.get(auth0_identifier=req_body['auth0_identifier'])
@@ -67,8 +68,6 @@ def register_user(request):
         exp = id_token['exp']
         iat = id_token['iat']
         assoc_type = "Username-Password-Authentication"
-        # open_id_config = get_open_id_config(req_body['uid'])
-        # print("OEPNID", open_id_config)
 
         login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
 
@@ -108,10 +107,30 @@ def register_user(request):
                 server_url=server_url,
                 handle='social_django',
                 secret=AUTH0_CLIENT_SECRET,
-                issued=iat, lifetime=exp,
+                issued=iat,
+                lifetime=exp,
                 assoc_type=assoc_type
                 )
+            # social_user = UserSocialAuth.create_social_auth(user, user.id, 'quantummanagement')
+            # credential = {
+            #     'username': user.username,
+            #     'password': user.password,
+            # }
+            # credentials = CredentialsModel(user=user, credentials=credential)
+            # django_token = Token.objects.get(user=user)
 
+            # extra_data = {
+            #     "token": django_token.key,
+            #     # "credentials": credentials,
+            # }
+            # social_user.extra_data = extra_data
+            # social_user.save()
+            # credentials.save()
+
+        management_token = get_management_api_config(AUTH0_DOMAIN)
+        management_api_token = json.loads(management_token)
+        management_api_jwt = management_api_token['access_token']
+        management_user = get_management_api_user(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
 
         user_obj = {
             "id": user.id,
@@ -124,6 +143,7 @@ def register_user(request):
             "QuantumToken": key,
             "session": session.session_key,
             'csrf': csrf,
+            'management_user': management_user,
         }
 
         data = json.dumps({"DjangoUser": user_obj})
@@ -131,13 +151,3 @@ def register_user(request):
 
     except Exception as ex:
         return Response(ex, content_type='application/json')
-
-
-
-def get_open_id_config(uid):
-    conn = http.client.HTTPConnection("https://dev-405n1e6w.auth0.com/api/v2/users/" + uid)
-    headers = { 'authorization': "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FVkJSRU0wTlRKRFFqa3hRalEyTXpJMVFqbENPVEkzUVRJMU16UTRPRE5HTXpSRVJURkVSUSJ9.eyJpc3MiOiJodHRwczovL2Rldi00MDVuMWU2dy5hdXRoMC5jb20vIiwic3ViIjoiclhDQWJVZ05qV0NiZmxnQWlVVTk3VXV4MWVpWFVOWnVAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vZGV2LTQwNW4xZTZ3LmF1dGgwLmNvbS9hcGkvdjIvIiwiaWF0IjoxNjA5MjgyMDY5LCJleHAiOjE2MDkzNjg0NjksImF6cCI6InJYQ0FiVWdOaldDYmZsZ0FpVVU5N1V1eDFlaVhVTlp1IiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.LEiimVbRd9S7VvRgpP-5Kp0t8t3ihyeUrL6rqJXXIp8_t5mYIc4xafaq98ZIlIOrTPAvR8ZF_IxejWCKSXkqJ1t_L65lBiXaoLhpCOFGBxoI3daE4RoEEejSKV1AeYcv2ER1qX0sQC0Wfwn6LsVBSI-B_A-NZF6I7mBSIfbtxojXSiV1ampbg9bveDFmU-WNFgeEM6mV_33qJQY0G8mgJGCwXN3w9feD11IUvvnUEdP_JAM2JA-tf6dl23TLDAu8-S90VnnZZJcWRJX8yBlaNnQuDAKZps_rn1BP6_hh7nfj_rQOt2lto6MS0AVog9Zp23jHVmLx-1YAfHPmPRYPhA" }
-    conn.request("GET", "/", headers=headers)
-    res = conn.getresponse()
-    data = res.read()
-    return data.decode("utf-8")

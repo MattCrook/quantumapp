@@ -3,29 +3,37 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from quantumapi.models import Park
+from quantumapi.models import Park, RollerCoaster
 
 
 class ParkSerializer(serializers.HyperlinkedModelSerializer):
 
+    name = serializers.CharField()
+    parkCountry = serializers.CharField()
+    parkLocation = serializers.CharField()
+    rollercoasters = serializers.PrimaryKeyRelatedField(queryset=RollerCoaster.objects.all(), many=True)
     class Meta:
         model = Park
-        url = serializers.HyperlinkedIdentityField(
-            view_name='park',
-            lookup_field='id'
-        )
-        fields = ('id', 'url', 'name', 'parkCountry', 'parkLocation', 'rollercoasters')
+        # url = serializers.HyperlinkedIdentityField(view_name='park', lookup_field='id')
+        fields = ('id', 'name', 'parkCountry', 'parkLocation', 'rollercoasters')
         depth = 1
 
 
 class Parks(ViewSet):
+
+    def list(self, request):
+        parks = Park.objects.all()
+        name = self.request.query_params.get('name', None)
+        if name is not None:
+            parks = parks.filter(name=name)
+        serializer = ParkSerializer(parks, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
     def create(self, request):
-        newpark = Park()
-        newpark.name = request.data["name"]
-        newpark.parkLocation = request.data["parkLocation"]
-        newpark.parkCountry = request.data["parkCountry"]
-        newpark.save()
-        serializer = ParkSerializer(newpark, context={'request': request})
+        serializer = ParkSerializer(data=request.data, context={'request': request})
+        serializer.is_valid()
+        serializer.save()
         return Response(serializer.data)
 
 
@@ -58,34 +66,3 @@ class Parks(ViewSet):
 
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-    def list(self, request):
-        parks = Park.objects.all()
-        name = self.request.query_params.get('name', None)
-        if name is not None:
-            parks = parks.filter(name=name)
-        serializer = ParkSerializer(
-            parks, many=True, context={'request': request})
-        return Response(serializer.data)
-
-
-
-# def add_new_park(request):
-#     if request.method == 'GET':
-#         parks = Park.objects.all()
-
-#         template = 'parks/add_park.html'
-#         context = {
-#             'parks': parks,
-#         }
-#         return render(request, template, context)
-#     elif request.method == 'POST':
-#         form_data = request.POST
-
-#         newpark = Park()
-#         newpark.name = request.data["name"]
-#         newpark.parkLocation = request.data["parkLocation"]
-#         newpark.parkCountry = request.data["parkCountry"]
-#         newpark.save()
-#         return redirect(reverse('quantumapi:park'))

@@ -3,18 +3,35 @@ import datetime
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
+import environ
 # import dotenv
 
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, True),
+    SECRET_KEY=(str),
+    AUTH0_CLIENT_ID=(str),
+    AUTH0_DOMAIN=(str),
+    AUTH0_CLIENT_SECRET=(str),
+    API_IDENTIFIER=(str),
+    AUTH0_OPEN_ID_SERVER_URL=(str),
+    SOCIAL_AUTH_AUTH0_DOMAIN=(str),
+    SOCIAL_AUTH_AUTH0_KEY=(str),
+    SOCIAL_AUTH_AUTH0_SECRET=(str),
+    JWT_ISSUER=(str)
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
+
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,11 +59,22 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'django_filters',
-    'quantumapi',
     'django.contrib.sessions.middleware',
+    'channels',
+    'quantumapi',
+    'quantumforum',
 ]
 
-# 'drf_queryfields',
+# Config/ routing for Websockets/ chat
+ASGI_APPLICATION = "quantumapp.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 
 MIDDLEWARE = [
@@ -84,18 +112,20 @@ REST_FRAMEWORK = {
 
 
 # Quantum API - Auth0 Credentials
-AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
-AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
-AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
-API_IDENTIFIER = 'https://api.quantumcoasters.com'
-AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
+
+AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
+AUTH0_DOMAIN = env('AUTH0_DOMAIN')
+AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
+API_IDENTIFIER = env('API_IDENTIFIER')
+AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
 
 
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
-SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
+
+SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
+SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
+SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
@@ -121,7 +151,7 @@ JWT_AUTH = {
         'quantumapi.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
-    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+    'JWT_ISSUER': env('JWT_ISSUER'),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
@@ -141,6 +171,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
+    # 'ws://127.0.0.1:8000',
 )
 
 
@@ -169,11 +200,14 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'sqlite3': {
+    'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
+        }
     },
-    'default': {
+    'postgres': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'quantumcoastersdb',
         'USER': 'matthewcrook',
@@ -244,18 +278,19 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
 SOCIAL_AUTH_USER_MODEL = 'quantumapi.User'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 SOCIAL_AUTH_CLEAN_USERNAMES = True
-SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
+SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
+    'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_PIPELINE = (
-'social_core.pipeline.social_auth.social_details',
-'social_core.pipeline.social_auth.social_uid',
-'social_core.pipeline.social_auth.social_user',
-'social_core.pipeline.user.get_username',
-'social_core.pipeline.social_auth.associate_by_email',
-'social_core.pipeline.user.create_user',
-'social_core.pipeline.social_auth.associate_user',
-'social_core.pipeline.social_auth.load_extra_data',
-'social_core.pipeline.user.user_details',
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
 )
 
 # Django All-Auth Settings
@@ -277,7 +312,9 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'}
+    'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'
+}
+# REST_SESSION_LOGIN = True
 
 # Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.
 SESSION_SAVE_EVERY_REQUEST = True
