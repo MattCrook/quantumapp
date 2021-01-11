@@ -7,31 +7,31 @@ import environ
 # import dotenv
 
 
-# env = environ.Env(
-#     # set casting, default value
-#     DEBUG=(bool, True),
-#     SECRET_KEY=(str),
-#     AUTH0_CLIENT_ID=(str),
-#     AUTH0_DOMAIN=(str),
-#     AUTH0_CLIENT_SECRET=(str),
-#     API_IDENTIFIER=(str),
-#     AUTH0_OPEN_ID_SERVER_URL=(str),
-#     SOCIAL_AUTH_AUTH0_DOMAIN=(str),
-#     SOCIAL_AUTH_AUTH0_KEY=(str),
-#     SOCIAL_AUTH_AUTH0_SECRET=(str),
-#     JWT_ISSUER=(str)
-# )
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, True),
+    SECRET_KEY=(str),
+    AUTH0_CLIENT_ID=(str),
+    AUTH0_DOMAIN=(str),
+    AUTH0_CLIENT_SECRET=(str),
+    API_IDENTIFIER=(str),
+    AUTH0_OPEN_ID_SERVER_URL=(str),
+    SOCIAL_AUTH_AUTH0_DOMAIN=(str),
+    SOCIAL_AUTH_AUTH0_KEY=(str),
+    SOCIAL_AUTH_AUTH0_SECRET=(str),
+    JWT_ISSUER=(str)
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# environ.Env.read_env()
+environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
-# SECRET_KEY = env('SECRET_KEY')
+
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -112,26 +112,20 @@ REST_FRAMEWORK = {
 
 
 # Quantum API - Auth0 Credentials
-AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
-AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
-AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
-API_IDENTIFIER = 'https://api.quantumcoasters.com'
-AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
-# AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
-# AUTH0_DOMAIN = env('AUTH0_DOMAIN')
-# AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
-# API_IDENTIFIER = env('API_IDENTIFIER')
-# AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
+
+AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
+AUTH0_DOMAIN = env('AUTH0_DOMAIN')
+AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
+API_IDENTIFIER = env('API_IDENTIFIER')
+AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
 
 
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
-SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
-SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
-# SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
-# SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
-# SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
+
+SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
+SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
+SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
@@ -157,8 +151,7 @@ JWT_AUTH = {
         'quantumapi.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
-    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
-    # 'JWT_ISSUER': env('JWT_ISSUER'),
+    'JWT_ISSUER': env('JWT_ISSUER'),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
