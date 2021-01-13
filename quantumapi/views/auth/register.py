@@ -17,7 +17,7 @@ from social_core.pipeline.social_auth import associate_user
 from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_OPEN_ID_SERVER_URL
 import http.client
 from social_django.context_processors import backends
-from .management_api_services import get_management_api_config, get_management_api_user
+from .management_api_services import management_api_oath_endpoint, get_management_api_user
 from jose import jwt
 import datetime
 import json
@@ -127,7 +127,7 @@ def register_user(request):
             # social_user.save()
             # credentials.save()
 
-        management_token = get_management_api_config(AUTH0_DOMAIN)
+        management_token = management_api_oath_endpoint(AUTH0_DOMAIN)
         management_api_token = json.loads(management_token)
         management_api_jwt = management_api_token['access_token']
         management_user = get_management_api_user(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])

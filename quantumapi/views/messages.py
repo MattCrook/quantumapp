@@ -5,6 +5,10 @@ from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Messages
 from django.contrib.auth.decorators import login_required
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+
+
 
 
 
@@ -16,11 +20,14 @@ class MessagesSerializer(serializers.HyperlinkedModelSerializer):
             view_name='messages',
             lookup_field='id'
         )
-        fields = ('id', 'url', 'message', 'timestamp', 'user_id', 'user', )
+        fields = ('id', 'url', 'message', 'timestamp', 'user')
         depth = 2
 
 
 class Message(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [RemoteUserAuthentication]
+
     def create(self, request):
         newmessage = Messages()
         newmessage.user_id = request.data["user_id"]
@@ -60,7 +67,10 @@ class Message(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
     def list(self, request):
+        print(request.session.session_key)
+        print(request.user.is_authenticated)
         messages = Messages.objects.all()
         serializer = MessagesSerializer(messages, many=True, context={'request': request})
         return Response(serializer.data)

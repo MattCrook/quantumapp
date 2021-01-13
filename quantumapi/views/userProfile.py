@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
 from .user import UserSerializer
 from quantumapi.models import UserProfile, Credit, Image, User
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 import json
 
 # from rest_framework.decorators import api_view, permission_classes
@@ -27,8 +29,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserProfiles(ViewSet):
-    # permission_classes = [permissions.AllowAny]
-    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [RemoteUserAuthentication]
 
 
     def list(self, request):

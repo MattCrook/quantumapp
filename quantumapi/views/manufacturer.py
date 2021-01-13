@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Manufacturer, RollerCoaster
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from urllib.parse import urlencode
 
 
@@ -22,6 +24,9 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Manufacturers(ViewSet):
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
+
     def create(self, request):
         serializer = ManufacturerSerializer(data=request.data, context={'request': request})
         serializer.is_valid()

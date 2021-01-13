@@ -11,6 +11,8 @@ from django.contrib.sessions.models import Session
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework_jwt.blacklist.models import BlacklistedToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 import datetime
 import psycopg2
 import json
@@ -27,6 +29,8 @@ class CredentialsSerializer(serializers.ModelSerializer):
 
 
 class Credentials(ViewSet):
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
 
     def list(self, request):
         try:

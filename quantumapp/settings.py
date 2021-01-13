@@ -36,7 +36,7 @@ SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 INSTALLED_APPS = [
@@ -87,6 +87,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.RemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 
@@ -163,10 +164,11 @@ JWT_AUTH = {
 }
 
 
-AUTHENTICATION_BACKENDS = {
-    'django.contrib.auth.backends.ModelBackend',
+AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.RemoteUserBackend',
-}
+    'django.contrib.auth.backends.ModelBackend',
+    'quantumapi.auth0_views.Auth0',
+)
 # FOR DJANGO WEB APP BACKEND
 # 'quantumapi.auth0_views.Auth0',
 
@@ -177,7 +179,7 @@ ROOT_URLCONF = 'quantumapp.urls'
 CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
-    'http://localhost:8000',
+    # 'http://localhost:8000',
     # 'ws://127.0.0.1:8000',
 )
 
@@ -288,6 +290,10 @@ SOCIAL_AUTH_CLEAN_USERNAMES = True
 SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
     'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
+SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
+
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
@@ -321,7 +327,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'
 }
-# REST_SESSION_LOGIN = True
+REST_SESSION_LOGIN = True
 
 # Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.
 SESSION_SAVE_EVERY_REQUEST = True

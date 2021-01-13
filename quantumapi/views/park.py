@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Park, RollerCoaster
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 
 
 class ParkSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,6 +22,8 @@ class ParkSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class Parks(ViewSet):
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
 
     def list(self, request):
         parks = Park.objects.all()

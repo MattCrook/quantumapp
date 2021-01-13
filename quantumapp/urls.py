@@ -37,16 +37,16 @@ router.register(r'error_logs', ErrorLogView, 'error_logs')
 
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('chat/', include('quantumforum.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('rest-auth/login/', login_user),
     path('rest-auth/registration/', register_user),
     path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
+    path('api/', include(router.urls)),
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
     path('get_user/', get_user),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
+    path('', include('quantumforum.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

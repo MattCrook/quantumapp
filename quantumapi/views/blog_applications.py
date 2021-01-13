@@ -6,6 +6,8 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from quantumapi.models import BlogContributorApplication as BlogContributorApplicationModel
 from quantumapi.models import User as UserModel
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 import datetime
 
 
@@ -24,6 +26,8 @@ class BlogApplicationSerializer(serializers.ModelSerializer):
 
 
 class BlogContributorApplications(ViewSet):
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
 
     def list(self, request):
         all_submissions= BlogContributorApplicationModel.objects.all()

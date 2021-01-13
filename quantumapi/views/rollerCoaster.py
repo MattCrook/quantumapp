@@ -9,6 +9,10 @@ from quantumapi.views.manufacturer import ManufacturerSerializer
 from quantumapi.views.trackType import TracktypeSerializer
 import json
 from django.forms.models import model_to_dict
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+
+
 
 
 
@@ -30,6 +34,8 @@ class RollerCoasterSerializer(serializers.ModelSerializer):
 
 
 class RollerCoasters(ViewSet):
+    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication]
 
     def list(self, request):
         rollercoasters = RollerCoaster.objects.all()
