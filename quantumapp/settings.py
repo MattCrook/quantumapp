@@ -22,6 +22,18 @@ import environ
 #     JWT_ISSUER=(str)
 # )
 
+
+# AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
+# AUTH0_DOMAIN = env('AUTH0_DOMAIN')
+# AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
+# API_IDENTIFIER = env('API_IDENTIFIER')
+# AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
+# SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
+# SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
+# SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
+
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -67,6 +79,7 @@ INSTALLED_APPS = [
 
 # Config/ routing for Websockets/ chat
 ASGI_APPLICATION = "quantumapp.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -97,51 +110,61 @@ REST_FRAMEWORK = {
     #     'rest_framework.renderers.JSONRenderer',
     # ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.RemoteUserAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
 
-# Quantum API - Auth0 Credentials
+# Quantum API - Auth0 Credentials (Management API APP(Test Application))
 AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
 AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
+
+# Quantum API
 API_IDENTIFIER = 'https://api.quantumcoasters.com'
-AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
-# AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
-# AUTH0_DOMAIN = env('AUTH0_DOMAIN')
-# AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
-# API_IDENTIFIER = env('API_IDENTIFIER')
-# AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
+QUANTUM_COASTERS_API_ID = '5e711bac91a8780913c58961'
+
+
+
+# Management API
+# AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
+AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/'
+AUTH0_MANAGEMENT_API_ID = '5e6d3e555847e208d7c16e1c'
 
 
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
 SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+# Quantum Coasters Key
 SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
+# Quantum Coasters Secret
 SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
-# SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
-# SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
-# SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
     'email'
 ]
 
+# Quantum Coasters Machine to Machine
+# AUTH0_CLIENT_ID = 'fEY3uAhpmSRIjOHKHEHusdAkcNTse77C'
+# AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
+# AUTH0_CLIENT_SECRET = 'qlj7YWFbbiLc4XLg9iQ6rrRF8paSYX_00nHg9DPhC-bQ3k3rv5pKroUmOI4u94ct'
+
+
 # For Testing, to persist session cookies between redirect when redirecting user from login page.
-# SESSION_COOKIE_SECURE = True
-# # USe with Ngnix configuration
+SESSION_COOKIE_SECURE = True
+
+# # Use with Ngnix configuration
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # CSRF_COOKIE_SECURE = False
@@ -159,16 +182,14 @@ JWT_AUTH = {
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
     'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
-    # 'JWT_ISSUER': env('JWT_ISSUER'),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.RemoteUserBackend',
+AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
-    'quantumapi.auth0_views.Auth0',
-)
+    'django.contrib.auth.backends.RemoteUserBackend',
+}
 # FOR DJANGO WEB APP BACKEND
 # 'quantumapi.auth0_views.Auth0',
 
@@ -179,7 +200,7 @@ ROOT_URLCONF = 'quantumapp.urls'
 CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
-    # 'http://localhost:8000',
+    'http://localhost:8000',
     # 'ws://127.0.0.1:8000',
 )
 
@@ -202,7 +223,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'quantumapp.wsgi.application'
+# WSGI_APPLICATION = 'quantumapp.wsgi.application'
 
 
 # Database
@@ -304,6 +325,10 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
+)
+
+SOCIAL_AUTH_AUTHENTICATION_BACKENDS = (
+    'social_core.backends.open_id.OpenIdAuth'
 )
 
 # Django All-Auth Settings

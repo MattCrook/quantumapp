@@ -7,9 +7,7 @@ from quantumapi.models import Messages
 from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
-
-
-
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 class MessagesSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +24,7 @@ class MessagesSerializer(serializers.HyperlinkedModelSerializer):
 
 class Message(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [RemoteUserAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def create(self, request):
         newmessage = Messages()

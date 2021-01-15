@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from quantumapi.models import NewsArticle
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
-
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 class NewsSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +26,7 @@ class NewsSerializer(serializers.HyperlinkedModelSerializer):
 
 class News(ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def list(self, request):
         section = self.request.query_params.get('content', None)

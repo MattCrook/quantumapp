@@ -8,6 +8,7 @@ from quantumapi.models import BlogContributorApplication as BlogContributorAppli
 from quantumapi.models import User as UserModel
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import datetime
 
 
@@ -27,7 +28,7 @@ class BlogApplicationSerializer(serializers.ModelSerializer):
 
 class BlogContributorApplications(ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def list(self, request):
         all_submissions= BlogContributorApplicationModel.objects.all()

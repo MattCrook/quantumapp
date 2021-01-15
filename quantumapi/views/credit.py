@@ -7,6 +7,7 @@ from quantumapi.models import Credit, RollerCoaster, UserProfile
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 # from .rollerCoaster import RollerCoasterSerializer
 
 
@@ -24,7 +25,7 @@ class CreditsSerializer(serializers.ModelSerializer):
 
 class Credits(ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def retrieve(self, request, pk=None):
         try:

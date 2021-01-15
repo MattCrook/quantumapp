@@ -11,8 +11,7 @@ import json
 from django.forms.models import model_to_dict
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
-
-
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 
@@ -35,7 +34,7 @@ class RollerCoasterSerializer(serializers.ModelSerializer):
 
 class RollerCoasters(ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def list(self, request):
         rollercoasters = RollerCoaster.objects.all()

@@ -9,6 +9,8 @@ from rest_framework import status
 from quantumapi.models import Image, ImageForm
 from rest_framework.permissions import IsAuthenticated, DjangoModelPermissions
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 
 
 
@@ -26,6 +28,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class Images(ModelViewSet):
     permission_classes = [DjangoModelPermissions]
+    # authentication_classes = [JSONWebTokenAuthentication]
 
     queryset = Image.objects.all()
     serializer_class = ImageSerializer

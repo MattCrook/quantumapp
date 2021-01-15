@@ -30,7 +30,7 @@ from social_core.backends.auth0 import Auth0OAuth2
 
 from social_core.actions import user_is_authenticated, user_is_active
 
-from social_core.pipeline.social_auth import associate_user
+# from social_core.pipeline.social_auth import associate_user
 from django.middleware.csrf import get_token
 from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_OPEN_ID_SERVER_URL, SOCIAL_AUTH_STRATEGY, SOCIAL_AUTH_AUTH0_KEY, SOCIAL_AUTH_AUTH0_SECRET
 from jose import jwt
@@ -60,8 +60,9 @@ def login_user(request):
 
                 if authenticated_user is not None:
                     request_backends = backends(request)
-                    auth0_backend = request_backends['backends']['backends'][0]
-                    backend = authenticated_user.backend
+                    print('request_backends', request_backends)
+                    # auth0_backend = request_backends['backends']['backends'][0]
+                    # backend = authenticated_user.backend
                     remote_user_auth = request.successful_authenticator.authenticate(request)
                     # backend_data = user_backends_data(authenticated_user, backend, storage=DjangoUserMixin)
                     # Find user user_socialauth or if none create a social auth user
@@ -117,10 +118,12 @@ def login_user(request):
                     transactions_values = all_transactions['transactions'].values()
 
                     codes = []
+                    print("transaction_items_keys", transaction_items_keys)
                     for c in transaction_items_keys:
                         codes.append(c)
 
                     transactions = []
+                    print('transactions_values', transactions_values)
                     for t in transactions_values:
                         transactions.append(t)
 

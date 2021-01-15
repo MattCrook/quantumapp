@@ -6,6 +6,7 @@ from rest_framework import status
 from quantumapi.models import Park, RollerCoaster
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 class ParkSerializer(serializers.HyperlinkedModelSerializer):
@@ -23,7 +24,7 @@ class ParkSerializer(serializers.HyperlinkedModelSerializer):
 
 class Parks(ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def list(self, request):
         parks = Park.objects.all()

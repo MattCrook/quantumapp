@@ -6,7 +6,7 @@ from quantumapi.models import Tracktype, RollerCoaster
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
-
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,7 +22,7 @@ class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
 
 class Tracktypes(ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def list(self, request):
         tracktypes = Tracktype.objects.all()

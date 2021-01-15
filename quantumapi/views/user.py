@@ -8,7 +8,7 @@ from rest_auth.models import TokenModel
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
-
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 
 # from rest_auth.serializers import TokenSerializer
@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class Users(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JSONWebTokenAuthentication]
 
     def list(self, request):
         UserModel = get_user_model()
