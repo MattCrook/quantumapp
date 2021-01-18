@@ -182,39 +182,43 @@ def register_user(request):
                 # time = expires_at.time()
 
                 social_token = SocialToken.objects.create(
-                    app_id=social_app.id,
+                    app_id=social_app[0].id,
                     account_id=social_account.id,
                     token=remote_authenticated_user[1],
                     token_secret=management_api_jwt,
                     expires_at=expires_at
                     )
 
+                social_app_to_list = list(social_app)
+                social_app_data = social_app_to_list[0]
 
-            auth_user = {
-                "valid": True,
-                "id": user.id,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-                "username": user.username,
-                "is_staff": user.is_staff,
-                "auth0_identifier": user.auth0_identifier,
-                "QuantumToken": key,
-                "session": session.session_key,
-                'csrf': csrf,
-                'user_social_auth_id': user_social_auth.id,
-                'account_email_id': account_email.id,
-                'management_user': json.dumps(management_api_user),
-                'social_account_id': social_account.id,
-                'social_app_id': social_app.id,
-                'social_app_name': social_app.name,
-                "social_token_id": social_token.id,
-                'association_id': user_association.id,
-                'email_confirmation': True,
-            }
 
-            data = json.dumps({"DjangoUser": auth_user})
-            return HttpResponse(data, content_type='application/json')
+                auth_user = {
+                    "valid": True,
+                    "id": user.id,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email": user.email,
+                    "username": user.username,
+                    "is_staff": user.is_staff,
+                    "auth0_identifier": user.auth0_identifier,
+                    "QuantumToken": key,
+                    "session": session.session_key,
+                    'csrf': csrf,
+                    'user_social_auth_id': user_social_auth.id,
+                    'account_email_id': account_email.id,
+                    'management_user': management_api_user,
+                    'social_account_id': social_account.id,
+                    'social_app_id': social_app_data.pk,
+                    'social_app_name': social_app_data.name,
+                    "social_token_id": social_token.id,
+                    'association_id': user_association.id,
+                    'email_confirmation': True,
+                    'user_profile_id': new_userprofile.id,
+                }
+
+                data = json.dumps({"DjangoUser": auth_user})
+                return HttpResponse(data, content_type='application/json')
 
     except Exception as ex:
         return Response(ex, content_type='application/json')

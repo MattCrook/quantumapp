@@ -1,17 +1,52 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from quantumapi.models import Credential, Messages
+from quantumapi.models import Credential, Messages, User, UserProfile
+from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL
+from django.contrib.auth import authenticate, get_backends
+from social_django.context_processors import backends
+
 import json
 import jwt
 import requests
 import os
-from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN
-from django.contrib.auth import authenticate, get_backends
 
 def index(request):
     template = 'forum/index.html'
     context = {}
     return render(request, template, context)
+
+def group_chat(request, auth_user_id):
+    backend = get_backends()
+    backends_context = backends(request)
+    user_profile = UserProfile.objects.get(user_id=auth_user_id)
+    all_users = User.objects.all()
+    default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
+
+    template = 'group_chat/group_chat.html'
+    context = {
+        'user_profile': user_profile,
+        'all_users': all_users,
+        'CLIENT_URL': REACT_APP_FORUM_URL
+    }
+    return render(request, template, context)
+
+
+def private_chat(request, auth_user_id):
+    backend = get_backends()
+    backends_context = backends(request)
+
+    user_profile = UserProfile.objects.get(user_id=auth_user_id)
+    all_users = User.objects.all()
+    default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
+
+    template = 'private_message/private_message.html'
+    context = {
+        'user_profile': user_profile,
+        'all_users': all_users,
+        'CLIENT_URL': REACT_APP_FORUM_URL
+    }
+    return render(request, template, context)
+
 
 
 # def room(request, room_name):
@@ -32,6 +67,9 @@ def index(request):
 #             'error': error,
 #         }
 #     return render(request, template, context)
+
+
+
 
 # @login_required
 def room(request, room_name):

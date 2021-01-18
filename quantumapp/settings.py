@@ -124,7 +124,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-
+REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
 AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
