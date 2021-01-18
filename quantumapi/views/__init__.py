@@ -14,6 +14,7 @@ from .blog_applications import BlogContributorApplications
 from .page_monitoring_views import LoginInfoView, ActivityLogView
 from .calendar_events import CalendarEvents
 from .error_logging_views import ErrorLogView
+from .user_submissions import Feedback, BugReports
 
 
 # from .user import get_user, get_user_email

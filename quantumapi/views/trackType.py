@@ -22,7 +22,7 @@ class TracktypeSerializer(serializers.HyperlinkedModelSerializer):
 
 class Tracktypes(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         tracktypes = Tracktype.objects.all()

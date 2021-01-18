@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class Users(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         UserModel = get_user_model()

@@ -16,10 +16,6 @@ import datetime
 class BlogApplicationSerializer(serializers.ModelSerializer):
         class Meta:
             model = BlogContributorApplicationModel
-            url = serializers.HyperlinkedIdentityField(
-                view_name='blogcontributorapplication',
-                lookup_field='id'
-            )
             fields = ('id', 'user', 'first_name', 'last_name', 'email', 'social_media', 'short_description', 'date_submitted')
             depth = 1
 
@@ -28,7 +24,7 @@ class BlogApplicationSerializer(serializers.ModelSerializer):
 
 class BlogContributorApplications(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         all_submissions= BlogContributorApplicationModel.objects.all()

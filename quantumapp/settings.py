@@ -162,13 +162,15 @@ SOCIAL_AUTH_AUTH0_SCOPE = [
 
 
 # For Testing, to persist session cookies between redirect when redirecting user from login page.
-SESSION_COOKIE_SECURE = True
+# Set to false for dev on localhost
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTPONLY = False
+
 
 # # Use with Ngnix configuration
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
-# CSRF_COOKIE_SECURE = False
-# CSRF_COOKIE_HTTPONLY = False
 
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
@@ -201,7 +203,6 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
-    # 'ws://127.0.0.1:8000',
 )
 
 
@@ -223,7 +224,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'quantumapp.wsgi.application'
+WSGI_APPLICATION = 'quantumapp.wsgi.application'
 
 
 # Database

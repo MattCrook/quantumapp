@@ -23,7 +23,6 @@ import json
 class CredentialsSerializer(serializers.ModelSerializer):
     class Meta:
         model = CredentialModel
-        # url = serializers.HyperlinkedIdentityField(view_name='credentials', lookup_field='id')
         fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'cookies', 'updated_at')
         # fields = '__all__'
         depth = 1
@@ -31,7 +30,7 @@ class CredentialsSerializer(serializers.ModelSerializer):
 
 class Credentials(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         try:

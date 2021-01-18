@@ -24,7 +24,7 @@ class MessagesSerializer(serializers.HyperlinkedModelSerializer):
 
 class Message(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def create(self, request):
         newmessage = Messages()

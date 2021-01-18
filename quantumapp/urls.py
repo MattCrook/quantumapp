@@ -9,6 +9,8 @@ from django.conf import settings
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView
 from quantumapi.views import login_user, register_user, get_user, auth0_logout
 from quantumapi.views import Credentials as CredentialsView
+from quantumapi.views import Feedback as FeedbackView
+from quantumapi.views import BugReports as BugReportView
 from rest_framework.authtoken.views import obtain_auth_token
 # python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json
 
@@ -32,18 +34,21 @@ router.register(r'activity_log', ActivityLogView, 'activity_log')
 router.register(r'login_info', LoginInfoView, 'login_info')
 router.register(r'calendar_events', CalendarEvents, 'calendar_event')
 router.register(r'error_logs', ErrorLogView, 'error_logs')
-
+router.register(r'user_feedback', FeedbackView, 'user_feedback')
+router.register(r'bug_reports', BugReportView, 'bug_reports')
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', obtain_auth_token),
     path('accounts/', include('django.contrib.auth.urls')),
     path('rest-auth/login/', login_user),
     path('rest-auth/registration/', register_user),
     path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
-    path('api/', include(router.urls)),
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
     path('get_user/', get_user),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),

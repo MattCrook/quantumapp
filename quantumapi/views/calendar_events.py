@@ -27,7 +27,7 @@ class CalendarEventSerializer(serializers.ModelSerializer):
 
 class CalendarEvents(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         all_calendar_events = CalendarEventModel.objects.all()

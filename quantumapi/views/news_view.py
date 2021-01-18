@@ -26,7 +26,7 @@ class NewsSerializer(serializers.HyperlinkedModelSerializer):
 
 class News(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         section = self.request.query_params.get('content', None)

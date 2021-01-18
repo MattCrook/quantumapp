@@ -5,6 +5,9 @@ from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import ErrorLog as ErrorLogModel
 from django.contrib.sessions.models import Session
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 import datetime
 
@@ -18,6 +21,8 @@ class ErrorLogViewSerializer(serializers.ModelSerializer):
 
 
 class ErrorLogView(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         try:

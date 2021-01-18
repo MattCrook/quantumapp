@@ -14,9 +14,6 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 class CreditsSerializer(serializers.ModelSerializer):
-
-    # rollerCoaster = RollerCoasterSerializer()
-
     class Meta:
         model = Credit
         fields = ['id', 'userProfile', 'rollerCoaster']
@@ -25,7 +22,7 @@ class CreditsSerializer(serializers.ModelSerializer):
 
 class Credits(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def retrieve(self, request, pk=None):
         try:

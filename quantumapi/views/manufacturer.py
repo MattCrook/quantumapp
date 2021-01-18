@@ -19,14 +19,13 @@ class ManufacturerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Manufacturer
-        # url = serializers.HyperlinkedIdentityField(view_name='manufacturer', lookup_field='id')
         fields = ('id', 'name', 'origin_country', 'company_website', 'rollercoasters')
         depth = 1
 
 
 class Manufacturers(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def create(self, request):
         serializer = ManufacturerSerializer(data=request.data, context={'request': request})

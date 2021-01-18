@@ -16,6 +16,7 @@ from .blog_application import BlogContributorApplication
 from .page_monitoring import ActivityLog, LoginHistory
 from .CalendarEvent import CalendarEvent
 from .error_logging import ErrorLog
+from .user_submissions import Feedback, BugReport
 
 
 # from .forms import SignUpForm

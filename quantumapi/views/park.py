@@ -17,14 +17,13 @@ class ParkSerializer(serializers.HyperlinkedModelSerializer):
     rollercoasters = serializers.PrimaryKeyRelatedField(queryset=RollerCoaster.objects.all(), many=True)
     class Meta:
         model = Park
-        # url = serializers.HyperlinkedIdentityField(view_name='park', lookup_field='id')
         fields = ('id', 'name', 'parkCountry', 'parkLocation', 'rollercoasters')
         depth = 1
 
 
 class Parks(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         parks = Park.objects.all()

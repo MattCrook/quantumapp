@@ -1,4 +1,4 @@
-from django.http import HttpResponseServerError, JsonResponse
+from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -34,7 +34,7 @@ class RollerCoasterSerializer(serializers.ModelSerializer):
 
 class RollerCoasters(ViewSet):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JSONWebTokenAuthentication]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         rollercoasters = RollerCoaster.objects.all()

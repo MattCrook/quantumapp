@@ -42,7 +42,7 @@ import http.client
 
 
 @api_view(('GET', 'POST'))
-@authentication_classes([JSONWebTokenAuthentication])
+@authentication_classes([SessionAuthentication, JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def register_user(request):
     try:
@@ -144,7 +144,9 @@ def register_user(request):
                     extra_data=extra_data
                     )
 
-                code_verifier = transactions[0]['code_verifier']
+
+                code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                code = codes[0] if len(codes) > 0 else {}
                 is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists()
 
                 if is_association:
@@ -160,7 +162,7 @@ def register_user(request):
                         )
 
                 social_auth_nonce = Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
-                user_socialauth_code = Code.objects.create(email=account_email, code=codes[0], verified=True)
+                user_socialauth_code = Code.objects.create(email=account_email, code=code, verified=True)
 
                 social_account = SocialAccount()
                 social_account.user = authenticated_user
