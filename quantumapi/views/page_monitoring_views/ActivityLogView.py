@@ -4,6 +4,9 @@ from rest_framework import serializers, status, authentication, permissions
 from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import ActivityLog as ActivityLogModel
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 import datetime
 
@@ -17,6 +20,8 @@ class ActivityLogSerializer(serializers.ModelSerializer):
         depth = 1
 
 class ActivityLogView(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         data = ActivityLogModel.objects.all()

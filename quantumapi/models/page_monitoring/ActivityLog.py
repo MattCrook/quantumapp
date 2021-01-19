@@ -10,8 +10,8 @@ class ActivityLog(models.Model):
     date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        verbose_name = ("activitylog")
-        verbose_name_plural = ("activitylogs")
+        verbose_name = ("Activity Log")
+        verbose_name_plural = ("Activity Logs")
         ordering = ("user", )
 
     def __str__(self):

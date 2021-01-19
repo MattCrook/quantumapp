@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumapi.models import Park, RollerCoaster
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 class ParkSerializer(serializers.HyperlinkedModelSerializer):
@@ -14,12 +17,13 @@ class ParkSerializer(serializers.HyperlinkedModelSerializer):
     rollercoasters = serializers.PrimaryKeyRelatedField(queryset=RollerCoaster.objects.all(), many=True)
     class Meta:
         model = Park
-        # url = serializers.HyperlinkedIdentityField(view_name='park', lookup_field='id')
         fields = ('id', 'name', 'parkCountry', 'parkLocation', 'rollercoasters')
         depth = 1
 
 
 class Parks(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         parks = Park.objects.all()

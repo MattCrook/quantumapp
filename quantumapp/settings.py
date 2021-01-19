@@ -7,36 +7,48 @@ import environ
 # import dotenv
 
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, True),
-    SECRET_KEY=(str),
-    AUTH0_CLIENT_ID=(str),
-    AUTH0_DOMAIN=(str),
-    AUTH0_CLIENT_SECRET=(str),
-    API_IDENTIFIER=(str),
-    AUTH0_OPEN_ID_SERVER_URL=(str),
-    SOCIAL_AUTH_AUTH0_DOMAIN=(str),
-    SOCIAL_AUTH_AUTH0_KEY=(str),
-    SOCIAL_AUTH_AUTH0_SECRET=(str),
-    JWT_ISSUER=(str)
-)
+# env = environ.Env(
+#     # set casting, default value
+#     DEBUG=(bool, True),
+#     SECRET_KEY=(str),
+#     AUTH0_CLIENT_ID=(str),
+#     AUTH0_DOMAIN=(str),
+#     AUTH0_CLIENT_SECRET=(str),
+#     API_IDENTIFIER=(str),
+#     AUTH0_OPEN_ID_SERVER_URL=(str),
+#     SOCIAL_AUTH_AUTH0_DOMAIN=(str),
+#     SOCIAL_AUTH_AUTH0_KEY=(str),
+#     SOCIAL_AUTH_AUTH0_SECRET=(str),
+#     JWT_ISSUER=(str)
+# )
+
+
+# AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
+# AUTH0_DOMAIN = env('AUTH0_DOMAIN')
+# AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
+# API_IDENTIFIER = env('API_IDENTIFIER')
+# AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
+# SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
+# SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
+# SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
+
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-environ.Env.read_env()
+# environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
+# SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 INSTALLED_APPS = [
@@ -67,6 +79,7 @@ INSTALLED_APPS = [
 
 # Config/ routing for Websockets/ chat
 ASGI_APPLICATION = "quantumapp.asgi.application"
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -87,6 +100,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.RemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 
@@ -96,49 +110,67 @@ REST_FRAMEWORK = {
     #     'rest_framework.renderers.JSONRenderer',
     # ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.RemoteUserAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
+REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
+# Quantum API - Auth0 Credentials (Management API APP(Test Application))
+AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
+AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
+AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
 
-# Quantum API - Auth0 Credentials
+# Quantum API
+API_IDENTIFIER = 'https://api.quantumcoasters.com'
+QUANTUM_COASTERS_API_ID = '5e711bac91a8780913c58961'
 
-AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
-AUTH0_DOMAIN = env('AUTH0_DOMAIN')
-AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
-API_IDENTIFIER = env('API_IDENTIFIER')
-AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
+
+
+# Management API
+# AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
+AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/'
+AUTH0_MANAGEMENT_API_ID = '5e6d3e555847e208d7c16e1c'
 
 
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-
-SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
-SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
-SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
+SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+# Quantum Coasters Key
+SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
+# Quantum Coasters Secret
+SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
     'email'
 ]
 
+# Quantum Coasters Machine to Machine
+# AUTH0_CLIENT_ID = 'fEY3uAhpmSRIjOHKHEHusdAkcNTse77C'
+# AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
+# AUTH0_CLIENT_SECRET = 'qlj7YWFbbiLc4XLg9iQ6rrRF8paSYX_00nHg9DPhC-bQ3k3rv5pKroUmOI4u94ct'
+
+
 # For Testing, to persist session cookies between redirect when redirecting user from login page.
-# SESSION_COOKIE_SECURE = True
-# # USe with Ngnix configuration
+# Set to false for dev on localhost
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+# CSRF_COOKIE_HTTPONLY = False
+
+
+# # Use with Ngnix configuration
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
-# CSRF_COOKIE_SECURE = False
-# CSRF_COOKIE_HTTPONLY = False
 
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
@@ -151,7 +183,7 @@ JWT_AUTH = {
         'quantumapi.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
-    'JWT_ISSUER': env('JWT_ISSUER'),
+    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
@@ -171,7 +203,6 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
-    # 'ws://127.0.0.1:8000',
 )
 
 
@@ -281,6 +312,10 @@ SOCIAL_AUTH_CLEAN_USERNAMES = True
 SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
     'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+
+SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
+SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
+
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
@@ -291,6 +326,10 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
+)
+
+SOCIAL_AUTH_AUTHENTICATION_BACKENDS = (
+    'social_core.backends.open_id.OpenIdAuth'
 )
 
 # Django All-Auth Settings
@@ -314,7 +353,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'quantumapi.views.UserSerializer'
 }
-# REST_SESSION_LOGIN = True
+REST_SESSION_LOGIN = True
 
 # Django only sends a cookie if it needs to. If you don’t set any session data, it won’t send a session cookie, unless this is set to true.
 SESSION_SAVE_EVERY_REQUEST = True

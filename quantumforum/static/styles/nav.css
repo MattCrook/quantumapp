@@ -1,0 +1,102 @@
+.body {
+  margin: 0;
+  transition: 0.5s all ease;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background-color: rgba(26, 26, 26, 0.904);
+  box-shadow: 0px 6px 4px 0px rgb(190, 190, 190);
+}
+
+.label_wrapper {
+  display: flex;
+  margin-left: 2%;
+}
+.label {
+  font: 150 0.8em helvetica neue, open sans, sans-serif;
+  text-transform: uppercase;
+  color: white;
+}
+
+.nav_end {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  margin-right: 1%;
+  width: 14%;
+}
+
+.nav_name_wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.nav_name {
+  margin-right: 5px;
+  font: 150 1em helvetica neue, open sans, sans-serif;
+  color: white;
+}
+
+.nav_image {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  margin-right: 3px;
+  object-fit: cover;
+}
+
+.back_btn {
+  font: 150 1em helvetica neue, open sans, sans-serif;
+}
+
+.back_btn {
+  padding: 5px 15px;
+  /* margin: 9px 5px; */
+  margin-right: 2%;
+  color: rgb(194, 64, 64);
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+}
+
+.back_btn::before {
+  content: "";
+  position: absolute;
+  bottom: 0%;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background: rgb(194, 64, 64);
+  display: block;
+  -webkit-transform-origin: right top;
+  -ms-transform-origin: right top;
+  transform-origin: right top;
+  -webkit-transform: scale(0, 1);
+  -ms-transform: scale(0, 1);
+  transform: scale(0, 1);
+  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+}
+
+.back_btn:hover::before {
+  color: rgb(228, 91, 91);
+  -webkit-transform-origin: left top;
+  -ms-transform-origin: left top;
+  transform-origin: left top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+.back_btn:hover {
+  color: rgb(228, 91, 91);
+}

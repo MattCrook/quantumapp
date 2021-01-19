@@ -1,0 +1,43 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/private_chat.css' %}" />
+    <title>Private Chat</title>
+</head>
+
+
+<body class="body">
+    <nav class="nav">
+        <div class="label_wrapper">
+            <div class="label">Quantum Coasters Forum</div>
+        </div>
+        <div class="nav_end">
+            <div class="nav_name_wrapper">
+                <div class="nav_name">{{user_profile.user.first_name}}</div>
+                <div class="nav_name">{{user_profile.user.last_name}}</div>
+            </div>
+            <div class="nav_image_container">
+                {% if user_profile and user_profile.image %}
+                <img class="nav_image" src="{{user_profile.image.image}}" />
+                {% else %}
+                <img class="nav_image"
+                    src="https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png" />
+                {% endif %}
+            </div>
+            <div class="back_btn_container">
+                <a class="back_btn" href="{{CLIENT_URL}}">Back</a>
+            </div>
+        </div>
+    </nav>
+
+
+</body>
+
+</html>

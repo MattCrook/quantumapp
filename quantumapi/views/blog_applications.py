@@ -6,6 +6,9 @@ from rest_framework import status
 from django.contrib.auth.decorators import login_required
 from quantumapi.models import BlogContributorApplication as BlogContributorApplicationModel
 from quantumapi.models import User as UserModel
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import datetime
 
 
@@ -13,10 +16,6 @@ import datetime
 class BlogApplicationSerializer(serializers.ModelSerializer):
         class Meta:
             model = BlogContributorApplicationModel
-            url = serializers.HyperlinkedIdentityField(
-                view_name='blogcontributorapplication',
-                lookup_field='id'
-            )
             fields = ('id', 'user', 'first_name', 'last_name', 'email', 'social_media', 'short_description', 'date_submitted')
             depth = 1
 
@@ -24,6 +23,8 @@ class BlogApplicationSerializer(serializers.ModelSerializer):
 
 
 class BlogContributorApplications(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         all_submissions= BlogContributorApplicationModel.objects.all()

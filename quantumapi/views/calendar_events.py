@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from quantumapi.models import CalendarEvent as CalendarEventModel
 from quantumapi.models import User as UserModel
 from django.contrib.sessions.models import Session
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import datetime
 
 
@@ -23,6 +26,9 @@ class CalendarEventSerializer(serializers.ModelSerializer):
             depth = 1
 
 class CalendarEvents(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
+
     def list(self, request):
         all_calendar_events = CalendarEventModel.objects.all()
         serializer = CalendarEventSerializer(all_calendar_events, many=True, context={'request': request})

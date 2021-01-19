@@ -1,4 +1,4 @@
-from django.http import HttpResponseServerError, JsonResponse
+from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -9,6 +9,9 @@ from quantumapi.views.manufacturer import ManufacturerSerializer
 from quantumapi.views.trackType import TracktypeSerializer
 import json
 from django.forms.models import model_to_dict
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 
@@ -30,6 +33,8 @@ class RollerCoasterSerializer(serializers.ModelSerializer):
 
 
 class RollerCoasters(ViewSet):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         rollercoasters = RollerCoaster.objects.all()

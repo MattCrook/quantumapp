@@ -6,6 +6,9 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
 from .user import UserSerializer
 from quantumapi.models import UserProfile, Credit, Image, User
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 
 # from rest_framework.decorators import api_view, permission_classes
@@ -27,13 +30,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserProfiles(ViewSet):
-    # permission_classes = [permissions.AllowAny]
-    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
 
     def list(self, request):
         try:
             userprofiles = UserProfile.objects.all()
+            serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
             email = self.request.query_params.get('email', None)
             user_id = self.request.query_params.get('userId', None)
 
@@ -46,14 +50,13 @@ class UserProfiles(ViewSet):
                 userprofiles = UserProfile.objects.get(user_id=user_id)
                 serializer = UserProfileSerializer(userprofiles, context={'request': request})
 
-            else:
-                serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
             return Response(serializer.data)
 
-        except UserProfile.DoesNotExist as ex:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        except Exception as ex:
-            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except:
+            if UserProfile.DoesNotExist:
+                return HttpResponse({"Error": "No User matching query."}, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'message': Exception.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def retrieve(self, request, pk=None):

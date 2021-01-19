@@ -1,5 +1,5 @@
 from django.contrib import admin
-from quantumapi.models import UserProfile, RollerCoaster, Tracktype, Manufacturer, Park, Credit, Messages, Image, User, NewsArticle, BlogContributorApplication, LoginHistory, ActivityLog, CalendarEvent, ErrorLog
+from quantumapi.models import UserProfile, RollerCoaster, Tracktype, Manufacturer, Park, Credit, Messages, Image, User, NewsArticle, BlogContributorApplication, LoginHistory, ActivityLog, CalendarEvent, ErrorLog, Feedback, BugReport
 from quantumapi.models import Credential as CredentialModel
 from quantumapi.models import QuantumUserAdmin
 from django.contrib.sessions.models import Session
@@ -24,4 +24,7 @@ admin.site.register(LoginHistory)
 admin.site.register(ActivityLog)
 admin.site.register(CalendarEvent)
 admin.site.register(ErrorLog)
+admin.site.register(Feedback)
+admin.site.register(BugReport)
+
 # admin.site.register(TokenModel)
