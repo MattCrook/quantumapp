@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 from rest_framework import status
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.urls import reverse
 
 # from social_django.utils import psa
 from django.utils.http import (
@@ -19,8 +20,8 @@ from django.utils.http import (
 )
 
 
+from social_django.context_processors import backends, user_backends_data
 
-from django.urls import reverse
 
 
 import json
@@ -37,14 +38,24 @@ success_url_allowed_hosts = set()
 
 
 
+def index(request, chat_type):
+    user = request.user
+    context = {
+        'CLIENT_URL': REACT_APP_FORUM_URL
+    }
+    if user.is_authenticated:
+        if chat_type == 'group_chat':
+            return redirect(group_chat)
+        elif chat_type == 'private_chat':
+            return redirect(private_chat)
+    else:
+        # return render(request, 'login.html', context)
+        return redirect(reverse('quantumforum:login'))
 
-def index(request):
-    template = 'forum/index.html'
-    context = {}
-    return render(request, template, context)
 
 
-
+def home(request):
+    pass
 
 
 
@@ -106,24 +117,26 @@ def get_success_url_allowed_hosts(request):
 @login_required
 def group_chat(request):
     user = request.user
-    auth = request.auth
+    session = request.session
     UserModel = get_user_model()
     backend_list = get_backends()
+    auth_user_backends = backends(request)
 
-    user_creds = get_user(user.id)
+    # user = get_user(user.id)
     user_profile = UserProfile.objects.get(user_id=user.id)
     all_users = UserModel.objects.all()
     default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
 
     template = 'group_chat/group_chat.html'
     context = {
+        'user': user,
         'user_profile': user_profile,
-        'all_users': all_users,
-        'CLIENT_URL': REACT_APP_FORUM_URL
+        'all_users': all_users
     }
     return render(request, template, context)
 
 
+@login_required
 def private_chat(request, auth_user_id):
     UserModel = get_user_model()
 

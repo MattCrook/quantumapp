@@ -3,13 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .usermanager import CustomUserManager
 
-# from django.core.mail import send_mail
-# import django.utils.timezone
-# from django.contrib.auth.models import UserManager
-# from django.contrib.auth.models import User
-# from quantumapi.models import Image
-# from django.contrib.auth.models import PermissionsMixin
-
 
 
 class User(AbstractUser):

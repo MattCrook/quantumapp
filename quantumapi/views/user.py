@@ -24,10 +24,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         token = serializers.SerializerMethodField()
-        url = serializers.HyperlinkedIdentityField(view_name='userprofile', lookup_field='id')
+        # url = serializers.HyperlinkedIdentityField(view_name='userprofile', lookup_field='id')
         fields = ('id', 'email', 'first_name', 'last_name', 'password', 'username',
                   'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'auth0_identifier', 'is_superuser', 'is_active',  )
-        extra_kwargs = {'password': {'write_only': True}}
+        # extra_kwargs = {'password': {'write_only': True}}
         depth = 1
 
 

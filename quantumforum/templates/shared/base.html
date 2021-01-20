@@ -1,0 +1,61 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'styles/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}" />
+
+
+
+    {% block css %}
+    {% endblock css %}
+</head>
+
+
+<body>
+    <div class="body">
+        <nav class="nav">
+            <div class="label_wrapper">
+                <div class="label">Quantum Coasters Forum</div>
+            </div>
+            <div class="nav_end">
+                <div class="nav_name_wrapper">
+                    <div class="nav_name">{{user_profile.user.first_name}}</div>
+                    <div class="nav_name">{{user_profile.user.last_name}}</div>
+                </div>
+                <div class="nav_image_container">
+                    {% if user_profile and user_profile.image %}
+                    <img class="nav_image" src="{{user_profile.image.image}}" />
+                    {% else %}
+                    <img class="nav_image"
+                        src="https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png" />
+                    {% endif %}
+                </div>
+                <div class="back_btn_container">
+                    <a class="back_btn" href="{{CLIENT_URL}}">Back</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div id="status">
+    </div>
+
+    <main class="main-content">
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+</body>
+
+</html>
