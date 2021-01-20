@@ -65,8 +65,7 @@ def login_user(request):
                     # backend = authenticated_user.backend
                     remote_user_auth = request.successful_authenticator.authenticate(request)
                     # backend_data = user_backends_data(authenticated_user, backend, storage=DjangoUserMixin)
-                    # Find user user_socialauth or if none create a social auth user
-                    # user_usersocialauth = associate_user(request, req_body['uid'], user=authenticated_user)
+
                     token = TokenModel.objects.get(user=authenticated_user)
 
                     if token is not None:
@@ -157,7 +156,7 @@ def login_user(request):
                             user_social_auth = associated_socialauth_backend_users.get(user=authenticated_user)
                             # user_social_auth = UserSocialAuth.objects.get(uid=req_body['uid'])
                             user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
-                            code_verifier = transactions[0]['code_verifier']
+                            code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
                             # social_auth_nonce = Nonce.objects.create(server_url=codes[0], timestamp=iat, salt=nonce)
                             # user_socialauth_code = Code.objects.create(email=account_email, code=codes[0], verified=True)
                             social_account = SocialAccount.objects.get(user_id=authenticated_user.id)
@@ -244,7 +243,8 @@ def create_user_association(request, token, transactions, codes, account_email, 
             provider=provider,
             extra_data=extra_data)
 
-    code_verifier = transactions[0]['code_verifier']
+    code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+    code = codes[0] if len(codes) > 0 else {}
     is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists()
 
     if is_association:
@@ -260,7 +260,7 @@ def create_user_association(request, token, transactions, codes, account_email, 
             )
 
     social_auth_nonce = Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
-    user_socialauth_code = Code.objects.create(email=account_email, code=codes[0], verified=True)
+    user_socialauth_code = Code.objects.create(email=account_email, code=code, verified=True)
 
     social_account = SocialAccount()
     social_account.user = authenticated_user

@@ -15,7 +15,6 @@ import datetime
 class ActivityLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivityLogModel
-        url = serializers.HyperlinkedIdentityField(view_name='activitylog', lookup_field='id')
         fields = ('id', 'user', 'action', 'date')
         depth = 1
 
@@ -50,8 +49,8 @@ class ActivityLogView(ViewSet):
 
     def create(self, request):
         try:
-            user = UserModel.objects.get(pk=request.data['event']['user_id'])
-            req_date = request.data['event']['date']
+            user = UserModel.objects.get(pk=request.data["event"]["user_id"])
+            req_date = request.data["event"]["date"]
 
             is_activity_log = ActivityLogModel.objects.filter(user_id=user.id).exists()
 
@@ -99,15 +98,15 @@ class ActivityLogView(ViewSet):
             else:
                 new_activity_log = ActivityLogModel()
                 new_activity_log.user = user
-                req_data_actions = request.data['event']['action']
-                serialized_actions = json.dumps({'event': req_data_actions})
+                req_data_actions = request.data["event"]["action"]
+                serialized_actions = json.dumps({"event": req_data_actions})
                 new_activity_log.action = serialized_actions
 
                 new_activity_log.save()
                 serializer = ActivityLogSerializer(new_activity_log, context={'request': request})
                 return Response(serializer.data)
         except Exception as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def destroy(self, request, pk=None):
@@ -130,34 +129,33 @@ def add_action_to_existing_actions(request, activity_log_action):
         activity_log = ActivityLogModel.objects.get(pk=activity_log_id)
 
         actions = json.loads(activity_log.action)
-        events = actions['event']
-        new_action = request.data['event']['action']
+        events = actions["event"]
+        new_action = request.data["event"]["action"]
         events_list = []
 
         if isinstance(events, list) and len(events) > 1:
             events_list = events
-            # print("Events 2", events_list)
             events_list.append(new_action)
         else:
             events_list.append(events)
             events_list.append(new_action)
 
-        actions['event'] = events_list
+        actions["event"] = events_list
         activity_log.action = json.dumps(actions)
         activity_log.save()
         serializer = ActivityLogSerializer(activity_log, context={'request': request})
         return serializer
 
     except Exception as ex:
-        return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def create_new_action(request, user, activity_log_action):
     try:
         new_activity_log = ActivityLogModel()
         new_activity_log.user = user
-        req_data_actions = request.data['event']['action']
-        serialized_actions = json.dumps({'event': req_data_actions})
+        req_data_actions = request.data["event"]["action"]
+        serialized_actions = json.dumps({"event": req_data_actions})
         new_activity_log.action = serialized_actions
 
         new_activity_log.save()
@@ -165,4 +163,4 @@ def create_new_action(request, user, activity_log_action):
         return serializer
 
     except Exception as ex:
-        return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

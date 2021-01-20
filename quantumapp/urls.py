@@ -14,6 +14,7 @@ from quantumapi.views import BugReports as BugReportView
 from rest_framework.authtoken.views import obtain_auth_token
 # python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json
 
+app_name = "quantumapp"
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -53,5 +54,5 @@ urlpatterns = [
     path('get_user/', get_user),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
-    path('', include('quantumforum.urls')),
+    path('', include('quantumforum.urls', namespace='quantumforum')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

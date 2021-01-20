@@ -92,7 +92,8 @@ def register_user(request):
                 iat = id_token['iat']
                 assoc_type = "username-password-authentication"
 
-                auth_login(request, user, backend='django.contrib.auth.backends.RemoteUserBackend')
+                # Changed from user to authenticated_user
+                auth_login(request, authenticated_user, backend='django.contrib.auth.backends.RemoteUserBackend')
 
                 current_user_session = request.session
                 is_session = Session.objects.filter(session_key=current_user_session.session_key).exists()
