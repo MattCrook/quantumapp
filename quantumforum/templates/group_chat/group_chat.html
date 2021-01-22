@@ -1,48 +1,98 @@
+{% extends 'shared/base.html' %}
+
 {% load static %}
 
 
-<!DOCTYPE html>
-<html>
+{% block css %}
+<link rel="stylesheet" href="{% static 'styles/group_chat.css' %}" />
+{% endblock %}
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'styles/nav.css' %}" />
-    <link rel="stylesheet" href="{% static 'styles/group_chat.css' %}" />
-    <title>Group Chat</title>
-</head>
 
-<body class="body">
-    <nav class="nav">
-        <div class="label_wrapper">
-            <div class="label">Quantum Coasters Forum</div>
-        </div>
-        <div class="nav_end">
-            <div class="nav_name_wrapper">
-                <div class="nav_name">{{user_profile.user.first_name}}</div>
-                <div class="nav_name">{{user_profile.user.last_name}}</div>
-            </div>
-            <div class="nav_image_container">
-                {% if user_profile and user_profile.image %}
-                <img class="nav_image" src="{{user_profile.image.image}}" />
-                {% else %}
-                <img class="nav_image"
-                    src="https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png" />
-                {% endif %}
-            </div>
-            <div class="back_btn_container">
-                <a class="back_btn" href="{{CLIENT_URL}}">Back</a>
-            </div>
-        </div>
-    </nav>
 
-    <div>Search Bar</div>
+{% block content %}
+<!-- <div>Search Bar</div>
     <div>Container for Search results</div>
     <div>Container for selected Users to add to chat</div>
     <div>Form adding those users to a room, creating a room</div>
     <div>Button to "Add" and go to room / where websockets will be called.</div>
+    <div>Save rooms when user exits</div>
+    <div>Have something show open rooms to user, or at least group chats they are in.
+
+        Show friends list...show active with like green dot or something (reading the is_active db column)
+    </div> -->
+
+<!-- <div class="search_container">
+    <input class="search_bar" placeholder="Search for users..." />
+</div> -->
+<div class="group_chat_main_container">
+    <div class="current_group_chats_container">
+        <div class="current_group_chats_title_wrapper">
+            <div class="current_group_chats_title">Group Chats <i class="far fa-comments"></i></div>
+        </div>
+        <div class="group_chat_list">
+            {% if group_chats.length > 0 %}
+            {% for chat in group_chats %}
+            <div class="chat_item">{{group.title}}</div>
+            {% endfor %}
+            {% else %}
+            <div class="no_chat_item">None</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="add_new_group_container">
+        <div class="create_new_group_btn_wrapper">
+            <div class="create_new_group_chat_btn">Create New Group<i class="fas fa-users"></i></div>
+        </div>
+        <div class="new_group_create_form_container" style="display: none;">
+            <form class="new_group_form" action="{% url 'quantumforum:group_chat' %}" method="POST">
+                <label class="group_form_label" for="group_name">Group Chat Name</label>
+                <input class="group_chat_input" id="group_name" type="text" name="group_name"
+                    value="{{ group.name }}" />
+                <label class="group_form_label" for="friends">Invite Friends</label>
+                <input class="group_chat_input_search" id="friends" name="friends" placeholder="Search friends..."
+                    value="{{friend.name}}" />
+
+                <input id="create_group" type="submit" value="Create" />
+            </form>
+        </div>
 
 
-</body>
 
-</html>
+
+        <div class="login-wrap">
+            <div class="login-html">
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">New Group</label>
+                <div class="login-form">
+                    <div class="sign-in-htm">
+                        <div class="group">
+                            <label for="user" class="label">Group Name</label>
+                            <input id="user" type="text" class="input">
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">Participants</label>
+                            <input id="pass" type="password" class="input" data-type="password">
+                        </div>
+                        <div class="group">
+                            <input type="submit" class="button" value="Sign In">
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <a href="#forgot">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'scripts/eventListeners.js'%}"></script>
+{% endblock %}

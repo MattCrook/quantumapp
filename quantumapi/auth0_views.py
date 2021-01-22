@@ -1,12 +1,10 @@
 from functools import wraps
 import jwt
-from django.http import JsonResponse
-from django.http import JsonResponse
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
 from urllib import request
 from jose import jwt
 from social_core.backends.oauth import BaseOAuth2
+from social_core.backends.open_id import OpenIDAuth
+
 
 
 # Obtains the Access Token from the Authorization Header
@@ -75,6 +73,18 @@ class Auth0(BaseOAuth2):
                 'picture': payload['picture'],
                 'user_id': payload['sub'],
                 'email': payload['email']}
+
+
+
+
+
+class Auth0OpenID(OpenIDAuth):
+    name = 'auth0'
+
+
+
+
+
 
 # Adding public and private endpoints.
 # The @api_view decorator can be added to all endpoints that indicate that the method requires authentication.

@@ -36,11 +36,13 @@ def login_user(request):
                 # data = json.dumps({"valid": True, "token": token.key})
                 login(request, authenticated_user)
                 return redirect(reverse('quantumforum:group_chat'))
+
             else:
                 print("LOGINDATA", login_form.errors.as_data())
                 error_message = login_form.errors.as_data()
                 messages.add_message(request, messages.ERROR, error_message)
                 return redirect(reverse('quantumforum:login'))
+
         else:
             print("LOGINDATA2", login_form.errors.as_data())
             error_message = login_form.errors.as_data()

@@ -1,0 +1,17 @@
+Runinng QuantumApp
+docker build -t application:latest .
+docker run -it -d -p 8000:8000 application
+
+
+
+run docker container image for django channels
+docker run -p 6379:6379 -d redis:5
+
+then  installed redis
+python3 -m pip install channels_redis
+python3 -m pip install selenium
+
+install chrome driver:
+http://chromedriver.chromium.org/downloads
+ if chromedriver not working:
+ xattr -d com.apple.quarantine <name-of-executable>

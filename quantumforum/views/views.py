@@ -11,17 +11,16 @@ from rest_auth.models import TokenModel
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from rest_framework import status
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login
 from django.urls import reverse
 
-# from social_django.utils import psa
+from social_django.utils import psa
 from django.utils.http import (
     url_has_allowed_host_and_scheme, urlsafe_base64_decode,
 )
 
 
 from social_django.context_processors import backends, user_backends_data
-
 
 
 import json
@@ -32,8 +31,20 @@ import os
 
 
 redirect_field_name = GROUP_CHAT_REDIRECT_FIELD_NAME
-success_url_allowed_hosts = set()
+success_url_allowed_hosts = []
 
+def get_success_url(request):
+    url = get_redirect_url(request)
+    return url or resolve_url(FORUM_LOGIN_REDIRECT_URL)
+
+def get_redirect_url(request):
+    """Return the user-originating redirect URL if it's safe."""
+    redirect_to = GROUP_CHAT_REDIRECT_FIELD_NAME
+    url_is_safe = url_has_allowed_host_and_scheme(url=redirect_to, allowed_hosts=get_success_url_allowed_hosts(request))
+    return redirect_to if url_is_safe else ''
+
+def get_success_url_allowed_hosts(request):
+    return [request.get_host(), *success_url_allowed_hosts]
 
 
 
@@ -49,7 +60,6 @@ def index(request, chat_type):
         elif chat_type == 'private_chat':
             return redirect(private_chat)
     else:
-        # return render(request, 'login.html', context)
         return redirect(reverse('quantumforum:login'))
 
 
@@ -66,6 +76,7 @@ def authenticate_for_group_chat(request, auth_user_id):
     remote_user_backend = backend_list[1]
     model_backend = backend_list[0]
     remote_user = remote_user_backend.get_user(auth_user_id)
+    # Use the remote user authenticate to auth wih Auth0...Auth0 backend?
     can_authenticate = remote_user_backend.user_can_authenticate(remote_user)
 
     if can_authenticate is not False:
@@ -75,43 +86,22 @@ def authenticate_for_group_chat(request, auth_user_id):
         authenticated_user = authenticate(request, username=username, password=secret)
         # authenticated_user = authenticate(remote_user=remote_user)
         if authenticated_user is not None:
-            auth_login(request, authenticated_user, backend='django.contrib.auth.backends.RemoteUserBackend')
+            login(request, authenticated_user)
             return HttpResponseRedirect(get_success_url(request))
-            # return redirect(reverse('quantumforum:group_chat'))
+
         else:
-            # Return error page and Login page if auth doesnt work
-            print("not authenticated")
+            # Return error page and Login page if auth doesn't work.
+            template = 'errors/error.html'
+            error = 'Oops! Something went wrong.'
+            context = {
+                'error': error,
+                'CLIENT_URL': REACT_APP_FORUM_URL,
+            }
+            return render(request, template, context)
+
     else:
-        print("can't authenticated")
+        return redirect(reverse('quantumforum:login'))
 
-
-
-
-def get_success_url(request):
-    url = get_redirect_url(request)
-    return url or resolve_url(FORUM_LOGIN_REDIRECT_URL)
-
-def get_redirect_url(request):
-    """Return the user-originating redirect URL if it's safe."""
-    redirect_to = request.POST.get(
-        redirect_field_name,
-        request.GET.get(redirect_field_name, '')
-    )
-    url_is_safe = url_has_allowed_host_and_scheme(
-        url=redirect_to,
-        allowed_hosts=get_success_url_allowed_hosts(request),
-        # require_https=request.is_secure(),
-    )
-    return redirect_to if url_is_safe else ''
-
-def get_success_url_allowed_hosts(request):
-    return {request.get_host(), *success_url_allowed_hosts}
-
-
-# def form_valid(self, form):
-    # """Security check complete. Log the user in."""
-    # login(self.request, form.get_user())
-    # return HttpResponseRedirect(get_success_url())
 
 
 @login_required
@@ -122,7 +112,6 @@ def group_chat(request):
     backend_list = get_backends()
     auth_user_backends = backends(request)
 
-    # user = get_user(user.id)
     user_profile = UserProfile.objects.get(user_id=user.id)
     all_users = UserModel.objects.all()
     default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
@@ -131,7 +120,7 @@ def group_chat(request):
     context = {
         'user': user,
         'user_profile': user_profile,
-        'all_users': all_users
+        'all_users': all_users,
     }
     return render(request, template, context)
 
@@ -139,9 +128,7 @@ def group_chat(request):
 @login_required
 def private_chat(request, auth_user_id):
     UserModel = get_user_model()
-
     backend_list = get_backends()
-
 
     user_profile = UserProfile.objects.get(user_id=auth_user_id)
     all_users = UserModel.objects.all()
@@ -154,6 +141,30 @@ def private_chat(request, auth_user_id):
         'CLIENT_URL': REACT_APP_FORUM_URL
     }
     return render(request, template, context)
+
+
+
+
+
+@login_required
+def room(request, room_name):
+    backends = get_backends()
+
+    auth = request.COOKIES
+    if auth and auth['auth0.is.authenticated'] == 'true':
+        # user = backends[1].do_auth(token, ajax=True)
+        # login(request, user)
+        template = 'general/general.html'
+        room_name = 'general'
+        context = {
+            'room_name': room_name
+        }
+        return render(request, template, context)
+
+
+
+
+
 
 
 
@@ -193,21 +204,6 @@ def get_user(uid):
 
 
 
-
-# @login_required
-def room(request, room_name):
-    backends = get_backends()
-
-    auth = request.COOKIES
-    if auth and auth['auth0.is.authenticated'] == 'true':
-        # user = backends[1].do_auth(token, ajax=True)
-        # login(request, user)
-        template = 'general/general.html'
-        room_name = 'general'
-        context = {
-            'room_name': room_name
-        }
-        return render(request, template, context)
 
 
 

@@ -49,7 +49,7 @@ SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '8000']
 
 
 INSTALLED_APPS = [
@@ -201,6 +201,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
 )
 
 
