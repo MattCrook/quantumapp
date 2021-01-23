@@ -93,19 +93,3 @@ class News(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-# @login_required
-# @api_view(['GET', 'POST'])
-# def news(request):
-#     if request.method == 'GET':
-#         section = request.query_params.get('content', None)
-#         if section is not None:
-#             if section == 'all':
-#                 content = NewsArticle.objects.all()
-#                 serializer = NewsSerializer(content, context={'request': request})
-#                 return Response(serializer.data)
-#             else:
-#                 print("OOPS 1")
-#         else:
-#             print("OOPS 2")
