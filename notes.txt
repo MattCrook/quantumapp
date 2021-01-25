@@ -15,3 +15,7 @@ install chrome driver:
 http://chromedriver.chromium.org/downloads
  if chromedriver not working:
  xattr -d com.apple.quarantine <name-of-executable>
+
+migrations for quantumforum (because new app must include module to create migrations folder)
+python manage.py makemigrations quantumforum
+python manage.py migrate

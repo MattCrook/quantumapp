@@ -29,9 +29,11 @@
                 <div class="label">Quantum Coasters Forum</div>
             </div>
             <div class="nav_middle">
-                <div class="quantum_friends_btn"><i class="fas fa-users"></i> Your Quantum Friends </div>
+                <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn"><i
+                        class="fas fa-users"></i> Your Quantum Friends </div>
                 <div class="search_quantum">
-                    <input class="search_quantum_input" id="user_search" type="search" placeholder="Search For Quantum Users..."/>
+                    <input class="search_quantum_input" id="user_search" type="search"
+                        placeholder="Search For Quantum Users..." />
                     <div class="divider"></div>
                     <i class="fas fa-search"></i>
                 </div>
@@ -58,10 +60,58 @@
     <div id="status">
     </div>
 
+    <div class="modal micromodal-slide" id="modal-4" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-4-title">
+                <header class="modal__header">
+                    <h2 class="modal__title" id="modal-4-title">Quantum Friends List</h2>
+                    <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                </header>
+
+                <main class="modal__content" id="modal-4-content">
+
+                    <div class="friends_list_contsainer">
+                        {% if quantum_friends %}
+                        {% for friend in quantum_friends %}
+                        <div class="friend_card">
+                            <div class="friend_profile_pic">
+                                {% if friend.user.image %}
+                                <img class="friend_card_img" src="{{friend.user.image.image}}" />
+                                {% else %}
+                                <img class="friend_card_img" src="{{default_profile_pic}}" />
+                                {% endif %}
+                            </div>
+                            <div class="friend_name">{{friend.first_name}} {{friend.last_name}}</div>
+                            <i id="user-check" class="fas fa-user-check"></i>
+                            <i id="fa-trash"class="far fa-trash-alt"></i>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="no_friends">None</div>
+                        {% endif %}
+                    </div>
+
+                    <footer class="modal__footer">
+                        <!-- <input id="modal__btn-primary" type="submit" value="Create" style="margin-right: 8px;"/> -->
+                        <button class="modal__btn" data-micromodal-close
+                            aria-label="Close this dialog window">Close</button>
+                    </footer>
+                    <div class="signature">
+                        <p id="signature_font_friends_list">
+                            Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i" class="fas fa-trademark"></i>
+                        </p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
     <main class="main-content">
         {% block content %}
         {% endblock content %}
     </main>
+
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
 
     {% block scripts %}
     {% endblock scripts %}

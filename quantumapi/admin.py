@@ -27,6 +27,11 @@ admin.site.register(CalendarEvent)
 admin.site.register(ErrorLog)
 admin.site.register(Feedback)
 admin.site.register(BugReport)
+admin.site.register(FriendRequest)
+admin.site.register(StatusCode)
+admin.site.register(Friendships)
+
+
 
 
 

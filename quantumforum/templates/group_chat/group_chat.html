@@ -69,17 +69,16 @@
 
         <div id="new_group_create_form_container" class="login-wrap" style="display: none;">
             <div class="login-html">
-                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">New
-                    Group</label>
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label id="form_title" for="tab-1" class="tab">New Group</label>
                 <div class="login-form">
                     <form class="sign-in-htm" action="{% url 'quantumforum:group_chat' %}" method="POST">
                         <div class="group">
-                            <label for="user" class="label">Group Name</label>
-                            <input id="user" type="text" class="input" name="user" autofocus />
+                            <label for="group_name" class="label">Group Name</label>
+                            <input id="group_name" type="text" class="input" name="group_name" autofocus />
                         </div>
                         <div class="group">
-                            <label for="pass" class="label">Participants</label>
-                            <input id="pass" type="text" class="input" placeholder="Search for users..." />
+                            <label for="participants" class="label">Participants</label>
+                            <input id="participants" type="text" class="input" name="participants" placeholder="Search for users..." />
                         </div>
                         <div class="group">
                             <input type="submit" class="button" value="Create Group">
@@ -119,22 +118,28 @@
 
     <div class="friends_master_container">
         <div class="friends_title_container">
-            <div class="friends_title">Your Quantum Friends <i class="fas fa-globe"></i>
+            <div class="friends_title">Your Active Quantum Friends <i class="fas fa-globe"></i>
                 <!-- <i class="fas fa-circle"></i> -->
             </div>
         </div>
         <div class="active_friends_list_container">
             {% if has_active_friends %}
-            {% for friend in is_active_user_friends %}
-            <div class="active_friend_row_wrapper">
-                <i class="fas fa-circle"></i>
-                <div class="active_friend_profile_pic">{{friend.userprofile.image}}</div>
-                <div class="active_friend_list_item">{{friend.first_name}} {{friend.last_name}}</div>
-                <i class="fas fa-user-plus"></i>
-                <i class="fas fa-user-minus"></i>
-                <i class="fas fa-user-slash"></i>
-            </div>
-            {% endfor %}
+                {% for friend in active_friends %}
+                <div class="active_friend_row_wrapper">
+                    <i id="fas_circle" class="fas fa-circle"></i>
+                    <div class="active_friend_profile_pic">
+                        {% if friend.user.image %}
+                        <img class="active_friends_pic" src="{{friend.user.image.image}}"/>
+                        {% else %}
+                        <img class="active_friends_pic" src="{{default_profile_pic}}"/>
+                        {% endif %}
+                    </div>
+                    <div class="active_friend_list_item">{{friend.first_name}} {{friend.last_name}}</div>
+                    <i id="i_active_friends_end" class="fas fa-user-plus"></i>
+                    <!-- <i class="fas fa-user-minus"></i>
+                    <i class="fas fa-user-slash"></i> -->
+                </div>
+                {% endfor %}
             {% else %}
             <div class="no_active_friends">No friends currently online</div>
             {% endif %}

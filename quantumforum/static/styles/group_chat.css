@@ -223,17 +223,20 @@
   min-height: 670px;
   position: relative;
   /* background: url(https://i.redd.it/4sm1yg5rhq131.jpg) no-repeat center; */
-  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.089), 0 17px 50px 0 rgba(0, 0, 0, 0.075);
+  /* border: 1px solid rgb(0, 0, 0); */
+  border-radius: 4px;
 }
 
 .login-html {
   width: 100%;
   height: 100%;
-  position: absolute;
+  /* position: absolute; */
   /* padding: 90px 70px 50px 70px; */
   padding: 58px 54px 30px 50px;
   /* background:rgba(40,57,101,.9); */
-  background: rgb(0, 0, 0);
+  /* background: rgb(0, 0, 0); */
+  /* background: rgba(243, 243, 243, 0.904); */
   overflow-y: scroll;
   border-radius: 4px 4px 4px 4px;
 }
@@ -247,6 +250,11 @@
 .login-form .group .label,
 .login-form .group .button {
   text-transform: uppercase;
+}
+
+#form_title {
+  font: 150 1.2em helvetica neue, open sans, sans-serif;
+  color: black;
 }
 
 .login-html .tab {
@@ -286,13 +294,17 @@
 .login-form .group .button {
   border: none;
   padding: 15px 20px;
-  border-radius: 25px;
+  border-radius: 15px;
   background: rgba(255, 255, 255, 0.1);
 }
 
 .login-form .group input:focus {
-  border: none;
+  border: 1px solid rgb(26, 26, 26);
   outline: none;
+}
+
+#group_name, #participants {
+  border: 1px solid rgb(105, 105, 105);
 }
 
 .login-form .group .label {
@@ -412,8 +424,6 @@
 }
 
 .friends_title_container {
-  /* display: flex;
-  justify-content: center; */
   margin-top: 5%;
   border-bottom: 1px solid black;
   margin-left: 2%;
@@ -446,4 +456,32 @@
   font-size: 15px;
   color: rgb(173, 173, 173);
   margin-bottom: 10%;
+}
+
+.active_friend_row_wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 2%;
+  margin-right: 3%;
+  margin-top: 2%;
+  margin-bottom: 1%;
+}
+
+.active_friends_pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 3px;
+  object-fit: cover;
+}
+
+#i_active_friends_end {
+  padding-left: 22%;
+}
+
+#fas_circle {
+  color: rgb(33, 97, 33);
+  font-size: 14px;
 }

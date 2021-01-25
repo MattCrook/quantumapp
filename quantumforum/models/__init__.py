@@ -1,2 +1,4 @@
 from .forms import LoginForm
-from .UsersFriendsJoin import FriendRequest, Friendships, StatusCode
+from .FriendRequest import FriendRequest
+from .Friendships import Friendships
+from .StatusCode import StatusCode

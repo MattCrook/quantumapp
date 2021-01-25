@@ -150,7 +150,7 @@ SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1O
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
-    'email'
+    'email',
 ]
 
 # Quantum Coasters Machine to Machine
