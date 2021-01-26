@@ -9,9 +9,16 @@ const showCreateGroupForm = () => {
   }
 };
 
+const closeCreateGroupForm = () => {
+  const closeButton = document.querySelector(".close_form");
+  const createNewGroupContainer = document.getElementById("new_group_create_form_container");
 
-const showQuantumFriendsModal = () => {
-  const yourQuantumFriendsBtn = document.getElementById("your_quantum_friends_btn");
+  closeButton.addEventListener("click", () => {
+    createNewGroupContainer.style.display = "none";
+  });
+};
+
+const showModal = () => {
   MicroModal.init({
     openTrigger: "data-micromodal-trigger",
     closeTrigger: "data-micromodal-close",
@@ -22,11 +29,12 @@ const showQuantumFriendsModal = () => {
     awaitCloseAnimation: false,
     debugMode: true,
   });
-}
+};
 
 const initEventListeners = () => {
   showCreateGroupForm();
-  showQuantumFriendsModal();
+  closeCreateGroupForm();
+  showModal();
 };
 
 initEventListeners();

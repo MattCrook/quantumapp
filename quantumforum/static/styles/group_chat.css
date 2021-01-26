@@ -305,6 +305,7 @@
 
 #group_name, #participants {
   border: 1px solid rgb(105, 105, 105);
+  color: rgb(20, 20, 20);
 }
 
 .login-form .group .label {
@@ -314,74 +315,69 @@
 
 .login-form .group .button {
   background: #000000f6;
-  border: 1px solid rgb(124, 123, 123);
+  /* border: 1px solid rgb(124, 123, 123); */
 }
 
 .login-form .group .button:hover {
   color: rgb(238, 238, 238);
-  border: 1px solid rgb(170, 170, 170);
-}
-
-.login-form .group label .icon:before,
-.login-form .group label .icon:after {
-  content: "";
-  width: 10px;
-  height: 2px;
-  background: #fff;
-  position: absolute;
-  transition: all 0.2s ease-in-out 0s;
-}
-
-.login-form .group label .icon:before {
-  left: 3px;
-  width: 5px;
-  bottom: 6px;
-  transform: scale(0) rotate(0);
-}
-
-.login-form .group label .icon:after {
-  top: 6px;
-  right: 0;
-  transform: scale(0) rotate(0);
-}
-
-.login-form .group + label {
-  color: #fff;
-}
-.login-form .group + label .icon {
-  background: #1161ee;
-}
-.login-form .group + label .icon:before {
-  transform: scale(1) rotate(45deg);
-}
-.login-form .group + label .icon:after {
-  transform: scale(1) rotate(-45deg);
+  /* border: 1px solid rgb(170, 170, 170); */
 }
 
 .hr {
   height: 2px;
   margin: 60px 0 12px 0;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(77, 77, 77);
 }
 .foot-lnk {
   text-align: center;
 }
 
 .invitee_list_title {
-  color: rgb(155, 155, 155);
+  color: rgb(82, 82, 82);
   font: 150 1em helvetica neue, open sans, sans-serif;
   margin-bottom: 30px;
 }
 .participant_item {
-  color: rgb(187, 187, 187);
+  color: rgb(73, 73, 73);
   font-family: sans-serif;
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 300;
 }
 
-#pass:focus::placeholder {
+#participants:focus::placeholder {
   color: transparent;
+}
+
+.add_new_participant_btn {
+  margin-top: 4%;
+  margin-left: 2%;
+  cursor: pointer;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font: 400 0.9em helvetica neue, open sans, sans-serif;
+  background-color: #020202;
+  color: #fff;
+  width: 25%;
+}
+
+
+#submit_group_btn {
+  margin-top: 25px;
+}
+
+.close_form {
+  background: transparent;
+  border: 0;
+  color: #f06d6d;
+  margin-left: 95%;
+  margin-top: 2px;
+}
+.close_form::before {
+  content: "\2715";
 }
 
 /*************************************************/
@@ -398,11 +394,11 @@
   text-align: center;
   font-family: Helvetica, Arial, Sans-Serif;
   font-size: 0.85em;
-  color: #aaaaaa;
+  color: #818181;
 }
 
 .signature_group a {
-  color: #aaaaaa;
+  color: #414141;
   text-decoration: none;
   font-weight: bold;
 }
@@ -410,16 +406,13 @@
 #signature_font_group {
   font: 260 0.65em helvetica neue, open sans, sans-serif;
   letter-spacing: 2px;
-  color: rgb(82, 82, 82);
+  color: rgb(54, 54, 54);
 }
 
 /*************************************************/
 /**********************Friends***************************/
 
 .friends_master_container {
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center; */
   width: 22%;
 }
 
@@ -484,4 +477,59 @@
 #fas_circle {
   color: rgb(33, 97, 33);
   font-size: 14px;
+}
+
+
+/******************** Add Participants Modal **********/
+
+.search_quantum_friends {
+  display: flex;
+  align-items: center;
+  width: 70%;
+  border: 1px solid rgb(151, 151, 151);
+  border-radius: 4px 4px 4px 4px;
+  margin-bottom: 5px;
+}
+
+.search_quantum_friends i {
+  color: rgb(223, 223, 223);
+  margin-left: 6%;
+  margin-right: 5%;
+  cursor: pointer;
+}
+
+.search_quantum_friends_input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  color: rgb(207, 207, 207);
+  font-size: 13px;
+}
+
+.divider {
+  border-left: 1px solid rgb(129, 128, 128);
+  height: 25px;
+}
+
+.search_quantum_friends_input::placeholder {
+  color: rgba(185, 185, 185, 0.719);
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 13px;
+  padding-left: 5px;
+}
+
+.search_quantum_friends_input:focus {
+  outline: none;
+}
+
+/* .search_quantum_friends_input:focus::placeholder {
+  color: transparent;
+} */
+
+#add_friend_group_chat_header {
+  border-bottom: none;
 }

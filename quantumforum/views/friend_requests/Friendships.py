@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from quantumforum.models import Friendships as FriendshipsModel
+from quantumapi.views import UserProfileSerializer
+from quantumapi.models import UserProfile
+
 
 
 
@@ -26,14 +29,34 @@ class Friendships(ViewSet):
         all_friendships = FriendshipsModel.objects.all()
         requester_id = self.request.query_params.get("sender")
         addressee_id = self.request.query_params.get('addressee')
+        user_friends = self.request.query_params.get('friend_list')
 
         if requester_id is not None:
             all_friendships = all_friendships.filter(requester_id=requester_id)
+            serializer = FriendshipsSerializer(all_friendships, many=True, context={'request': request})
 
         if addressee_id is not None:
             all_friendships = all_friendships.filter(addressee_id=addressee_id)
+            serializer = FriendshipsSerializer(all_friendships, many=True, context={'request': request})
 
-        serializer = FriendshipsSerializer(all_friendships, many=True, context={'request': request})
+        if user_friends is not None:
+            user = request.user
+            user_profile = UserProfile.objects.get
+            all_friendships = []
+            friendships_sender = FriendshipsModel.objects.filter(requester_id=user.id)
+            friendships_receiver = FriendshipsModel.objects.filter(addressee_id=user.id)
+
+            for f in friendships_sender:
+                user_profile = UserProfile.objects.get(user_id=f.requester.id)
+                all_friendships.append(user_profile)
+
+            for f in friendships_receiver:
+                user_profile = UserProfile.objects.get(user_id=f.addressee.id)
+                all_friendships.append(user_profile)
+
+            serializer = UserProfileSerializer(all_friendships, many=True, context={'request': request})
+
+
         return Response(serializer.data)
 
 

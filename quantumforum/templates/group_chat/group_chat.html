@@ -68,8 +68,9 @@
 
 
         <div id="new_group_create_form_container" class="login-wrap" style="display: none;">
+            <button class="close_form"></button>
             <div class="login-html">
-                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label id="form_title" for="tab-1" class="tab">New Group</label>
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label id="form_title" for="tab-1" class="tab">New Group Chat</label>
                 <div class="login-form">
                     <form class="sign-in-htm" action="{% url 'quantumforum:group_chat' %}" method="POST">
                         <div class="group">
@@ -78,9 +79,10 @@
                         </div>
                         <div class="group">
                             <label for="participants" class="label">Participants</label>
-                            <input id="participants" type="text" class="input" name="participants" placeholder="Search for users..." />
+                            <div href="#modal-5" data-micromodal-trigger="modal-5" class="add_new_participant_btn">Add <i class="fas fa-user-plus"></i></div>
+                            <!-- <input id="participants" type="text" class="input" name="participants" placeholder="Search for users..." /> -->
                         </div>
-                        <div class="group">
+                        <div id="submit_group_btn" class="group">
                             <input type="submit" class="button" value="Create Group">
                         </div>
                         <div class="hr"></div>
@@ -91,7 +93,6 @@
                                 <li class="participant_item">Matt crook</li>
                                 <li class="participant_item">Matt crook</li>
                                 <li class="participant_item">Matt crook</li>
-
                                 <li class="participant_item">Matt crook</li>
                                 <li class="participant_item">Matt crook</li>
                                 <li class="participant_item">Matt crook</li>
@@ -149,8 +150,60 @@
 
 
 
+<div class="modal micromodal-slide" id="modal-5" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-5-title">
+            <header id="add_friend_group_chat_header" class="modal__header">
+                <div class="search_quantum_friends">
+                    <input class="search_quantum_friends_input" id="friends_search" type="search" placeholder="Search For Quantum Users..." />
+                    <div class="divider"></div>
+                    <i class="fas fa-search"></i>
+                </div>
+                <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+            </header>
+
+            <main class="modal__content" id="modal-5-content">
+
+                <div class="friends_list_container">
+                    <div id="results"></div>
+                    <!-- {% if quantum_friends %}
+                    {% for friend in quantum_friends %}
+                    <div class="friend_card">
+                        <div class="friend_profile_pic">
+                            {% if friend.user.image %}
+                            <img class="friend_card_img" src="{{friend.user.image.image}}" />
+                            {% else %}
+                            <img class="friend_card_img" src="{{default_profile_pic}}" />
+                            {% endif %}
+                        </div>
+                        <div class="friend_name">{{friend.first_name}} {{friend.last_name}}</div>
+                        <i id="user-check" class="fas fa-user-check"></i>
+                        <i id="fa-trash"class="far fa-trash-alt"></i>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="no_friends">None</div>
+                    {% endif %} -->
+                </div>
+
+                <footer class="modal__footer">
+                    <button class="modal__btn" data-micromodal-close aria-label="Close this dialog window">Close</button>
+                </footer>
+                <div class="signature">
+                    <p id="signature_font_friends_list">
+                        Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i" class="fas fa-trademark"></i>
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
 
 {% block scripts %}
 <script src="{% static 'scripts/eventListeners.js'%}"></script>
+<script type="module" src="{% static 'scripts/addFriendsSearch.js'%}"></script>
+
 {% endblock %}
