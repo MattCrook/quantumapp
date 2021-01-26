@@ -1,12 +1,21 @@
 import { useQuantumFriends } from "./hooks.js";
 import { getAllUsersFriends } from "./services.js";
 
-const initUserFriends = async () => {
+
+initFriendsSearch();
+
+async function initFriendsSearch() {
   const [friendships, setFriendships] = useQuantumFriends();
   const search_input = document.getElementById("friends_search");
+  const results = document.getElementById("results");
 
   const allFriendships = await getAllUsersFriends();
   setFriendships(allFriendships);
+  friendships().forEach((friend) => {
+    let row;
+    friend.image ? (row = renderFriendRowWithImage(friend)) : (row = renderFriendRowNoImage(friend));
+    results.innerHTML += row;
+  });
 
   search_input.addEventListener("input", (e) => {
     const search_term = e.target.value;
@@ -14,14 +23,17 @@ const initUserFriends = async () => {
   });
 };
 
-initUserFriends();
 
 function filterSearchQuery(friendships, search_term) {
   const results = document.getElementById("results");
   results.innerHTML = "";
 
   friendships
-    .filter((friend) => friend.user.first_name.toLowerCase().includes(search_term.toLowerCase()))
+    .filter((friend) =>
+        friend.user.first_name.toLowerCase().includes(search_term.toLowerCase()) ||
+        friend.user.last_name.toLowerCase().includes(search_term.toLowerCase()) ||
+        friend.user.username.toLowerCase().includes(search_term.toLowerCase())
+    )
     .forEach((friend) => {
       let row;
       friend.image ? (row = renderFriendRowWithImage(friend)) : (row = renderFriendRowNoImage(friend));
