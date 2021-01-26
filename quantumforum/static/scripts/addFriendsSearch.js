@@ -48,8 +48,7 @@ function renderFriendRowWithImage(friend) {
             <img class="friend_card_img" src="${friend.image.image}" />
         </div>
         <div class="friend_name">${friend.user.first_name} ${friend.user.last_name}</div>
-        <i id="user-check" class="fas fa-user-check"></i>
-        <i id="fa-trash"class="far fa-trash-alt"></i>
+        <i d="fa_plus_add_user" class="fas fa-plus"></i>
     </div>
     `;
 }
@@ -62,8 +61,7 @@ function renderFriendRowNoImage(friend) {
               <img class="friend_card_img" src="${default_profile_pic}" />
           </div>
           <div class="friend_name">${friend.user.first_name} ${friend.user.last_name}</div>
-          <i id="user-check" class="fas fa-user-check"></i>
-          <i id="fa-trash"class="far fa-trash-alt"></i>
+          <i id="fa_plus_add_user" class="fas fa-plus"></i>
       </div>
       `;
 }

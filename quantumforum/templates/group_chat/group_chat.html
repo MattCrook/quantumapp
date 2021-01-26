@@ -52,20 +52,6 @@
         <div class="create_new_group_btn_wrapper">
             <div class="create_new_group_chat_btn">Create New Group<i class="fas fa-users"></i></div>
         </div>
-        <!-- <div class="new_group_create_form_container" style="display: none;">
-            <form class="new_group_form" action="{% url 'quantumforum:group_chat' %}" method="POST">
-                <label class="group_form_label" for="group_name">Group Chat Name</label>
-                <input class="group_chat_input" id="group_name" type="text" name="group_name"
-                    value="{{ group.name }}" />
-                <label class="group_form_label" for="friends">Invite Friends</label>
-                <input class="group_chat_input_search" id="friends" name="friends" placeholder="Search friends..."
-                    value="{{friend.name}}" />
-
-                <input id="create_group" type="submit" value="Create" />
-            </form>
-        </div> -->
-
-
 
         <div id="new_group_create_form_container" class="login-wrap" style="display: none;">
             <button class="close_form"></button>
@@ -85,7 +71,7 @@
                             <!-- <input id="participants" type="text" class="input" name="participants" placeholder="Search for users..." /> -->
                         </div>
                         <div id="submit_group_btn" class="group">
-                            <input type="submit" class="button" value="Create Group">
+                            <input id="button_submit_group" type="submit" class="button" value="Create Group">
                         </div>
                         <div class="hr"></div>
                         <div class="list_of_participants_container">
@@ -191,3 +177,20 @@
 <script type="module" src="{% static 'scripts/addFriendsSearch.js'%}"></script>
 
 {% endblock %}
+
+
+
+
+
+        <!-- <div class="new_group_create_form_container" style="display: none;">
+            <form class="new_group_form" action="{% url 'quantumforum:group_chat' %}" method="POST">
+                <label class="group_form_label" for="group_name">Group Chat Name</label>
+                <input class="group_chat_input" id="group_name" type="text" name="group_name"
+                    value="{{ group.name }}" />
+                <label class="group_form_label" for="friends">Invite Friends</label>
+                <input class="group_chat_input_search" id="friends" name="friends" placeholder="Search friends..."
+                    value="{{friend.name}}" />
+
+                <input id="create_group" type="submit" value="Create" />
+            </form>
+        </div> -->

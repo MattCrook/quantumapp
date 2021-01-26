@@ -42,7 +42,7 @@ router.register(r'user_feedback', FeedbackView, 'user_feedback')
 router.register(r'bug_reports', BugReportView, 'bug_reports')
 router.register(r'status_code', StatusCodeView, 'status_codes')
 router.register(r'friend_request', FriendRequestView, 'friend_requests')
-router.register(r'friendship', FriendshipView, 'friendships')
+router.register(r'friendships', FriendshipView, 'friendships')
 
 
 

@@ -6,5 +6,13 @@ const useQuantumFriends = () => {
       ];
   };
 
+const useUserList = () => {
+let users = [];
+    return [
+        () => users.slice(),
+        (newUsers) => (users = newUsers.splice(0))
+    ];
+};
 
-export { useQuantumFriends };
+
+export { useQuantumFriends, useUserList };

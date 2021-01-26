@@ -26,36 +26,42 @@ class Friendships(ViewSet):
     # authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
-        all_friendships = FriendshipsModel.objects.all()
+
         requester_id = self.request.query_params.get("sender")
         addressee_id = self.request.query_params.get('addressee')
         user_friends = self.request.query_params.get('friend_list')
 
         if requester_id is not None:
-            all_friendships = all_friendships.filter(requester_id=requester_id)
+            all_friendships = FriendshipsModel.objects.filter(requester_id=requester_id)
             serializer = FriendshipsSerializer(all_friendships, many=True, context={'request': request})
 
-        if addressee_id is not None:
-            all_friendships = all_friendships.filter(addressee_id=addressee_id)
+        elif addressee_id is not None:
+            all_friendships = FriendshipsModel.objects.filter(addressee_id=addressee_id)
             serializer = FriendshipsSerializer(all_friendships, many=True, context={'request': request})
 
-        if user_friends is not None:
+        elif user_friends is not None:
             user = request.user
             user_profile = UserProfile.objects.get
             all_friendships = []
+
+            # All friend requests the user sent, so then need the addressee
             friendships_sender = FriendshipsModel.objects.filter(requester_id=user.id)
+            # All friend requests the user received, so then need the requester
             friendships_receiver = FriendshipsModel.objects.filter(addressee_id=user.id)
 
             for f in friendships_sender:
-                user_profile = UserProfile.objects.get(user_id=f.requester.id)
+                user_profile = UserProfile.objects.get(user_id=f.addressee.id)
                 all_friendships.append(user_profile)
 
             for f in friendships_receiver:
-                user_profile = UserProfile.objects.get(user_id=f.addressee.id)
+                user_profile = UserProfile.objects.get(user_id=f.requester.id)
                 all_friendships.append(user_profile)
 
             serializer = UserProfileSerializer(all_friendships, many=True, context={'request': request})
 
+        else:
+             all_friendships = FriendshipsModel.objects.all()
+             serializer = FriendshipsSerializer(all_friendships, many=True, context={'request': request})
 
         return Response(serializer.data)
 

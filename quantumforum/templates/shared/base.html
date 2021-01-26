@@ -14,7 +14,10 @@
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="{% static 'styles/nav.css' %}" />
     <link rel="stylesheet" href="{% static 'styles/login.css' %}" />
-
+    <link rel="apple-touch-icon" sizes="180x180" href="../../static//images//apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png'%}"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png'%}"/>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.ico'%}"/>
 
 
     {% block css %}
@@ -57,6 +60,30 @@
             </div>
         </nav>
     </div>
+    <div id="search_quantum_results" style="display: none;">
+        <!-- <div class="search_result_wrapper">
+            <div class="search_result_container_1">
+                <img class="search_result_image" src="{{default_profile_pic}}" />
+                <div class="search_result_name">{{user_profile.user.first_name}}</div>
+                <div class="search_result_name">{{user_profile.user.last_name}}</div>
+            </div>
+            <div class="search_result_container_2">
+                <div class="send_friend_request_btn"><i class="fas fa-user-plus"></i></div>
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        <div class="search_result_wrapper">
+            <div class="search_result_container_1">
+                <img class="search_result_image" src="{{default_profile_pic}}" />
+                <div class="search_result_name">{{user_profile.user.first_name}}</div>
+                <div class="search_result_name">{{user_profile.user.last_name}}</div>
+            </div>
+            <div class="search_result_container_2">
+                <div class="send_friend_request_btn"><i class="fas fa-user-plus"></i></div>
+                <i id="fa_check_friend_request" class="fas fa-check"></i>
+            </div>
+        </div> -->
+    </div>
     <div id="status">
     </div>
 
@@ -74,16 +101,21 @@
                         {% if quantum_friends %}
                         {% for friend in quantum_friends %}
                         <div class="friend_card">
-                            <div class="friend_profile_pic">
-                                {% if friend.user.image %}
-                                <img class="friend_card_img" src="{{friend.user.image.image}}" />
-                                {% else %}
-                                <img class="friend_card_img" src="{{default_profile_pic}}" />
-                                {% endif %}
+                            <div id="friend_card_container_1">
+                                <div class="friend_profile_pic">
+                                    {% if friend.user.image %}
+                                    <img class="friend_card_img" src="{{friend.user.image.image}}" />
+                                    {% else %}
+                                    <img class="friend_card_img" src="{{default_profile_pic}}" />
+                                    {% endif %}
+                                </div>
+                                <div class="friend_name">{{friend.first_name}} {{friend.last_name}}</div>
                             </div>
-                            <div class="friend_name">{{friend.first_name}} {{friend.last_name}}</div>
-                            <i id="user-check" class="fas fa-user-check"></i>
-                            <i id="fa-trash"class="far fa-trash-alt"></i>
+
+                            <div id="friend_card_container_2">
+                                <i id="user-check" class="fas fa-user-check"></i>
+                                <i id="fa-trash"class="far fa-trash-alt"></i>
+                            </div>
                         </div>
                         {% endfor %}
                         {% else %}
@@ -96,12 +128,12 @@
                         <button class="modal__btn" data-micromodal-close
                             aria-label="Close this dialog window">Close</button>
                     </footer>
-                    <div class="signature">
-                        <p id="signature_font_friends_list">
-                            Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i" class="fas fa-trademark"></i>
-                        </p>
-                    </div>
                 </main>
+                <div class="signature">
+                    <p id="signature_font_friends_list">
+                        Made by <a href="https://matt-crook-io.now.sh" >Quantum Coasters</a> <i id="i" class="fas fa-trademark"></i>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -112,6 +144,8 @@
     </main>
 
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
+
 
     {% block scripts %}
     {% endblock scripts %}

@@ -1,5 +1,18 @@
 // const remoteUrl = process.env.REMOTE_API_URL;
-const remoteUrl = "http://localhost:8000"
+const remoteUrl = "http://localhost:8000";
+
+
+
+export async function getUserList() {
+  const response = await fetch(`${remoteUrl}/api/userprofiles`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+    },
+  });
+  return await response.json();
+}
 
 export async function sendFriendRequest(payload) {
   const response = await fetch(`${remoteUrl}/api/friend_request`, {
@@ -26,7 +39,7 @@ export async function updateStatusCode(code) {
 }
 
 export async function getAllUsersFriends() {
-  const response = await fetch(`${remoteUrl}/api/friendship?friend_list=sender_and_receiver`, {
+  const response = await fetch(`${remoteUrl}/api/friendships?friend_list=sender_and_receiver`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -37,13 +50,12 @@ export async function getAllUsersFriends() {
 }
 
 export async function getAllUsersFriendsFromReceiver(userId) {
-  const response = await fetch(`${remoteUrl}/api/friendship?addressee=${userId}`, {
+  const response = await fetch(`${remoteUrl}/api/friendships?addressee=${userId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
     },
-    body: JSON.stringify(code),
   });
   return await response.json();
 }
