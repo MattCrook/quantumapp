@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, resolve_url
 from django.contrib.auth.decorators import login_required
 from quantumapi.models import Credential, Messages, UserProfile
 from quantumforum.models import Friendships, FriendRequest
-from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, FORUM_LOGIN_REDIRECT_URL, GROUP_CHAT_REDIRECT_FIELD_NAME
+from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, FORUM_LOGIN_REDIRECT_URL, GROUP_CHAT_REDIRECT_FIELD_NAME, REACT_APP_HOME
 from django.contrib.auth import authenticate, get_backends
 # from social_django.context_processors import backends
 from django.contrib.auth import get_user_model
@@ -181,6 +181,7 @@ def group_chat(request):
         'default_profile_pic': default_profile_pic,
         'has_active_friends': has_active_friends,
         'active_friends': active_friends,
+        'REACT_APP_HOME': REACT_APP_HOME,
 
     }
     return render(request, template, context)

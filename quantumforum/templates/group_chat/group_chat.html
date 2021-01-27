@@ -21,14 +21,6 @@
         Show friends list...show active with like green dot or something (reading the is_active db column)
     </div> -->
 
-<!-- <div class="search_container">
-    <input class="search_bar" placeholder="Search for users..." />
-</div> -->
-
-
-
-
-
 <div class="group_chat_main_container">
     <div class="current_group_chats_container">
         <div class="current_group_chats_title_wrapper">
@@ -107,7 +99,7 @@
 
     <div class="friends_master_container">
         <div class="friends_title_container">
-            <div class="friends_title">Your Active Quantum Friends <i class="fas fa-globe"></i>
+            <div class="friends_title">Active Quantum Friends <i class="fas fa-globe"></i>
                 <!-- <i class="fas fa-circle"></i> -->
             </div>
         </div>
@@ -124,7 +116,8 @@
                     {% endif %}
                 </div>
                 <div class="active_friend_list_item">{{friend.first_name}} {{friend.last_name}}</div>
-                <i id="i_active_friends_end" class="fas fa-user-plus"></i>
+                <i id="i_active_friends_end" class="far fa-check-circle"></i>
+
                 <!-- <i class="fas fa-user-minus"></i>
                     <i class="fas fa-user-slash"></i> -->
             </div>

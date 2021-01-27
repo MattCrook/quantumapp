@@ -60,29 +60,26 @@
             </div>
         </nav>
     </div>
+    <div id="profile_dropdown_container" style="display: none;">
+            <div class="profile_dropdown_row">
+                <div id="home" class="profile_dropdown_item"><a class="nav_link" href="{% url 'quantumforum:home' %}">Home</a></div>
+                <i class="fas fa-home"></i>
+              </div>
+              <div class="profile_dropdown_row">
+                <div class="profile_dropdown_item">Edit Account</div>
+                <i class="fas fa-user-edit"></i>
+              </div>
+              <div class="profile_dropdown_row">
+                <div class="profile_dropdown_item">Give Feedback</div>
+                <i class="far fa-comments"></i>
+              </div>
+              <div class="profile_dropdown_row">
+                <div class="profile_dropdown_item">Report a Bug</div>
+                <i class="fas fa-bug"></i>
+              </div>
+
+      </div>
     <div id="search_quantum_results" style="display: none;">
-        <!-- <div class="search_result_wrapper">
-            <div class="search_result_container_1">
-                <img class="search_result_image" src="{{default_profile_pic}}" />
-                <div class="search_result_name">{{user_profile.user.first_name}}</div>
-                <div class="search_result_name">{{user_profile.user.last_name}}</div>
-            </div>
-            <div class="search_result_container_2">
-                <div class="send_friend_request_btn"><i class="fas fa-user-plus"></i></div>
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        <div class="search_result_wrapper">
-            <div class="search_result_container_1">
-                <img class="search_result_image" src="{{default_profile_pic}}" />
-                <div class="search_result_name">{{user_profile.user.first_name}}</div>
-                <div class="search_result_name">{{user_profile.user.last_name}}</div>
-            </div>
-            <div class="search_result_container_2">
-                <div class="send_friend_request_btn"><i class="fas fa-user-plus"></i></div>
-                <i id="fa_check_friend_request" class="fas fa-check"></i>
-            </div>
-        </div> -->
     </div>
     <div id="status">
     </div>
