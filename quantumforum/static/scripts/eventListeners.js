@@ -44,13 +44,25 @@ const handleProfileDropdown = () => {
   });
 };
 
-
+const closeOverlaySearchBar = () => {
+  const closeButton = document.querySelector(".overlay_close");
+  const searchQuantumResults = document.getElementById("search_quantum_results");
+  const bodyTag = document.getElementsByTagName("body")[0];
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      searchQuantumResults.style.display = "none";
+      bodyTag.classList.toggle("overlay");
+      closeButton.style.display = "none";
+    });
+  }
+};
 
 const initEventListeners = () => {
   showCreateGroupForm();
   closeCreateGroupForm();
   showModal();
   handleProfileDropdown();
+  closeOverlaySearchBar();
 };
 
 initEventListeners();

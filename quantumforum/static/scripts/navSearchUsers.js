@@ -37,7 +37,6 @@ function filterUserFriends(profileId, friendsList) {
   return userFriendProfileIds.includes(profileId);
 }
 
-
 function renderRowNoImage(user_profile, isFriend) {
   const default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
   const endRowIcon = renderWhichIcon(isFriend);
@@ -109,8 +108,22 @@ function renderSearchResults(userList, friendsList, searchQuery) {
     });
 }
 
+const toggleOverlay = () => {
+    const bodyTag = document.getElementsByTagName("body")[0]
+    const closeOverlay = document.querySelector(".overlay_close")
+    bodyTag.classList.toggle("overlay");
+    if (closeOverlay.style.display === "none") {
+        closeOverlay.style.display = "block"
+    } else if (closeOverlay.style.display === "block") {
+        closeOverlay.style.display = "none";
+    }
+    // var tabIndex = document.createAttribute("tabindex");
+    // tabIndex.value = '-1';
+    // bodyTag.setAttributeNode(tabIndex);
+}
+
 const handleClickInInput = () => {
-  const searchQuantumInput = document.querySelector(".search_quantum");
+  const searchQuantumInput = document.querySelector(".search_quantum_input");
   const searchQuantumResults = document.getElementById("search_quantum_results");
   const toggleNone = () => (searchQuantumResults.style.display = "none");
   const toggleBlock = () => (searchQuantumResults.style.display = "block");
@@ -119,6 +132,7 @@ const handleClickInInput = () => {
     const display = searchQuantumResults.style.display;
     display === "none" && toggleBlock();
     display === "block" && toggleNone();
+    toggleOverlay();
   });
 };
 

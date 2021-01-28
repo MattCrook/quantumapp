@@ -14,6 +14,17 @@ export async function getUserList() {
   return await response.json();
 }
 
+export async function retrieveUserProfile(uid) {
+  const response = await fetch(`${remoteUrl}/api/userprofiles/${uid}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+    },
+  });
+  return await response.json();
+}
+
 export async function sendFriendRequest(payload) {
   const response = await fetch(`${remoteUrl}/api/friend_request`, {
     method: "POST",

@@ -122,9 +122,10 @@ REST_FRAMEWORK = {
     ),
 }
 
-# env variables sent through context to templates
+# env variables sent through context to templates, redirect to Client React App URLS
 REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
 REACT_APP_HOME = 'http://localhost:3000/forum'
+REACT_APP_USER_PROFILE = 'http://localhost:3000/user/profile/credits'
 
 
 

@@ -14,5 +14,21 @@ let users = [];
     ];
 };
 
+const useLoading = (initialState) => {
+    let isLoading = initialState;
+        return [
+            () => isLoading,
+            (newState) => (isLoading = newState)
+        ];
+    };
 
-export { useQuantumFriends, useUserList };
+
+const useGroupChatParticipants = () => {
+    let participants = [];
+        return [
+            () => participants.slice(),
+            (newInvitee) => (participants = newInvitee.splice(0))
+        ];
+    };
+
+export { useQuantumFriends, useUserList, useLoading, useGroupChatParticipants };

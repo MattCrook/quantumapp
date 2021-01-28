@@ -58,8 +58,7 @@
                         </div>
                         <div class="group">
                             <label for="participants" class="label">Participants</label>
-                            <div href="#modal-5" data-micromodal-trigger="modal-5" class="add_new_participant_btn">Add
-                                <i class="fas fa-user-plus"></i></div>
+                            <div href="#modal-5" data-micromodal-trigger="modal-5" class="add_new_participant_btn">Add<i class="fas fa-user-plus"></i></div>
                             <!-- <input id="participants" type="text" class="input" name="participants" placeholder="Search for users..." /> -->
                         </div>
                         <div id="submit_group_btn" class="group">
@@ -67,20 +66,11 @@
                         </div>
                         <div class="hr"></div>
                         <div class="list_of_participants_container">
-                            <div class="invitee_list_title">Users Invited To This Group Chat</div>
-                            <ul>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-                                <li class="participant_item">Matt crook</li>
-
-                                {% for person in participants %}
-                                <li class="participant_item">{{person.first_name}} {{person.last_name}}</li>
-                                {% endfor %}
+                            <div class="list_of_participants_title_wrapper">
+                                <div class="invitee_list_title">Users Invited To This Group Chat</div>
+                                <div class="clear_all_button">Clear All</div>
+                            </div>
+                            <ul class="invitee_list">
                             </ul>
                         </div>
                     </form>
@@ -94,8 +84,6 @@
             </div>
         </div>
     </div>
-
-
 
     <div class="friends_master_container">
         <div class="friends_title_container">
@@ -167,15 +155,14 @@
 
 {% block scripts %}
 <script src="{% static 'scripts/eventListeners.js'%}"></script>
-<script type="module" src="{% static 'scripts/addFriendsSearch.js'%}"></script>
-
+<script type="module" src="{% static 'scripts/createGroupForm.js'%}"></script>
 {% endblock %}
 
 
 
 
 
-        <!-- <div class="new_group_create_form_container" style="display: none;">
+<!-- <div class="new_group_create_form_container" style="display: none;">
             <form class="new_group_form" action="{% url 'quantumforum:group_chat' %}" method="POST">
                 <label class="group_form_label" for="group_name">Group Chat Name</label>
                 <input class="group_chat_input" id="group_name" type="text" name="group_name"

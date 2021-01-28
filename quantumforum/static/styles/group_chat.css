@@ -210,7 +210,7 @@
   box-shadow: 3px 3px 3px 3px rgb(212, 212, 212);
 }
 
-/************************** New Create Group Chat Form***********************/
+/************************** New Create Group Chat Form ***********************/
 
 #new_group_create_form_container {
   margin-top: 15%;
@@ -337,7 +337,6 @@
 .invitee_list_title {
   color: rgb(82, 82, 82);
   font: 150 1em helvetica neue, open sans, sans-serif;
-  margin-bottom: 30px;
 }
 .participant_item {
   color: rgb(73, 73, 73);
@@ -345,10 +344,101 @@
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 300;
+  /* display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center; */
+}
+
+.participant_item_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.participant_item_wrapper_1 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.participant_item_wrapper_2 {
+  display: flex;
+  align-items: center;
 }
 
 #participants:focus::placeholder {
   color: transparent;
+}
+
+.list_of_participants_title_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.clear_all_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 7px 20px;
+  color: rgb(114, 114, 114);
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.clear_all_button {
+  border: 1px solid transparent;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+
+.clear_all_button::before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 0%;
+  height: 1px;
+  background: #7e3434;
+  box-shadow: inset 0px 0px 0px #7e3434;
+  display: block;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+
+.clear_all_button:hover::before {
+  width: 100%;
+}
+
+.clear_all_button::after {
+  content: "";
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 0%;
+  height: 1px;
+  background: #7e3434;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+.clear_all_button:hover::after {
+  width: 100%;
+}
+.clear_all_button:hover {
+  text-decoration: none;
+  color: black;
+  border-left: 1px solid #7e3434;
+  border-right: 1px solid #7e3434;
 }
 
 .add_new_participant_btn {
@@ -395,6 +485,20 @@
   content: "\2715";
 }
 
+.remove_participant {
+  background: transparent;
+  border: 0;
+  color: #a77777d5;
+  margin-left: 51%;
+}
+
+.remove_participant::before {
+  content: "\2715";
+}
+
+.remove_participant:hover {
+  color: rgb(185, 40, 40);
+}
 /*************************************************/
 /**********************Signature***************************/
 
@@ -551,4 +655,42 @@
 
 #fa_plus_add_user {
   cursor: pointer;
+}
+
+#add_friend_card_container_1 {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  flex-direction: row;
+  width: 50%;
+  max-width: 50%;
+}
+
+#add_friend_card_container_2 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: row;
+  width: 50%;
+  max-width: 50%;
+}
+.add_friend_card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: rgb(212, 212, 212);
+  border-bottom: 1px solid rgb(83, 83, 83);
+}
+
+.add_friend_profile_pic {
+  padding-right: 5%;
+}
+
+.add_friend_card_img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  margin-right: 3px;
+  object-fit: cover;
 }

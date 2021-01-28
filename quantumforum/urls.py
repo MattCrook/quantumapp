@@ -2,7 +2,10 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 from django.conf.urls import include
 from django.contrib.auth import views as auth_views
-from quantumforum.views import index, login_user, logout_user, authenticate_for_group_chat, group_chat, private_chat, room, redirect_home
+from quantumforum.views import index, login_user, logout_user, authenticate_for_group_chat, group_chat, private_chat, room
+from quantumforum.views import redirect_home as client_home
+from quantumforum.views import redirect_profile as profile
+
 
 
 
@@ -19,7 +22,8 @@ urlpatterns = [
 
     path('login/', login_user, name='login'),
     path('logout/', logout_user, name='logout'),
-    path('home/', redirect_home, name='home'),
+    path('home/', client_home, name='home'),
+    path('user/profile/credits', profile, name='profile'),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('authenticate_for_group_chat/<int:auth_user_id>/', authenticate_for_group_chat, name='authenticate_for_group_chat'),
     path('group_chat/', group_chat, name='group_chat'),

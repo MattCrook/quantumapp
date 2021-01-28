@@ -34,12 +34,16 @@
             <div class="nav_middle">
                 <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn"><i
                         class="fas fa-users"></i> Your Quantum Friends </div>
-                <div class="search_quantum">
-                    <input class="search_quantum_input" id="user_search" type="search"
-                        placeholder="Search For Quantum Users..." />
-                    <div class="divider"></div>
-                    <i class="fas fa-search"></i>
-                </div>
+
+                    <div class="search_quantum">
+                        <input class="search_quantum_input" id="user_search" type="search"
+                            placeholder="Search For Quantum Users..." />
+                        <div class="divider"></div>
+                        <i class="fas fa-search"></i>
+                        <button class="overlay_close" style="display: none;"></button>
+                    </div>
+
+
             </div>
             <div class="nav_end">
                 <div class="nav_name_wrapper">
@@ -66,9 +70,13 @@
                 <i class="fas fa-home"></i>
               </div>
               <div class="profile_dropdown_row">
+                <div class="profile_dropdown_item"><a class="nav_link" href="{% url 'quantumforum:profile' %}">Profile</a></div>
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <!-- <div class="profile_dropdown_row">
                 <div class="profile_dropdown_item">Edit Account</div>
                 <i class="fas fa-user-edit"></i>
-              </div>
+              </div> -->
               <div class="profile_dropdown_row">
                 <div class="profile_dropdown_item">Give Feedback</div>
                 <i class="far fa-comments"></i>
@@ -81,6 +89,7 @@
       </div>
     <div id="search_quantum_results" style="display: none;">
     </div>
+
     <div id="status">
     </div>
 
@@ -93,7 +102,6 @@
                 </header>
 
                 <main class="modal__content" id="modal-4-content">
-
                     <div class="friends_list_container">
                         {% if quantum_friends %}
                         {% for friend in quantum_friends %}

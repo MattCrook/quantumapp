@@ -181,7 +181,6 @@ def group_chat(request):
         'default_profile_pic': default_profile_pic,
         'has_active_friends': has_active_friends,
         'active_friends': active_friends,
-        'REACT_APP_HOME': REACT_APP_HOME,
 
     }
     return render(request, template, context)
