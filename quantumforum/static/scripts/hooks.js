@@ -7,10 +7,10 @@ const useQuantumFriends = () => {
   };
 
 const useUserList = () => {
-let users = [];
-    return [
-        () => users.slice(),
-        (newUsers) => (users = newUsers.splice(0))
+    let users = [];
+        return [
+            () => users.slice(),
+            (newUsers) => (users = newUsers.splice(0))
     ];
 };
 
@@ -22,13 +22,29 @@ const useLoading = (initialState) => {
         ];
     };
 
-
+// need to be able to add a new entry to Array
+// pass in updated state and that be the array without the old state.
 const useGroupChatParticipants = () => {
-    let participants = [];
+    let participantsInState = [];
         return [
-            () => participants.slice(),
-            (newInvitee) => (participants = newInvitee.splice(0))
+            () => participantsInState.slice(),
+            (newParticipantList) => (participantsInState = newParticipantList.splice(0))
         ];
     };
+const useGroup = (participants) => {
+    let group = participants;
+        return [
+            () => group.slice(),
+            (newGroup) => (group = newGroup.splice(0))
+        ];
+};
 
-export { useQuantumFriends, useUserList, useLoading, useGroupChatParticipants };
+const useAddedToGroup = () => {
+    let userProfile = [];
+        return [
+            () => userProfile.slice(),
+            (newUser) => (userProfile = newUser.splice(0))
+        ];
+}
+
+export { useQuantumFriends, useUserList, useLoading, useGroupChatParticipants, useGroup, useAddedToGroup };
