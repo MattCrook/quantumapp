@@ -8,71 +8,82 @@ import {
 } from "./hooks.js";
 import { getAllUsersFriends, retrieveUserProfile } from "./services.js";
 
-const [participants, setParticipants] = useGroupChatParticipants();
-// const [addedToGroup, addedToGroup] = useAddedToGroup();
-const [friendships, setFriendships] = useQuantumFriends();
-const [group, setGroup] = useGroup([...participants()]);
 
+// const [addedToGroup, addedToGroup] = useAddedToGroup();
+// const [participants, setParticipants] = useGroupChatParticipants();
+// const [friendships, setFriendships] = useQuantumFriends();
+// const [group, setGroup] = useGroup([...participants()]);
+
+let participants = [];
 let addedToGroup = [];
-let addedParticipantsList = [];
+let friendShips = new Set();
+let group = new Set()
+
 
 const initFriendsSearchAndCreateGroupForm = async () => {
-  const search_input = document.getElementById("friends_search");
+  const searchInput = document.getElementById("friends_search");
   const results = document.getElementById("results");
+  const addedToGroupList = document.querySelector(".invitee_list");
+  let search_term = '';
+
   const allFriendships = await getAllUsersFriends();
-  setFriendships(allFriendships);
-  setFormState(friendships(), search_input, results);
+  friendShips.add(allFriendships)
+  setFormState(friendShips, searchInput, search_term, results, addedToGroupList)
 };
 
-const setFormState = (friendShips, search_input, results) => {
-  initialRenderFriendShipData(friendShips, results);
-  handleSearchInput([...friendships()], search_input);
-  initAddGroupForm();
+
+const setFormState = (friendShips, searchInput, search_term, results, addedToGroupList) => {
+  const friendShipEntries = friendShips.values()
+  const allUserFriendships = friendShipEntries.next().value;
+  initialRenderFriendShipData(allUserFriendships, results, searchInput, addedToGroupList);
+  handleSearchInput(allUserFriendships, searchInput, search_term, results, addedToGroupList);
 };
 
-const initAddGroupForm = () => {
+
+const initSelectUserToAdd = (results, searchInput, addedToGroupList) => {
   const addUserNodes = document.querySelectorAll(".fas.fa-plus");
   const addUserButtons = [...addUserNodes];
   addUserButtons.forEach((button) => {
-    handleAddFriendToGroup(button);
+    handleAddFriendToGroup(button, results, addedToGroupList);
   });
-  handleClearAllEvent();
+  handleClearAllEvent(results, searchInput, addedToGroupList);
 };
 
-const initialRenderFriendShipData = (friendshipList, results) => {
+
+const initialRenderFriendShipData = (friendshipList, results, searchInput, addedToGroupList) => {
+  results.innerHTML = '';
   friendshipList.forEach((friend) => {
     let row;
     friend.image ? (row = renderFriendRowWithImage(friend)) : (row = renderFriendRowNoImage(friend));
     results.innerHTML += row;
   });
+  initSelectUserToAdd(results, searchInput, addedToGroupList);
 };
 
-const handleSearchInput = (friendShips, search_input) => {
-  search_input.addEventListener("input", (e) => {
-    const search_term = e.target.value;
-    filterSearchQuery(friendShips, search_term);
-    initAddGroupForm();
+
+const handleSearchInput = (friendShips, searchInput, search_term, results, addedToGroupList) => {
+  searchInput.addEventListener("input", (e) => {
+    search_term = e.target.value;
+    filterSearchQuery(friendShips, search_term, results, addedToGroupList, searchInput);
+    initSelectUserToAdd(results, searchInput, addedToGroupList);
   });
 };
 
-const filterSearchQuery = (friendships, search_term) => {
-  const results = document.getElementById("results");
+
+const filterSearchQuery = (friendships, search_term, results) => {
   results.innerHTML = "";
 
-  friendships
-    .filter(
-      (friend) =>
+  const filteredResults = friendships.filter((friend) =>
         friend.user.first_name.toLowerCase().includes(search_term.toLowerCase()) ||
         friend.user.last_name.toLowerCase().includes(search_term.toLowerCase()) ||
         friend.user.username.toLowerCase().includes(search_term.toLowerCase())
     )
-    .forEach((friend) => {
+    filteredResults.forEach((friend) => {
       let row;
       const isFriendImage = friend && friend.image && friend.image != null;
-      // const participantIds = [...participants()].map(user => user.id)
-      const addedFriendToGroup = searchFriendIdInList([...participants()], friend.id);
-      const hasGroupParticipants = true ? addedFriendToGroup != null : false;
-      const isAddedToGroup = hasGroupParticipants ? addedFriendToGroup.id === friend.id : false;
+      const addedFriendToGroup = searchFriendIdInList(participants, friend.id);
+      const hasGroupParticipants = Array.isArray(addedFriendToGroup) || addedFriendToGroup.length
+      const isAddedToGroup = hasGroupParticipants ? addedFriendToGroup[0].id === friend.id : false;
 
       const isImageAndIsAdded = () => (row = renderAddedFriendRowWithImage(friend));
       const isImageAndNotAdded = () => (row = renderFriendRowWithImage(friend));
@@ -88,51 +99,48 @@ const filterSearchQuery = (friendships, search_term) => {
     });
 };
 
-const handleAddFriendToGroup = (addUserButton) => {
-  const [isLoading, setIsLoading] = useLoading(false);
-  const inviteList = document.querySelector(".invitee_list");
 
+const handleAddFriendToGroup = (addUserButton, results, addedToGroupList) => {
+  const [isLoading, setIsLoading] = useLoading(false);
   addUserButton.addEventListener("click", async (e) => {
     e.preventDefault();
     setIsLoading(true);
     const userId = e.target.dataset.id;
     const user = await retrieveUserProfile(parseInt(userId));
-    addedParticipantsList.push(user);
-
-    // setAddedToGroup([user]);
-    addedToGroup.push([user]);
-    setParticipants([...addedParticipantsList]);
-
-    const newParticipantRow = invitedUserToGroup(user);
-    inviteList.innerHTML += newParticipantRow;
+    addedToGroup.push(user);
+    participants.push (user)
+    group.add(participants);
     setIsLoading(false);
-    // alert(`${user.user.first_name} ${user.user.last_name} added to group chat.`);
-
-    toggleAddCheckIcon(e, participants());
-    handleRemoveUserFromList();
-    setGroup(participants());
+    renderAddedUserToInviteList(e, user, addedToGroupList);
+    handleRemoveUserFromList(results, addedToGroupList);
   });
 };
 
-const toggleAddCheckIcon = (e, participantList) => {
+
+const renderAddedUserToInviteList = (e, user, addedToGroupList) => {
+  const newParticipantRow = invitedUserToGroup(user);
+  addedToGroupList.innerHTML += newParticipantRow;
+  addCheckIconAfterAddingUser(e);
+
+}
+
+
+const addCheckIconAfterAddingUser = (e) => {
   e.preventDefault();
   const eventTarget = e.target;
   const uid = eventTarget.dataset.id;
+  // Get the event from clicking the add icon, that gives you the icon to toggle to check icon.
+  // Replace with check icon.
   const parentContainer = eventTarget.parentNode;
   parentContainer.innerHTML = "";
   const checkIcon = renderCheckIcon(uid);
   parentContainer.innerHTML += checkIcon;
-};
+}
 
-const toggleAddPlusIcon = (e, friendsList) => {
+const toggleAddPlusIcon = (e) => {
   e.preventDefault();
   const eventTarget = e.target;
   const uid = eventTarget.dataset.id;
-  // const parentContainer = eventTarget.parentNode;
-  // parentContainer.innerHTML = "";
-  // const checkIcon = renderAddIcon(uid);
-  // parentContainer.innerHTML += checkIcon;
-
   const allCheckButtonNodes = document.querySelectorAll(".fas.fa-check");
   const allCheckButtons = Array.from(allCheckButtonNodes);
   const buttonToToggle = allCheckButtons.filter((button) => parseInt(button.dataset.id) === parseInt(uid));
@@ -142,19 +150,24 @@ const toggleAddPlusIcon = (e, friendsList) => {
   parentContainer.innerHTML += plusIcon;
 };
 
-const handleClearAllEvent = () => {
+
+const handleClearAllEvent = (results, searchInput, addedToGroupList) => {
   const clearAllBtn = document.querySelector(".clear_all_button");
-  const inviteList = document.querySelector(".invitee_list");
-  const results = document.getElementById("results");
   clearAllBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    inviteList.innerHTML = "";
+    addedToGroupList.innerHTML = "";
     results.innerHTML = "";
-    initFriendsSearchAndCreateGroupForm();
+    participants = [];
+    addedToGroup = [];
+    addedParticipantsList = [];
+    group.clear();
+    search_term = '';
+    setFormState(friendShips, searchInput, search_term, results, addedToGroupList)
   });
 };
 
-const handleRemoveUserFromList = () => {
+
+const handleRemoveUserFromList = (results, addedToGroupList) => {
   const removeInviteeNodes = document.querySelectorAll(".remove_participant");
   const removeInviteeButtons = [...removeInviteeNodes];
 
@@ -165,39 +178,48 @@ const handleRemoveUserFromList = () => {
     removeButton.addEventListener("click", (e) => {
       e.preventDefault();
       const key = e.target.dataset.id;
-      // const parentNode = e.target.parentNode;
       const nodeKeys = allParticipantContainers.map((node) => node.dataset.key);
       const match = nodeKeys.includes(key);
 
       if (match != null) {
-        console.log("HERE3");
+        const participantToRemove = participants.filter((userProfile) => userProfile.id === parseInt(key));
+        const updatedParticipantsList = participants.filter((participant) => participant.id !== [...participantToRemove][0].id);
+        participants = updatedParticipantsList;
+        addedToGroup = updatedParticipantsList;
+        group.clear()
+        group.add(participants)
+        toggleAddPlusIcon(e, participants);
+
+        const allPlusIconsInResults = document.querySelectorAll(".fas.fa-plus");
+        const addUserPlusIcons = [...allPlusIconsInResults];
         const containerToRemove = allParticipantContainers.filter((element) => element.dataset.key === key);
         containerToRemove[0].remove();
-        const participantToRemove = [...participants()].filter((userProfile) => userProfile.id === parseInt(key));
-        const updatedParticipantsList = [...addedParticipantsList].filter(
-          (participant) => participant.id !== [...participantToRemove][0].id
-        );
-        setParticipants([...updatedParticipantsList]);
-        toggleAddPlusIcon(e, [...updatedParticipantsList]);
-        setGroup([...updatedParticipantsList]);
+
+        const iconToAddEventListener = addUserPlusIcons.filter(icon => parseInt(icon.dataset.id) === participantToRemove[0].id);
+        handleAddFriendToGroup(iconToAddEventListener[0], results, addedToGroupList);
       }
     });
   });
 };
 
+
 function searchFriendIdInList(array, valueToFind) {
+  let matchingValues = []
   for (let item in array) {
     let index = item;
     let value = array[index];
     const values = Object.values(value);
-    console.log(valueToFind);
     if (values.includes(valueToFind)) {
-      return value;
-    } else {
-      return false;
+      matchingValues.push(value)
     }
   }
+  if (Array.isArray(matchingValues) && matchingValues.length > 0) {
+    return matchingValues.splice(0);
+  } else {
+    return false;
+  }
 }
+
 
 function renderFriendRowWithImage(friend) {
   return `
@@ -296,78 +318,5 @@ function renderClearAllButton() {
   `;
 }
 
+
 initFriendsSearchAndCreateGroupForm();
-
-/*
-  const addedFriendToGroup = searchFriendIdInList(participantList, parseInt(uid));
-  console.log('addedFriendToGroup', addedFriendToGroup)
-  const hasGroupParticipants = true ? addedFriendToGroup != null : false;
-  console.log('hasGroupParticipants', hasGroupParticipants)
-
-  const isAddedToGroup = hasGroupParticipants ? addedFriendToGroup.id === parseInt(uid) : false;
-  console.log('isAddedToGroup', isAddedToGroup)
-  // isAddedToGroup ? renderCheckIcon(uid) : renderAddIcon(uid);
-
-
-
-  if (isAddedToGroup) {
-    console.log({eventTarget})
-    const parentContainer = eventTarget.parentNode;
-    parentContainer.innerHTML = "";
-    const checkIcon = renderCheckIcon(uid);
-    parentContainer.innerHTML += checkIcon;
-  } else {
-    // const addIcon = renderAddIcon(uid);
-    const checkIconNodes = document.querySelectorAll(".fas.fa-check");
-    const checkIcons = Array.from(checkIconNodes);
-    // const iconToChange = checkIcons.filter((icon) => parseInt(icon.dataset.id) === parseInt(uid));
-    // console.log({iconToChange})
-    // const isIcon = iconToChange != null;
-    // const parentContainer = iconToChange.parentNode;
-    const parentContainer = eventTarget.parentNode;
-    console.log(parentContainer)
-
-    parentContainer.innerHTML = "";
-    const addIcon = renderCheckIcon(uid);
-    parentContainer.innerHTML += addIcon
-
-    // const tempContainer = document.createElement("div");
-    // tempContainer.innerHTML = addIcon;
-    // const addIconElement = tempContainer.firstChild.nextSibling;
-    // parentContainer.appendChild(addIconElement);
-  }
-  */
-
-// if (isCheck) {
-//   console.log("here")
-//   const parentContainer = eventTarget.parentNode;
-//   parentContainer.innerHTML = "";
-//   const checkIcon = renderCheckIcon(uid);
-//   parentContainer.innerHTML += checkIcon;
-// } else {
-//   console.log("here2")
-//   const addIcon = renderAddIcon(uid);
-//   const checkIconNodes = document.querySelectorAll(".fas.fa-check");
-//   const checkIcons = Array.from(checkIconNodes);
-//   const iconToChange = checkIcons.filter((icon) => icon.dataset.id === uid);
-//   console.log(iconToChange)
-//   const isIcon = iconToChange != null;
-
-//   if (isIcon) {
-//     console.log("here4")
-//     console.log(participants());
-//     console.log({ addedParticipantsList })
-//     setParticipants([...participants()])
-//     setGroup([...participants()])
-//     console.log('h4part', participants());
-
-// const parentContainer = iconToChange[0].parentNode;
-// parentContainer.innerHTML = "";
-// const tempContainer = document.createElement("div");
-// tempContainer.innerHTML = addIcon;
-// const addIconElement = tempContainer.firstChild.nextSibling;
-// parentContainer.appendChild(addIconElement);
-// handleAddFriendToGroup(addIconElement);
-// }
-// }
-// };
