@@ -7,35 +7,36 @@ import environ
 # import dotenv
 
 
-# env = environ.Env(
-#     # set casting, default value
-#     DEBUG=(bool, True),
-#     SECRET_KEY=(str),
-#     AUTH0_CLIENT_ID=(str),
-#     AUTH0_DOMAIN=(str),
-#     AUTH0_CLIENT_SECRET=(str),
-#     API_IDENTIFIER=(str),
-#     AUTH0_OPEN_ID_SERVER_URL=(str),
-#     SOCIAL_AUTH_AUTH0_DOMAIN=(str),
-#     SOCIAL_AUTH_AUTH0_KEY=(str),
-#     SOCIAL_AUTH_AUTH0_SECRET=(str),
-#     JWT_ISSUER=(str)
-# )
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, True),
+    SECRET_KEY=(str),
+    AUTH0_CLIENT_ID=(str),
+    AUTH0_DOMAIN=(str),
+    AUTH0_CLIENT_SECRET=(str),
+    API_IDENTIFIER=(str),
+    AUTH0_OPEN_ID_SERVER_URL=(str),
+    SOCIAL_AUTH_AUTH0_DOMAIN=(str),
+    SOCIAL_AUTH_AUTH0_KEY=(str),
+    SOCIAL_AUTH_AUTH0_SECRET=(str),
+    JWT_ISSUER=(str)
+)
 
 
-# AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
-# AUTH0_DOMAIN = env('AUTH0_DOMAIN')
-# AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
-# API_IDENTIFIER = env('API_IDENTIFIER')
-# AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
-# SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
-# SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
-# SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
+AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
+AUTH0_DOMAIN = env('AUTH0_DOMAIN')
+AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
+API_IDENTIFIER = env('API_IDENTIFIER')
+AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
+SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
+SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
+SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
 
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
@@ -48,7 +49,7 @@ SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '8000']
 
 
 INSTALLED_APPS = [
@@ -106,9 +107,6 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    # 'DEFAULT_RENDERER_CLASSES': (
-    #     'rest_framework.renderers.JSONRenderer',
-    # ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
@@ -124,7 +122,13 @@ REST_FRAMEWORK = {
     ),
 }
 
+# env variables sent through context to templates, redirect to Client React App URLS
 REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
+REACT_APP_HOME = 'http://localhost:3000/forum'
+REACT_APP_USER_PROFILE = 'http://localhost:3000/user/profile/credits'
+
+
+
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
 AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
 AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
@@ -152,7 +156,7 @@ SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1O
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
-    'email'
+    'email',
 ]
 
 # Quantum Coasters Machine to Machine
@@ -191,6 +195,7 @@ JWT_AUTH = {
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
+    'quantumapi.auth0_views.Auth0',
 }
 # FOR DJANGO WEB APP BACKEND
 # 'quantumapi.auth0_views.Auth0',
@@ -203,12 +208,14 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:3000',
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
 )
 
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # 'DIRS': [os.path.join(BASE_DIR, 'quantumforum/templates')],
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -294,6 +301,8 @@ LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
+FORUM_LOGIN_REDIRECT_URL = '/login'
+GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat'
 
 
 # Social Auth Configs

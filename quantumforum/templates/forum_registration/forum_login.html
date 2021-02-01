@@ -1,0 +1,74 @@
+<!-- {% extends 'shared/base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}" />
+
+    <title>Login</title>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Login</h2>
+            <div class="login_sub_header">Superuser or SysAdmin Accounts {{test}}</div>
+            <form action="{% url 'quantumforum:login' %}" method="POST">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                <button class="login_btn" type="submit">Login</button>
+                <button class="register_btn"><a class="register_btn" href="{'#'}">Register New SysAdmin
+                        Account</a></button>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li id="error_message" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </form>
+        </div>
+        <div id="row" class="row">
+            <div id="login_buttons_card_wrapper" class="col-md-8 mx-auto social-container my-2 order-md-1">
+
+                <button id="login_with_auth0" class="btn btn-primary mb-2">
+                    <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 26px;">
+                    <a href="{% url 'social:begin' 'auth0' %}" title="Auth0">Login with Auth0</a>
+                </button>
+                <button id="back_to_quantum_coaters" class="btn btn-primary mb-2">
+                    <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 26px;">
+                    <a href="{{CLIENT_URL}}">Back To Quantum Coasters</a>
+                </button>
+                <button id="login_with_email" class="btn btn-primary mb-2">
+                    <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 26px;">
+                    <a href="{% url 'social:begin' 'auth0' %}">Login with Email</a>
+                </button>
+                <button id="login_help" class="btn btn-primary mb-2">
+                    <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 26px;">
+                    <a href="{% url 'social:begin' 'auth0' %}">Help</a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="signature">
+        <p id="signature_font_login">
+            Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i" class="fas fa-trademark"></i>
+        </p>
+    </div>
+
+
+
+</body>
+
+</html> -->

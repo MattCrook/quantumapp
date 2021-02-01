@@ -1,0 +1,22 @@
+.error_page_message {
+  margin-left: 20px;
+}
+
+.error_page_title {
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.error_btn {
+  background-color: white;
+  border-radius: 5px 5px 5px 5px;
+  margin-top: 15px;
+  border: 1px solid black;
+  margin-right: 20px;
+}
+
+.error_a {
+  text-decoration: none;
+  color: black;
+  padding: 10px 20px;
+}

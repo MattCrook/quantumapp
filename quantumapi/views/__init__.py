@@ -3,7 +3,7 @@ from .trackType import Tracktypes
 from .manufacturer import Manufacturers
 from .park import Parks
 from .messages import Message
-from .userProfile import UserProfiles
+from .userProfile import UserProfiles, UserProfileSerializer
 from .credit import Credits
 from .auth import login_user, register_user, auth0_logout
 from .user import Users, UserSerializer, get_user

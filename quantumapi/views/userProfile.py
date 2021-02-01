@@ -74,15 +74,22 @@ class UserProfiles(ViewSet):
             userprofile_user_id = userprofile.user_id
             user = User.objects.get(pk=userprofile_user_id)
             email = self.request.query_params.get('email', None)
+            print(request.data)
 
             if 'image' in request.data and request.data['image']:
                 new_image = request.data['image']
                 image = Image.objects.get(pk=new_image['id'])
                 userprofile.image = image
 
-            userprofile.address = request.data["address"]
-            userprofile.user = user
+            if 'is_currently_active' in request.data and request.data['is_currently_active']:
+                is_currently_active = request.data['is_currently_active']
+                userprofile.is_currently_active = is_currently_active
 
+            if 'address' in request.data and request.data['address']:
+                address = request.data['address']
+                userprofile.address = address
+
+            userprofile.user = user
             userprofile.save()
             return Response({'UserProfile Updated Successfully'}, status=status.HTTP_204_NO_CONTENT)
 

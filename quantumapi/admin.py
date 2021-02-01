@@ -3,6 +3,7 @@ from quantumapi.models import UserProfile, RollerCoaster, Tracktype, Manufacture
 from quantumapi.models import Credential as CredentialModel
 from quantumapi.models import QuantumUserAdmin
 from django.contrib.sessions.models import Session
+from quantumforum.models import *
 # from rest_auth.models import TokenModel
 
 
@@ -26,5 +27,12 @@ admin.site.register(CalendarEvent)
 admin.site.register(ErrorLog)
 admin.site.register(Feedback)
 admin.site.register(BugReport)
+admin.site.register(FriendRequest)
+admin.site.register(StatusCode)
+admin.site.register(Friendships)
+
+
+
+
 
 # admin.site.register(TokenModel)

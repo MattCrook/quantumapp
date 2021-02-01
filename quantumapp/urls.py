@@ -11,9 +11,13 @@ from quantumapi.views import login_user, register_user, get_user, auth0_logout
 from quantumapi.views import Credentials as CredentialsView
 from quantumapi.views import Feedback as FeedbackView
 from quantumapi.views import BugReports as BugReportView
+from quantumforum.views import FriendRequests as FriendRequestView
+from quantumforum.views import StatusCodes as StatusCodeView
+from quantumforum.views import Friendships as FriendshipView
 from rest_framework.authtoken.views import obtain_auth_token
-# python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json
 
+
+app_name = "quantumapp"
 
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -36,6 +40,10 @@ router.register(r'calendar_events', CalendarEvents, 'calendar_event')
 router.register(r'error_logs', ErrorLogView, 'error_logs')
 router.register(r'user_feedback', FeedbackView, 'user_feedback')
 router.register(r'bug_reports', BugReportView, 'bug_reports')
+router.register(r'status_code', StatusCodeView, 'status_codes')
+router.register(r'friend_request', FriendRequestView, 'friend_requests')
+router.register(r'friendships', FriendshipView, 'friendships')
+
 
 
 
@@ -53,5 +61,10 @@ urlpatterns = [
     path('get_user/', get_user),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
-    path('', include('quantumforum.urls')),
+    path('', include('quantumforum.urls', namespace='quantumforum')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+
+# python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json

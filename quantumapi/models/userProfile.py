@@ -12,6 +12,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="user", null=True, blank=True, on_delete=models.CASCADE, )
     address = models.CharField(null=True, blank=True, max_length=50,)
     image = models.ForeignKey(Image, blank=True, null=True, on_delete=models.CASCADE)
+    is_currently_active = models.CharField(max_length=10, blank=True, null=True, default='False')
     rollerCoaster_id = models.ManyToManyField("RollerCoaster", through="Credit", )
 
     class Meta:

@@ -123,8 +123,6 @@ class RollerCoasters(ViewSet):
                 serializer = RollerCoasterSerializer(data=data, context={'request': request})
                 serializer.is_valid()
                 serializer.save()
-
-
                 return Response(serializer.data)
 
             except Exception as ex:
