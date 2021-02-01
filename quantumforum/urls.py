@@ -20,7 +20,7 @@ urlpatterns = [
     # path('accounts', include('django.contrib.auth.urls')),
     # path('', include('django.contrib.auth.urls')),
 
-    path('login/', login_user, name='login'),
+    path('login/auth0', login_user, name='login'),
     path('logout/', logout_user, name='logout'),
     path('home/', client_home, name='home'),
     path('user/profile/credits', profile, name='profile'),
@@ -35,7 +35,4 @@ urlpatterns = [
     # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
     # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
     # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
-
-
-
 ]

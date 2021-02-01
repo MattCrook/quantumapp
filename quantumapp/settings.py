@@ -195,6 +195,7 @@ JWT_AUTH = {
 AUTHENTICATION_BACKENDS = {
     'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
+    'quantumapi.auth0_views.Auth0',
 }
 # FOR DJANGO WEB APP BACKEND
 # 'quantumapi.auth0_views.Auth0',

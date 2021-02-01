@@ -159,9 +159,8 @@ const handleClearAllEvent = (results, searchInput, addedToGroupList) => {
     results.innerHTML = "";
     participants = [];
     addedToGroup = [];
-    addedParticipantsList = [];
     group.clear();
-    search_term = '';
+    let search_term = '';
     setFormState(friendShips, searchInput, search_term, results, addedToGroupList)
   });
 };

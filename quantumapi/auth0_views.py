@@ -2,8 +2,8 @@ from functools import wraps
 import jwt
 from urllib import request
 from jose import jwt
-from social_core.backends.oauth import BaseOAuth2
-from social_core.backends.open_id import OpenIDAuth
+# from social_core.backends.oauth import BaseOAuth2
+from social_core.backends.open_id import BaseOAuth2
 
 
 
@@ -78,8 +78,8 @@ class Auth0(BaseOAuth2):
 
 
 
-class Auth0OpenID(OpenIDAuth):
-    name = 'auth0'
+# class Auth0OpenID(OpenIDAuth):
+#     name = 'auth0'
 
 
 

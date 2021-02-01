@@ -74,6 +74,8 @@ def authenticate_for_group_chat(request, auth_user_id):
     UserModel = get_user_model()
     user = UserModel.objects.get(pk=auth_user_id)
     backend_list = get_backends()
+    cookies = request.COOKIES
+
     remote_user_backend = backend_list[1]
     model_backend = backend_list[0]
     remote_user = remote_user_backend.get_user(auth_user_id)
@@ -81,8 +83,8 @@ def authenticate_for_group_chat(request, auth_user_id):
     can_authenticate = remote_user_backend.user_can_authenticate(remote_user)
 
     if can_authenticate is not False:
-        secret = user.auth0_identifier.split(".")[1]
-        username = user.auth0_identifier
+        secret = remote_user.auth0_identifier.split(".")[1]
+        username = remote_user.auth0_identifier
 
         authenticated_user = authenticate(request, username=username, password=secret)
         # authenticated_user = authenticate(remote_user=remote_user)
