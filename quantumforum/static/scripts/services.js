@@ -1,8 +1,6 @@
 // const remoteUrl = process.env.REMOTE_API_URL;
 const remoteUrl = "http://localhost:8000";
 
-
-
 export async function getUserList() {
   const response = await fetch(`${remoteUrl}/api/userprofiles`, {
     method: "GET",
@@ -50,14 +48,18 @@ export async function updateStatusCode(code) {
 }
 
 export async function getAllUsersFriends() {
-  const response = await fetch(`${remoteUrl}/api/friendships?friend_list=sender_and_receiver`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
-    },
-  });
-  return await response.json();
+  try {
+    const response = await fetch(`${remoteUrl}/api/friendships?friend_list=sender_and_receiver`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function getAllUsersFriendsFromReceiver(userId) {

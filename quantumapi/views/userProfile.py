@@ -11,13 +11,6 @@ from rest_framework.authentication import RemoteUserAuthentication, TokenAuthent
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import IsAuthenticated, AllowAny
-# from rest_framework.authtoken.models import Token
-# from django.contrib.auth import login, authenticate
-# from quantumapi.models import ImageForm
-# from quantumapi.auth0_views import requires_scope
-
 
 class UserProfileSerializer(serializers.ModelSerializer):
 

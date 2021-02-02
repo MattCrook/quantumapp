@@ -10,6 +10,9 @@ from quantumapp.settings import REACT_APP_FORUM_URL
 from django.contrib.auth import get_user_model
 import json
 
+from social_django.views import auth, do_auth
+from social_django.context_processors import backends, user_backends_data
+
 # We know the user is already authenticted with auth0, so there is no way to get to this point
 # without going thru auth0 first from the FE. 
 
@@ -33,9 +36,15 @@ def login_user(request):
             authenticated_user = authenticate(request, username=auth0_uid, password=password)
             if authenticated_user is not None:
                 token = TokenModel.objects.get(user=authenticated_user)
-                # data = json.dumps({"valid": True, "token": token.key})
-                login(request, authenticated_user)
-                return redirect(reverse('quantumforum:group_chat'))
+                if token is not None:
+                    social_user = authenticated_user.social_auth.get(provider='auth0')
+                    backend_data = backends(request)
+                    user_backend = authenticated_user.backend
+                    storage = authenticated_user.storage
+                    backends_data = user_backends_data(authenticated_user, backend_data, storage)
+
+                    login(request, social_user)
+                    return redirect(reverse('quantumforum:group_chat'))
 
             else:
                 print("LOGINDATA", login_form.errors.as_data())

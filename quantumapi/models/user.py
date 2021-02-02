@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .usermanager import CustomUserManager
+from social_django.models import DjangoStorage
 
 
 
@@ -24,7 +25,8 @@ class User(AbstractUser):
 
     # Specifiesthat all objects for the class come from the CustomUserManager
     objects = CustomUserManager()
+    storage = DjangoStorage()
 
 
     def __str__(self):
-        return "{}".format(self.email)
+        return f'{self.email}'

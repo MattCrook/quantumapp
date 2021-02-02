@@ -10,16 +10,6 @@
 
 
 {% block content %}
-<!-- <div>Search Bar</div>
-    <div>Container for Search results</div>
-    <div>Container for selected Users to add to chat</div>
-    <div>Form adding those users to a room, creating a room</div>
-    <div>Button to "Add" and go to room / where websockets will be called.</div>
-    <div>Save rooms when user exits</div>
-    <div>Have something show open rooms to user, or at least group chats they are in.
-
-        Show friends list...show active with like green dot or something (reading the is_active db column)
-    </div> -->
 
 <div class="group_chat_main_container">
     <div class="current_group_chats_container">
@@ -155,22 +145,6 @@
 
 {% block scripts %}
 <script src="{% static 'scripts/eventListeners.js'%}"></script>
+<script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 <script type="module" src="{% static 'scripts/createGroupForm.js'%}"></script>
 {% endblock %}
-
-
-
-
-
-<!-- <div class="new_group_create_form_container" style="display: none;">
-            <form class="new_group_form" action="{% url 'quantumforum:group_chat' %}" method="POST">
-                <label class="group_form_label" for="group_name">Group Chat Name</label>
-                <input class="group_chat_input" id="group_name" type="text" name="group_name"
-                    value="{{ group.name }}" />
-                <label class="group_form_label" for="friends">Invite Friends</label>
-                <input class="group_chat_input_search" id="friends" name="friends" placeholder="Search friends..."
-                    value="{{friend.name}}" />
-
-                <input id="create_group" type="submit" value="Create" />
-            </form>
-        </div> -->

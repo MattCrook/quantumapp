@@ -31,6 +31,7 @@
             <div class="label_wrapper">
                 <div class="label">Quantum Coasters Forum</div>
             </div>
+            {% if user.is_authenticated %}
             <div class="nav_middle">
                 <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn"><i
                         class="fas fa-users"></i> Your Quantum Friends </div>
@@ -42,9 +43,8 @@
                         <i class="fas fa-search"></i>
                         <button class="overlay_close" style="display: none;"></button>
                     </div>
-
-
             </div>
+            {% endif %}
             <div class="nav_end">
                 <div class="nav_name_wrapper">
                     <div class="nav_name">{{user_profile.user.first_name}}</div>
@@ -87,8 +87,10 @@
               </div>
 
       </div>
+      {% if user.is_authenticated %}
     <div id="search_quantum_results" style="display: none;">
     </div>
+    {% endif %}
 
     <div id="status">
     </div>
@@ -149,8 +151,6 @@
     </main>
 
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-    <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
-
 
     {% block scripts %}
     {% endblock scripts %}

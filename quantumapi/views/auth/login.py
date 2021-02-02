@@ -59,14 +59,21 @@ def login_user(request):
                 authenticated_user = authenticate(auth0_identifier=auth0_uid, password=password)
 
                 if authenticated_user is not None:
-                    request_backends = backends(request)
-                    print('request_backends', request_backends)
-                    # auth0_backend = request_backends['backends']['backends'][0]
-                    # backend = authenticated_user.backend
                     remote_user_auth = request.successful_authenticator.authenticate(request)
-                    # backend_data = user_backends_data(authenticated_user, backend, storage=DjangoUserMixin)
-
                     token = TokenModel.objects.get(user=authenticated_user)
+
+                    social_user = authenticated_user.social_auth.get(provider='auth0')
+                    backend_data = backends(request)
+                    print('Login quantumapi:request_backends', backend_data)
+                    user_current_backend = authenticated_user.backend
+                    storage = authenticated_user.storage
+                    user_backend_data = user_backends_data(authenticated_user, backend_data, storage)
+
+                    association = storage.association
+                    code = storage.code
+                    nonce = storage.nonce
+                    partial = storage.partial
+                    user_from_storage = storage.user
 
                     if token is not None:
                         token = TokenModel.objects.get(user=authenticated_user)
@@ -87,7 +94,9 @@ def login_user(request):
                     else:
                         csrf = get_token(request)
 
-                    auth_login(request, authenticated_user, backend='django.contrib.auth.backends.RemoteUserBackend')
+                    # auth_login(request, authenticated_user, backend='django.contrib.auth.backends.RemoteUserBackend')
+                    login(request, social_user)
+
                     auth_user_backends = backends(request)
                     is_active = user_is_active(authenticated_user)
                     is_authenticated = user_is_authenticated(authenticated_user)

@@ -23,6 +23,13 @@ from django.utils.http import (
 
 from social_django.context_processors import backends, user_backends_data
 
+from rest_framework.authentication import authenticate, SessionAuthentication, BasicAuthentication, RemoteUserAuthentication, TokenAuthentication
+from rest_framework.decorators import api_view, renderer_classes, authentication_classes, permission_classes
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+
+
 
 import json
 import jwt
@@ -34,30 +41,18 @@ import os
 redirect_field_name = GROUP_CHAT_REDIRECT_FIELD_NAME
 success_url_allowed_hosts = []
 
-def get_success_url(request):
-    url = get_redirect_url(request)
-    return url or resolve_url(FORUM_LOGIN_REDIRECT_URL)
-
-def get_redirect_url(request):
-    """Return the user-originating redirect URL if it's safe."""
-    redirect_to = GROUP_CHAT_REDIRECT_FIELD_NAME
-    url_is_safe = url_has_allowed_host_and_scheme(url=redirect_to, allowed_hosts=get_success_url_allowed_hosts(request))
-    return redirect_to if url_is_safe else ''
-
-def get_success_url_allowed_hosts(request):
-    return [request.get_host(), *success_url_allowed_hosts]
 
 
-
-
-def index(request, chat_type):
+def index(request, chat_type=None):
     user = request.user
+    chat_type = 'group_chat'
     context = {
-        'CLIENT_URL': REACT_APP_FORUM_URL
+        'CLIENT_URL': REACT_APP_FORUM_URL,
+        'user': user,
     }
     if user.is_authenticated:
         if chat_type == 'group_chat':
-            return redirect(group_chat)
+            return redirect(reverse('quantumforum:group_chat'))
         elif chat_type == 'private_chat':
             return redirect(private_chat)
     else:
@@ -99,14 +94,32 @@ def authenticate_for_group_chat(request, auth_user_id):
             context = {
                 'error': error,
                 'CLIENT_URL': REACT_APP_FORUM_URL,
+                'user': user,
             }
             return render(request, template, context)
 
     else:
         return redirect(reverse('quantumforum:login'))
 
+def get_success_url(request):
+    url = get_redirect_url(request)
+    return url or resolve_url(FORUM_LOGIN_REDIRECT_URL)
+
+def get_redirect_url(request):
+    """Return the user-originating redirect URL if it's safe."""
+    redirect_to = GROUP_CHAT_REDIRECT_FIELD_NAME
+    url_is_safe = url_has_allowed_host_and_scheme(url=redirect_to, allowed_hosts=get_success_url_allowed_hosts(request))
+    return redirect_to if url_is_safe else ''
+
+def get_success_url_allowed_hosts(request):
+    return [request.get_host(), *success_url_allowed_hosts]
 
 
+
+
+
+# @authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 @login_required
 def group_chat(request):
     user = request.user
@@ -119,7 +132,7 @@ def group_chat(request):
     all_users = UserModel.objects.all()
     default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
 
-    # Each join, get all that user has sent, and then all they receieved. 
+    # Each join, get all that user has sent, and then all they received.
     sent_friendships = Friendships.objects.filter(requester_id=user.id)
     received_friendships = Friendships.objects.filter(addressee=user.id)
     accepted_sent_friendships = []
@@ -161,8 +174,6 @@ def group_chat(request):
     has_active_friends = len(active_friends) > 0
 
 
-
-
     friend_data = {
         'accepted_sent_friendships': accepted_sent_friendships,
         'accepted_sent_friend_requests': accepted_sent_friend_requests,
@@ -170,8 +181,6 @@ def group_chat(request):
         'accepted_received_friend_requests': accepted_received_friend_requests,
         'active_friends': active_friends
     }
-
-
 
     template = 'group_chat/group_chat.html'
     context = {

@@ -22,9 +22,9 @@ from allauth.socialaccount.models import SocialToken, SocialApp, SocialLogin, So
 
 from .login import login_user
 from django.middleware.csrf import get_token
-# from social_core.pipeline.social_auth import associate_user
+from social_core.pipeline.social_auth import associate_user
 from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_OPEN_ID_SERVER_URL, SOCIAL_AUTH_AUTH0_SECRET, SOCIAL_AUTH_AUTH0_KEY
-from social_django.context_processors import backends
+from social_django.context_processors import backends, user_backends_data
 from .management_api_services import management_api_oath_endpoint, get_management_api_user
 
 from django.contrib.auth.views import auth_login
@@ -48,9 +48,6 @@ def register_user(request):
     try:
         if request.method == 'POST':
             req_body = json.loads(request.body.decode())
-            request_backends = backends(request)
-            print(request_backends)
-
 
             UserModel = get_user_model()
             user = UserModel.objects.get(auth0_identifier=req_body['auth0_identifier'])
@@ -59,7 +56,7 @@ def register_user(request):
             user.last_name = req_body['last_name']
             user.username = req_body['username']
             user.email = req_body['email']
-            password = req_body['password']
+            password = req_body['auth0_identifier'].split(".")[1]
             user.set_password(password)
             user.save()
 
@@ -73,155 +70,159 @@ def register_user(request):
             authenticated_user = authenticate(auth0_identifier=req_body['auth0_identifier'], password=password)
 
             if authenticated_user is not None:
-                backend = authenticated_user.backend
                 remote_authenticated_user = request.successful_authenticator.authenticate(request)
                 # associate_user('django.contrib.auth.backends.RemoteUserBackend', req_body['uid'], user, req_body['provider'])
-                # UserModel.blacklistedtoken_set.related_manager_cls.create()
-                # UserModel.socialaccount_set.related_manager_cls.create()
-
-                token = TokenModel.objects.create(user=authenticated_user)
-
-                key = token.key
-                # return csrf token for POST form. side effect is have @csrf_protect
-                csrf = get_token(request)
-                provider = req_body['provider']
-                extra_data = req_body['extra_data']
-                id_token = json.loads(req_body['id_token'])
-                nonce = id_token['nonce']
-                exp = id_token['exp']
-                iat = id_token['iat']
-                assoc_type = "username-password-authentication"
-
-                # Changed from user to authenticated_user
-                auth_login(request, authenticated_user, backend='django.contrib.auth.backends.RemoteUserBackend')
-
-                current_user_session = request.session
-                is_session = Session.objects.filter(session_key=current_user_session.session_key).exists()
-                # is_account_email = EmailAddress.objects.filter(user_id=user.id).exists()
-                # is_user_social_auth = UserSocialAuth.objects.filter(user_id=user.id).exists()
-
-                if is_session:
-                    session = Session.objects.get(session_key=current_user_session.session_key)
-                    session.save()
-                else:
-                    session = Session.objects.create(user=authenticated_user)
-                    session.save()
-
-                management_api_token = management_api_oath_endpoint(AUTH0_DOMAIN)
-                management_api_token = json.loads(management_api_token)
-                management_api_jwt = management_api_token['access_token']
-                management_api_user = get_management_api_user(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
+                if remote_authenticated_user is not None:
+                    management_api_token_endpoint = management_api_oath_endpoint(AUTH0_DOMAIN)
+                    management_api_token = json.loads(management_api_token_endpoint)
+                    management_api_jwt = management_api_token['access_token']
+                    management_api_user = get_management_api_user(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
 
 
-                all_transactions = req_body['transactions']
-                transaction_items_keys = all_transactions['transactions'].keys()
-                transactions_values = all_transactions['transactions'].values()
+                    token = TokenModel.objects.create(user=remote_authenticated_user[0])
+                    key = token.key
 
-                transactions = []
-                for t in transactions_values:
-                    transactions.append(t)
+                    extra_data = req_body['extra_data']
+                    extra_data['access_token'] = remote_authenticated_user[1]
+                    social_user = remote_authenticated_user[0].social_auth.get_or_create(user_id=remote_authenticated_user[0].id, provider=req_body['provider'], extra_data=extra_data, uid=req_body['auth0_identifier'].replace(".", "|"))
 
-                codes = []
-                for c in transaction_items_keys:
-                    codes.append(c)
+                    backend_data = backends(request)
+                    user_current_backend = authenticated_user.backend
+                    storage = authenticated_user.storage
+                    # user_backend_data = user_backends_data(authenticated_user, backend_data, storage)
 
+                    association = storage.association
+                    code_from_storage = storage.code
+                    nonce_from_storage = storage.nonce
+                    partial = storage.partial
+                    social_user_from_storage = storage.user
 
-                account_email = EmailAddress.objects.create(
-                    user=authenticated_user,
-                    email=user.email,
-                    verified=True,
-                    primary=True
-                    )
-                email_confirmation = EmailConfirmation.objects.create(
-                    email_address=account_email,
-                    key=session.session_key,
-                    sent=datetime.datetime.now()
-                    )
+                    auth0_backend = backend_data['backends']['backends'][0]
+                    openId_backend = backend_data['backends']['backends'][1]
+                    associated_backends = backend_data['backends'].get('associated')
 
-                user_social_auth = UserSocialAuth.objects.create(
-                    user=authenticated_user,
-                    uid=req_body['uid'],
-                    provider=provider,
-                    extra_data=extra_data
-                    )
+                    # return csrf token for POST form. side effect is have @csrf_protect
+                    csrf = get_token(request)
+                    provider = req_body['provider']
+                    # extra_data = req_body['extra_data']
+                    id_token = json.loads(req_body['id_token'])
+                    nonce = id_token['nonce']
+                    exp = id_token['exp']
+                    iat = id_token['iat']
+                    # assoc_type = "username-password-authentication"
 
+                    all_transactions = req_body['transactions']
+                    transaction_items_keys = all_transactions['transactions'].keys()
+                    transactions_values = all_transactions['transactions'].values()
 
-                code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
-                code = codes[0] if len(codes) > 0 else {}
-                is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists()
+                    transactions = []
+                    for t in transactions_values:
+                        transactions.append(t)
 
-                if is_association:
-                    user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
-                else:
-                    user_association = Association.objects.create(
-                        server_url=AUTH0_OPEN_ID_SERVER_URL,
-                        handle=nonce,
-                        secret=code_verifier,
-                        issued=iat,
-                        lifetime=exp,
-                        assoc_type=assoc_type
+                    codes = []
+                    for c in transaction_items_keys:
+                        codes.append(c)
+
+                    code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                    code = codes[0] if len(codes) > 0 else {}
+
+                    user_association = association.objects.create(
+                            server_url=AUTH0_OPEN_ID_SERVER_URL,
+                            handle=nonce,
+                            secret=code_verifier,
+                            issued=iat,
+                            lifetime=exp,
+                            assoc_type=openId_backend
                         )
 
-                social_auth_nonce = Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
-                user_socialauth_code = Code.objects.create(email=account_email, code=code, verified=True)
+                    social_account = SocialAccount()
+                    social_account.user = authenticated_user
+                    social_account.uid = req_body['uid']
+                    social_account.provider = provider
+                    social_account.extra_data = management_api_user
+                    social_account.save()
 
-                social_account = SocialAccount()
-                social_account.user = authenticated_user
-                social_account.uid = req_body['uid']
-                social_account.provider = provider
-                social_account.extra_data = management_api_user
-                social_account.save()
+                    account_email = EmailAddress.objects.get_or_create(
+                        user=authenticated_user,
+                        email=authenticated_user.email,
+                        verified=True,
+                        primary=True
+                        )
 
-                social_app = SocialApp.objects.get_or_create(
-                    provider=provider,
-                    name="Quantum Coasters",
-                    secret=SOCIAL_AUTH_AUTH0_SECRET,
-                    client_id=AUTH0_CLIENT_ID,
-                    key=SOCIAL_AUTH_AUTH0_KEY
-                    )
+                    social_auth_nonce = nonce_from_storage.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
+                    user_socialauth_code = code_from_storage.objects.create(email=account_email[0], code=code, verified=True)
 
-                time_now = datetime.datetime.now()
-                expires_at = time_now + datetime.timedelta(0, exp)
-                # time = expires_at.time()
+                    social_app = SocialApp.objects.get_or_create(
+                        provider=provider,
+                        name="Quantum Coasters",
+                        secret=SOCIAL_AUTH_AUTH0_SECRET,
+                        client_id=AUTH0_CLIENT_ID,
+                        key=SOCIAL_AUTH_AUTH0_KEY
+                        )
 
-                social_token = SocialToken.objects.create(
-                    app_id=social_app[0].id,
-                    account_id=social_account.id,
-                    token=remote_authenticated_user[1],
-                    token_secret=management_api_jwt,
-                    expires_at=expires_at
-                    )
+                    time_now = datetime.datetime.now()
+                    expires_at = time_now + datetime.timedelta(0, exp)
+                    # time = expires_at.time()
 
-                social_app_to_list = list(social_app)
-                social_app_data = social_app_to_list[0]
+                    social_token = SocialToken.objects.create(
+                        app_id=social_app[0].id,
+                        account_id=social_account.id,
+                        token=id_token,
+                        token_secret=remote_authenticated_user[1],
+                        expires_at=expires_at
+                        )
 
+                    # Changed from user to authenticated_user
+                    login(request, social_user[0].user, backend='quantumapi.auth0_backend.Auth0')
 
-                auth_user = {
-                    "valid": True,
-                    "id": user.id,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "email": user.email,
-                    "username": user.username,
-                    "is_staff": user.is_staff,
-                    "auth0_identifier": user.auth0_identifier,
-                    "QuantumToken": key,
-                    "session": session.session_key,
-                    'csrf': csrf,
-                    'user_social_auth_id': user_social_auth.id,
-                    'account_email_id': account_email.id,
-                    'management_user': management_api_user,
-                    'social_account_id': social_account.id,
-                    'social_app_id': social_app_data.pk,
-                    'social_app_name': social_app_data.name,
-                    "social_token_id": social_token.id,
-                    'association_id': user_association.id,
-                    'email_confirmation': True,
-                    'user_profile_id': new_userprofile.id,
-                }
+                    current_user_session = request.session
+                    is_session = Session.objects.filter(session_key=current_user_session.session_key).exists()
 
-                data = json.dumps({"DjangoUser": auth_user})
-                return HttpResponse(data, content_type='application/json')
+                    if is_session:
+                        session = Session.objects.get(session_key=current_user_session.session_key)
+                    else:
+                        session = Session.objects.create(user=authenticated_user)
+                        session.save()
+
+                    email_confirmation = EmailConfirmation.objects.get_or_create(
+                        email_address=account_email[0],
+                        key=session.session_key,
+                        sent=datetime.datetime.now()
+                        )
+
+                    social_app_to_list = list(social_app)
+                    social_app_data = social_app_to_list[0]
+
+                    auth_user = {
+                        "valid": True,
+                        "id": user.id,
+                        "first_name": user.first_name,
+                        "last_name": user.last_name,
+                        "email": user.email,
+                        "username": user.username,
+                        "is_staff": user.is_staff,
+                        "auth0_identifier": user.auth0_identifier,
+                        "QuantumToken": key,
+                        "session": session.session_key,
+                        'csrf': csrf,
+                        'user_social_auth_id': social_user[0].id,
+                        'account_email_id': account_email[0].id,
+                        'management_user': management_api_user,
+                        'social_account_id': social_account.id,
+                        'social_app_id': social_app_data.pk,
+                        'social_app_name': social_app_data.name,
+                        "social_token_id": social_token.id,
+                        'association_id': user_association.id,
+                        'email_confirmation': True,
+                        'user_profile_id': new_userprofile.id,
+                    }
+
+                    data = json.dumps({"DjangoUser": auth_user})
+                    return HttpResponse(data, content_type='application/json')
+                else:
+                    pass
+            else:
+                pass
 
     except Exception as ex:
         return Response(ex, content_type='application/json')

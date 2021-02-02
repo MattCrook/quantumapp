@@ -8,19 +8,19 @@ from quantumforum.views import redirect_profile as profile
 
 
 
-
-
 app_name = 'quantumforum'
 
 urlpatterns = [
-    # Hits the index first, index checks for login, if not redirects to login page, if so, redirects to requested page. 
+    # Hits the index first, index checks for login, if not redirects to login page, if so, redirects to requested page.
     # path('authenticate/<str:chat_type>/', index, name='index'),
 
     # Will render to default django login form - can't override - must be at registration/login
     # path('accounts', include('django.contrib.auth.urls')),
     # path('', include('django.contrib.auth.urls')),
 
+    path('index/', index, name='index'),
     path('login/auth0', login_user, name='login'),
+    # path('complete/auth0', complete, name='complete'),
     path('logout/', logout_user, name='logout'),
     path('home/', client_home, name='home'),
     path('user/profile/credits', profile, name='profile'),
@@ -30,9 +30,5 @@ urlpatterns = [
     path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
 
     # path('<str:room_name>/', room, name='room'),
-
-    # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
-    # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
-    # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
     # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
 ]

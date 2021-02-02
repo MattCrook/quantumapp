@@ -7,12 +7,16 @@ let userSearchResultRows = [];
 
 // initial load of the dropdown. Shows paginated results, then user can type to filter/ search.
 const loadUsersAndFriends = async () => {
-  const allFriendships = await getAllUsersFriends();
-  setFriends(allFriendships);
-  const allUsers = await getUserList();
-  setUsers(allUsers);
-  initNavSearchInput(users(), friends());
-  handleSearchInput(users(), friends());
+  try {
+    const allFriendships = await getAllUsersFriends();
+    setFriends(allFriendships);
+    const allUsers = await getUserList();
+    setUsers(allUsers);
+    initNavSearchInput(users(), friends());
+    handleSearchInput(users(), friends());
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 function initNavSearchInput(userList, friendsList) {
@@ -128,12 +132,15 @@ const handleClickInInput = () => {
   const toggleNone = () => (searchQuantumResults.style.display = "none");
   const toggleBlock = () => (searchQuantumResults.style.display = "block");
 
-  searchQuantumInput.addEventListener("click", () => {
-    const display = searchQuantumResults.style.display;
-    display === "none" && toggleBlock();
-    display === "block" && toggleNone();
-    toggleOverlay();
-  });
+  if (searchQuantumInput != null) {
+    searchQuantumInput.addEventListener("click", () => {
+      const display = searchQuantumResults.style.display;
+      display === "none" && toggleBlock();
+      display === "block" && toggleNone();
+      toggleOverlay();
+    });
+  }
+
 };
 
 const handleSearchInput = (userList, friendList) => {

@@ -21,14 +21,18 @@ let group = new Set()
 
 
 const initFriendsSearchAndCreateGroupForm = async () => {
-  const searchInput = document.getElementById("friends_search");
-  const results = document.getElementById("results");
-  const addedToGroupList = document.querySelector(".invitee_list");
-  let search_term = '';
+  try {
+    const searchInput = document.getElementById("friends_search");
+    const results = document.getElementById("results");
+    const addedToGroupList = document.querySelector(".invitee_list");
+    let search_term = '';
 
-  const allFriendships = await getAllUsersFriends();
-  friendShips.add(allFriendships)
-  setFormState(friendShips, searchInput, search_term, results, addedToGroupList)
+    const allFriendships = await getAllUsersFriends();
+    friendShips.add(allFriendships);
+    setFormState(friendShips, searchInput, search_term, results, addedToGroupList);
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 
