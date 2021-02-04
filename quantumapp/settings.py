@@ -108,9 +108,9 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
@@ -124,7 +124,7 @@ REST_FRAMEWORK = {
 
 # env variables sent through context to templates, redirect to Client React App URLS
 REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
-REACT_APP_HOME = 'http://localhost:3000/forum'
+REACT_APP_HOME = 'http://localhost:3000/home'
 REACT_APP_USER_PROFILE = 'http://localhost:3000/user/profile/credits'
 
 
@@ -192,13 +192,13 @@ JWT_AUTH = {
 }
 
 
-AUTHENTICATION_BACKENDS = {
+AUTHENTICATION_BACKENDS = (
     'social_core.backends.open_id.OpenIdAuth',
     'quantumapi.auth0_backend.Auth0',
-    'django.contrib.auth.backends.ModelBackend',
     'django.contrib.auth.backends.RemoteUserBackend',
+    'django.contrib.auth.backends.ModelBackend'
     # 'social_core.backends.auth0.Auth0OAuth2',
-}
+)
 # FOR DJANGO WEB APP BACKEND
 # 'quantumapi.auth0_views.Auth0',
 
@@ -304,19 +304,30 @@ LOGIN_REDIRECT_URL = '/home'
 LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
 
-FORUM_LOGIN_REDIRECT_URL = '/login'
-GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat'
+
+GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
+
+
 
 
 # Social Auth Configs (For Django full stack app)
 # https://readthedocs.org/projects/python-social-auth/downloads/pdf/latest/
 
+# The OpenID backend will check for a username key in the values returned by the server, but default to first-name
+# + last-name if that key is missing. It’s possible to indicate the username key in the values If the username is under
+# a different key with a setting, but backends should have defined a default value.
+# SOCIAL_AUTH_FEDORA_USERNAME_KEY = 'email'
+
 # authorize endpoint in Auth0 backend to authorize user.
-SOCIAL_AUTH_LOGIN_URL = '/authorize'
+# SOCIAL_AUTH_LOGIN_URL = '/authorize/'
+SOCIAL_AUTH_LOGIN_URL = '/forum/login/'
+
 
 # Redirect url that Auth0 will redirect to after auth0/complete
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/group_chat/'
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/index/'
+
 
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
@@ -328,8 +339,11 @@ SOCIAL_AUTH_USER_MODEL = 'quantumapi.User'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email', 'username']
 SOCIAL_AUTH_CLEAN_USERNAMES = True
-SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
-    'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', ]
+# SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
+#     'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', 'https://dev-405n1e6w.auth0.com/'
+#     ]
+
+# SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', 'localhost', '8000',]
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
@@ -338,18 +352,15 @@ SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
-    'social_core.pipeline.social_auth.auth_allowed',
-
-    # 'social_core.pipeline.mail.mail_validation',
-
+    'social_core.pipeline.mail.mail_validation',
     'social_core.pipeline.social_auth.associate_by_email',
     'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-
     'social_core.pipeline.debug.debug',
 )
 

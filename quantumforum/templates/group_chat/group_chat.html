@@ -11,6 +11,7 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
 <div class="group_chat_main_container">
     <div class="current_group_chats_container">
         <div class="current_group_chats_title_wrapper">
@@ -139,7 +140,11 @@
         </div>
     </div>
 </div>
-
+{% else %}
+<div>
+    <a href="{url 'quantumforum:error' }">Error Page</a>
+</div>
+{% endif %}
 
 {% endblock %}
 

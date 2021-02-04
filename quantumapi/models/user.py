@@ -11,7 +11,7 @@ class User(AbstractUser):
     last_name = models.CharField(('last name'), max_length=50, blank=True)
     username = models.CharField(('username'), max_length=50, blank=True, null=True)
     email = models.CharField(('email'), max_length=50, blank=True)
-    password = models.CharField(('password'), max_length=500, unique=True)
+    password = models.CharField(('password'), max_length=500, blank=True, null=True)
     auth0_identifier = models.CharField(('auth0_identifier'), max_length=150, unique=True)
 
 

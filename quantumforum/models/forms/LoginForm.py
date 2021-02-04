@@ -6,12 +6,13 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(attrs={'autofocus': True}))
-    password = forms.CharField(label=_("Password"), strip=False, widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),)
+    email = forms.EmailField(widget=forms.TextInput(attrs={'autofocus': True}),)
+    # password = forms.CharField(label=_("Password"), strip=False, widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),)
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password',)
+        fields = ('email',)
+        # fields = ('email', 'password',)
 
 
 

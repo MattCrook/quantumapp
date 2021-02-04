@@ -1,10 +1,10 @@
 from functools import wraps
 from urllib import request
 from jose import jwt
-# from social_core.backends.oauth import BaseOAuth2
 from social_core.backends.open_id import BaseOAuth2
 from django.http import JsonResponse
-import jwt
+# from social_core.backends.oauth import BaseOAuth2
+# import jwt
 
 
 
@@ -66,6 +66,7 @@ class Auth0(BaseOAuth2):
         id_token = response.get('id_token')
         jwks = request.urlopen('https://' + self.setting('DOMAIN') + '/.well-known/jwks.json')
         issuer = 'https://' + self.setting('DOMAIN') + '/'
+        print(issuer)
         audience = self.setting('KEY')  # CLIENT_ID
         payload = jwt.decode(id_token, jwks.read(), algorithms=['RS256'], audience=audience, issuer=issuer)
         strategy = self.strategy

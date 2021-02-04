@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, resolve_url
 from django.contrib.auth.decorators import login_required
 from quantumapi.models import Credential, Messages, UserProfile
+from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.sessions.models import Session
 from quantumforum.models import Friendships, FriendRequest
-from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, FORUM_LOGIN_REDIRECT_URL, GROUP_CHAT_REDIRECT_FIELD_NAME, REACT_APP_HOME
+from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, GROUP_CHAT_REDIRECT_FIELD_NAME, REACT_APP_HOME
 from django.contrib.auth import authenticate, get_backends
 # from social_django.context_processors import backends
 from django.contrib.auth import get_user_model
@@ -28,6 +30,10 @@ from rest_framework.decorators import api_view, renderer_classes, authentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from social_core.pipeline.user import user_details
+from social_core.utils import get_strategy, module_member
+
+
 
 
 
@@ -36,7 +42,7 @@ import jwt
 import requests
 import os
 
-
+from social_core.actions import user_is_authenticated
 
 redirect_field_name = GROUP_CHAT_REDIRECT_FIELD_NAME
 success_url_allowed_hosts = []
@@ -44,7 +50,9 @@ success_url_allowed_hosts = []
 
 
 def index(request, chat_type=None):
+    print("IN INdex")
     user = request.user
+    # is_authenticated = user_is_authenticated(user)
     chat_type = 'group_chat'
     context = {
         'CLIENT_URL': REACT_APP_FORUM_URL,
@@ -61,58 +69,8 @@ def index(request, chat_type=None):
 
 
 def home(request):
+    print("OOPS in home.")
     pass
-
-
-
-def authenticate_for_group_chat(request, auth_user_id):
-    UserModel = get_user_model()
-    user = UserModel.objects.get(pk=auth_user_id)
-    backend_list = get_backends()
-    cookies = request.COOKIES
-
-    remote_user_backend = backend_list[1]
-    model_backend = backend_list[0]
-    remote_user = remote_user_backend.get_user(auth_user_id)
-    # Use the remote user authenticate to auth wih Auth0...Auth0 backend?
-    can_authenticate = remote_user_backend.user_can_authenticate(remote_user)
-
-    if can_authenticate is not False:
-        secret = remote_user.auth0_identifier.split(".")[1]
-        username = remote_user.auth0_identifier
-
-        authenticated_user = authenticate(request, username=username, password=secret)
-        # authenticated_user = authenticate(remote_user=remote_user)
-        if authenticated_user is not None:
-            login(request, authenticated_user)
-            return HttpResponseRedirect(get_success_url(request))
-
-        else:
-            # Return error page and Login page if auth doesn't work.
-            template = 'errors/error.html'
-            error = 'Oops! Something went wrong.'
-            context = {
-                'error': error,
-                'CLIENT_URL': REACT_APP_FORUM_URL,
-                'user': user,
-            }
-            return render(request, template, context)
-
-    else:
-        return redirect(reverse('quantumforum:login'))
-
-def get_success_url(request):
-    url = get_redirect_url(request)
-    return url or resolve_url(FORUM_LOGIN_REDIRECT_URL)
-
-def get_redirect_url(request):
-    """Return the user-originating redirect URL if it's safe."""
-    redirect_to = GROUP_CHAT_REDIRECT_FIELD_NAME
-    url_is_safe = url_has_allowed_host_and_scheme(url=redirect_to, allowed_hosts=get_success_url_allowed_hosts(request))
-    return redirect_to if url_is_safe else ''
-
-def get_success_url_allowed_hosts(request):
-    return [request.get_host(), *success_url_allowed_hosts]
 
 
 
@@ -123,7 +81,9 @@ def get_success_url_allowed_hosts(request):
 @login_required
 def group_chat(request):
     user = request.user
-    session = request.session
+    session_key = request.session.session_key
+    session = Session.objects.get(session_key=session_key)
+    decoded_session_data = request.session.decode(session.session_data)
     UserModel = get_user_model()
     backend_list = get_backends()
     auth_user_backends = backends(request)
@@ -141,8 +101,6 @@ def group_chat(request):
     accepted_received_friend_requests = []
     quantum_friends = []
     active_friends  = []
-
-
 
     # loop thru each join and get the friend request object.
     for f in sent_friendships:
@@ -192,7 +150,6 @@ def group_chat(request):
         'default_profile_pic': default_profile_pic,
         'has_active_friends': has_active_friends,
         'active_friends': active_friends,
-
     }
     return render(request, template, context)
 
@@ -255,6 +212,19 @@ def get_user(uid):
     return userdict
 
 
+
+def error(request):
+    template = 'errors/error.html'
+    error = 'Oops! Something went wrong.'
+    context = {
+            'error': error,
+        }
+    return render(request, template, context)
+
+
+
+
+
 # def room(request, room_name):
 #     if room_name == 'private_message':
 #         if request.COOKIES and request.COOKIES['session']:
@@ -295,3 +265,55 @@ def get_user(uid):
 #     login(request, user)
 #     data = {'id': user.id, 'username': user.username}
 #     return HttpResponse(json.dumps(data), mimetype='application/json')
+
+
+
+
+# def authenticate_for_group_chat(request, auth_user_id):
+#     UserModel = get_user_model()
+#     user = UserModel.objects.get(pk=auth_user_id)
+#     backend_list = get_backends()
+#     cookies = request.COOKIES
+
+#     remote_user_backend = backend_list[1]
+#     model_backend = backend_list[0]
+#     remote_user = remote_user_backend.get_user(auth_user_id)
+#     # Use the remote user authenticate to auth wih Auth0...Auth0 backend?
+#     can_authenticate = remote_user_backend.user_can_authenticate(remote_user)
+
+#     if can_authenticate is not False:
+#         secret = remote_user.auth0_identifier.split(".")[1]
+#         username = remote_user.auth0_identifier
+
+#         authenticated_user = authenticate(request, username=username, password=secret)
+#         # authenticated_user = authenticate(remote_user=remote_user)
+#         if authenticated_user is not None:
+#             login(request, authenticated_user)
+#             return HttpResponseRedirect(get_success_url(request))
+
+#         else:
+#             # Return error page and Login page if auth doesn't work.
+#             template = 'errors/error.html'
+#             error = 'Oops! Something went wrong.'
+#             context = {
+#                 'error': error,
+#                 'CLIENT_URL': REACT_APP_FORUM_URL,
+#                 'user': user,
+#             }
+#             return render(request, template, context)
+
+#     else:
+#         return redirect(reverse('quantumforum:login'))
+
+# def get_success_url(request):
+#     url = get_redirect_url(request)
+#     return url or resolve_url(FORUM_LOGIN_REDIRECT_URL)
+
+# def get_redirect_url(request):
+#     """Return the user-originating redirect URL if it's safe."""
+#     redirect_to = GROUP_CHAT_REDIRECT_FIELD_NAME
+#     url_is_safe = url_has_allowed_host_and_scheme(url=redirect_to, allowed_hosts=get_success_url_allowed_hosts(request))
+#     return redirect_to if url_is_safe else ''
+
+# def get_success_url_allowed_hosts(request):
+#     return [request.get_host(), *success_url_allowed_hosts]

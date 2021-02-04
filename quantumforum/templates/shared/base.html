@@ -151,6 +151,22 @@
     </main>
 
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    <script type="text/javascript">
+        const handleNavProfileDropdown = () => {
+            const profileDropdownContainer = document.getElementById("profile_dropdown_container");
+            const navImage = document.querySelector(".nav_image");
+            const close = () => (profileDropdownContainer.style.display = "none");
+            const open = () => (profileDropdownContainer.style.display = "block");
+
+            navImage.addEventListener("click", () => {
+              const display = profileDropdownContainer.style.display;
+              display === "none" && open();
+              display === "block" && close();
+            });
+          };
+
+          handleNavProfileDropdown();
+    </script>
 
     {% block scripts %}
     {% endblock scripts %}
