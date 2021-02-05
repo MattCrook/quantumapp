@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from quantumapi.models import Credential, Messages, UserProfile
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.sessions.models import Session
-from quantumforum.models import Friendships, FriendRequest
-from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, GROUP_CHAT_REDIRECT_FIELD_NAME, REACT_APP_HOME
+from quantumforum.models import Friendships, FriendRequest, GroupChat, GroupMembersJoin
+from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, REACT_APP_HOME
 from django.contrib.auth import authenticate, get_backends
 # from social_django.context_processors import backends
 from django.contrib.auth import get_user_model
@@ -34,9 +34,7 @@ from social_core.pipeline.user import user_details
 from social_core.utils import get_strategy, module_member
 
 
-
-
-
+import datetime
 import json
 import jwt
 import requests
@@ -44,8 +42,8 @@ import os
 
 from social_core.actions import user_is_authenticated
 
-redirect_field_name = GROUP_CHAT_REDIRECT_FIELD_NAME
-success_url_allowed_hosts = []
+# redirect_field_name = GROUP_CHAT_REDIRECT_FIELD_NAME
+# success_url_allowed_hosts = []
 
 
 
@@ -80,78 +78,113 @@ def home(request):
 # @permission_classes([IsAuthenticated])
 @login_required
 def group_chat(request):
-    user = request.user
-    session_key = request.session.session_key
-    session = Session.objects.get(session_key=session_key)
-    decoded_session_data = request.session.decode(session.session_data)
-    UserModel = get_user_model()
-    backend_list = get_backends()
-    auth_user_backends = backends(request)
+    if request.method == 'GET':
+        user = request.user
+        session_key = request.session.session_key
+        session = Session.objects.get(session_key=session_key)
+        decoded_session_data = request.session.decode(session.session_data)
+        UserModel = get_user_model()
+        backend_list = get_backends()
+        auth_user_backends = backends(request)
 
-    user_profile = UserProfile.objects.get(user_id=user.id)
-    all_users = UserModel.objects.all()
-    default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
+        user_profile = UserProfile.objects.get(user_id=user.id)
+        all_users = UserModel.objects.all()
+        default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
 
-    # Each join, get all that user has sent, and then all they received.
-    sent_friendships = Friendships.objects.filter(requester_id=user.id)
-    received_friendships = Friendships.objects.filter(addressee=user.id)
-    accepted_sent_friendships = []
-    accepted_sent_friend_requests = []
-    accepted_received_friendships = []
-    accepted_received_friend_requests = []
-    quantum_friends = []
-    active_friends  = []
+        # Each join, get all that user has sent, and then all they received.
+        sent_friendships = Friendships.objects.filter(requester_id=user.id)
+        received_friendships = Friendships.objects.filter(addressee=user.id)
+        accepted_sent_friendships = []
+        accepted_sent_friend_requests = []
+        accepted_received_friendships = []
+        accepted_received_friend_requests = []
+        quantum_friends = []
+        active_friends  = []
 
-    # loop thru each join and get the friend request object.
-    for f in sent_friendships:
-        friendship_id = f.id
-        is_friend_request = FriendRequest.objects.filter(sender_and_receiver=friendship_id).exists()
-        if is_friend_request is not None:
-            friend_request = FriendRequest.objects.get(sender_and_receiver=friendship_id)
-            if friend_request.status_code.code == '1':
-                accepted_sent_friendships.append(f)
-                accepted_sent_friend_requests.append(friend_request)
-                addressee = UserModel.objects.get(pk=f.addressee_id)
-                quantum_friends.append(addressee)
+        # loop thru each join and get the friend request object.
+        for f in sent_friendships:
+            friendship_id = f.id
+            is_friend_request = FriendRequest.objects.filter(sender_and_receiver=friendship_id).exists()
+            if is_friend_request:
+                friend_request = FriendRequest.objects.get(sender_and_receiver=friendship_id)
+                if friend_request.status_code.code == '1':
+                    accepted_sent_friendships.append(f)
+                    accepted_sent_friend_requests.append(friend_request)
+                    addressee = UserModel.objects.get(pk=f.addressee_id)
+                    quantum_friends.append(addressee)
 
-    for f in received_friendships:
-        friendship_id = f.id
-        is_friend_request = FriendRequest.objects.filter(sender_and_receiver=friendship_id).exists()
-        if is_friend_request is not None:
-            friend_request = FriendRequest.objects.filter(sender_and_receiver=friendship_id).exists()
-            if friend_request.status_code.code == '1':
-                accepted_received_friendships.append(f)
-                accepted_received_friend_requests.append(friend_request)
-                requester = UserModel.objects.get(pk=f.requester_id)
-                quantum_friends.append(requester)
+        for f in received_friendships:
+            friendship_id = f.id
+            is_friend_request = FriendRequest.objects.filter(sender_and_receiver=friendship_id).exists()
+            if is_friend_request:
+                friend_request = FriendRequest.objects.get(sender_and_receiver=friendship_id)
+                if friend_request.status_code.code == '1':
+                    accepted_received_friendships.append(f)
+                    accepted_received_friend_requests.append(friend_request)
+                    requester = UserModel.objects.get(pk=f.requester_id)
+                    quantum_friends.append(requester)
 
-    for friend in quantum_friends:
-        if friend.is_active == True:
-            active_friends.append(friend)
+        for friend in quantum_friends:
+            if friend.is_active == True:
+                active_friends.append(friend)
 
-    has_active_friends = len(active_friends) > 0
+        has_active_friends = len(active_friends) > 0
+
+        friend_data = {
+            'accepted_sent_friendships': accepted_sent_friendships,
+            'accepted_sent_friend_requests': accepted_sent_friend_requests,
+            'accepted_received_friendships': accepted_received_friendships,
+            'accepted_received_friend_requests': accepted_received_friend_requests,
+            'active_friends': active_friends
+        }
+
+        template = 'group_chat/group_chat.html'
+        context = {
+            'user': user,
+            'user_profile': user_profile,
+            'all_users': all_users,
+            'friend_data': friend_data,
+            'quantum_friends': quantum_friends,
+            'default_profile_pic': default_profile_pic,
+            'has_active_friends': has_active_friends,
+            'active_friends': active_friends,
+        }
+        return render(request, template, context)
+
+    if request.method == 'POST':
+        try:
+            # form_data = request.POST
+            participant_ids_from_form_data = request.POST.get('participants', None)
+            group_name = request.POST.get('group_name')
+            all_users_in_group = set()
+            UserModel = get_user_model()
+
+            for participant_id in participant_ids_from_form_data:
+                user_profile = UserProfile.objects.get(pk=participant_id)
+                all_users_in_group.add(user_profile)
+
+            all_group_members = list(all_users_in_group)
+
+            new_group = GroupChat()
+            new_group.name = group_name
+            new_group.members = all_group_members
+            new_group.created_by = request.user
+            new_group.created_at = datetime.datetime.now()
+            # new_group.is_valid()
+            new_group.save()
+
+            for user in all_group_members:
+                new_group_members_join = GroupMembersJoin()
+                new_group_members_join.user_profile = user
+                new_group_members_join.group = new_group
+                new_group_members_join.save()
 
 
-    friend_data = {
-        'accepted_sent_friendships': accepted_sent_friendships,
-        'accepted_sent_friend_requests': accepted_sent_friend_requests,
-        'accepted_received_friendships': accepted_received_friendships,
-        'accepted_received_friend_requests': accepted_received_friend_requests,
-        'active_friends': active_friends
-    }
+        except Exception as ex:
+            print(ex.args)
 
-    template = 'group_chat/group_chat.html'
-    context = {
-        'user': user,
-        'user_profile': user_profile,
-        'all_users': all_users,
-        'friend_data': friend_data,
-        'quantum_friends': quantum_friends,
-        'default_profile_pic': default_profile_pic,
-        'has_active_friends': has_active_friends,
-        'active_friends': active_friends,
-    }
-    return render(request, template, context)
+        return redirect(reverse('quantumforum:group_chat'))
+
 
 
 @login_required

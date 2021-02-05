@@ -72,12 +72,6 @@ def login_user(request):
                         social_user = authenticated_user.social_auth.get(provider='auth0')
                         remote_authenticated_user = remote_user_auth[0]
 
-                        # backend_data = backends(request)
-                        # user_current_backend = authenticated_user.backend
-                        # storage = authenticated_user.storage
-                        # user_backend_data = user_backends_data(remote_authenticated_user, backend_data, storage)
-                        # print("user_backend_data: login.py:", user_backends_data)
-
                         if user_django_token is not None:
                             token = user_django_token
                         else:

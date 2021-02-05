@@ -72,25 +72,20 @@ def login_user(request):
 
 
                     else:
-                        print("LOGINDATA2", login_form.errors.as_data())
-                        error_message = login_form.errors.as_data()
+                        error_message = "User not found. Please provide a valid email."
                         messages.add_message(request, messages.ERROR, error_message)
                         return redirect(reverse('quantumforum:login'))
-                else:
-                    print("LOGINDATA3", login_form.errors.as_data())
-                    error_message = "Incorrect Email or Password."
-                    messages.add_message(request, messages.ERROR, error_message)
-                    return redirect(reverse('quantumforum:login'))
+
             except Exception as ex:
                 error_message = "Incorrect Email or Password."
                 messages.add_message(request, messages.ERROR, error_message)
-                print(ex.args)
+                print("[ERRORS]", ex.args)
                 return redirect(reverse('quantumforum:login'))
         else:
-            print("LOGINDATA4", login_form.errors.as_data())
             error_message = login_form.errors.as_data()
-            messages.add_message(request, messages.ERROR, error_message['email'][0])
-            return redirect(reverse('quantumforum:login'))
+            if 'email' in error_message:
+                messages.add_message(request, messages.ERROR, list(error_message['email'][0])[0])
+                return redirect(reverse('quantumforum:login'))
 
     else:
         login_form = LoginForm()

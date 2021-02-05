@@ -5,9 +5,12 @@
 
 
 {% block content %}
-<div class="login-container">
-    <div class="login-card">
-        <h2>Login</h2>
+<div id="login_container" class="login-container">
+    <div id="login_card" class="login-card" style="display: none;">
+        <div class="login_card_title">
+            <h2>Login</h2>
+            <button class="card_close"></button>
+        </div>
         <div class="login_sub_header">Superuser or SysAdmin Accounts</div>
         <form action="{% url 'quantumforum:login' %}" method="POST">
             {% csrf_token %}
@@ -38,7 +41,7 @@
             </button>
             <button id="login_with_email" class="btn btn-primary mb-2">
                 <i class="fas fa-envelope"></i>
-                <a href="{% url 'social:begin' 'auth0' %}">Login with Email</a>
+                <a>Login with Email</a>
             </button>
             <button id="login_help" class="btn btn-primary mb-2">
                 <i class="fas fa-question-circle"></i>
@@ -53,3 +56,38 @@
     </p>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+
+    const showLoginWithEmailCard = () => {
+        let loginCard = document.getElementById("login_card");
+        let loginWithEmailButton = document.getElementById("login_with_email");
+        let socialButtonsContainer = document.getElementById("row");
+        const close = () => (loginCard.style.display = "none");
+        const open = () => (loginCard.style.display = "block");
+        const addMarginSocialLoginRow = () => socialButtonsContainer.style.margin = "0% 25% 3% 0.5%";
+        const subtractMarginSocialLoginRow = () => socialButtonsContainer.style.margin = "10% 25% 3% 0.5%";
+
+        loginWithEmailButton.addEventListener("click", () => {
+            const loginCardDisplay = loginCard.style.display;
+            loginCardDisplay === "none" && open() && addMarginSocialLoginRow();
+            loginCardDisplay === "block" && close() && subtractMarginSocialLoginRow();
+        });
+    };
+
+    const cardClose = () => {
+        let cardCloseButton = document.querySelector(".card_close");
+        let loginCard = document.getElementById("login_card");
+        let socialButtonsContainer = document.getElementById("row");
+        cardCloseButton.addEventListener("click", () => {
+            loginCard.style.display = "none";
+            socialButtonsContainer.style.margin = "10% 25% 3% 0.5%";
+        });
+    };
+
+    showLoginWithEmailCard();
+    cardClose();
+
+</script>
+{% endblock%}

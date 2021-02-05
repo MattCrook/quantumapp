@@ -363,6 +363,13 @@ body {
   margin-bottom: 12%;
 }
 
+.no_friends {
+  color: rgb(201, 201, 201);
+  margin-left: 46%;
+  margin-top: 4%;
+  font: 150 1em helvetica neue, open sans, sans-serif;
+}
+
 #friend_card_container_1 {
   display: flex;
   justify-content: stretch;

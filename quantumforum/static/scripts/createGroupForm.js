@@ -125,8 +125,7 @@ const renderAddedUserToInviteList = (e, user, addedToGroupList) => {
   const newParticipantRow = invitedUserToGroup(user);
   addedToGroupList.innerHTML += newParticipantRow;
   addCheckIconAfterAddingUser(e);
-
-}
+};
 
 
 const addCheckIconAfterAddingUser = (e) => {
@@ -139,7 +138,7 @@ const addCheckIconAfterAddingUser = (e) => {
   parentContainer.innerHTML = "";
   const checkIcon = renderCheckIcon(uid);
   parentContainer.innerHTML += checkIcon;
-}
+};
 
 const toggleAddPlusIcon = (e) => {
   e.preventDefault();
@@ -295,6 +294,7 @@ function invitedUserToGroup(userProfile) {
     <div class="participant_item_container" data-key="${userProfile.id}">
       <div class="participant_item_wrapper_1">
         <li class="participant_item"> ${userProfile.user.first_name} ${userProfile.user.last_name}</li>
+        <input type="hidden" name="participants" value="${userProfile.id}"/>
       </div>
       <div class="participant_item_wrapper_2">
         <button class="remove_participant" data-id="${userProfile.id}"></button>

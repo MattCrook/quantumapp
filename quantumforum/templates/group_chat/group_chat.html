@@ -43,6 +43,8 @@
                     class="tab">New Group Chat</label>
                 <div class="login-form">
                     <form class="sign-in-htm" action="{% url 'quantumforum:group_chat' %}" method="POST">
+                        {% csrf_token %}
+
                         <div class="group">
                             <label for="group_name" class="label">Group Name</label>
                             <input id="group_name" type="text" class="input" name="group_name" autofocus />
@@ -50,28 +52,32 @@
                         <div class="group">
                             <label for="participants" class="label">Participants</label>
                             <div href="#modal-5" data-micromodal-trigger="modal-5" class="add_new_participant_btn">Add<i class="fas fa-user-plus"></i></div>
-                            <!-- <input id="participants" type="text" class="input" name="participants" placeholder="Search for users..." /> -->
                         </div>
                         <div id="submit_group_btn" class="group">
                             <input id="button_submit_group" type="submit" class="button" value="Create Group">
                         </div>
+
                         <div class="hr"></div>
+
                         <div class="list_of_participants_container">
                             <div class="list_of_participants_title_wrapper">
                                 <div class="invitee_list_title">Users Invited To This Group Chat</div>
                                 <div class="clear_all_button">Clear All</div>
                             </div>
-                            <ul class="invitee_list">
-                            </ul>
+
+                                <ul class="invitee_list">
+                                </ul>
                         </div>
                     </form>
                 </div>
+
                 <div class="signature_group">
                     <p id="signature_font_group">
                         Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a> <i
                             class="fas fa-trademark"></i>
                     </p>
                 </div>
+
             </div>
         </div>
     </div>

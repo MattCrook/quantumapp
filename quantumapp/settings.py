@@ -305,7 +305,7 @@ LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
+# GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
 
 
 
