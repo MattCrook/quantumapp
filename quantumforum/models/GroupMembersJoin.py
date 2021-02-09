@@ -6,7 +6,6 @@ from quantumapi.models import UserProfile
 
 
 class GroupMembersJoin(models.Model):
-    # UserModel = get_user_model()
 
     group = models.ForeignKey("GroupChat", null=True, blank=True, on_delete=models.CASCADE)
     user_profile = models.ForeignKey(UserProfile, null=True, blank=True, on_delete=models.CASCADE)

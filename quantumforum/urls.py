@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 from django.conf.urls import include
 from django.contrib.auth import views as auth_views
-from quantumforum.views import index, login_user, logout_user, group_chat, private_chat, room
+from quantumforum.views import index, login_user, logout_user, group_chat, private_chat, staging_room, room
 from quantumforum.views import redirect_home as client_home
 from quantumforum.views import redirect_profile as profile
 from quantumforum.views import error as error_view
@@ -22,15 +22,15 @@ urlpatterns = [
 
     path('index/', index, name='index'),
     path('forum/login/', login_user, name='login'),
-    path('social-auth/', include('social_django.urls', namespace='social')),
+    path('', include('social_django.urls', namespace='social')),
     path('group_chat/', group_chat, name='group_chat'),
-    # path('complete/auth0', complete, name='complete'),
     path('logout/', logout_user, name='logout'),
     path('home/', client_home, name='home'),
     path('user/profile/credits', profile, name='profile'),
-    path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
+    # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
+    path('private_chat/', private_chat, name='private_chat'),
+    path('group_chat/<int:group_id>/confirm/', staging_room, name='staging_room'),
     path('error', error_view, name='error'),
 
     # path('<str:room_name>/', room, name='room'),
-    # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
 ]

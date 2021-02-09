@@ -14,6 +14,7 @@ from rest_framework_jwt.blacklist.models import BlacklistedToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from quantumapp.settings import AUTH0_CLIENT_ID, AUTH0_DOMAIN, API_IDENTIFIER, SOCIAL_AUTH_AUTH0_KEY
 import datetime
 import psycopg2
 import json
@@ -21,10 +22,24 @@ import json
 
 
 class CredentialsSerializer(serializers.ModelSerializer):
+    user_sub = serializers.CharField()
+    domain = serializers.CharField()
+    client_id = serializers.CharField()
+    redirect_uri = serializers.CharField()
+    audience = serializers.CharField()
+    scope = serializers.CharField()
+    transactions = serializers.DictField()
+    nonce = serializers.CharField()
+    access_token = serializers.CharField()
+    django_token = serializers.CharField()
+    session_id = serializers.CharField()
+    session = serializers.CharField()
+    csrf_token = serializers.CharField()
+    cookies = serializers.DictField()
+    updated_at = serializers.DateTimeField()
     class Meta:
         model = CredentialModel
-        fields = ('id', 'user_id', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'cookies', 'updated_at')
-        # fields = '__all__'
+        fields = ('id', 'user_sub', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'csrf_token', 'cookies', 'updated_at')
         depth = 1
 
 
@@ -77,11 +92,11 @@ class Credentials(ViewSet):
                 if 'session_id' in request.data and request.data['session_id']:
                     session_id = request.data['session_id']
                     session = Session.objects.get(session_key=session_id)
-                    decoded_session = session.get_decoded()
+                    decoded_session = request.session.decode(session.session_data)
 
                 elif request.session and 'session_key' in request.session:
                     session = Session.objects.get(session_key=request.session.session_key)
-                    decoded_session = session.get_decoded()
+                    decoded_session = request.session.decode(session.session_data)
 
                 else:
                     print("Session Error: No Session tied to user.")
@@ -102,8 +117,8 @@ class Credentials(ViewSet):
                     auth0data = CredentialModel.objects.get(user_id=user.id)
                     auth0data.user = user
                     auth0data.user_sub = request.data['user_sub']
-                    auth0data.domain = request.data["domain"]
-                    auth0data.client_id = request.data["client_id"]
+                    auth0data.domain = API_IDENTIFIER
+                    auth0data.client_id = SOCIAL_AUTH_AUTH0_KEY
                     auth0data.redirect_uri = request.data["redirect_uri"]
                     auth0data.audience = request.data["audience"]
                     auth0data.scope = request.data["scope"]
@@ -116,59 +131,57 @@ class Credentials(ViewSet):
                     auth0data.csrf_token = csrftoken
                     auth0data.cookies = json.dumps(request.data["cookies"])
                     auth0data.updated_at = request.data["updated_at"]
+
+                    credentials = {
+                        'user': user,
+                        'user_sub': user_sub,
+                        'domain': API_IDENTIFIER,
+                        'client_id': SOCIAL_AUTH_AUTH0_KEY,
+                        'redirect_uri': request.data["redirect_uri"],
+                        'audience': request.data["audience"],
+                        'scope': request.data["scope"],
+                        'transactions': json.loads(transactions),
+                        'nonce': request.data["nonce"],
+                        'access_token': request.data["access_token"],
+                        'django_token': request.data["django_token"],
+                        'session': decoded_session,
+                        'session_id': session_id,
+                        'csrf_token': csrftoken,
+                        'cookies': request.data["cookies"],
+                        'updated_at': request.data["updated_at"],
+                    }
+                    serializer = CredentialsSerializer(data=credentials, context={'request': request})
+                    serializer.is_valid()
                     auth0data.save()
-                    # serializer = CredentialsSerializer(data=request.data)
-                    # serializer.is_valid()
-                    # serializer.save()
-                    serializer = CredentialsSerializer(auth0data , context={'request': request})
                     return Response(serializer.data)
                 else:
-                    newAuth0data = CredentialModel()
-                    newAuth0data.user = user
-                    newAuth0data.user_sub = request.data['user_sub']
-                    newAuth0data.domain = request.data["domain"]
-                    newAuth0data.client_id = request.data["client_id"]
-                    newAuth0data.redirect_uri = request.data["redirect_uri"]
-                    newAuth0data.audience = request.data["audience"]
-                    newAuth0data.scope = request.data["scope"]
-                    newAuth0data.transactions = transactions
-                    newAuth0data.nonce = request.data["nonce"]
-                    newAuth0data.access_token = request.data["access_token"]
-                    newAuth0data.django_token = request.data["django_token"]
-                    newAuth0data.session = decoded_session
-                    newAuth0data.session_id = session_id
-                    newAuth0data.csrf_token = csrftoken
-                    newAuth0data.cookies = json.dumps(request.data["cookies"])
-                    newAuth0data.updated_at = request.data["updated_at"]
-                    newAuth0data.save()
-                    # credentials = {
-                    #     'user': user,
-                    #     'user_sub': user_sub,
-                    #     'domain': request.data["domain"],
-                    #     'client_id': request.data["client_id"],
-                    #     'redirect_uri': request.data["redirect_uri"],
-                    #     'audience': request.data["audience"],
-                    #     'scope': request.data["scope"],
-                    #     'transactions': transactions,
-                    #     'nonce': request.data["nonce"],
-                    #     'access_token': request.data["access_token"],
-                    #     'django_token': request.data["django_token"],
-                    #     'session': json.dumps(decoded_session),
-                    #     'session_id': session_id,
-                    #     'csrf_token': csrftoken,
-                    #     'cookies': json.dumps(request.data["cookies"]),
-                    #     'updated_at': request.data["updated_at"],
-                    # }
-                    serializer = CredentialsSerializer(newAuth0data , context={'request': request})
-                    # serializer.is_valid()
-                    # serializer.save()
+                    credentials = {
+                        'user': user,
+                        'user_sub': user_sub,
+                        'domain': request.data["domain"],
+                        'client_id': request.data["client_id"],
+                        'redirect_uri': request.data["redirect_uri"],
+                        'audience': request.data["audience"],
+                        'scope': request.data["scope"],
+                        'transactions': json.loads(transactions),
+                        'nonce': request.data["nonce"],
+                        'access_token': request.data["access_token"],
+                        'django_token': request.data["django_token"],
+                        'session': decoded_session,
+                        'session_id': session_id,
+                        'csrf_token': csrftoken,
+                        'cookies': request.data["cookies"],
+                        'updated_at': request.data["updated_at"],
+                    }
+                    serializer = CredentialsSerializer(data=credentials , context={'request': request})
+                    serializer.is_valid()
+                    serializer.save()
                     return Response(serializer.data)
             else:
                 return Response({"Login Failed": "User social sub not present or does not match."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as ex:
-            # black_listed_token = BlacklistedToken(token=request.auth, blacklisted_at=datetime.datetime.now(), user_id=request.user.id)
-            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'Error': ex.args, 'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except AssertionError as ass:
             return HttpResponse({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

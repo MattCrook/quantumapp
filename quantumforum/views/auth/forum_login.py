@@ -15,7 +15,7 @@ from social_django.views import auth, do_auth, complete, do_complete
 from social_django.context_processors import backends, user_backends_data, login_redirect
 from social_core.actions import user_is_authenticated
 
-from quantumapi.views.auth.management_api_services import get_open_id_config, management_api_oath_endpoint, get_management_api_grants, get_management_api_client_grants, get_management_api_connections, retrieve_user_logs
+from quantumapi.views.auth.management_api_services import get_open_id_config, management_api_oath_endpoint, get_management_api_grants, get_management_api_client_grants, get_management_api_connections, retrieve_user_logs, resource_servers, management_api_keys, device_credentials
 
 # We know the user is already authenticted with auth0, so there is no way to get to this point
 # without going thru auth0 first from the FE.
@@ -27,20 +27,10 @@ def login_user(request):
             email = login_form.cleaned_data.get('email')
             # password = login_form.cleaned_data.get('password')
 
-            oauth_endpoint = management_api_oath_endpoint(AUTH0_DOMAIN)
-            management_api_token = json.loads(oauth_endpoint)
-            token = management_api_token['access_token']
-            open_id_config = get_open_id_config(AUTH0_DOMAIN, token)
-            grants = get_management_api_grants(AUTH0_DOMAIN, token)
-            client_grants = get_management_api_client_grants(AUTH0_DOMAIN, token)
-            connections = get_management_api_connections(AUTH0_DOMAIN, token)
-
             try:
                 UserModel = get_user_model()
                 user = UserModel.objects.get(email=email)
                 password = user.auth0_identifier.split(".")[1]
-
-                user_logs = retrieve_user_logs(AUTH0_DOMAIN, token, user.auth0_identifier.replace(".", "|"))
                 social_account = user.socialaccount_set.get(user_id=user.id)
                 social_token = social_account.socialtoken_set.get(account_id=social_account.pk).token_secret
                 # social_storage = user.storage.user.tokens
@@ -79,7 +69,7 @@ def login_user(request):
             except Exception as ex:
                 error_message = "Incorrect Email or Password."
                 messages.add_message(request, messages.ERROR, error_message)
-                print("[ERRORS]", ex.args)
+                print("[ERRORS: Forum Login]", ex.args)
                 return redirect(reverse('quantumforum:login'))
         else:
             error_message = login_form.errors.as_data()

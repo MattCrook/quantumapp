@@ -85,7 +85,8 @@ def login_user(request):
                         nonce = id_token['nonce']
                         exp = id_token['exp']
                         iat = id_token['iat']
-                        assoc_type = "username-password-authentication"
+                        connection = management_api_user.get('identities')[0]
+                        assoc_type = connection.get('connection')
 
                         if 'csrf_token' in req_body and req_body['csrf_token']:
                             csrf = req_body['csrf_token']
@@ -114,8 +115,22 @@ def login_user(request):
                         for t in transactions_values:
                             transactions.append(t)
 
-                        user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
-                        code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                        handles = [handle for handle in codes] if len(codes) > 0 else {}
+                        code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
+
+                        all_backends = backends(request)
+                        user_backends = all_backends.get('backends')
+                        user_assoc_backends = user_backends.get('associated')
+
+                        if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists():
+                            # user_association = Association.objects.get(assoc_type=user_assoc_backends)
+                            user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
+
+                        else:
+                            Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handles, secret=code_verifiers, issued=iat, lifetime=exp, assoc_type=user_assoc_backends)
+
+
+                        # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
                         social_account = SocialAccount.objects.get(user_id=remote_authenticated_user.id)
 
                         social_token = SocialToken.objects.get(account_id=social_account.id)

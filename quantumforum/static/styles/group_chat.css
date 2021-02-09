@@ -690,3 +690,29 @@
   margin-right: 3px;
   object-fit: cover;
 }
+
+/**************************** Group Chats User Is In List/ Side Nav ***********/
+
+.group_chat_list {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 5%;
+  font-size: 15px;
+  color: rgb(173, 173, 173);
+  margin-bottom: 14%;
+  margin-right: 2%;
+}
+
+.chat_item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6%;
+}
+
+.chat_item:hover {
+  color: rgb(236, 236, 236);
+  cursor: pointer;
+
+}

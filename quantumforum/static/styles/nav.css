@@ -126,6 +126,10 @@ body {
   cursor: pointer;
 }
 
+.quantum_friends_btn i {
+  margin-right: 2%;
+}
+
 .search_quantum {
   display: flex;
   align-items: center;

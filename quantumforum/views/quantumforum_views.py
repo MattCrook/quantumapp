@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, resolve_url
 from django.contrib.auth.decorators import login_required
-from quantumapi.models import Credential, Messages, UserProfile
+from quantumapi.models import Credential, Messages
+from quantumapi.models import UserProfile as UserProfileModel
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.sessions.models import Session
 from quantumforum.models import Friendships, FriendRequest, GroupChat, GroupMembersJoin
@@ -48,7 +49,7 @@ from social_core.actions import user_is_authenticated
 
 
 def index(request, chat_type=None):
-    print("IN INdex")
+    print("IN Index")
     user = request.user
     # is_authenticated = user_is_authenticated(user)
     chat_type = 'group_chat'
@@ -66,14 +67,6 @@ def index(request, chat_type=None):
 
 
 
-def home(request):
-    print("OOPS in home.")
-    pass
-
-
-
-
-
 # @authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
 # @permission_classes([IsAuthenticated])
 @login_required
@@ -87,7 +80,7 @@ def group_chat(request):
         backend_list = get_backends()
         auth_user_backends = backends(request)
 
-        user_profile = UserProfile.objects.get(user_id=user.id)
+        user_profile = UserProfileModel.objects.get(user_id=user.id)
         all_users = UserModel.objects.all()
         default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
 
@@ -99,7 +92,8 @@ def group_chat(request):
         accepted_received_friendships = []
         accepted_received_friend_requests = []
         quantum_friends = []
-        active_friends  = []
+        active_friends = []
+        group_chats = []
 
         # loop thru each join and get the friend request object.
         for f in sent_friendships:
@@ -130,6 +124,14 @@ def group_chat(request):
 
         has_active_friends = len(active_friends) > 0
 
+        user_assoc_group_chats = GroupMembersJoin.objects.filter(user_profile_id=user_profile.id)
+
+        for group in user_assoc_group_chats:
+            group_id = group.group_id
+            group_chat = GroupChat.objects.get(pk=group_id)
+            group_chats.append(group_chat)
+
+
         friend_data = {
             'accepted_sent_friendships': accepted_sent_friendships,
             'accepted_sent_friend_requests': accepted_sent_friend_requests,
@@ -148,51 +150,92 @@ def group_chat(request):
             'default_profile_pic': default_profile_pic,
             'has_active_friends': has_active_friends,
             'active_friends': active_friends,
+            'group_chats': group_chats,
         }
         return render(request, template, context)
 
     if request.method == 'POST':
         try:
-            # form_data = request.POST
-            participant_ids_from_form_data = request.POST.get('participants', None)
+            form_data = request.POST
             group_name = request.POST.get('group_name')
             all_users_in_group = set()
-            UserModel = get_user_model()
+            user = request.user
+            user_profile = UserProfileModel.objects.get(user_id=user.id)
+            participant_ids = []
 
-            for participant_id in participant_ids_from_form_data:
-                user_profile = UserProfile.objects.get(pk=participant_id)
-                all_users_in_group.add(user_profile)
+            for p in form_data:
+                if p.split("-")[0] == 'participant':
+                    participant_ids.append(p.split("-")[1])
+
+            for pid in participant_ids:
+                group_member_user_profile = UserProfileModel.objects.get(pk=pid)
+                all_users_in_group.add(group_member_user_profile)
 
             all_group_members = list(all_users_in_group)
+            all_group_members.append(user_profile)
 
             new_group = GroupChat()
             new_group.name = group_name
             new_group.members = all_group_members
-            new_group.created_by = request.user
+            new_group.created_by = user
             new_group.created_at = datetime.datetime.now()
             # new_group.is_valid()
             new_group.save()
 
-            for user in all_group_members:
+
+            # Then loop through all of invited group members,
+            # User who created group should be included in the array.
+            for member in all_group_members:
                 new_group_members_join = GroupMembersJoin()
-                new_group_members_join.user_profile = user
+                new_group_members_join.user_profile = member
                 new_group_members_join.group = new_group
                 new_group_members_join.save()
 
-
         except Exception as ex:
-            print(ex.args)
+            HttpResponse(ex.args, content='application/json')
 
-        return redirect(reverse('quantumforum:group_chat'))
+        return redirect(reverse('quantumforum:staging_room', kwargs={'group_id': new_group.id}))
+
 
 
 
 @login_required
-def private_chat(request, auth_user_id):
+def staging_room(request, group_id):
+    if request.method == 'GET':
+        auth_user = request.user
+        user_profile = UserProfileModel.objects.get(user_id=auth_user.id)
+        group = GroupChat.objects.get(pk=group_id)
+        group_members_join = group.group_members
+        group_participants = GroupMembersJoin.objects.filter(group_id=group_id)
+        group_members = set()
+
+        for member in group_participants:
+            member_user_profile = UserProfileModel.objects.get(pk=member.user_profile_id)
+            group_members.add(member_user_profile)
+
+        group_members = list(group_members)
+        template = 'group_chat/staging_room.html'
+        context = {
+            'group': group,
+            'group_members_join': group_members_join,
+            'group_members': group_members,
+            'auth_user': auth_user,
+            'user_profile': user_profile
+        }
+
+        return render(request, template, context)
+
+
+
+
+
+@login_required
+def private_chat(request):
     UserModel = get_user_model()
     backend_list = get_backends()
+    auth_user = request.user
 
-    user_profile = UserProfile.objects.get(user_id=auth_user_id)
+    user_profile = UserProfileModel.objects.get(user_id=auth_user.id)
     all_users = UserModel.objects.all()
     default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png"
 
@@ -222,12 +265,6 @@ def room(request, room_name):
             'room_name': room_name
         }
         return render(request, template, context)
-
-
-
-
-
-
 
 
 def get_user(uid):

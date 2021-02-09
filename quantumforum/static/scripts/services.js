@@ -72,3 +72,15 @@ export async function getAllUsersFriendsFromReceiver(userId) {
   });
   return await response.json();
 }
+
+export async function sendAppLoginData(payload) {
+  const response = await fetch(`${remoteUrl}/api/app_login_data`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+    },
+    body: JSON.stringify(payload),
+  });
+  return await response.json();
+}

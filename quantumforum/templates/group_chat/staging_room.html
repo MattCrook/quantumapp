@@ -1,0 +1,72 @@
+{% extends 'shared/base.html' %}
+
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'styles/staging_room.css' %}" />
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div data-id="{{group.id}}" class="back_to_previous">&lt; Back To Previous</div>
+
+
+<div class="group_confirm_master_container" display="block">
+    <div class="confirm_title_wrapper">
+
+        <div class="confirm_group_header_container_1">
+            <div class="confirm_title">Confirm Group</div>
+        </div>
+
+        <div class="confirm_group_header_container_2">
+            <div data-id="{{group.id}}" class="cancel_group">Cancel</div>
+        </div>
+    </div>
+
+    <div class="confirm_form_content">
+
+        <div class="confirm_group_row_container">
+            <div class="confirm_group_row_label">Group Name: </div>
+            <div class="confirm_group_name">{{group.name}}</div>
+        </div>
+
+        <div class="confirm_group_row_container">
+            <div class="confirm_group_row_label">Group Members: </div>
+            <div class="confirm_group_members_list">
+                {% for member in group_members %}
+                <li>{{member.user.first_name}} {{member.user.last_name}}</li>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="confirm_group_row_container">
+            <div class="group_created_by">Group Created By: </div>
+            <div>{{group.created_by.first_name}} {{group.created_by.last_name}}</div>
+        </div>
+
+        <div class="confirm_edit_button_container">
+            <button id="confirm_group_btn">Confirm</button>
+            <button id="edit_group_btn">Edit</button>
+        </div>
+
+
+    </div>
+
+    <div class="signature_group">
+        <p id="signature_font_group"> Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a>
+            <i class="fas fa-trademark"></i>
+        </p>
+    </div>
+
+</div>
+<div id="loading"></div>
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'scripts/groupChatStagingEvents.js' %}"></script>
+{% endblock %}

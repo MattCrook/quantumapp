@@ -294,7 +294,7 @@ function invitedUserToGroup(userProfile) {
     <div class="participant_item_container" data-key="${userProfile.id}">
       <div class="participant_item_wrapper_1">
         <li class="participant_item"> ${userProfile.user.first_name} ${userProfile.user.last_name}</li>
-        <input type="hidden" name="participants" value="${userProfile.id}"/>
+        <input type="hidden" id="participant-${userProfile.id}" name="participant-${userProfile.id}" value="${userProfile.id}"/>
       </div>
       <div class="participant_item_wrapper_2">
         <button class="remove_participant" data-id="${userProfile.id}"></button>
