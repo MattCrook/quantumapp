@@ -27,8 +27,8 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class Images(ModelViewSet):
-    permission_classes = [DjangoModelPermissions]
-    # authentication_classes = [JSONWebTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     queryset = Image.objects.all()
     serializer_class = ImageSerializer

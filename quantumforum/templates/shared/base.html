@@ -52,7 +52,7 @@
                 </div>
                 <div class="nav_image_container">
                     {% if user_profile and user_profile.image %}
-                    <img class="nav_image" src="{{user_profile.image.image}}" />
+                    <img class="nav_image" src="{{user_profile.image.image.url}}" />
                     {% else %}
                     <img class="nav_image"
                         src="https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png" />
@@ -111,7 +111,7 @@
                             <div id="friend_card_container_1">
                                 <div class="friend_profile_pic">
                                     {% if friend.user.image %}
-                                    <img class="friend_card_img" src="{{friend.user.image.image}}" />
+                                    <img class="friend_card_img" src="{{friend.user.image.image.url}}" />
                                     {% else %}
                                     <img class="friend_card_img" src="{{default_profile_pic}}" />
                                     {% endif %}
