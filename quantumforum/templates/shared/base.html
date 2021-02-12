@@ -59,7 +59,8 @@
                     {% endif %}
                 </div>
                 <div class="back_btn_container">
-                    <a class="back_btn" href="{% url 'quantumforum:logout' %}">Back</a>
+                    <a class="back_btn" href="{% url 'quantumforum:logout' %}">Back  <i class="fas fa-long-arrow-alt-right"></i></a>
+
                 </div>
             </div>
         </nav>
@@ -73,10 +74,6 @@
                 <div class="profile_dropdown_item"><a id="go_to_profile" class="nav_link" href="{% url 'quantumforum:profile' %}">Profile</a></div>
                 <i class="fas fa-user-circle"></i>
               </div>
-              <!-- <div class="profile_dropdown_row">
-                <div class="profile_dropdown_item">Edit Account</div>
-                <i class="fas fa-user-edit"></i>
-              </div> -->
               <div class="profile_dropdown_row">
                 <div class="profile_dropdown_item">Give Feedback</div>
                 <i class="far fa-comments"></i>
@@ -84,6 +81,10 @@
               <div class="profile_dropdown_row">
                 <div class="profile_dropdown_item">Report a Bug</div>
                 <i class="fas fa-bug"></i>
+              </div>
+              <div class="profile_dropdown_row">
+                <div class="profile_dropdown_item">Logout</div>
+                <i class="fas fa-sign-out-alt"></i>
               </div>
 
       </div>
