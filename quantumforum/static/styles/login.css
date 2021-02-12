@@ -4,6 +4,7 @@
   flex-direction: column;
   padding-left: 16px;
   padding-right: 16px;
+  transition: 0.5s all ease;
 }
 
 .login-card {
@@ -16,11 +17,21 @@
   margin-bottom: 4%;
   text-align: center;
   background: #f4f7f8;
+  transition: 0.5s all ease;
 }
 
 .login-card h2 {
   margin-bottom: 10px;
   margin-top: 15px;
+}
+
+.login_card_title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 56%;
+  margin-left: 42%;
 }
 
 .login-card form {
@@ -110,9 +121,7 @@
   font-size: 9px;
 }
 
-/* #login_buttons_card_wrapper:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-} */
+
 
 /**********************Row Login Buttons Auth0************************/
 
@@ -122,11 +131,12 @@
   width: 100%;
   /* transition: 0.3s; */
   border-radius: 5px;
-  margin: 0 auto;
   text-align: center;
   padding-left: 25%;
   padding-right: 25%;
   margin-bottom: 3%;
+  margin-top: 10%;
+  margin-left: 0.5%;
 }
 
 #error_message {
@@ -189,6 +199,15 @@
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
+.card_close {
+  background: transparent;
+  border: 0;
+  color: #f06d6d;
+}
+
+.card_close:before {
+  content: "\2715";
+}
 /****************************************/
 
 img {

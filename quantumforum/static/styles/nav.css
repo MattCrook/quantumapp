@@ -28,12 +28,13 @@ body {
   align-items: center;
   flex-direction: row;
   margin-right: 1%;
-  width: 14%;
+  width: calc(100% - 84%);
 }
 
 .nav_name_wrapper {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .nav_name {
@@ -51,12 +52,17 @@ body {
   cursor: pointer;
 }
 
-.back_btn {
+/* .back_btn {
   font: 150 1em helvetica neue, open sans, sans-serif;
-}
+} */
+
 
 .back_btn {
-  padding: 5px 15px;
+  padding: 5px 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 16px;
+  padding-left: 15px;
   /* margin: 9px 5px; */
   margin-right: 2%;
   color: rgb(194, 64, 64);
@@ -65,10 +71,15 @@ body {
   text-align: center;
   position: relative;
   text-decoration: none;
-  display: inline-block;
+  /* display: inline-block; */
+  display: flex;
+  align-items: center;
   font-size: 13px;
 }
 
+.back_btn i {
+  padding-left: 10px;
+}
 .back_btn::before {
   content: "";
   position: absolute;
@@ -100,6 +111,7 @@ body {
 
 .back_btn:hover {
   color: rgb(228, 91, 91);
+  text-decoration: none;
 }
 
 .nav_middle {
@@ -119,6 +131,10 @@ body {
 .quantum_friends_btn:hover {
   color: rgb(247, 247, 247);
   cursor: pointer;
+}
+
+.quantum_friends_btn i {
+  margin-right: 2%;
 }
 
 .search_quantum {
@@ -356,6 +372,13 @@ body {
   display: flex;
   flex-direction: column;
   margin-bottom: 12%;
+}
+
+.no_friends {
+  color: rgb(201, 201, 201);
+  margin-left: 46%;
+  margin-top: 4%;
+  font: 150 1em helvetica neue, open sans, sans-serif;
 }
 
 #friend_card_container_1 {

@@ -2,10 +2,13 @@ from django.contrib import admin
 from quantumapi.models import UserProfile, RollerCoaster, Tracktype, Manufacturer, Park, Credit, Messages, Image, User, NewsArticle, BlogContributorApplication, LoginHistory, ActivityLog, CalendarEvent, ErrorLog, Feedback, BugReport
 from quantumapi.models import Credential as CredentialModel
 from quantumapi.models import QuantumUserAdmin
+from quantumapi.models import AppLoginData as AppLoginDataModel
 from django.contrib.sessions.models import Session
 from quantumforum.models import *
+# from quantumapi.models.user_social_auth import CustomDjangoStorage
 # from rest_auth.models import TokenModel
-
+# admin.site.register(TokenModel)
+# To register the join tables, have to have a custom admin, bc many to many do not have _meta.
 
 
 admin.site.register(UserProfile)
@@ -30,9 +33,5 @@ admin.site.register(BugReport)
 admin.site.register(FriendRequest)
 admin.site.register(StatusCode)
 admin.site.register(Friendships)
-
-
-
-
-
-# admin.site.register(TokenModel)
+admin.site.register(GroupChat)
+admin.site.register(AppLoginDataModel)

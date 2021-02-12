@@ -13,7 +13,7 @@ from .UserAdmin import QuantumUserAdmin
 from .Credential import Credential
 from .news import NewsArticle
 from .blog_application import BlogContributorApplication
-from .page_monitoring import ActivityLog, LoginHistory
+from .page_monitoring import ActivityLog, LoginHistory, AppLoginData
 from .CalendarEvent import CalendarEvent
 from .error_logging import ErrorLog
 from .user_submissions import Feedback, BugReport

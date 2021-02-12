@@ -6,7 +6,7 @@ import {
   useGroup,
   useAddedToGroup,
 } from "./hooks.js";
-import { getAllUsersFriends, retrieveUserProfile } from "./services.js";
+import { getAllUsersFriends, retrieveUserProfile, retrieveUserSessionData } from "./services.js";
 
 
 // const [addedToGroup, addedToGroup] = useAddedToGroup();
@@ -21,14 +21,18 @@ let group = new Set()
 
 
 const initFriendsSearchAndCreateGroupForm = async () => {
-  const searchInput = document.getElementById("friends_search");
-  const results = document.getElementById("results");
-  const addedToGroupList = document.querySelector(".invitee_list");
-  let search_term = '';
+  try {
+    const searchInput = document.getElementById("friends_search");
+    const results = document.getElementById("results");
+    const addedToGroupList = document.querySelector(".invitee_list");
+    let search_term = '';
 
-  const allFriendships = await getAllUsersFriends();
-  friendShips.add(allFriendships)
-  setFormState(friendShips, searchInput, search_term, results, addedToGroupList)
+    const allFriendships = await getAllUsersFriends();
+    friendShips.add(allFriendships);
+    setFormState(friendShips, searchInput, search_term, results, addedToGroupList);
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 
@@ -121,8 +125,7 @@ const renderAddedUserToInviteList = (e, user, addedToGroupList) => {
   const newParticipantRow = invitedUserToGroup(user);
   addedToGroupList.innerHTML += newParticipantRow;
   addCheckIconAfterAddingUser(e);
-
-}
+};
 
 
 const addCheckIconAfterAddingUser = (e) => {
@@ -135,7 +138,7 @@ const addCheckIconAfterAddingUser = (e) => {
   parentContainer.innerHTML = "";
   const checkIcon = renderCheckIcon(uid);
   parentContainer.innerHTML += checkIcon;
-}
+};
 
 const toggleAddPlusIcon = (e) => {
   e.preventDefault();
@@ -291,6 +294,7 @@ function invitedUserToGroup(userProfile) {
     <div class="participant_item_container" data-key="${userProfile.id}">
       <div class="participant_item_wrapper_1">
         <li class="participant_item"> ${userProfile.user.first_name} ${userProfile.user.last_name}</li>
+        <input type="hidden" id="participant-${userProfile.id}" name="participant-${userProfile.id}" value="${userProfile.id}"/>
       </div>
       <div class="participant_item_wrapper_2">
         <button class="remove_participant" data-id="${userProfile.id}"></button>
@@ -318,4 +322,32 @@ function renderClearAllButton() {
 }
 
 
+
+const setSessionStorage = async () => {
+  const userSession = await retrieveUserSessionData();
+  sessionStorage.setItem("token", userSession.token);
+  sessionStorage.setItem("session_hash", userSession.auth_hash_data.auth_session);
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+
+
+
+
 initFriendsSearchAndCreateGroupForm();
+setSessionStorage();

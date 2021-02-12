@@ -6,8 +6,9 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView
-from quantumapi.views import login_user, register_user, get_user, auth0_logout
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView
+from quantumapi.views import login_user, register_user, auth0_logout, get_user_session
+# from quantumapi.views import get_authuser
 from quantumapi.views import Credentials as CredentialsView
 from quantumapi.views import Feedback as FeedbackView
 from quantumapi.views import BugReports as BugReportView
@@ -41,8 +42,12 @@ router.register(r'error_logs', ErrorLogView, 'error_logs')
 router.register(r'user_feedback', FeedbackView, 'user_feedback')
 router.register(r'bug_reports', BugReportView, 'bug_reports')
 router.register(r'status_code', StatusCodeView, 'status_codes')
-router.register(r'friend_request', FriendRequestView, 'friend_requests')
-router.register(r'friendships', FriendshipView, 'friendships')
+router.register(r'friend_requests', FriendRequestView, 'friend_request')
+router.register(r'friendships', FriendshipView, 'friendship')
+router.register(r'app_login_data', AppLoginDataView, 'app_login_data')
+router.register(r'group_chats', GroupChatApiView, 'group_chat')
+
+
 
 
 
@@ -58,10 +63,14 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
-    path('get_user/', get_user),
+    # path('get_user/', get_user),
+    path('get_user_session/', get_user_session),
+
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
     path('', include('quantumforum.urls', namespace='quantumforum')),
+    path('', include('quantumadminapp.urls', namespace='quantumadminapp')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

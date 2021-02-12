@@ -31,6 +31,7 @@
             <div class="label_wrapper">
                 <div class="label">Quantum Coasters Forum</div>
             </div>
+            {% if user.is_authenticated %}
             <div class="nav_middle">
                 <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn"><i
                         class="fas fa-users"></i> Your Quantum Friends </div>
@@ -42,9 +43,8 @@
                         <i class="fas fa-search"></i>
                         <button class="overlay_close" style="display: none;"></button>
                     </div>
-
-
             </div>
+            {% endif %}
             <div class="nav_end">
                 <div class="nav_name_wrapper">
                     <div class="nav_name">{{user_profile.user.first_name}}</div>
@@ -52,31 +52,28 @@
                 </div>
                 <div class="nav_image_container">
                     {% if user_profile and user_profile.image %}
-                    <img class="nav_image" src="{{user_profile.image.image}}" />
+                    <img class="nav_image" src="{{user_profile.image.image.url}}" />
                     {% else %}
                     <img class="nav_image"
                         src="https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png" />
                     {% endif %}
                 </div>
                 <div class="back_btn_container">
-                    <a class="back_btn" href="{% url 'quantumforum:logout' %}">Back</a>
+                    <a class="back_btn" href="{% url 'quantumforum:logout' %}">Back  <i class="fas fa-long-arrow-alt-right"></i></a>
+
                 </div>
             </div>
         </nav>
     </div>
     <div id="profile_dropdown_container" style="display: none;">
             <div class="profile_dropdown_row">
-                <div id="home" class="profile_dropdown_item"><a class="nav_link" href="{% url 'quantumforum:home' %}">Home</a></div>
+                <div id="home" class="profile_dropdown_item"><a id="go_home" class="nav_link" href="{% url 'quantumforum:home' %}">Home</a></div>
                 <i class="fas fa-home"></i>
               </div>
               <div class="profile_dropdown_row">
-                <div class="profile_dropdown_item"><a class="nav_link" href="{% url 'quantumforum:profile' %}">Profile</a></div>
+                <div class="profile_dropdown_item"><a id="go_to_profile" class="nav_link" href="{% url 'quantumforum:profile' %}">Profile</a></div>
                 <i class="fas fa-user-circle"></i>
               </div>
-              <!-- <div class="profile_dropdown_row">
-                <div class="profile_dropdown_item">Edit Account</div>
-                <i class="fas fa-user-edit"></i>
-              </div> -->
               <div class="profile_dropdown_row">
                 <div class="profile_dropdown_item">Give Feedback</div>
                 <i class="far fa-comments"></i>
@@ -85,10 +82,16 @@
                 <div class="profile_dropdown_item">Report a Bug</div>
                 <i class="fas fa-bug"></i>
               </div>
+              <div class="profile_dropdown_row">
+                <div class="profile_dropdown_item">Logout</div>
+                <i class="fas fa-sign-out-alt"></i>
+              </div>
 
       </div>
+      {% if user.is_authenticated %}
     <div id="search_quantum_results" style="display: none;">
     </div>
+    {% endif %}
 
     <div id="status">
     </div>
@@ -109,7 +112,7 @@
                             <div id="friend_card_container_1">
                                 <div class="friend_profile_pic">
                                     {% if friend.user.image %}
-                                    <img class="friend_card_img" src="{{friend.user.image.image}}" />
+                                    <img class="friend_card_img" src="{{friend.user.image.image.url}}" />
                                     {% else %}
                                     <img class="friend_card_img" src="{{default_profile_pic}}" />
                                     {% endif %}
@@ -149,8 +152,40 @@
     </main>
 
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-    <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
+    <script type="text/javascript">
+        const handleNavProfileDropdown = () => {
+            const profileDropdownContainer = document.getElementById("profile_dropdown_container");
+            const navImage = document.querySelector(".nav_image");
+            const close = () => (profileDropdownContainer.style.display = "none");
+            const open = () => (profileDropdownContainer.style.display = "block");
 
+            navImage.addEventListener("click", () => {
+              const display = profileDropdownContainer.style.display;
+              display === "none" && open();
+              display === "block" && close();
+            });
+          };
+
+          handleNavProfileDropdown();
+
+          const handleClearSessionStorage = () => {
+              const backBtn = document.querySelector('.back_btn');
+              const goToProfileBtn = document.getElementById('go_to_profile');
+              const goHomeButton = document.getElementById('go_home');
+
+              backBtn.addEventListener("click", () => {
+                  sessionStorage.clear();
+              });
+              goToProfileBtn.addEventListener("click", () => {
+                  sessionStorage.clear();
+              })
+            goHomeButton.addEventListener("click", () => {
+                sessionStorage.clear();
+            })
+          };
+
+          handleClearSessionStorage();
+    </script>
 
     {% block scripts %}
     {% endblock scripts %}

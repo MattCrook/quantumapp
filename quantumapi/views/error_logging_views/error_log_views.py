@@ -74,10 +74,10 @@ class ErrorLogView(ViewSet):
 
             if request.session is not None:
                 session = request.session.session_key
-            elif Session.objects.get(session_key=request.data['sessionId']).exists():
+            elif Session.objects.filter(session_key=request.data['sessionId']).exists():
                 session = Session.objects.get(session_key=request.data['sessionId'])
             else:
-                session = ""
+                session = None
 
             try:
                 # if incoming date (from client) does not match current date (set on backend) then skip.
@@ -223,7 +223,7 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
         for log in user_error_logs:
             error_log = ErrorLogModel.objects.get(pk=log.id)
             error_log.user = request.user
-            error_log.environment = request.stream.environ
+            error_log.environment = request.stream.META
             error_log.error_message = request.data['message']
             error_log.stack = request.data['stack']
             error_log.component = request.data['component']
@@ -251,7 +251,7 @@ def create_new_error_log_entry(request, session, time):
     try:
         new_error_log = ErrorLogModel()
         new_error_log.user = request.user
-        new_error_log.environment = request.stream.environ
+        new_error_log.environment = request.stream.META
         new_error_log.error_message = request.data['message']
         new_error_log.stack = request.data['stack']
         new_error_log.component = request.data['component']

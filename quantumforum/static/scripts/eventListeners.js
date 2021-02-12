@@ -31,19 +31,6 @@ const showModal = () => {
   });
 };
 
-const handleProfileDropdown = () => {
-  const profileDropdownContainer = document.getElementById("profile_dropdown_container");
-  const navImage = document.querySelector(".nav_image");
-  const close = () => (profileDropdownContainer.style.display = "none");
-  const open = () => (profileDropdownContainer.style.display = "block");
-
-  navImage.addEventListener("click", () => {
-    const display = profileDropdownContainer.style.display;
-    display === "none" && open();
-    display === "block" && close();
-  });
-};
-
 const closeOverlaySearchBar = () => {
   const closeButton = document.querySelector(".overlay_close");
   const searchQuantumResults = document.getElementById("search_quantum_results");
@@ -61,7 +48,6 @@ const initEventListeners = () => {
   showCreateGroupForm();
   closeCreateGroupForm();
   showModal();
-  handleProfileDropdown();
   closeOverlaySearchBar();
 };
 
