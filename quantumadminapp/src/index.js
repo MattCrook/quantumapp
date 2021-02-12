@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router } from "react-router-dom";
+// import { BrowserRouter as Router } from "react-router-dom";
 import AdminApp from "./AdminApp";
 // import "./index.css";
 
@@ -8,8 +8,5 @@ import AdminApp from "./AdminApp";
 // for Auth0ProviderWithHistory to access the useHistory() hook from React Router.
 
 ReactDOM.render(
-  <Router>
-    <AdminApp />
-  </Router>,
-  document.getElementById("app")
+    <AdminApp />, document.getElementById("app")
 );
