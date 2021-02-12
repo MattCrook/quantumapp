@@ -84,3 +84,18 @@ export async function sendAppLoginData(payload) {
   });
   return await response.json();
 }
+
+export async function retrieveUserSessionData() {
+  try {
+    const response = await fetch(`${remoteUrl}/get_user_session`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      Accept: "application/json",
+    });
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+}

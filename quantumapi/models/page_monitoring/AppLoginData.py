@@ -15,10 +15,10 @@ class AppLoginData(models.Model):
     strategy = models.CharField(max_length=50, blank=True, null=True)
     strategy_type = models.CharField(max_length=50, blank=True, null=True)
     prompts = models.TextField(null=True, blank=True)
-    recent_attempts = models.CharField(max_length=2, null=True, blank=True)
-    total_logins = models.CharField(max_length=6, null=True, blank=True, default=0)
+    recent_attempts = models.IntegerField(null=True, blank=True)
+    total_logins = models.IntegerField(null=True, blank=True, default=0)
     ip_address = models.GenericIPAddressField(protocol='both', unpack_ipv4=True, null=True, blank=True)
-    oauth_endpoint_scopes = models.TextField(null=True, blank=True)
+    oauth_endpoint_scopes = models.CharField(max_length=100000, null=True, blank=True)
     openid_configuration = models.TextField(null=True, blank=True)
     grants = models.TextField(null=True, blank=True)
     client_grants = models.TextField(null=True, blank=True)
@@ -45,4 +45,4 @@ class AppLoginData(models.Model):
         ordering = ("auth_user", )
 
     def __str__(self):
-        return f'{self.user.username} -- {self.recent_attempts} -- {self.date}'
+        return f'{self.email} -- {self.updated_at}'

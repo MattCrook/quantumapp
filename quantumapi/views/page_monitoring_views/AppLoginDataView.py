@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework import serializers, status, authentication, permissions
 from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import AppLoginData as AppLoginDataModel
+from quantumapi.views import UserSerializer
 from rest_auth.models import TokenModel
 from social_django.models import UserSocialAuth
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -15,45 +17,125 @@ import datetime
 import socket
 import os
 import json
+from django.forms.models import model_to_dict
 
 
-class AppLoginDataSerializer(serializers.ModelSerializer):
+class AppLoginDataSerializer(serializers.Serializer):
     UserModel = get_user_model()
 
+
+    # auth_user_id = UserSerializer()
+    # email = serializers.EmailField()
+    # management_api_user = serializers.DictField()
+    # access_token = serializers.CharField()
+    # management_api_token = serializers.CharField()
+    # rest_auth_token = serializers.CharField()
+    # strategy = serializers.CharField()
+    # strategy_type = serializers.CharField()
+    # prompts = serializers.ListField()
+    # recent_attempts = serializers.IntegerField()
+    # total_logins = serializers.IntegerField()
+    # ip_address = serializers.IPAddressField(protocol='both')
+    # oauth_endpoint_scopes = serializers.CharField()
+    # openid_configuration = serializers.DictField()
+    # grants = serializers.ListField()
+    # client_grants = serializers.ListField()
+    # connections = serializers.ListField()
+    # user_logs = serializers.ListField()
+    # resource_servers = serializers.ListField()
+    # management_api_keys = serializers.ListField()
+    # device_credentials = serializers.ListField()
+    # rest_auth_session = serializers.CharField()
+    # management_session_id = serializers.CharField()
+    # management_session_user = serializers.CharField()
+    # connection = serializers.CharField()
+    # connection_id = serializers.CharField()
+    # location_info = serializers.DictField()
+    # last_login_ip = serializers.IPAddressField(protocol='both')
+    # # social_user = serializers.SerializerMethodField()
+    # # social_user = UserSocialAuthSerializer()
+    # social_user = serializers.PrimaryKeyRelatedField(queryset=UserSocialAuth.objects.all())
+    # client_name = serializers.CharField()
+    # updated_at = serializers.DateTimeField()
+
+
+
+
+
+
+    # auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
+    # auth_user = UserSerializer(read_only=True)
+    # auth_user = serializers.SerializerMethodField(method_name='get_auth_user')
+    # auth_user = UserSerializer(read_only=True)
+    id = serializers.IntegerField(label='ID', read_only=True)
     auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
     email = serializers.EmailField()
-    management_api_user = serializers.DictField()
+    management_api_user = serializers.JSONField()
     access_token = serializers.CharField()
     management_api_token = serializers.CharField()
     rest_auth_token = serializers.CharField()
     strategy = serializers.CharField()
     strategy_type = serializers.CharField()
-    prompts = serializers.ListField()
+    prompts = serializers.JSONField()
     recent_attempts = serializers.IntegerField()
     total_logins = serializers.IntegerField()
-    ip_address = serializers.IPAddressField()
+    ip_address = serializers.IPAddressField(protocol='both')
     oauth_endpoint_scopes = serializers.CharField()
-    openid_configuration = serializers.DictField()
-    grants = serializers.ListField()
-    client_grants = serializers.ListField()
-    connections = serializers.ListField()
-    user_logs = serializers.ListField()
-    resource_servers = serializers.ListField()
-    management_api_keys = serializers.ListField()
+    openid_configuration = serializers.JSONField()
+    grants = serializers.JSONField()
+    client_grants = serializers.JSONField()
+    connections = serializers.JSONField()
+    user_logs = serializers.JSONField()
+    resource_servers = serializers.JSONField()
+    management_api_keys = serializers.JSONField()
+    # device_credentials = serializers.JSONField()
     rest_auth_session = serializers.CharField()
     management_session_id = serializers.CharField()
     management_session_user = serializers.CharField()
     connection = serializers.CharField()
     connection_id = serializers.CharField()
-    location_info = serializers.DictField()
-    last_login_ip = serializers.IPAddressField()
+    location_info = serializers.JSONField()
+    last_login_ip = serializers.IPAddressField(protocol='both')
+    # social_user = serializers.SerializerMethodField()
+    # social_user = UserSocialAuthSerializer()
     social_user = serializers.PrimaryKeyRelatedField(queryset=UserSocialAuth.objects.all())
     client_name = serializers.CharField()
     updated_at = serializers.DateTimeField()
 
+
+
+    def create(self, validated_data):
+        return AppLoginDataModel.objects.create(**validated_data)
+
+
+
+
+
+
+
+
+
+    # def get_auth_user(self, obj):
+    #     print(obj)
+    #     print('IN GET_AUTH_USER')
+    #     serialized_user = UserSerializer(instance=obj.auth_user)
+    #     return serialized_user.data
+
+
+    # def to_representation(self, value):
+    #     UserModel = get_user_model()
+    #     if isinstance(value, AppLoginDataModel):
+    #         serializer = UserSerializer(value.auth_user)
+    #     else:
+    #         raise Exception('Unexpected type of tagged object')
+
+    #     return serializer.data
+
+
+
     class Meta:
         model = AppLoginDataModel
-        fields = ('auth_user', 'email', 'management_api_user', 'access_token', 'management_api_token', 'rest_auth_token', 'strategy', 'strategy_type', 'prompts', 'recent_attempts', 'total_logins', 'ip_address', 'oauth_endpoint_scopes', 'openid_configuration', 'grants', 'client_grants', 'connections', 'user_logs', 'resource_servers', 'management_api_keys', 'rest_auth_session', 'management_session_id', 'management_session_user', 'connection', 'connection_id', 'location_info', 'last_login_ip', 'social_user', 'client_name', 'updated_at')
+        fields = ['id', 'auth_user', 'email', 'management_api_user', 'access_token', 'management_api_token', 'rest_auth_token', 'strategy', 'strategy_type', 'prompts', 'recent_attempts', 'total_logins', 'ip_address', 'oauth_endpoint_scopes', 'openid_configuration', 'grants', 'client_grants', 'connections', 'user_logs', 'resource_servers', 'management_api_keys', 'rest_auth_session', 'management_session_id', 'management_session_user', 'connection', 'connection_id', 'location_info', 'last_login_ip', 'social_user', 'client_name', 'updated_at']
         depth = 2
 
 
@@ -62,28 +144,33 @@ class AppLoginDataView(ViewSet):
     authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
-        user_id = self.request.query_params.get("user_id", None)
+        try:
+            all_login_data = AppLoginDataModel.objects.all()
+            # user_id = self.request.query_params.get("auth_user_id", None)
 
-        if user_id is not None:
-            data = AppLoginDataModel.objects.filter(user_id=user_id)
-        else:
-            data = AppLoginDataModel.objects.all()
+            # if user_id is not None:
+            #     all_login_data = all_login_data.filter(auth_user_id=user_id)
 
-        serializer = AppLoginDataSerializer(
-            data, many=True, context={'request': request})
-        return Response(serializer.data)
+
+            serializer = AppLoginDataSerializer(all_login_data, many=True, context={'request': request})
+            # serializer.is_valid()
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # return Response({'Error': ex.args, 'Serializer Errors': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     def retrieve(self, request, pk=None):
         try:
             data = AppLoginDataModel.objects.get(pk=pk)
-            serializer = AppLoginDataSerializer(
-                data, context={'request': request})
+            serializer = AppLoginDataSerializer(data, context={'request': request})
             return Response(serializer.data)
 
         except Exception as ex:
             return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except AppLoginDataModel.DoesNotExist as dne:
             return Response({'message': dne.args}, status=status.HTTP_404_NOT_FOUND)
+
 
     def create(self, request):
         try:
@@ -130,6 +217,7 @@ class AppLoginDataView(ViewSet):
             management_session_user = prompts[0].get('session_user')
             rest_auth_token = TokenModel.objects.get(user=auth_user) if request.user else ""
 
+            # 'auth_user': auth_user.to_dict(),
             data = {
                 'auth_user': auth_user.id,
                 'email': auth_user.email,
@@ -162,13 +250,15 @@ class AppLoginDataView(ViewSet):
                 'client_name': client_name,
                 'updated_at': datetime.datetime.now(),
             }
+ 
 
             serializer = AppLoginDataSerializer(data=data, context={'request': request})
-            serializer.is_valid()
-            serializer.save()
-            return Response(serializer.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
 
         except Exception as ex:
+            # return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             return Response({'Error': ex.args, 'Serializer Errors': serializer.errors }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):

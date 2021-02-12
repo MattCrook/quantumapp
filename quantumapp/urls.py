@@ -7,7 +7,8 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView
-from quantumapi.views import login_user, register_user, get_user, auth0_logout
+from quantumapi.views import login_user, register_user, auth0_logout, get_user_session
+# from quantumapi.views import get_authuser
 from quantumapi.views import Credentials as CredentialsView
 from quantumapi.views import Feedback as FeedbackView
 from quantumapi.views import BugReports as BugReportView
@@ -62,7 +63,9 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
-    path('get_user/', get_user),
+    # path('get_user/', get_user),
+    path('get_user_session/', get_user_session),
+
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
     path('', include('quantumforum.urls', namespace='quantumforum')),

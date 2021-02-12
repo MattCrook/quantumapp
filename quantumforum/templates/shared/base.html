@@ -66,11 +66,11 @@
     </div>
     <div id="profile_dropdown_container" style="display: none;">
             <div class="profile_dropdown_row">
-                <div id="home" class="profile_dropdown_item"><a class="nav_link" href="{% url 'quantumforum:home' %}">Home</a></div>
+                <div id="home" class="profile_dropdown_item"><a id="go_home" class="nav_link" href="{% url 'quantumforum:home' %}">Home</a></div>
                 <i class="fas fa-home"></i>
               </div>
               <div class="profile_dropdown_row">
-                <div class="profile_dropdown_item"><a class="nav_link" href="{% url 'quantumforum:profile' %}">Profile</a></div>
+                <div class="profile_dropdown_item"><a id="go_to_profile" class="nav_link" href="{% url 'quantumforum:profile' %}">Profile</a></div>
                 <i class="fas fa-user-circle"></i>
               </div>
               <!-- <div class="profile_dropdown_row">
@@ -166,6 +166,24 @@
           };
 
           handleNavProfileDropdown();
+
+          const handleClearSessionStorage = () => {
+              const backBtn = document.querySelector('.back_btn');
+              const goToProfileBtn = document.getElementById('go_to_profile');
+              const goHomeButton = document.getElementById('go_home');
+
+              backBtn.addEventListener("click", () => {
+                  sessionStorage.clear();
+              });
+              goToProfileBtn.addEventListener("click", () => {
+                  sessionStorage.clear();
+              })
+            goHomeButton.addEventListener("click", () => {
+                sessionStorage.clear();
+            })
+          };
+
+          handleClearSessionStorage();
     </script>
 
     {% block scripts %}

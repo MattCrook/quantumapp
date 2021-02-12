@@ -9,26 +9,25 @@ from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from django.contrib.sessions.models import Session
 import json
 
-# from rest_auth.serializers import TokenSerializer
-# from quantumapi.models import User as UserModel
-# from rest_framework.authtoken.models import Token
-# from quantumapp import settings
-# from rest_framework.decorators import api_view, permission_classes
-# from rest_framework.permissions import AllowAny, IsAuthenticated
+
 
 
 
 class UserSerializer(serializers.ModelSerializer):
+    # def get_queryset(self):
+    #     return super().get_queryset()
+    
     class Meta:
         model = get_user_model()
-        token = serializers.SerializerMethodField()
-        # url = serializers.HyperlinkedIdentityField(view_name='userprofile', lookup_field='id')
+        # token = serializers.SerializerMethodField()
         fields = ('id', 'email', 'first_name', 'last_name', 'password', 'username',
                   'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'auth0_identifier', 'is_superuser', 'is_active',  )
         # extra_kwargs = {'password': {'write_only': True}}
-        depth = 1
+        depth = 2
 
 
 class Users(viewsets.ViewSet):
@@ -103,22 +102,84 @@ class Users(viewsets.ViewSet):
 
 
 
-def get_user(self, request):
-    req_body = json.loads(request.body.decode())
+
+
+
+@authentication_classes([SessionAuthentication])
+@permission_classes([IsAuthenticated])
+@api_view(['GET', 'POST'])
+def get_user_session(request):
     if request.method == 'POST':
-        token = req_body['token']
-        user = TokenModel.objects.get(key=token).user
-        userdict = {
-            "first": user.first_name,
-            "last": user.last_name,
-            "email": user.email,
-            "username": user.username,
-            'auth0_identifier': user.auth0_identifier,
-            "is_staff": user.is_staff,
-            "is_superuser": user.is_superuser,
-            "token": token
-        }
-        return HttpResponse(json.dumps(userdict), content_type='application/json')
+        req_body = json.loads(request.body.decode())
+        token = request.auth
+        auth_user_token = TokenModel.objects.get(key=token.key)
+        if auth_user_token.user_id == request.user.id:
+            auth_user = request.user
+            session = request.session
+            decoded_session_data = session.get_decoded()
+            auth_session_hash_data = auth_user.get_session_data(session)
+
+            data = {
+                'decoded_session_data': decoded_session_data,
+                'auth_hash_data': auth_session_hash_data,
+                'token': auth_user_token.key
+            }
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        else:
+            data = json.dumps({"valid": False, "Error": 'Missing or incorrectly matching authentication.'})
+            return HttpResponse(data, content_type='application/json', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    elif request.method == 'GET':
+        try:
+            auth_user = request.user
+            session_key = request.session.session_key
+            session = Session.objects.get(session_key=session_key)
+            session_store_class = session.get_session_store_class()
+            decoded_session_data = session.get_decoded()
+            auth_user_token = TokenModel.objects.get(user_id=auth_user.id)
+            auth_session_hash_data = auth_user.get_session_data(session)
+
+            data = {
+                'decoded_session_data': decoded_session_data,
+                'auth_hash_data': auth_session_hash_data,
+                'token': auth_user_token.key
+            }
+            return HttpResponse(json.dumps(data), content_type='application/json')
+        except Exception as ex:
+            return Response({'error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+# def get_auth_user(self, obj):
+#     serialized_user = UserSerializer(instance=obj.auth_user)
+#     return serialized_user.data
+
+# @authentication_classes([SessionAuthentication, JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
+# @api_view
+# def get_authuser(self, request):
+#     # req_body = json.loads(request.body.decode())
+#     if request.method == 'POST':
+#         user = request.user
+#         session = request.session
+#         decoded_session_data = session.decode(session.session_data)
+#         # token = req_body['token']
+#         token = TokenModel.objects.get(user_id=user.id)
+#         userdict = {
+#             "first": user.first_name,
+#             "last": user.last_name,
+#             "email": user.email,
+#             "username": user.username,
+#             'auth0_identifier': user.auth0_identifier,
+#             "is_staff": user.is_staff,
+#             "is_superuser": user.is_superuser,
+#             "token": token.key,
+#             'session_data': decoded_session_data
+#         }
+#         return HttpResponse(json.dumps(userdict), content_type='application/json')
 
 
 

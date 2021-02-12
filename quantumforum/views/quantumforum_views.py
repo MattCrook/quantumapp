@@ -67,8 +67,8 @@ def index(request, chat_type=None):
 
 
 
-# @authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
+@authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 @login_required
 def group_chat(request):
     if request.method == 'GET':
@@ -198,7 +198,8 @@ def group_chat(request):
 
 
 
-
+@authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 @login_required
 def staging_room(request, group_id):
     if request.method == 'GET':
@@ -228,7 +229,8 @@ def staging_room(request, group_id):
 
 
 
-
+@authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 @login_required
 def private_chat(request):
     UserModel = get_user_model()
@@ -250,7 +252,8 @@ def private_chat(request):
 
 
 
-
+@authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 @login_required
 def room(request, room_name):
     backends = get_backends()
@@ -267,21 +270,6 @@ def room(request, room_name):
         return render(request, template, context)
 
 
-def get_user(uid):
-    token = TokenModel.objects.get(user_id=uid)
-    userdict = {
-        "first": token.user.first_name,
-        "last": token.user.last_name,
-        "email": token.user.email,
-        "username": token.user.username,
-        'auth0_identifier': token.user.auth0_identifier,
-        "is_staff": token.user.is_staff,
-        "is_superuser": token.user.is_superuser,
-        "token": token
-    }
-    return userdict
-
-
 
 def error(request):
     template = 'errors/error.html'
@@ -293,6 +281,19 @@ def error(request):
 
 
 
+# def get_user(uid):
+#     token = TokenModel.objects.get(user_id=uid)
+#     userdict = {
+#         "first": token.user.first_name,
+#         "last": token.user.last_name,
+#         "email": token.user.email,
+#         "username": token.user.username,
+#         'auth0_identifier': token.user.auth0_identifier,
+#         "is_staff": token.user.is_staff,
+#         "is_superuser": token.user.is_superuser,
+#         "token": token
+#     }
+#     return userdict
 
 
 # def room(request, room_name):

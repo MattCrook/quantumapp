@@ -18,7 +18,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         url = serializers.HyperlinkedIdentityField(view_name='userprofile', lookup_field='id')
         fields = ('id', 'address', 'image', 'credits', 'user', )
-        depth = 1
+        depth = 2
         extra_kwargs = {'password': {'write_only': True}}
 
 
