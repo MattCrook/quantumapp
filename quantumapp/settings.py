@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'channels',
     'quantumapi',
     'quantumforum',
+    'quantumadminapp',
 ]
 
 # Config/ routing for Websockets/ chat
