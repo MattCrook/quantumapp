@@ -145,5 +145,6 @@ CodeBackup/
 
 # misc
 .vscode/
+/.vscode
 node_modules/
 /node_modules

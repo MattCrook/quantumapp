@@ -6,12 +6,14 @@ Django Rest API backend for [Quantum Coasters](https://github.com/MattCrook/quan
 1. Clone it:
    * `git@github.com:MattCrook/quantumapp-api.git`
 2. Set up your virtual environment:
-   * python -m venv `quantumenv`
+   * python -m venv `venv`
 3. Activate virtual environment:
-   * `source ./quantumenv/bin/activate`
+   * `source ./venv/bin/activate`
 4. Install dependencies:
    * `pip install -r requirements.txt`
 5. Run migrations:
+   * You can use SQLite3 or PostgreSQL as the database. Just be sure whichever you choose to use it set to the default in `settings.py`.
+   * Run:
    * `python manage.py makemigrations`
    * `python manage.py migrate`
 6. Load fixtures:
