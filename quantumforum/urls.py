@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.authtoken.views import obtain_auth_token
 from django.conf.urls import include
 from django.contrib.auth import views as auth_views
-from quantumforum.views import index, login_user, logout_user, group_chat, private_chat, staging_room, room
+from quantumforum.views import index, login_user, logout_user, group_chat, private_chat, staging_room, edit_group_chat_form, room
 from quantumforum.views import redirect_home as client_home
 from quantumforum.views import redirect_profile as profile
 from quantumforum.views import error as error_view
@@ -30,6 +30,7 @@ urlpatterns = [
     # path('private_chat/<int:auth_user_id>/', private_chat, name='private_chat'),
     path('private_chat/', private_chat, name='private_chat'),
     path('group_chat/<int:group_id>/confirm/', staging_room, name='staging_room'),
+    path('group_chat/<int:group_id>/edit/', edit_group_chat_form, name='edit_group_chat_form'),
     path('error', error_view, name='error'),
 
     # path('<str:room_name>/', room, name='room'),

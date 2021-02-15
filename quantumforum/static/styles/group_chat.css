@@ -213,7 +213,7 @@
 /************************** New Create Group Chat Form ***********************/
 
 #new_group_create_form_container {
-  margin-top: 15%;
+  margin-top: 6%;
   margin-bottom: 5%;
 }
 .login-wrap {
@@ -222,23 +222,23 @@
   max-width: 525px;
   min-height: 670px;
   position: relative;
-  /* background: url(https://i.redd.it/4sm1yg5rhq131.jpg) no-repeat center; */
   box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.089), 0 17px 50px 0 rgba(0, 0, 0, 0.075);
-  /* border: 1px solid rgb(0, 0, 0); */
   border-radius: 4px;
+  /* background: url(https://i.redd.it/4sm1yg5rhq131.jpg) no-repeat center; */
+  /* border: 1px solid rgb(0, 0, 0); */
 }
 
 .login-html {
   width: 100%;
   height: 100%;
+  padding: 58px 54px 30px 50px;
+  border-radius: 4px 4px 4px 4px;
+  overflow-y: auto;
   /* position: absolute; */
   /* padding: 90px 70px 50px 70px; */
-  padding: 58px 54px 30px 50px;
   /* background:rgba(40,57,101,.9); */
   /* background: rgb(0, 0, 0); */
   /* background: rgba(243, 243, 243, 0.904); */
-  overflow-y: scroll;
-  border-radius: 4px 4px 4px 4px;
 }
 
 .login-html .sign-in,

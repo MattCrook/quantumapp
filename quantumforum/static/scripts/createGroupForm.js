@@ -68,7 +68,7 @@ const initialRenderFriendShipData = (friendshipList, results, searchInput, added
 const handleSearchInput = (friendShips, searchInput, search_term, results, addedToGroupList) => {
   searchInput.addEventListener("input", (e) => {
     search_term = e.target.value;
-    filterSearchQuery(friendShips, search_term, results, addedToGroupList, searchInput);
+    filterSearchQuery(friendShips, search_term, results);
     initSelectUserToAdd(results, searchInput, addedToGroupList);
   });
 };
@@ -315,12 +315,6 @@ function renderCheckIcon(uid) {
       `;
 }
 
-function renderClearAllButton() {
-  return `
-      <div class="clear_all_button">Clear All</div>
-  `;
-}
-
 
 
 const setSessionStorage = async () => {
@@ -328,23 +322,6 @@ const setSessionStorage = async () => {
   sessionStorage.setItem("token", userSession.token);
   sessionStorage.setItem("session_hash", userSession.auth_hash_data.auth_session);
 }
-
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      // Does this cookie string begin with the name we want?
-      if (cookie.substring(0, name.length + 1) === name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
 
 
 

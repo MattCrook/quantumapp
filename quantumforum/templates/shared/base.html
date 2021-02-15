@@ -132,7 +132,6 @@
                     </div>
 
                     <footer class="modal__footer">
-                        <!-- <input id="modal__btn-primary" type="submit" value="Create" style="margin-right: 8px;"/> -->
                         <button class="modal__btn" data-micromodal-close
                             aria-label="Close this dialog window">Close</button>
                     </footer>
@@ -186,6 +185,12 @@
 
           handleClearSessionStorage();
     </script>
+
+
+
+    <script type="text/javascript" src="{% static 'scripts/navEventListeners.js'%}"></script>
+    <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
+
 
     {% block scripts %}
     {% endblock scripts %}

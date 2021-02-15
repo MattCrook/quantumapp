@@ -99,3 +99,20 @@ export async function retrieveUserSessionData() {
     console.log(err);
   }
 }
+
+export async function getGroupChat(groupId) {
+  const token = sessionStorage.getItem("token");
+  try {
+    const response = await fetch(`${remoteUrl}/api/group_chats/${groupId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      Accept: "application/json",
+    });
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+}

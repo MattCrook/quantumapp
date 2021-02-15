@@ -98,7 +98,7 @@
                 <i id="fas_circle" class="fas fa-circle"></i>
                 <div class="active_friend_profile_pic">
                     {% if friend.user.image %}
-                    <img class="active_friends_pic" src="{{friend.user.image.image}}" />
+                    <img class="active_friends_pic" src="{{friend.user.image.image.url}}" />
                     {% else %}
                     <img class="active_friends_pic" src="{{default_profile_pic}}" />
                     {% endif %}
@@ -149,16 +149,16 @@
         </div>
     </div>
 </div>
+
+<!-- if error with data or in except send to error page. So put error in context and send here where the template will pick it up. -->
 {% else %}
 <div>
-    <a href="{url 'quantumforum:error' }">Error Page</a>
+    <a href="{% url 'quantumforum:error' %}">Error Page</a>
 </div>
 {% endif %}
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'scripts/eventListeners.js'%}"></script>
-<script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 <script type="module" src="{% static 'scripts/createGroupForm.js'%}"></script>
 {% endblock %}
