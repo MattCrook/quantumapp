@@ -82,6 +82,7 @@ class Friendships(ViewSet):
     def create(self, request):
         pass
 
+
     def update(self, request, pk=None):
         pass
 

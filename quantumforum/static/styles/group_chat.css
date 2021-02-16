@@ -61,8 +61,9 @@
 .add_new_group_container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 30%;
-  margin-left: 33%;
+  margin-left: 36%;
   margin-top: 5%;
 }
 

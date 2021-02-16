@@ -1,0 +1,30 @@
+.banner {
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+}
+
+.private_chat_banner_back_btn {
+  cursor: pointer;
+  border: none;
+  padding: 12px 20px;
+  margin: 0px 5px;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;
+  background-color: #020202;
+  color: #fff;
+  margin-left: 46%;
+  margin-top: 5%;
+}
+
+.private_chat_banner_back_btn:hover {
+  box-shadow: 3px 3px 3px 3px rgb(212, 212, 212);
+}
+
+
+.private_chat_banner_back_btn a {
+    text-decoration: none;
+    color: #fff;
+}

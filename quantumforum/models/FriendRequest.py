@@ -9,9 +9,9 @@ from django.contrib.auth import get_user_model
 # 3	Blocked
 # The action_user_id represent the id of the user who has performed the most recent status field update.
 
+UserModel = get_user_model()
 
 class FriendRequest(models.Model):
-    UserModel = get_user_model()
 
     sender_and_receiver = models.ForeignKey("Friendships", on_delete=models.CASCADE)
     status_code = models.ForeignKey("StatusCode", on_delete=models.CASCADE)

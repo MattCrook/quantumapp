@@ -11,6 +11,7 @@ from rest_framework.authentication import RemoteUserAuthentication, TokenAuthent
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.cache import SessionStore
 import json
 
 
@@ -153,33 +154,52 @@ def get_user_session(request):
 
 
 
-# def get_auth_user(self, obj):
-#     serialized_user = UserSerializer(instance=obj.auth_user)
-#     return serialized_user.data
 
-# @authentication_classes([SessionAuthentication, JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
-# @api_view
-# def get_authuser(self, request):
-#     # req_body = json.loads(request.body.decode())
-#     if request.method == 'POST':
-#         user = request.user
-#         session = request.session
-#         decoded_session_data = session.decode(session.session_data)
-#         # token = req_body['token']
-#         token = TokenModel.objects.get(user_id=user.id)
-#         userdict = {
-#             "first": user.first_name,
-#             "last": user.last_name,
-#             "email": user.email,
-#             "username": user.username,
-#             'auth0_identifier': user.auth0_identifier,
-#             "is_staff": user.is_staff,
-#             "is_superuser": user.is_superuser,
-#             "token": token.key,
-#             'session_data': decoded_session_data
-#         }
-#         return HttpResponse(json.dumps(userdict), content_type='application/json')
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_auth_user(request):
+    try:
+        if request.method == 'POST':
+            auth_user = request.user
+            session = request.session
+            session_queryset = Session.objects.get(session_key=session.session_key)
+            if session is not None:
+                decoded_session_data = session_queryset.get_decoded()
+            auth_token = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+            django_token = TokenModel.objects.get(user_id=auth_user.id).key
+            if auth_token == django_token:
+                user_profile = UserProfile.objects.get(user_id=auth_user.id)
+                user_credits = user_profile.credits.model.objects.filter(userProfile_id=user_profile.id)
+
+                user_profile_dict = {
+                    'id': user_profile.id,
+                    'image_id': user_profile.image.id,
+                    'credits': user_credits if len(user_credits) > 0 else [],
+                    'address': user_profile.address,
+                    'user_id': user_profile.user.id
+                }
+
+                return_data = {
+                    "id": auth_user.id,
+                    "first_name": auth_user.first_name,
+                    "last_name": auth_user.last_name,
+                    "email": auth_user.email,
+                    "username": auth_user.username,
+                    'auth0_identifier': auth_user.auth0_identifier,
+                    "is_staff": auth_user.is_staff,
+                    "is_superuser": auth_user.is_superuser,
+                    "token": django_token,
+                    'session_data': decoded_session_data,
+                    'user_profile': user_profile_dict
+                }
+                return HttpResponse(json.dumps(return_data), content_type='application/json')
+            else:
+                error = {"Error": "You are not authorized to view this endpoint"}
+                return HttpResponse(json.dumps(error), content_type='application/json')
+
+    except Exception as ex:
+        error = {'Exception': ex.args}
+        return HttpResponse(json.dumps(error), content_type='application/json')
 
 
 

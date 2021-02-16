@@ -57,7 +57,6 @@ body {
   font: 150 1em helvetica neue, open sans, sans-serif;
 } */
 
-
 .back_btn {
   padding: 5px 20px;
   padding-top: 5px;
@@ -436,15 +435,15 @@ body {
 
 #search_quantum_results {
   position: absolute;
-  left: 52.5%;
-  top: 11%;
-  width: 19%;
+  left: 50%;
+  top: 7%;
+  width: 21%;
   z-index: 1000;
   border-radius: 4px;
-  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.089), 0 17px 50px 0 rgba(0, 0, 0, 0.075);
+  box-shadow: 0 12px 15px 5px rgba(0, 0, 0, 0.089), 0 17px 50px 0 rgba(0, 0, 0, 0.075);
+  background: white;
+  border: none;
 }
-
-
 
 .overlay {
   position: fixed;
@@ -456,7 +455,6 @@ body {
   transition: 0.5s all ease;
 }
 
-
 .overlay_close {
   background: transparent;
   border: 0;
@@ -466,8 +464,6 @@ body {
 .overlay_close:before {
   content: "\2715";
 }
-
-
 
 .search_result_wrapper {
   display: flex;
@@ -512,6 +508,7 @@ body {
 #fa_check_friend_request {
   padding-right: 20px;
   color: #4d4d4d;
+  font-size: 13px;
 }
 
 /******* Friend Request Button ********/
@@ -521,7 +518,8 @@ body {
   align-items: center;
   cursor: pointer;
   text-decoration: none;
-  padding: 7px 20px;
+  padding: 7px 12px;
+  margin-right: 5px;
   color: rgb(0, 0, 0);
   font-family: sans-serif;
   text-transform: uppercase;

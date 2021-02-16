@@ -6,7 +6,7 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView, UsersFriendsApiView
 from quantumapi.views import login_user, register_user, auth0_logout, get_user_session
 # from quantumapi.views import get_authuser
 from quantumapi.views import Credentials as CredentialsView
@@ -46,6 +46,8 @@ router.register(r'friend_requests', FriendRequestView, 'friend_request')
 router.register(r'friendships', FriendshipView, 'friendship')
 router.register(r'app_login_data', AppLoginDataView, 'app_login_data')
 router.register(r'group_chats', GroupChatApiView, 'group_chat')
+router.register(r'friends', UsersFriendsApiView, 'friends')
+
 
 
 

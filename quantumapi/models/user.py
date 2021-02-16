@@ -46,7 +46,7 @@ class User(AbstractUser):
         return data
 
 
-    def get_user(self):
+    def get_current_user(self):
         data = {
             'id': self.id,
             'last_login': self.last_login,

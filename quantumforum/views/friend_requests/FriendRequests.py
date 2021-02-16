@@ -8,6 +8,7 @@ from rest_framework import status
 from quantumforum.models import FriendRequest as FriendRequestModel
 from quantumforum.models import Friendships as FriendshipsJoin
 from quantumforum.models import StatusCode as StatusCodeModel
+from quantumapi.models import UserProfile as UserProfileModel
 from django.contrib.auth import get_user_model
 import datetime
 
@@ -48,24 +49,21 @@ class FriendRequests(ViewSet):
     def create(self, request):
         try:
             UserModel = get_user_model()
-            new_friend_request = FriendRequestModel()
             sender_user = request.user
-            receiver_user_id = request.data['receiver']
-            receiver_user = UserModel.objects.get(pk=receiver_user_id)
+            receiver_id = request.data['receiver']
+            receiver_user_profile = UserProfileModel.objects.get(pk=receiver_id)
+            receiver = UserModel.objects.get(pk=receiver_user_profile.user_id)
 
             friendship = FriendshipsJoin()
             friendship.requester = sender_user
-            friendship.addressee = receiver_user
+            friendship.addressee = receiver
             friendship.save()
 
-            status_code = StatusCodeModel.objects.get_or_create(code=0)
-            status_code.save()
-
-
-            new_friend_request.sender_and_receiver = friendship.id
-            new_friend_request.status_code = status_code
-            new_friend_request.last_updated_by = request.data['actionTakenBy']
-            new_friend_request.date = datetime.datetie.now()
+            new_friend_request = FriendRequestModel()
+            new_friend_request.sender_and_receiver = friendship
+            new_friend_request.status_code = StatusCodeModel.objects.get(code=request.data['statusCode'])
+            new_friend_request.last_updated_by = UserModel.objects.get(pk=request.data['lastUpdatedBy'])
+            new_friend_request.date = datetime.datetime.now()
             new_friend_request.save()
 
             serializer = FriendRequestSerializer(new_friend_request, context={'request': request})

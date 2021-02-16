@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from quantumapi.models import UserProfile
 
 
+UserModel = get_user_model()
 
 class GroupChat(models.Model):
-    UserModel = get_user_model()
 
     name = models.CharField(max_length=100, null=True, blank=True)
     group_members = models.ManyToManyField(UserProfile, through="GroupMembersJoin",)

@@ -126,7 +126,7 @@ def register_user(request):
                     code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
                     code = codes[0] if len(codes) > 0 else {}
 
-                    user_association = association.objects.create(
+                    user_association = association.objects.get_or_create(
                             server_url=AUTH0_OPEN_ID_SERVER_URL,
                             handle=nonce,
                             secret=code_verifier,
@@ -212,7 +212,7 @@ def register_user(request):
                         'social_app_id': social_app_data.pk,
                         'social_app_name': social_app_data.name,
                         "social_token_id": social_token.id,
-                        'association_id': user_association.id,
+                        'association_id': user_association[0].id,
                         'email_confirmation': True,
                         'user_profile_id': new_userprofile.id,
                     }

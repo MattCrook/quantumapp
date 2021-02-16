@@ -1,6 +1,35 @@
 // const remoteUrl = process.env.REMOTE_API_URL;
 const remoteUrl = "http://localhost:8000";
 
+export async function getUser() {
+  try {
+    let name = "csrftoken";
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    const response = await fetch(`${remoteUrl}/get_auth_user/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": cookieValue,
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+      Accept: "application/json",
+    });
+    return await response.json();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export async function getUserList() {
   const response = await fetch(`${remoteUrl}/api/userprofiles`, {
     method: "GET",
@@ -24,11 +53,24 @@ export async function retrieveUserProfile(uid) {
 }
 
 export async function sendFriendRequest(payload) {
-  const response = await fetch(`${remoteUrl}/api/friend_request`, {
+  let name = "csrftoken";
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  const response = await fetch(`${remoteUrl}/api/friend_requests`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+      "X-CSRFToken": cookieValue,
+      Authorization: "Token " + sessionStorage.getItem("token"),
     },
     body: JSON.stringify(payload),
   });

@@ -32,10 +32,13 @@
                 <div class="label">Quantum Coasters Forum</div>
             </div>
             {% if user.is_authenticated %}
+
+            <!-- Open modal-4 for list of quantum friends (populated from server in group_chat.py) -->
             <div class="nav_middle">
                 <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn"><i
                         class="fas fa-users"></i> Your Quantum Friends </div>
 
+                    <!-- Search Quantum friends search bar. To search ALL quantum users to send friend requests. Search handled by navSearchUsers.js -->
                     <div class="search_quantum">
                         <input class="search_quantum_input" id="user_search" type="search"
                             placeholder="Search For Quantum Users..." />
@@ -103,7 +106,6 @@
                     <h2 class="modal__title" id="modal-4-title">Quantum Friends List</h2>
                     <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
                 </header>
-
                 <main class="modal__content" id="modal-4-content">
                     <div class="friends_list_container">
                         {% if quantum_friends %}
@@ -119,9 +121,7 @@
                                 </div>
                                 <div class="friend_name">{{friend.first_name}} {{friend.last_name}}</div>
                             </div>
-
                             <div id="friend_card_container_2">
-                                <i id="user-check" class="fas fa-user-check"></i>
                                 <i id="fa-trash"class="far fa-trash-alt"></i>
                             </div>
                         </div>
@@ -150,44 +150,8 @@
         {% endblock content %}
     </main>
 
+
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-    <script type="text/javascript">
-        const handleNavProfileDropdown = () => {
-            const profileDropdownContainer = document.getElementById("profile_dropdown_container");
-            const navImage = document.querySelector(".nav_image");
-            const close = () => (profileDropdownContainer.style.display = "none");
-            const open = () => (profileDropdownContainer.style.display = "block");
-
-            navImage.addEventListener("click", () => {
-              const display = profileDropdownContainer.style.display;
-              display === "none" && open();
-              display === "block" && close();
-            });
-          };
-
-          handleNavProfileDropdown();
-
-          const handleClearSessionStorage = () => {
-              const backBtn = document.querySelector('.back_btn');
-              const goToProfileBtn = document.getElementById('go_to_profile');
-              const goHomeButton = document.getElementById('go_home');
-
-              backBtn.addEventListener("click", () => {
-                  sessionStorage.clear();
-              });
-              goToProfileBtn.addEventListener("click", () => {
-                  sessionStorage.clear();
-              })
-            goHomeButton.addEventListener("click", () => {
-                sessionStorage.clear();
-            })
-          };
-
-          handleClearSessionStorage();
-    </script>
-
-
-
     <script type="text/javascript" src="{% static 'scripts/navEventListeners.js'%}"></script>
     <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 
