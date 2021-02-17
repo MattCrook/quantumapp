@@ -91,16 +91,13 @@ def register_user(request):
                     storage = authenticated_user.storage
                     # user_backend_data = user_backends_data(authenticated_user, backend_data, storage)
 
-                    association = storage.association
-                    code_from_storage = storage.code
-                    nonce_from_storage = storage.nonce
-                    partial = storage.partial
-                    social_user_from_storage = storage.user
-
-                    # auth0_backend = backend_data['backends']['backends'][0]
-                    # openId_backend = backend_data['backends']['backends'][1]
-                    auth0_backend = backend_data['backends']['backends'].pop('auth0')
-                    openId_backend = backend_data['backends']['backends'].pop('openid')
+                    # association = storage.association
+                    # code_from_storage = storage.code
+                    # nonce_from_storage = storage.nonce
+                    # partial = storage.partial
+                    # social_user_from_storage = storage.user
+                    auth0_backend = backend_data['backends']['backends'][1]
+                    openId_backend = backend_data['backends']['backends'][0]
                     associated_backends = backend_data['backends'].get('associated')
 
                     # return csrf token for POST form. side effect is have @csrf_protect
@@ -127,14 +124,21 @@ def register_user(request):
 
                     code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
                     code = codes[0] if len(codes) > 0 else {}
+                    handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
 
-                    user_association = association.objects.get_or_create(
+                    # associate_user('openid', social_user.uid, authenticated_user, social_user)
+
+                    is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists()
+                    if is_association:
+                        user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
+                    else:
+                        user_association = Association.objects.create(
                             server_url=AUTH0_OPEN_ID_SERVER_URL,
-                            handle=nonce,
+                            handle=handle,
                             secret=code_verifier,
                             issued=iat,
                             lifetime=exp,
-                            assoc_type=openId_backend
+                            assoc_type=auth0_backend
                         )
 
                     social_account = SocialAccount()
@@ -151,8 +155,8 @@ def register_user(request):
                         primary=True
                         )
 
-                    social_auth_nonce = nonce_from_storage.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
-                    user_socialauth_code = code_from_storage.objects.create(email=account_email[0], code=code, verified=True)
+                    social_auth_nonce = Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
+                    user_socialauth_code = Code.objects.create(email=account_email[0], code=code, verified=True)
 
                     social_app = SocialApp.objects.get_or_create(
                         provider=provider,
@@ -184,7 +188,7 @@ def register_user(request):
                         session = Session.objects.get(session_key=current_user_session.session_key)
                     else:
                         session = Session.objects.create(user=authenticated_user)
-                        session.save()
+                        # session.save()
 
                     email_confirmation = EmailConfirmation.objects.get_or_create(
                         email_address=account_email[0],
@@ -214,7 +218,7 @@ def register_user(request):
                         'social_app_id': social_app_data.pk,
                         'social_app_name': social_app_data.name,
                         "social_token_id": social_token.id,
-                        'association_id': user_association[0].id,
+                        'association_id': user_association.id,
                         'email_confirmation': True,
                         'user_profile_id': new_userprofile.id,
                     }

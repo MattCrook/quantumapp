@@ -247,7 +247,8 @@ class AppLoginDataView(ViewSet):
  
 
             serializer = AppLoginDataSerializer(data=data, context={'request': request})
-            if serializer.is_valid():
+            valid = serializer.is_valid()
+            if valid:
                 serializer.save()
                 return Response(serializer.data)
             else:

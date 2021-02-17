@@ -116,6 +116,7 @@ def login_user(request):
 
                         # login user, then grab the credentials and newly created session which is going to be called and returned after login.
                         login(request, social_user.user, backend='quantumapi.auth0_backend.Auth0')
+
                         try:
                             session_user = request.session
                             is_session = Session.objects.filter(session_key=session_user.session_key).exists()
@@ -130,61 +131,34 @@ def login_user(request):
                             # Get the most recent entry on Credentials, which would have just posted/ updated
                             # from the user logging in thru auth0. (In App.js and Auth0Context)
                             credentials = Credential.objects.get(user_id=authenticated_user.id)
-                            all_transactions = json.dump(credentials.transactions)
+                            all_transactions = json.loads(credentials.transactions)
                             transaction_items_keys = all_transactions['transactions'].keys()
                             transactions_values = all_transactions['transactions'].values()
 
                             codes = []
-                            print("transaction_items_keys", transaction_items_keys)
                             for c in transaction_items_keys:
                                 codes.append(c)
 
                             transactions = []
-                            print('transactions_values', transactions_values)
                             for t in transactions_values:
                                 transactions.append(t)
 
                             handles = [handle for handle in codes] if len(codes) > 0 else {}
                             code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
+                            handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
+                            code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
 
                             all_backends = backends(request)
                             user_backends = all_backends.get('backends')
+                            auth0_backend = user_backends['backends'][1]
+                            openId_backend = user_backends['backends'][0]
                             user_assoc_backends = user_backends.get('associated')
 
-                            if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists():
+                            if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
                                 # user_association = Association.objects.get(assoc_type=user_assoc_backends)
-                                user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
-
+                                user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
                             else:
-                                Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handles, secret=code_verifiers, issued=iat, lifetime=exp, assoc_type=user_assoc_backends)
-
-
-                        # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
-                        # social_account = SocialAccount.objects.get(user_id=remote_authenticated_user.id)
-
-                        # social_token = SocialToken.objects.get(account_id=social_account.id)
-                        # social_token.token = id_token
-                        # social_token.token_secret = request.auth
-                        # time_now = datetime.datetime.now()
-                        # expires_at = time_now + datetime.timedelta(0, exp)
-                        # social_token.expires_at = expires_at
-                        # social_token.save()
-
-                        # social_app = SocialApp.objects.get(provider=provider)
-
-                        # login(request, social_user.user, backend='quantumapi.auth0_backend.Auth0')
-                        # session_user = request.session
-                        # is_session = Session.objects.filter(session_key=session_user.session_key).exists()
-
-                        # try:
-                        #     if is_session:
-                        #         session = Session.objects.get(session_key=session_user.session_key)
-                        #         decoded_session = session.get_decoded()
-                        #         session.save()
-                        #     else:
-                        #         session = Session.objects.create(user=remote_authenticated_user)
-                        #         session.save()
-
+                                Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=user_assoc_backends)
 
                             auth_user = {
                                     "valid": True,
@@ -198,14 +172,14 @@ def login_user(request):
                                     "accessToken": remote_user_auth[1],
                                     "management_api_token": management_api_token,
                                     "session": session.session_key,
-                                    'csrf': csrf,
+                                    "csrf": csrf,
+                                    "user_social_auth": user_social_auth.id,
+                                    "account_email": account_email.id,
+                                    "management_user": management_api_user,
+                                    "social_account": social_account.id,
+                                    "social_app": social_app.id,
+                                    "email_confirmation": True,
                                     # 'user_association': user_association.id,
-                                    'user_social_auth': user_social_auth.id,
-                                    'account_email': account_email.id,
-                                    'management_user': management_api_user,
-                                    'social_account': social_account.id,
-                                    'social_app': social_app.id,
-                                    'email_confirmation': True,
                                 }
 
                             data = json.dumps(auth_user)
