@@ -37,7 +37,8 @@ class CredentialsSerializer(serializers.ModelSerializer):
     redirect_uri = serializers.CharField()
     audience = serializers.CharField()
     scope = serializers.CharField()
-    transactions = serializers.DictField()
+    transactions = serializers.ListField()
+    codes = serializers.ListField()
     nonce = serializers.CharField()
     access_token = serializers.CharField()
     django_token = serializers.CharField()
@@ -130,10 +131,20 @@ class Credentials(ViewSet):
 
                 if 'transactions' in request.data and request.data['transactions']:
                     # transactions = json.dumps(request.data['transactions'])
-                    transactions = request.data['transactions']
+                    all_transactions = request.data['transactions']
+                    transaction_items_keys = all_transactions['transactions'].keys()
+                    transactions_values = all_transactions['transactions'].values()
+                    transactions = []
+                    codes = []
+
+                    for t in transactions_values:
+                        transactions.append(t)
+
+                    for c in transaction_items_keys:
+                        codes.append(c)
 
                 else:
-                    transactions = request.data['transactions']
+                    transactions = {}
 
 
                 user = request.user

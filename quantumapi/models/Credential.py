@@ -14,6 +14,7 @@ class Credential(models.Model):
     audience = models.CharField(max_length=300, null=True, blank=True)
     scope = models.CharField(max_length=300, null=True, blank=True)
     transactions = models.TextField(null=True, blank=True)
+    codes = models.TextField(null=True, blank=True)
     nonce = models.CharField(max_length=300, null=True, blank=True)
     access_token = models.TextField(null=True, blank=True)
     django_token = models.CharField(max_length=900, null=True, blank=True)

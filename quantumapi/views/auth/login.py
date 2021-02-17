@@ -130,7 +130,7 @@ def login_user(request):
                             # Get the most recent entry on Credentials, which would have just posted/ updated
                             # from the user logging in thru auth0. (In App.js and Auth0Context)
                             credentials = Credential.objects.get(user_id=authenticated_user.id)
-                            all_transactions = json.loads(credentials.transactions)
+                            all_transactions = json.dump(credentials.transactions)
                             transaction_items_keys = all_transactions['transactions'].keys()
                             transactions_values = all_transactions['transactions'].values()
 

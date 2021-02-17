@@ -97,8 +97,10 @@ def register_user(request):
                     partial = storage.partial
                     social_user_from_storage = storage.user
 
-                    auth0_backend = backend_data['backends']['backends'][0]
-                    openId_backend = backend_data['backends']['backends'][1]
+                    # auth0_backend = backend_data['backends']['backends'][0]
+                    # openId_backend = backend_data['backends']['backends'][1]
+                    auth0_backend = backend_data['backends']['backends'].pop('auth0')
+                    openId_backend = backend_data['backends']['backends'].pop('openid')
                     associated_backends = backend_data['backends'].get('associated')
 
                     # return csrf token for POST form. side effect is have @csrf_protect
