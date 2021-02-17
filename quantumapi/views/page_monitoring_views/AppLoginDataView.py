@@ -59,14 +59,13 @@ class AppLoginDataSerializer(serializers.Serializer):
     # updated_at = serializers.DateTimeField()
 
 
-
-
-
-
     # auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
     # auth_user = UserSerializer(read_only=True)
     # auth_user = serializers.SerializerMethodField(method_name='get_auth_user')
     # auth_user = UserSerializer(read_only=True)
+
+
+
     id = serializers.IntegerField(label='ID', read_only=True)
     auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
     email = serializers.EmailField()
@@ -106,11 +105,6 @@ class AppLoginDataSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return AppLoginDataModel.objects.create(**validated_data)
-
-
-
-
-
 
 
 
@@ -209,12 +203,12 @@ class AppLoginDataView(ViewSet):
             management_session = success_login['details']['session_id']
             management_user_id = success_login.get('user_id')
 
-            last_logout_ip = success_logouts[0].get('ip')
+            last_logout_ip = success_logouts[0].get('ip') if len(success_logouts) > 0 else management_user.get('last_ip')
             last_ip = management_user.get('last_ip')
             strategy = success_login.get('strategy')
             strategy_type = success_login.get('strategy_type')
-            prompts = success_login['details']['prompts']
-            management_session_user = prompts[0].get('session_user')
+            prompts = success_login['details']['prompts'] if len(success_login['details']['prompts']) > 0 else {}
+            management_session_user = prompts[0].get('session_user') if len(prompts)> 0 else ""
             rest_auth_token = TokenModel.objects.get(user=auth_user) if request.user else ""
 
             # 'auth_user': auth_user.to_dict(),
@@ -256,10 +250,11 @@ class AppLoginDataView(ViewSet):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
+            else:
+                return Response({'Serializer Error': serializer.errors }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as ex:
-            # return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response({'Error': ex.args, 'Serializer Errors': serializer.errors }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'Error': ex.args }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
         pass

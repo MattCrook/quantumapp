@@ -9,7 +9,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 from allauth.account.models import EmailAddress
 from allauth.account.models import EmailConfirmation
@@ -40,10 +42,15 @@ import datetime
 from allauth.socialaccount.views import  get_current_site
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialLogin, SocialAccount
 
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+
 
 
 
 @api_view(('GET', 'POST'))
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def login_user(request):
     try:
         req_body = json.loads(request.body.decode())
@@ -94,45 +101,9 @@ def login_user(request):
                             csrf = get_token(request)
 
                         # is_active = user_is_active(authenticated_user)
-
                         account_email = EmailAddress.objects.get(user_id=remote_authenticated_user.id)
                         user_social_auth = UserSocialAuth.objects.get(user_id=remote_authenticated_user.id)
-
-                        # Get the most recent entry on Credentials, which would have just posted/ updated
-                        # from the user logging in thru auth0. (In App.js and Auth0Context)
-                        credentials = Credential.objects.get(user_id=authenticated_user.id)
-                        all_transactions = json.loads(credentials.transactions)
-                        transaction_items_keys = all_transactions['transactions'].keys()
-                        transactions_values = all_transactions['transactions'].values()
-
-                        codes = []
-                        print("transaction_items_keys", transaction_items_keys)
-                        for c in transaction_items_keys:
-                            codes.append(c)
-
-                        transactions = []
-                        print('transactions_values', transactions_values)
-                        for t in transactions_values:
-                            transactions.append(t)
-
-                        handles = [handle for handle in codes] if len(codes) > 0 else {}
-                        code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
-
-                        all_backends = backends(request)
-                        user_backends = all_backends.get('backends')
-                        user_assoc_backends = user_backends.get('associated')
-
-                        if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists():
-                            # user_association = Association.objects.get(assoc_type=user_assoc_backends)
-                            user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
-
-                        else:
-                            Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handles, secret=code_verifiers, issued=iat, lifetime=exp, assoc_type=user_assoc_backends)
-
-
-                        # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
                         social_account = SocialAccount.objects.get(user_id=remote_authenticated_user.id)
-
                         social_token = SocialToken.objects.get(account_id=social_account.id)
                         social_token.token = id_token
                         social_token.token_secret = request.auth
@@ -143,18 +114,76 @@ def login_user(request):
 
                         social_app = SocialApp.objects.get(provider=provider)
 
+                        # login user, then grab the credentials and newly created session which is going to be called and returned after login.
                         login(request, social_user.user, backend='quantumapi.auth0_backend.Auth0')
-                        session_user = request.session
-                        is_session = Session.objects.filter(session_key=session_user.session_key).exists()
-
                         try:
+                            session_user = request.session
+                            is_session = Session.objects.filter(session_key=session_user.session_key).exists()
                             if is_session:
                                 session = Session.objects.get(session_key=session_user.session_key)
                                 decoded_session = session.get_decoded()
-                                session.save()
+                                # session.save()
                             else:
                                 session = Session.objects.create(user=remote_authenticated_user)
-                                session.save()
+                                # session.save()
+
+                            # Get the most recent entry on Credentials, which would have just posted/ updated
+                            # from the user logging in thru auth0. (In App.js and Auth0Context)
+                            credentials = Credential.objects.get(user_id=authenticated_user.id)
+                            all_transactions = json.loads(credentials.transactions)
+                            transaction_items_keys = all_transactions['transactions'].keys()
+                            transactions_values = all_transactions['transactions'].values()
+
+                            codes = []
+                            print("transaction_items_keys", transaction_items_keys)
+                            for c in transaction_items_keys:
+                                codes.append(c)
+
+                            transactions = []
+                            print('transactions_values', transactions_values)
+                            for t in transactions_values:
+                                transactions.append(t)
+
+                            handles = [handle for handle in codes] if len(codes) > 0 else {}
+                            code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
+
+                            all_backends = backends(request)
+                            user_backends = all_backends.get('backends')
+                            user_assoc_backends = user_backends.get('associated')
+
+                            if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL).exists():
+                                # user_association = Association.objects.get(assoc_type=user_assoc_backends)
+                                user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL)
+
+                            else:
+                                Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handles, secret=code_verifiers, issued=iat, lifetime=exp, assoc_type=user_assoc_backends)
+
+
+                        # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                        # social_account = SocialAccount.objects.get(user_id=remote_authenticated_user.id)
+
+                        # social_token = SocialToken.objects.get(account_id=social_account.id)
+                        # social_token.token = id_token
+                        # social_token.token_secret = request.auth
+                        # time_now = datetime.datetime.now()
+                        # expires_at = time_now + datetime.timedelta(0, exp)
+                        # social_token.expires_at = expires_at
+                        # social_token.save()
+
+                        # social_app = SocialApp.objects.get(provider=provider)
+
+                        # login(request, social_user.user, backend='quantumapi.auth0_backend.Auth0')
+                        # session_user = request.session
+                        # is_session = Session.objects.filter(session_key=session_user.session_key).exists()
+
+                        # try:
+                        #     if is_session:
+                        #         session = Session.objects.get(session_key=session_user.session_key)
+                        #         decoded_session = session.get_decoded()
+                        #         session.save()
+                        #     else:
+                        #         session = Session.objects.create(user=remote_authenticated_user)
+                        #         session.save()
 
 
                             auth_user = {

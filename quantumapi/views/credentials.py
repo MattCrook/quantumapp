@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status, authentication
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import Serializer, ModelField
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import HttpResponse
 from django.conf import settings
@@ -12,9 +12,11 @@ from rest_framework.decorators import api_view, renderer_classes, permission_cla
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework_jwt.blacklist.models import BlacklistedToken
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from quantumapp.settings import AUTH0_CLIENT_ID, AUTH0_DOMAIN, API_IDENTIFIER, SOCIAL_AUTH_AUTH0_KEY
+from quantumapi.views import UserSerializer
+from django.contrib.auth import get_user_model
 import datetime
 import psycopg2
 import json
@@ -22,6 +24,13 @@ import json
 
 
 class CredentialsSerializer(serializers.ModelSerializer):
+    UserModel = get_user_model()
+
+    # user = UserSerializer(read_only=True)
+    # user = serializers.RelatedField(queryset=UserModel.objects.all())
+    # user = serializers.SerializerMethodField()
+    # user = serializers.ModelField()
+    user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
     user_sub = serializers.CharField()
     domain = serializers.CharField()
     client_id = serializers.CharField()
@@ -33,14 +42,29 @@ class CredentialsSerializer(serializers.ModelSerializer):
     access_token = serializers.CharField()
     django_token = serializers.CharField()
     session_id = serializers.CharField()
-    session = serializers.CharField()
+    session = serializers.DictField()
     csrf_token = serializers.CharField()
     cookies = serializers.DictField()
     updated_at = serializers.DateTimeField()
+
+
+    # def get_user(self, obj):
+    #     # UserModel = get_user_model()
+    #     user_instance = self.initial_data.get('user')
+    #     # instance = UserModel.objects.get(pk=user_instance)
+    #     serializer = UserSerializer(user_instance)
+    #     obj.user = serializers.ReturnDict(serializer)
+    #     return obj
+
+
     class Meta:
         model = CredentialModel
-        fields = ('id', 'user_sub', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'csrf_token', 'cookies', 'updated_at')
+        fields = ('id', 'user', 'user_sub', 'domain', 'client_id', 'redirect_uri', 'audience', 'scope', 'transactions', 'nonce', 'access_token', 'django_token', 'session_id', 'session', 'csrf_token', 'cookies', 'updated_at')
         depth = 1
+
+
+
+
 
 
 class Credentials(ViewSet):
@@ -105,33 +129,37 @@ class Credentials(ViewSet):
                     # session = Session.objects.create()
 
                 if 'transactions' in request.data and request.data['transactions']:
-                    transactions = json.dumps(request.data['transactions'])
+                    # transactions = json.dumps(request.data['transactions'])
+                    transactions = request.data['transactions']
+
                 else:
                     transactions = request.data['transactions']
 
 
                 user = request.user
-                is_auth0data = CredentialModel.objects.filter(user_id=user.id).exists()
+                has_credentials = CredentialModel.objects.filter(user_id=user.id).exists()
 
-                if is_auth0data and user_sub == user.auth0_identifier:
-                    auth0data = CredentialModel.objects.get(user_id=user.id)
-                    auth0data.user = user
-                    auth0data.user_sub = request.data['user_sub']
-                    auth0data.domain = API_IDENTIFIER
-                    auth0data.client_id = SOCIAL_AUTH_AUTH0_KEY
-                    auth0data.redirect_uri = request.data["redirect_uri"]
-                    auth0data.audience = request.data["audience"]
-                    auth0data.scope = request.data["scope"]
-                    auth0data.transactions = transactions
-                    auth0data.nonce = request.data["nonce"]
-                    auth0data.access_token = request.data["access_token"]
-                    auth0data.django_token = request.data["django_token"]
-                    auth0data.session = decoded_session
-                    auth0data.session_id = session_id
-                    auth0data.csrf_token = csrftoken
-                    auth0data.cookies = json.dumps(request.data["cookies"])
-                    auth0data.updated_at = request.data["updated_at"]
+                if has_credentials and user_sub == user.auth0_identifier:
+                    credential_instance = CredentialModel.objects.get(user_id=user.id)
+                    # auth0data.user = user
+                    # auth0data.user_sub = request.data['user_sub']
+                    # auth0data.domain = API_IDENTIFIER
+                    # auth0data.client_id = SOCIAL_AUTH_AUTH0_KEY
+                    # auth0data.redirect_uri = request.data["redirect_uri"]
+                    # auth0data.audience = request.data["audience"]
+                    # auth0data.scope = request.data["scope"]
+                    # auth0data.transactions = transactions
+                    # auth0data.nonce = request.data["nonce"]
+                    # auth0data.access_token = request.data["access_token"]
+                    # auth0data.django_token = request.data["django_token"]
+                    # auth0data.session = decoded_session
+                    # auth0data.session_id = session_id
+                    # auth0data.csrf_token = csrftoken
+                    # auth0data.cookies = json.dumps(request.data["cookies"])
+                    # auth0data.updated_at = request.data["updated_at"]
 
+                    # user_serializer = UserSerializer(user)
+                        # 'user': UserSerializer(user),
                     credentials = {
                         'user': user,
                         'user_sub': user_sub,
@@ -140,7 +168,7 @@ class Credentials(ViewSet):
                         'redirect_uri': request.data["redirect_uri"],
                         'audience': request.data["audience"],
                         'scope': request.data["scope"],
-                        'transactions': json.loads(transactions),
+                        'transactions': transactions,
                         'nonce': request.data["nonce"],
                         'access_token': request.data["access_token"],
                         'django_token': request.data["django_token"],
@@ -150,20 +178,45 @@ class Credentials(ViewSet):
                         'cookies': request.data["cookies"],
                         'updated_at': request.data["updated_at"],
                     }
-                    serializer = CredentialsSerializer(data=credentials, context={'request': request})
-                    serializer.is_valid()
-                    auth0data.save()
-                    return Response(serializer.data)
+                    serializer = CredentialsSerializer(instance=credential_instance, data=credentials, context={'request': request})
+                    if serializer.is_valid():
+                        serializer.save()
+                        # auth0data.save()
+                        return Response(serializer.data)
+                    else:
+                        return Response({'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 else:
+
+                    # credentials = CredentialModel.objects.create(
+                    #     user=user,
+                    #     user_sub=user_sub,
+                    #     domain=API_IDENTIFIER,
+                    #     client_id=SOCIAL_AUTH_AUTH0_KEY,
+                    #     redirect_uri=request.data["redirect_uri"],
+                    #     audience=request.data["audience"],
+                    #     scope=request.data["scope"],
+                    #     transactions=json.loads(transactions),
+                    #     nonce=request.data["nonce"],
+                    #     access_token=request.data["access_token"],
+                    #     django_token=request.data["django_token"],
+                    #     session=decoded_session,
+                    #     session_id=session_id,
+                    #     csrf_token=csrftoken,
+                    #     cookies=request.data["cookies"],
+                    #     updated_at=request.data["updated_at"],
+                    #  )
+                    # serializer = CredentialsSerializer(credentials, context={'request': request})
+                    # return Response(serializer.data)
+
                     credentials = {
-                        'user': user,
+                        'user': user.pk,
                         'user_sub': user_sub,
-                        'domain': request.data["domain"],
-                        'client_id': request.data["client_id"],
+                        'domain': API_IDENTIFIER,
+                        'client_id': SOCIAL_AUTH_AUTH0_KEY,
                         'redirect_uri': request.data["redirect_uri"],
                         'audience': request.data["audience"],
                         'scope': request.data["scope"],
-                        'transactions': json.loads(transactions),
+                        'transactions': transactions,
                         'nonce': request.data["nonce"],
                         'access_token': request.data["access_token"],
                         'django_token': request.data["django_token"],
@@ -173,15 +226,19 @@ class Credentials(ViewSet):
                         'cookies': request.data["cookies"],
                         'updated_at': request.data["updated_at"],
                     }
+
                     serializer = CredentialsSerializer(data=credentials , context={'request': request})
-                    serializer.is_valid()
-                    serializer.save()
-                    return Response(serializer.data)
+                    valid = serializer.is_valid()
+                    if valid:
+                        serializer.save()
+                        return Response(serializer.data)
+                    else:
+                        return Response({"Serialized Data Error": serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:
-                return Response({"Login Failed": "User social sub not present or does not match."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({"Credentials POST Failed": "An Error Occurred"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         except Exception as ex:
-            return Response({'Error': ex.args, 'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except AssertionError as ass:
             return HttpResponse({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -225,21 +282,21 @@ class Credentials(ViewSet):
 
 
 # @renderer_classes((JSONRenderer))
-@api_view(('GET', 'POST'))
-@permission_classes([IsAuthenticated])
-def get_django_session(request, session_id):
-    if request.method == 'GET':
-        conn = psycopg2.connect(
-            host="localhost",
-            database="quantumcostersdb",
-            user="matthewcrook",
-            password="password")
-        db_cursor = conn.cursor()
-        db_cursor.execute("""
-            SELECT * FROM django_session
-            """ )
-        data = db_cursor.fetchall()
-        print(data)
+# @api_view(('GET', 'POST'))
+# @permission_classes([IsAuthenticated])
+# def get_django_session(request, session_id):
+#     if request.method == 'GET':
+#         conn = psycopg2.connect(
+#             host="localhost",
+#             database="quantumcostersdb",
+#             user="matthewcrook",
+#             password="password")
+#         db_cursor = conn.cursor()
+#         db_cursor.execute("""
+#             SELECT * FROM django_session
+#             """ )
+#         data = db_cursor.fetchall()
+#         print(data)
         # db_cursor.execute("""
         #     SELECT *
         #     FROM django_session ds
