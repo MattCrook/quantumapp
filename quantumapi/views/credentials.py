@@ -189,15 +189,15 @@ class Credentials(ViewSet):
                     credential_instance.redirect_uri = request.data["redirect_uri"]
                     credential_instance.audience = request.data["audience"]
                     credential_instance.scope = request.data["scope"]
-                    credential_instance.transactions = all_transactions
+                    credential_instance.transactions = json.dumps(all_transactions)
                     credential_instance.codes = codes
                     credential_instance.nonce = request.data["nonce"]
                     credential_instance.access_token = request.data["access_token"]
                     credential_instance.django_token = request.data["django_token"]
-                    credential_instance.session = decoded_session
+                    credential_instance.session = json.dumps(decoded_session),
                     credential_instance.session_id = session_id
                     credential_instance.csrf_token = csrftoken
-                    credential_instance.cookies = request.data["cookies"]
+                    credential_instance.cookies = json.dumps(request.data["cookies"])
                     credential_instance.updated_at = request.data["updated_at"]
 
                     credentials = {

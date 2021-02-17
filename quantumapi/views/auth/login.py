@@ -158,7 +158,7 @@ def login_user(request):
                                 # user_association = Association.objects.get(assoc_type=user_assoc_backends)
                                 user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
                             else:
-                                Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=user_assoc_backends)
+                                user_association = Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=auth0_backend)
 
                             auth_user = {
                                     "valid": True,
