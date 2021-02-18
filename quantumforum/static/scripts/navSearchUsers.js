@@ -1,5 +1,5 @@
 import { useQuantumFriends, useUserList, useAuthUser } from "./hooks.js";
-import { getAllUsersFriends, getUserList, getUser, sendFriendRequest} from "./services.js";
+import { getAllUsersFriends, getUserList, getUser, sendFriendRequest, getFriendships, getFriendRequests} from "./services.js";
 
 const [friends, setFriends] = useQuantumFriends();
 const [users, setUsers] = useUserList();
@@ -17,13 +17,36 @@ const handleUserSearchInput = (userList, friendList) => {
 // initial load of the dropdown. Shows paginated results, then user can type to filter/ search.
 const loadUsersAndFriends = async () => {
   try {
-    const allFriendships = await getAllUsersFriends();
-    setFriends(allFriendships);
-    const allUsers = await getUserList();
     const currentUser = await getUser();
-
     setCurrentAuthUser([currentUser]);
     const authUser = currentAuthUser();
+    const allUsers = await getUserList();
+    console.log(authUser)
+
+    const allFriendships = await getAllUsersFriends();
+    const allSenderAndReceiver = await getFriendships();
+    const friendRequestsUserHasSent = allSenderAndReceiver.filter(request => request.requester_id === authUser.id);
+    const friendRequestsUserHasReceived = allSenderAndReceiver.filter(request => request.addressee_id === authUser.id);
+
+    const sentAndReceivedRequestsObj = {
+      sent: friendRequestsUserHasSent,
+      received: friendRequestsUserHasReceived
+    }
+    const sentAndReceivedRequests = [...friendRequestsUserHasSent, ...friendRequestsUserHasReceived]
+    console.log(sentAndReceivedRequestsObj)
+    console.log({sentAndReceivedRequests})
+
+
+
+
+
+
+    const allFriendRequests = await getFriendRequests();
+
+    console.log(friends())
+    console.log(allSenderAndReceiver)
+
+
     const allUsersExcludingCurrentUser = allUsers.filter((profile) => profile.id !== authUser[0].user_profile.id);
     setUsers(allUsersExcludingCurrentUser);
 

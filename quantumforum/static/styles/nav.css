@@ -471,6 +471,12 @@ body {
   align-items: center;
   width: 100%;
   margin-bottom: 1%;
+  padding-left: 3%;
+  padding-right: 2%;
+}
+
+.search_result_wrapper:hover {
+  background-color: #f3f3f3;
 }
 
 .search_result_container_1 {
@@ -478,6 +484,7 @@ body {
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
+  padding-top: 2%;
 }
 
 .search_result_image {
@@ -497,6 +504,7 @@ body {
   justify-content: flex-end;
   flex-direction: row;
   align-items: center;
+  padding-top: 2%;
 }
 
 .search_result_name {

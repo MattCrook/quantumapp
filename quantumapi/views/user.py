@@ -3,7 +3,7 @@ from rest_framework import viewsets, status, serializers
 from rest_framework.serializers import ModelSerializer
 from django.http import HttpResponseServerError, HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from ..models import UserProfile, ImageForm
+from ..models import UserProfile, ImageForm, Credit
 from rest_auth.models import TokenModel
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
@@ -169,12 +169,12 @@ def get_auth_user(request):
             django_token = TokenModel.objects.get(user_id=auth_user.id).key
             if auth_token == django_token:
                 user_profile = UserProfile.objects.get(user_id=auth_user.id)
-                user_credits = user_profile.credits.model.objects.filter(userProfile_id=user_profile.id)
+                user_credits = Credit.objects.filter(userProfile_id=user_profile.id)
 
                 user_profile_dict = {
                     'id': user_profile.id,
-                    'image_id': user_profile.image.id,
-                    'credits': user_credits if len(user_credits) > 0 else [],
+                    'image_id': user_profile.image.id if user_profile.image else None,
+                    'credits': [c.rollerCoaster_id for c in user_credits],
                     'address': user_profile.address,
                     'user_id': user_profile.user.id
                 }

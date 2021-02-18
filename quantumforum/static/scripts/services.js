@@ -104,6 +104,38 @@ export async function getAllUsersFriends() {
   }
 }
 
+export async function getFriendships() {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${remoteUrl}/api/friendships`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getFriendRequests() {
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${remoteUrl}/api/friend_requests`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function getAllUsersFriendsFromReceiver(userId) {
   const response = await fetch(`${remoteUrl}/api/friendships?addressee=${userId}`, {
     method: "GET",
