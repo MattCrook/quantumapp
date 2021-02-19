@@ -7,8 +7,7 @@ from django.contrib.auth import get_user_model
 UserModel = get_user_model()
 
 class Friendships(models.Model):
-    # requester = models.ForeignKey(UserModel, related_name='auth_user', on_delete=models.CASCADE)
-    requester = models.ForeignKey(UserModel, related_name='requester', on_delete=models.CASCADE)
+    requester = models.ForeignKey(UserModel, related_name='sender', on_delete=models.CASCADE)
     addressee = models.ForeignKey(UserModel, on_delete=models.CASCADE)
 
     class Meta:

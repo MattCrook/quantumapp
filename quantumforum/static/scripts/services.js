@@ -1,25 +1,30 @@
 // const remoteUrl = process.env.REMOTE_API_URL;
 const remoteUrl = "http://localhost:8000";
 
-export async function getUser() {
-  try {
-    let name = "csrftoken";
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+const getCookie = (name) => {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
       }
     }
+  }
+  return cookieValue;
+};
+
+export async function getUser() {
+  try {
+    let cookie = getCookie("csrftoken");
     const response = await fetch(`${remoteUrl}/get_auth_user/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": cookieValue,
+        "X-CSRFToken": cookie,
         Authorization: "Token " + sessionStorage.getItem("token"),
       },
       Accept: "application/json",
@@ -31,71 +36,72 @@ export async function getUser() {
 }
 
 export async function getUserList() {
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${remoteUrl}/api/userprofiles`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+      Authorization: "Token " + token,
     },
   });
   return await response.json();
 }
 
 export async function retrieveUserProfile(uid) {
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${remoteUrl}/api/userprofiles/${uid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+      Authorization: "Token " + token,
     },
   });
   return await response.json();
 }
 
 export async function sendFriendRequest(payload) {
-  let name = "csrftoken";
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== "") {
-    const cookies = document.cookie.split(";");
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.substring(0, name.length + 1) === name + "=") {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
+  try {
+    let cookie = getCookie("csrftoken");
+    const response = await fetch(`${remoteUrl}/api/friend_requests`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": cookie,
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
   }
-  const response = await fetch(`${remoteUrl}/api/friend_requests`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": cookieValue,
-      Authorization: "Token " + sessionStorage.getItem("token"),
-    },
-    body: JSON.stringify(payload),
-  });
-  return await response.json();
 }
 
 export async function updateStatusCode(code) {
-  const response = await fetch(`${remoteUrl}/api/status_code`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
-    },
-    body: JSON.stringify(code),
-  });
-  return await response.json();
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${remoteUrl}/api/status_code`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(code),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function getAllUsersFriends() {
   try {
+    const token = sessionStorage.getItem("token");
     const response = await fetch(`${remoteUrl}/api/friendships?friend_list=sender_and_receiver`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+        Authorization: "Token " + token,
       },
     });
     return await response.json();
@@ -137,34 +143,42 @@ export async function getFriendRequests() {
 }
 
 export async function getAllUsersFriendsFromReceiver(userId) {
+  const token = sessionStorage.getItem("token");
   const response = await fetch(`${remoteUrl}/api/friendships?addressee=${userId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
+      Authorization: "Token " + token,
     },
   });
   return await response.json();
 }
 
 export async function sendAppLoginData(payload) {
-  const response = await fetch(`${remoteUrl}/api/app_login_data`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + sessionStorage.getItem("accessToken"),
-    },
-    body: JSON.stringify(payload),
-  });
-  return await response.json();
+  try {
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${remoteUrl}/api/app_login_data`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function retrieveUserSessionData() {
   try {
+    const token = sessionStorage.getItem("token");
     const response = await fetch(`${remoteUrl}/get_user_session`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: "Token " + token,
       },
       Accept: "application/json",
     });
@@ -175,8 +189,8 @@ export async function retrieveUserSessionData() {
 }
 
 export async function getGroupChat(groupId) {
-  const token = sessionStorage.getItem("token");
   try {
+    const token = sessionStorage.getItem("token");
     const response = await fetch(`${remoteUrl}/api/group_chats/${groupId}`, {
       method: "GET",
       headers: {
@@ -188,5 +202,33 @@ export async function getGroupChat(groupId) {
     return await response.json();
   } catch (err) {
     console.log(err);
+  }
+}
+
+export async function postActivityLogError(error, appName, fileName, functionName, userId) {
+  try {
+    const token = sessionStorage.getItem("token");
+    const payload = {
+      message: error.message,
+      stack: error.stack,
+      component: fileName,
+      error: error,
+      appName: appName,
+      callingFunction: functionName,
+      time: date,
+      sessionId: getCookie("sessionid"),
+      userId: userId,
+    }
+    const response = await fetch(`${remoteUrl}/api/error_logs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
   }
 }

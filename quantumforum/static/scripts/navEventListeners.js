@@ -11,14 +11,12 @@ const showModal = () => {
   });
 };
 
-
 // Handles the 'X' button in the search users bar.
 const closeOverlaySearchBarButton = () => {
   const closeButton = document.querySelector(".overlay_close");
-  const searchQuantumResults = document.getElementById("search_quantum_results");
+  const searchQuantumResults = document.getElementById("search_quantum_results_master_container");
   const nav = document.querySelector(".nav");
   const currentGroupChats = document.querySelector(".current_group_chats_container");
-
 
   const bodyTag = document.getElementsByTagName("body")[0];
   if (closeButton) {
@@ -45,8 +43,6 @@ const handleNavProfileDropdown = () => {
   });
 };
 
-
-
 const handleClearSessionStorage = () => {
   const backBtn = document.querySelector(".back_btn");
   const goToProfileBtn = document.getElementById("go_to_profile");
@@ -63,11 +59,51 @@ const handleClearSessionStorage = () => {
   });
 };
 
+const handleShowNotifications = () => {
+  const notificationsButton = document.querySelector(".notifications_header");
+  const friendsListModalContainer = document.querySelector(".friends_list");
+  const friendsButton = document.querySelector(".friends_header");
+
+  notificationsButton.addEventListener("click", () => {
+    friendsListModalContainer.style.display = "none";
+    notificationsButton.style.display = "none";
+    friendsButton.style.display = "block";
+    showNotificationsBody();
+  });
+};
+
+const showNotificationsBody = () => {
+  const notificationsContainer = document.querySelector(".notifications");
+  notificationsContainer.style.display = "block";
+  notificationsContainer.innerHTML = "";
+  const render = renderNotifications();
+  notificationsContainer.innerHTML += render;
+};
+
+const handleShowFriendsList = () => {
+  const notificationsButton = document.querySelector(".notifications_header");
+  const friendsListModalContainer = document.querySelector(".friends_list");
+  const friendsButton = document.querySelector(".friends_header");
+  friendsButton.addEventListener("click", () => {
+    notificationsButton.style.display = "block";
+    friendsListModalContainer.style.display = "block";
+    friendsButton.style.display = "none";
+  });
+};
+
+function renderNotifications() {
+  return `
+  <div>HELLO</div>
+  `;
+}
+
 const initNav = () => {
   showModal();
   closeOverlaySearchBarButton();
   handleNavProfileDropdown();
   handleClearSessionStorage();
+  handleShowNotifications();
+  handleShowFriendsList();
 };
 
 initNav();

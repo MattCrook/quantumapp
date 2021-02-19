@@ -1,12 +1,60 @@
-import { useQuantumFriends, useUserList, useAuthUser } from "./hooks.js";
-import { getAllUsersFriends, getUserList, getUser, sendFriendRequest, getFriendships, getFriendRequests} from "./services.js";
+// import { useQuantumFriends, useUserList, useAuthUser } from "./hooks.js";
+import {
+  getAllUsersFriends,
+  getUserList,
+  getUser,
+  sendFriendRequest,
+  getFriendships,
+  getFriendRequests,
+  postActivityLogError,
+} from "./services.js";
 
-const [friends, setFriends] = useQuantumFriends();
-const [users, setUsers] = useUserList();
-const [currentAuthUser, setCurrentAuthUser] = useAuthUser();
+// const [friends, setFriends] = useQuantumFriends();
+// const [users, setUsers] = useUserList();
+// const [currentAuthUser, setCurrentAuthUser] = useAuthUser();
 let userSearchResultRows = [];
 
-const handleUserSearchInput = (userList, friendList) => {
+
+
+// Initial load of the dropdown. Shows paginated results, then user can type to filter/ search.
+// Gets current logged in user.
+// Gets all friendships, and all friends, then maps the friendships join to the users friend requests on sender and receiver id to get
+// all friend requests tied to the current user.
+// Filtering all friendships on sender and receiver id to later user the status code on the friend request object.
+const loadUsersAndFriends = async () => {
+  try {
+    const data = await Promise.all([getUser(), getUserList(), getAllUsersFriends(), getFriendships(), getFriendRequests()]);
+    const currentUser = data[0];
+    const allUsers = data[1];
+    const allFriendshipProfiles = data[2];
+    const allSenderAndReceiver = data[3];
+    const allFriendRequests = data[4];
+
+    const friendRequestsUserHasSent = allSenderAndReceiver.filter((request) => request.requester.id === currentUser.id);
+    const friendRequestsUserHasReceived = allSenderAndReceiver.filter(
+      (request) => request.addressee.id === currentUser.id
+    );
+    const allSentAndReceivedFriendships = [...friendRequestsUserHasSent, ...friendRequestsUserHasReceived];
+    const senderAndReceiverIds = allSentAndReceivedFriendships.map((friendship) => friendship.id);
+    const allUsersFriendRequests = allFriendRequests.filter(
+      (friendRequest) => !senderAndReceiverIds.includes(friendRequest.sender_and_receiver_id)
+    );
+
+    const allUsersExcludingCurrentUser = allUsers.filter((profile) => profile.id !== currentUser.user_profile.id);
+    // setUsers(allUsersExcludingCurrentUser);
+    // setFriends(allUsersFriendRequests);
+    console.log("Friends", allUsersFriendRequests);
+
+    initNavSearchInput(allUsersExcludingCurrentUser, allUsersFriendRequests, allFriendshipProfiles);
+    handleUserSearchInput(allUsersExcludingCurrentUser, allUsersFriendRequests);
+  } catch (error) {
+    console.log(error);
+    await postActivityLogError(error, "QuantumForum", "navSearchUsers.js", "loadUsersAndFriends", currentUser.id);
+  }
+};
+
+
+function handleUserSearchInput(userList, friendList) {
   const search_input = document.getElementById("user_search");
   search_input.addEventListener("input", (e) => {
     const search_term = e.target.value;
@@ -14,56 +62,15 @@ const handleUserSearchInput = (userList, friendList) => {
   });
 };
 
-// initial load of the dropdown. Shows paginated results, then user can type to filter/ search.
-const loadUsersAndFriends = async () => {
-  try {
-    const currentUser = await getUser();
-    setCurrentAuthUser([currentUser]);
-    const authUser = currentAuthUser();
-    const allUsers = await getUserList();
-    console.log(authUser)
-
-    const allFriendships = await getAllUsersFriends();
-    const allSenderAndReceiver = await getFriendships();
-    const friendRequestsUserHasSent = allSenderAndReceiver.filter(request => request.requester_id === authUser.id);
-    const friendRequestsUserHasReceived = allSenderAndReceiver.filter(request => request.addressee_id === authUser.id);
-
-    const sentAndReceivedRequestsObj = {
-      sent: friendRequestsUserHasSent,
-      received: friendRequestsUserHasReceived
-    }
-    const sentAndReceivedRequests = [...friendRequestsUserHasSent, ...friendRequestsUserHasReceived]
-    console.log(sentAndReceivedRequestsObj)
-    console.log({sentAndReceivedRequests})
-
-
-
-
-
-
-    const allFriendRequests = await getFriendRequests();
-
-    console.log(friends())
-    console.log(allSenderAndReceiver)
-
-
-    const allUsersExcludingCurrentUser = allUsers.filter((profile) => profile.id !== authUser[0].user_profile.id);
-    setUsers(allUsersExcludingCurrentUser);
-
-    initNavSearchInput(users(), friends());
-    handleUserSearchInput(users(), friends());
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-function initNavSearchInput(userList, friendsList) {
+function initNavSearchInput(userList, friendRequestList, allFriendshipProfiles) {
   const searchResults = document.getElementById("search_quantum_results");
   searchResults.innerHTML = "";
-  userList.forEach((profile) => {
+  userList.forEach((userProfile) => {
     let row;
-    const isFriend = filterUserFriends(profile.id, friendsList);
-    profile.image ? (row = renderRowWithImage(isFriend, profile)) : (row = renderRowNoImage(isFriend, profile));
+    const friendRequestStatusData = filterUserFriends(userProfile, friendRequestList, allFriendshipProfiles);
+    userProfile.image
+      ? (row = renderRowWithImage(friendRequestStatusData, userProfile))
+      : (row = renderRowNoImage(friendRequestStatusData, userProfile));
     userSearchResultRows.push(row);
     searchResults.innerHTML += row;
   });
@@ -72,16 +79,48 @@ function initNavSearchInput(userList, friendsList) {
 // Finding the user ID of the current friend in the loop, and return where the Ids match.
 // To render either check or add friend icon.
 // Want to return is the current user in loop is a friend or not.
-function filterUserFriends(profileId, friendsList) {
-  const userFriendProfileIds = friendsList.map((friend) => {
-    return friend.id;
+// userProfile.id is current userProfile id of user's friend in for each loop  in initNavSearchInput().
+// friendRequestList is filtered list of friend request objects that hold the friendships join to the user's friends.
+function filterUserFriends(userProfile, friendRequestList, allFriendshipProfiles) {
+  const authUserId = userProfile.user.id;
+  const friendships = friendRequestList.map((request) => {
+    let sent = [];
+    let received = [];
+    if (request.sender_and_receiver.requester.id === authUserId) {
+      sent.push(request);
+    } else if (request.sender_and_receiver.addressee.id === authUserId) {
+      received.push(request);
+    }
+    const data = {
+      sent: sent,
+      received: received,
+      all: [...sent, ...received],
+    };
+    return data;
   });
-  return userFriendProfileIds.includes(profileId);
+  const friendUserProfileIds = allFriendshipProfiles.map((userProfile) => {
+    return userProfile.id;
+  });
+  const friendAuthUser = userProfile.user;
+  const friendRequestForCurrentFriend = friendRequestList.filter(
+    (friendRequest) =>
+      friendRequest.sender_and_receiver.addressee.id === friendAuthUser.id ||
+      friendRequest.sender_and_receiver.requester.id === friendAuthUser.id
+  );
+
+  const friendRequestStatusData = {
+    isFriend: friendUserProfileIds.includes(userProfile.id),
+    friendships: friendships.filter((friendship) => friendship.all.length > 0),
+    friendRequest: friendRequestForCurrentFriend,
+    friendUserProfile: userProfile,
+    friendAuthUser: friendAuthUser,
+  };
+  return friendRequestStatusData;
 }
 
-function renderRowNoImage(isFriend, userProfile) {
+function renderRowNoImage(friendRequestStatusData, userProfile) {
   const default_profile_pic = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
-  const endRowIcon = renderWhichIcon(isFriend, userProfile.id);
+  const endRowIcon = renderWhichIcon(friendRequestStatusData, userProfile.id);
   return `
     <div class="search_result_wrapper">
         <div class="search_result_container_1">
@@ -96,8 +135,8 @@ function renderRowNoImage(isFriend, userProfile) {
     `;
 }
 
-function renderRowWithImage(isFriend, userProfile) {
-  const endRowIcon = renderWhichIcon(isFriend, userProfile.id);
+function renderRowWithImage(friendRequestStatusData, userProfile) {
+  const endRowIcon = renderWhichIcon(friendRequestStatusData, userProfile.id);
   return `
     <div class="search_result_wrapper">
         <div class="search_result_container_1">
@@ -112,34 +151,69 @@ function renderRowWithImage(isFriend, userProfile) {
     `;
 }
 
-function renderPendingApproval(userProfile_id) {
+// After determining if user is a friend or not, this function then Determines which icon to render,
+// for status of friend request: pending, approved, denied, or not friend.
+// Also handles whether to show the alert next to "Your Quantum Friends" or not,
+// based on the status code of friend requests.
+function renderWhichIcon(friendRequestStatusData, userProfileId) {
+  let icon;
+  const { isFriend, friendRequest } = friendRequestStatusData;
+  console.log(friendRequest);
+  let statusCode;
+  friendRequest && Array.isArray(friendRequest) && friendRequest.length > 0 && friendRequest[0].status_code
+    ? (statusCode = friendRequest[0].status_code)
+    : (statusCode = false);
+
+  console.log({ statusCode });
+  isFriend && statusCode && statusCode.id === 1 && (icon = renderSentRequestPendingApproval(userProfileId));
+  isFriend && statusCode && statusCode.id === 2 && (icon = renderCheckIcon(userProfileId));
+  isFriend && statusCode && statusCode.id === 3 && (icon = renderBlockedIcon(userProfileId));
+  isFriend && statusCode && statusCode.id === 4 && (icon = renderDeniedIcon(userProfileId));
+  !isFriend && !statusCode && (icon = renderAddFriendIcon(userProfileId));
+
+  handleAlert(statusCode);
+  return icon;
+}
+
+function renderAddFriendIcon(userProfileId) {
+  return `
+      <div class="send_friend_request_btn"><i id="fa_user_plus" class="fas fa-user-plus" data-id="${userProfileId}"></i></div>
+      `;
+}
+
+function renderCheckIcon(userProfileId) {
+  return `
+      <i id="fa_check_friend_request" class="fas fa-check" data-id="${userProfileId}"></i>
+      `;
+}
+
+function renderSentRequestPendingApproval(userProfileId) {
+  return `
+      <i id="fa_pending_friend_request" class="fas fa-user-check" data-id="${userProfileId}"></i>
+      `;
+}
+
+function renderPendingApproval(userProfileId) {
   return `
     <div class="search_result_container_2">
-      <div class="pending_approval_button"><i class="fas fa-user-check" data-id="${userProfile_id}"></i></div>
+      <div class="pending_approval_button"><i class="fas fa-user-check" data-id="${userProfileId}"></i></div>
     </div>
   `;
 }
 
-// After determining if user is a friend or not, this function then Determines which icon to render, the check or the friend icon.
-function renderWhichIcon(isFriend, userProfile_id) {
-  let icon;
-  !isFriend ? (icon = renderAddFriendIcon(userProfile_id)) : (icon = renderCheckIcon(userProfile_id));
-  return icon;
-}
-
-function renderAddFriendIcon(userProfile_id) {
+function renderDeniedIcon(userProfileId) {
   return `
-      <div class="send_friend_request_btn"><i class="fas fa-user-plus" data-id="${userProfile_id}"></i></div>
-      `;
+      <i id="fa_denied_friend_request" class="fas fa-user-alt-slash" data-id="${userProfileId}"></i>
+    `;
 }
 
-function renderCheckIcon(userProfile_id) {
+function renderBlockedIcon(userProfileId) {
   return `
-      <i id="fa_check_friend_request" class="fas fa-check" data-id="${userProfile_id}"></i>
-      `;
+    <i id="fa_blocked_friend_request" class="fas fa-ban" data-id="${userProfileId}"></i>
+  `;
 }
 
-function renderSearchResults(userList, friendsList, searchQuery) {
+function renderSearchResults(userList, friendRequestList, searchQuery) {
   const searchResults = document.getElementById("search_quantum_results");
   searchResults.innerHTML = "";
   userList
@@ -149,12 +223,13 @@ function renderSearchResults(userList, friendsList, searchQuery) {
         userProfile.user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         userProfile.user.username.toLowerCase().includes(searchQuery.toLowerCase())
     )
-    .forEach((userProfile) => {
+    .forEach(async (userProfile) => {
       let row;
-      const isFriend = filterUserFriends(userProfile.id, friendsList);
+      const friendRequestStatusData = filterUserFriends(userProfile.id, friendRequestList);
+      console.log("friendRequest2", friendRequestStatusData);
       userProfile.image
-        ? (row = renderRowWithImage(userProfile, isFriend))
-        : (row = renderRowNoImage(userProfile, isFriend));
+        ? (row = renderRowWithImage(friendRequestStatusData, userProfile))
+        : (row = renderRowNoImage(friendRequestStatusData, userProfile));
       searchResults.innerHTML += row;
     });
 }
@@ -180,13 +255,15 @@ const toggleOverlay = () => {
 // Handler for search bar in nav.
 const handleClickInInput = () => {
   const searchQuantumInput = document.querySelector(".search_quantum_input");
-  const searchQuantumResults = document.getElementById("search_quantum_results");
-  const toggleNone = () => (searchQuantumResults.style.display = "none");
-  const toggleBlock = () => (searchQuantumResults.style.display = "block");
+  // const searchQuantumResults = document.getElementById("search_quantum_results");
+  const searchResultsMasterContainer = document.getElementById("search_quantum_results_master_container");
+
+  const toggleNone = () => (searchResultsMasterContainer.style.display = "none");
+  const toggleBlock = () => (searchResultsMasterContainer.style.display = "block");
 
   if (searchQuantumInput != null) {
     searchQuantumInput.addEventListener("click", () => {
-      const display = searchQuantumResults.style.display;
+      const display = searchResultsMasterContainer.style.display;
       display === "none" && toggleBlock();
       display === "block" && toggleNone();
       toggleOverlay();
@@ -195,12 +272,11 @@ const handleClickInInput = () => {
   }
 };
 
-
 const handleSendFriendRequest = () => {
   const addFriendButtonNodes = document.querySelectorAll(".send_friend_request_btn");
   const addFriendButtons = Array.from(addFriendButtonNodes);
 
-  addFriendButtons.forEach(addButton => {
+  addFriendButtons.forEach((addButton) => {
     addButton.firstChild.addEventListener("click", async (e) => {
       e.preventDefault();
       const userProfileId = parseInt(e.target.dataset.id);
@@ -211,20 +287,35 @@ const handleSendFriendRequest = () => {
         lastUpdatedBy: currentUser.id,
         statusCode: 0,
       };
-
-      const submitFriendRequest = await sendFriendRequest(friendRequestPayload);
-      console.log({submitFriendRequest});
-
+      try {
+        const submitFriendRequest = await sendFriendRequest(friendRequestPayload);
+        console.log({ submitFriendRequest });
+      } catch (error) {
+        console.log(error)
+      }
       const buttonContainer = e.target.parentNode;
-      buttonContainer.innerHTML = '';
+      buttonContainer.innerHTML = "";
       const checkIcon = renderPendingApproval(userProfileId);
       buttonContainer.innerHTML += checkIcon;
-    })
-  })
+    });
+  });
 };
 
+function showAlert() {
+  const alert = document.getElementById("quantum_friend_alert");
+  alert.style.display = "block";
+}
 
+function hideAlert() {
+  const alert = document.getElementById("quantum_friend_alert");
+  alert.style.display = "none";
+}
 
+function handleAlert(statusCode) {
+  if (statusCode.id === 1) {
+    showAlert();
+  }
+}
 
 const init = () => {
   loadUsersAndFriends();

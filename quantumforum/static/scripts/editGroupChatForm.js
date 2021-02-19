@@ -59,8 +59,6 @@ const back = () => {
     loading();
     const path = window.location.pathname;
     const groupId = parseInt(path.split("/")[2]);
-    console.log(path);
-    console.log(groupId);
     setIsLoading(false);
     loading();
     setTimeout(() => {
