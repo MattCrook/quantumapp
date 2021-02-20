@@ -37,10 +37,10 @@
             <div class="nav_middle">
                 <div class="nav_middle_quantum_friends">
                     <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn">
-                        <i class="fas fa-users"></i> 
-                        Your Quantum Friends
+                        <i class="fas fa-users"></i> Your Quantum Friends
+                        <!-- <i id="quantum_friend_alert" class="fas fa-circle" style="display: none;"></i> -->
+                        <div id="quantum_friend_alert" style="display: none;"></div>
                     </div>
-                    <i id="quantum_friend_alert" class="fas fa-circle" style="display: none;"></i>
                     </div>
 
                     <!-- Search Quantum friends search bar. To search ALL quantum users to send friend requests. Search handled by navSearchUsers.js -->
@@ -152,6 +152,9 @@
                 </main>
             </div>
             <div class="notifications"></div>
+            <div id="loading_main_container"></div>
+
+
                 <div class="signature">
                     <p id="signature_font_friends_list">
                         Made by <a href="https://matt-crook-io.now.sh" >Quantum Coasters</a> <i id="i" class="fas fa-trademark"></i>
@@ -168,7 +171,7 @@
 
 
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-    <script type="text/javascript" src="{% static 'scripts/navEventListeners.js'%}"></script>
+    <script type="module" src="{% static 'scripts/navEventListeners.js'%}"></script>
     <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 
 
