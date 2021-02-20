@@ -197,7 +197,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.open_id.OpenIdAuth',
     'quantumapi.auth0_backend.Auth0',
     'django.contrib.auth.backends.RemoteUserBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    'django.contrib.auth.backends.ModelBackend',
     # 'social_core.backends.auth0.Auth0OAuth2',
 )
 # FOR DJANGO WEB APP BACKEND

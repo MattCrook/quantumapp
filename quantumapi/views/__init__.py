@@ -16,7 +16,7 @@ from .page_monitoring_views import LoginInfoView, ActivityLogView, AppLoginDataV
 from .calendar_events import CalendarEvents
 from .error_logging_views import ErrorLogView
 from .user_submissions import Feedback, BugReports
-from .forum_api_views import GroupChatApiView
+from .forum_api_views import GroupChatApiView, UsersFriendsApiView
 
 
 

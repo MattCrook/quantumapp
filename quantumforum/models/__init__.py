@@ -4,3 +4,4 @@ from .Friendships import Friendships
 from .StatusCode import StatusCode
 from .GroupChat import GroupChat
 from .GroupMembersJoin import GroupMembersJoin
+from .UsersFriends import UsersFriends

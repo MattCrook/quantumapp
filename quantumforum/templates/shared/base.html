@@ -32,10 +32,18 @@
                 <div class="label">Quantum Coasters Forum</div>
             </div>
             {% if user.is_authenticated %}
-            <div class="nav_middle">
-                <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn"><i
-                        class="fas fa-users"></i> Your Quantum Friends </div>
 
+            <!-- Open modal-4 for list of quantum friends (populated from server in group_chat.py) -->
+            <div class="nav_middle">
+                <div class="nav_middle_quantum_friends">
+                    <div href="#modal-4" data-micromodal-trigger="modal-4" class="quantum_friends_btn">
+                        <i class="fas fa-users"></i> Your Quantum Friends
+                        <!-- <i id="quantum_friend_alert" class="fas fa-circle" style="display: none;"></i> -->
+                        <div id="quantum_friend_alert" style="display: none;"></div>
+                    </div>
+                    </div>
+
+                    <!-- Search Quantum friends search bar. To search ALL quantum users to send friend requests. Search handled by navSearchUsers.js -->
                     <div class="search_quantum">
                         <input class="search_quantum_input" id="user_search" type="search"
                             placeholder="Search For Quantum Users..." />
@@ -89,8 +97,14 @@
 
       </div>
       {% if user.is_authenticated %}
-    <div id="search_quantum_results" style="display: none;">
-    </div>
+      <div id="search_quantum_results_master_container" style="display: none;">
+          <i id="fa_question_results_header" class="far fa-question-circle"></i>
+          <div class="search_quantum_results_header_container">
+              <div class="search_quantum_results_header">Search Other People On Quantum</div>
+          </div>
+            <div id="search_quantum_results">
+        </div>
+      </div>
     {% endif %}
 
     <div id="status">
@@ -101,9 +115,11 @@
             <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-4-title">
                 <header class="modal__header">
                     <h2 class="modal__title" id="modal-4-title">Quantum Friends List</h2>
+                    <div class="notifications_header" style="display: block;">Notifications<i class="far fa-bell"></i></div>
+                    <div class="friends_header" style="display: none;">Friends<i class="fas fa-user-friends"></i></div>
                     <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
                 </header>
-
+                <div class="friends_list" style="display: block;">
                 <main class="modal__content" id="modal-4-content">
                     <div class="friends_list_container">
                         {% if quantum_friends %}
@@ -119,9 +135,7 @@
                                 </div>
                                 <div class="friend_name">{{friend.first_name}} {{friend.last_name}}</div>
                             </div>
-
                             <div id="friend_card_container_2">
-                                <i id="user-check" class="fas fa-user-check"></i>
                                 <i id="fa-trash"class="far fa-trash-alt"></i>
                             </div>
                         </div>
@@ -132,11 +146,15 @@
                     </div>
 
                     <footer class="modal__footer">
-                        <!-- <input id="modal__btn-primary" type="submit" value="Create" style="margin-right: 8px;"/> -->
                         <button class="modal__btn" data-micromodal-close
                             aria-label="Close this dialog window">Close</button>
                     </footer>
                 </main>
+            </div>
+            <div class="notifications"></div>
+            <div id="loading_main_container"></div>
+
+
                 <div class="signature">
                     <p id="signature_font_friends_list">
                         Made by <a href="https://matt-crook-io.now.sh" >Quantum Coasters</a> <i id="i" class="fas fa-trademark"></i>
@@ -151,41 +169,11 @@
         {% endblock content %}
     </main>
 
+
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-    <script type="text/javascript">
-        const handleNavProfileDropdown = () => {
-            const profileDropdownContainer = document.getElementById("profile_dropdown_container");
-            const navImage = document.querySelector(".nav_image");
-            const close = () => (profileDropdownContainer.style.display = "none");
-            const open = () => (profileDropdownContainer.style.display = "block");
+    <script type="module" src="{% static 'scripts/navEventListeners.js'%}"></script>
+    <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 
-            navImage.addEventListener("click", () => {
-              const display = profileDropdownContainer.style.display;
-              display === "none" && open();
-              display === "block" && close();
-            });
-          };
-
-          handleNavProfileDropdown();
-
-          const handleClearSessionStorage = () => {
-              const backBtn = document.querySelector('.back_btn');
-              const goToProfileBtn = document.getElementById('go_to_profile');
-              const goHomeButton = document.getElementById('go_home');
-
-              backBtn.addEventListener("click", () => {
-                  sessionStorage.clear();
-              });
-              goToProfileBtn.addEventListener("click", () => {
-                  sessionStorage.clear();
-              })
-            goHomeButton.addEventListener("click", () => {
-                sessionStorage.clear();
-            })
-          };
-
-          handleClearSessionStorage();
-    </script>
 
     {% block scripts %}
     {% endblock scripts %}

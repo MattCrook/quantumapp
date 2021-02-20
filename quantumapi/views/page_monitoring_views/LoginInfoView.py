@@ -14,7 +14,7 @@ import os
 class LoginInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = LoginHistoryModel
-        url = serializers.HyperlinkedIdentityField(view_name='loginhistory', lookup_field='id')
+        # url = serializers.HyperlinkedIdentityField(view_name='loginhistory', lookup_field='id')
         fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'date')
         depth = 1
 
@@ -39,11 +39,6 @@ class LoginInfoView(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             data = LoginHistoryModel.objects.get(pk=pk)
-
-            user_id = self.request.query_params.get("user_id", None);
-            if user_id is not None:
-                data = LoginHistoryModel.objects.filter(user_id=user_id)
-
             serializer = LoginInfoSerializer(data, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
@@ -57,20 +52,13 @@ class LoginInfoView(ViewSet):
             host_ip = socket.getfqdn()
             host_ipv4 = ipv4s[-1]
             IPAddr = socket.gethostbyname(hostname)
-            # print(ipv4s[-1])
-            # print(host_ip)
-            # print(IPAddr)
 
             successful_authenticator = request.successful_authenticator
-            get_token_from_auth_header = successful_authenticator.get_token_from_authorization_header
-            token_from_cookies = successful_authenticator.get_token_from_cookies
-            token_from_request = successful_authenticator.get_token_from_request
-            # print(successful_authenticator)
-            # print(token_from_cookies)
-            # print(get_token_from_auth_header)
-            # print(token_from_request)
-
-            # print(request.data)
+            auth_header = successful_authenticator.authenticate_header(request)
+            get_token_from_auth_header = successful_authenticator.get_token_from_authorization_header(auth_header)
+            # token_from_cookies = successful_authenticator.get_token_from_cookies(COOKIES)
+            # token_from_request = successful_authenticator.get_token_from_request()
+            # user_from_token = successful_authenticator.authenticate_credentials()
 
 
             user_id = request.data['user_id']

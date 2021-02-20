@@ -5,6 +5,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'styles/staging_room.css' %}" />
+<link rel="stylesheet" href="{% static 'styles/loading.css' %}" />
 {% endblock %}
 
 
@@ -45,12 +46,12 @@
 
         <div class="confirm_group_row_container">
             <div class="group_created_by">Group Created By: </div>
-            <div>{{group.created_by.first_name}} {{group.created_by.last_name}}</div>
+            <div class="group_created_by_member_name">{{group.created_by.first_name}} {{group.created_by.last_name}}</div>
         </div>
 
         <div class="confirm_edit_button_container">
             <button id="confirm_group_btn">Confirm</button>
-            <button id="edit_group_btn">Edit</button>
+            <button id="edit_group_btn"><a href="{% url 'quantumforum:edit_group_chat_form' group.id %}">Edit</a></button>
         </div>
 
 

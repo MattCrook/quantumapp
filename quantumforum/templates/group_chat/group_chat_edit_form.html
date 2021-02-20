@@ -1,0 +1,110 @@
+{% extends 'shared/base.html' %}
+
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'styles/group_chat_edit_form.css' %}" />
+<link rel="stylesheet" href="{% static 'styles/loading.css' %}" />
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{% if user.is_authenticated %}
+{% if group.id is not None %}
+
+<div class="group_chat_edit_back_to_previous">&lt; Back To Previous</div>
+
+<div class="group_edit_master_container" display="block">
+    <div class="edit_title_wrapper">
+        <div class="edit_group_header_container_1">
+            <div class="edit_title">Edit Group</div>
+        </div>
+        <div class="edit_group_header_container_2">
+            <div class="back_edit_group">Back</div>
+        </div>
+    </div>
+    <form class="edit_form_content" action="" method="POST">
+        <fieldset class="edit_group_row_container">
+            <label class="edit_group_row_label" for="group_name">Group Name: </label>
+            <input class="form_input" id="group_name" name="group_name" value="{{group.name}}" required />
+        </fieldset>
+        <div class="edit_group_row_container">
+            <div class="edit_group_row_label">Group Members: </div>
+            <div class="edit_group_add_member_button" href="#edit_group_add_modal" data-micromodal-trigger="edit_group_add_modal">Add <i class="fas fa-user-plus"></i></div>
+            <ul class="edit_group_ul">
+                {% for member in group_members %}
+                <div class="edit_group_members_list_item">
+                    <li class="group_members_list_item" data-id="{{member.user_profile.id}}">
+                        {{member.user_profile.user.first_name}} {{member.user_profile.user.last_name}}</li>
+                    {% if member.user_profile.user.id != group.created_by.id %}
+                    <button class="remove_group_member" data-id="{{member.user_profile.id}}"></button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
+        <fieldset class="edit_group_row_container">
+            <label class="group_created_by">Group Created By: </label>
+            <input class="form_input" id="created_by" name="created_by" value="{{created_by_fullname}}" required />
+        </fieldset>
+        <div class="edit_group_button_container">
+            <input id="confirm_changes_button" type="submit" value="Confirm Changes" />
+        </div>
+    </form>
+    <div class="signature_group">
+        <p id="signature_font_group"> Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a>
+            <i class="fas fa-trademark"></i>
+        </p>
+    </div>
+</div>
+
+<div class="edit_group_modal micromodal-slide" id="edit_group_add_modal" aria-hidden="true">
+    <div class="edit_group_modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="edit_group_modal__container" role="dialog" aria-modal="true" aria-labelledby="edit_group_add_modal_title">
+            <header id="edit_group_add_modal_header" class="edit_group_modal__header">
+                <div class="edit_group_search_quantum_friends">
+                    <input class="edit_group_search_quantum_friends_input" id="friends_search" type="search"
+                        placeholder="Search For Quantum Users..." />
+                    <div class="divider"></div>
+                    <i class="fas fa-search"></i>
+                </div>
+                <button class="edit_group_modal__close" aria-label="Close modal" data-micromodal-close></button>
+            </header>
+            <main class="edit_group_modal__content" id="edit_group_add_modal_content">
+                <div class="friends_list_container">
+                    <div id="results"></div>
+                </div>
+                <footer class="edit_group_modal__footer">
+                    <button class="edit_group_modal__btn" data-micromodal-close
+                        aria-label="Close this dialog window">Close</button>
+                </footer>
+                <div class="signature">
+                    <p id="signature_font_edit_group_add_modal">
+                        Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i"
+                            class="fas fa-trademark"></i>
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
+
+
+<div id="loading"></div>
+
+
+
+
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'scripts/editGroupChatForm.js' %}"></script>
+<script type="module" src="{% static 'scripts/addGroupMemberEditFormModal.js' %}"></script>
+
+{% endblock %}

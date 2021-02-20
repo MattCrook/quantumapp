@@ -25,7 +25,7 @@ const backToPreviousPage = () => {
     loading();
     const csrftoken = getCookie("csrftoken");
 
-    const response = await fetch(`${URL}/api/group_chats/${e.target.id}`, {
+    const response = await fetch(`${URL}/api/group_chats/${e.target.dataset.id}`, {
       method: "DELETE",
       mode: "same-origin",
       headers: {

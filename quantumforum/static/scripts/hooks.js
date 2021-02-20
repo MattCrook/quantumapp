@@ -47,4 +47,12 @@ const useAddedToGroup = () => {
         ];
 }
 
-export { useQuantumFriends, useUserList, useLoading, useGroupChatParticipants, useGroup, useAddedToGroup };
+const useAuthUser = () => {
+    let authUser = [];
+        return [
+            () => authUser.slice(),
+            (newAuthUser) => (authUser = newAuthUser.splice(0))
+        ];
+}
+
+export { useQuantumFriends, useUserList, useLoading, useGroupChatParticipants, useGroup, useAddedToGroup, useAuthUser };

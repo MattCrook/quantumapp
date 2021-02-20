@@ -7,11 +7,9 @@
 <link rel="stylesheet" href="{% static 'styles/group_chat.css' %}" />
 {% endblock %}
 
-
-
 {% block content %}
-
 {% if user.is_authenticated %}
+
 <div class="group_chat_main_container">
     <div class="current_group_chats_container">
         <div class="current_group_chats_title_wrapper">
@@ -33,12 +31,12 @@
 
     <div class="add_new_group_container">
         <div class="create_new_group_btn_wrapper">
-            <div class="create_new_group_chat_btn">Create New Group
-                <i class="fas fa-comment-alt"></i>
+            <div class="create_new_group_chat_btn">Create New Group<i class="fas fa-comment-alt"></i>
                 <!-- <i class="fas fa-users"></i> -->
             </div>
         </div>
 
+        <!-- Create new group form -->
         <div id="new_group_create_form_container" class="login-wrap" style="display: none;">
             <button class="close_form"></button>
             <div class="login-html">
@@ -47,7 +45,6 @@
                 <div class="login-form">
                     <form class="sign-in-htm" action="{% url 'quantumforum:group_chat' %}" method="POST">
                         {% csrf_token %}
-
                         <div class="group">
                             <label for="group_name" class="label">Group Name</label>
                             <input id="group_name" type="text" class="input" name="group_name" autofocus required />
@@ -59,21 +56,17 @@
                         <div id="submit_group_btn" class="group">
                             <input id="button_submit_group" type="submit" class="button" value="Create Group">
                         </div>
-
                         <div class="hr"></div>
-
                         <div class="list_of_participants_container">
                             <div class="list_of_participants_title_wrapper">
                                 <div class="invitee_list_title">Users Invited To This Group Chat</div>
                                 <div class="clear_all_button">Clear All</div>
                             </div>
-
                                 <ul class="invitee_list">
                                 </ul>
                         </div>
                     </form>
                 </div>
-
                 <div class="signature_group">
                     <p id="signature_font_group">
                         Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a> <i
@@ -85,6 +78,7 @@
         </div>
     </div>
 
+    <!-- Active quantum friends side nav (right side nav) List populated from server (group_chat.py) -->
     <div class="friends_master_container">
         <div class="friends_title_container">
             <div class="friends_title">Active Quantum Friends <i class="fas fa-globe"></i>
@@ -98,7 +92,7 @@
                 <i id="fas_circle" class="fas fa-circle"></i>
                 <div class="active_friend_profile_pic">
                     {% if friend.user.image %}
-                    <img class="active_friends_pic" src="{{friend.user.image.image}}" />
+                    <img class="active_friends_pic" src="{{friend.user.image.image.url}}" />
                     {% else %}
                     <img class="active_friends_pic" src="{{default_profile_pic}}" />
                     {% endif %}
@@ -118,7 +112,7 @@
 </div>
 
 
-
+<!-- Search and add friends to group chat Modal (List populated dynamically in createGroupForm.js) -->
 <div class="modal micromodal-slide" id="modal-5" aria-hidden="true">
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
         <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-5-title">
@@ -149,16 +143,16 @@
         </div>
     </div>
 </div>
+
+<!-- if error with data or in except send to error page. So put error in context and send here where the template will pick it up. -->
 {% else %}
 <div>
-    <a href="{url 'quantumforum:error' }">Error Page</a>
+    <a href="{% url 'quantumforum:error' %}">Error Page</a>
 </div>
 {% endif %}
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'scripts/eventListeners.js'%}"></script>
-<script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 <script type="module" src="{% static 'scripts/createGroupForm.js'%}"></script>
 {% endblock %}
