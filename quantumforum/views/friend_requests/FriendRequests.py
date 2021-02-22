@@ -64,7 +64,8 @@ class FriendRequests(ViewSet):
             new_friend_request.sender_and_receiver = friendship
             new_friend_request.status_code = StatusCodeModel.objects.get(code=request.data['statusCode'])
             new_friend_request.last_updated_by = UserModel.objects.get(pk=request.data['lastUpdatedBy'])
-            new_friend_request.date = datetime.datetime.now()
+            new_friend_request.sent_date = datetime.datetime.now()
+            new_friend_request.last_updated = datetime.datetime.now()
             new_friend_request.save()
 
             serializer = FriendRequestSerializer(new_friend_request, context={'request': request})
@@ -74,7 +75,7 @@ class FriendRequests(ViewSet):
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-    def update(self, request):
+    def update(self, request, pk=None):
         try:
             UserModel = get_user_model()
             friend_request = FriendRequestModel.objects.get(pk=request.data['id'])
@@ -89,8 +90,8 @@ class FriendRequests(ViewSet):
 
             friend_request.last_updated = datetime.datetime.now()
             friend_request.save()
-            return Response({"Success": True}, status=status.HTTP_200_OK)
-
+            serializer = FriendRequestSerializer(friend_request, context={'request': request})
+            return Response(serializer.data)
         except Exception as ex:
             return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

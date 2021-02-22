@@ -13,22 +13,35 @@ const handleAcceptFriendRequest = () => {
   const acceptButtons = Array.from(acceptButtonNodes);
   acceptButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
-        const dataFriendId = e.target.dataset.id;
-        const friendRequestId = e.target.dataset.friendRequest;
+      const dataFriendId = e.target.dataset.id;
+      const friendRequestId = e.target.dataset.friendrequest;
 
-        const data = {
-            id: friendRequestId,
-            statusCode: 2,
-            lastUpdatedBy: authUser.id
-        }
+      const data = {
+        id: friendRequestId,
+        statusCode: 2,
+        lastUpdatedBy: authUser[0].id,
+      };
 
-        updateFriendRequest(data).then(friendRequest => {
+      updateFriendRequest(data).then((friendRequest) => {
+          console.log({ friendRequest });
+          console.log(e.target);
 
-        })
-
+          const friendCardContainer2 = e.target.parentNode;
+          friendCardContainer2.innerHTML = "";
+          const renderAccepted = displayAccepted(dataFriendId, friendRequestId);
+          friendCardContainer2.innerHTML += renderAccepted;
+      });
     });
   });
 };
+
+function displayAccepted(friendId, friendRequestId) {
+    return `
+    <div id="friend_card_container_2" data-friendrequest="${friendRequestId}">
+        <div class="accepted_banner" data-id="${friendId}">Accepted</div>
+    </div>
+    `
+}
 
 const initActions = () => {
   getUser().then((response) => {
@@ -40,4 +53,4 @@ const initActions = () => {
   });
 };
 
-initActions();
+export { initActions };

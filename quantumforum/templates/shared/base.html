@@ -144,11 +144,11 @@
                         <div class="no_friends">No Friends</div>
                         {% endif %}
                     </div>
-                    <footer class="modal__footer">
-                        <button class="modal__btn" data-micromodal-close
-                            aria-label="Close this dialog window">Close</button>
-                    </footer>
                 </main>
+                <footer class="modal__footer">
+                    <button class="modal__btn" data-micromodal-close
+                        aria-label="Close this dialog window">Close</button>
+                </footer>
             </div>
             <div class="notifications" style="display: none;"></div>
             <div id="footer" style="display: none;"></div>
@@ -173,9 +173,7 @@
 
     <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
     <script type="module" src="{% static 'scripts/navEventListeners.js'%}"></script>
-    <script type="module" src="{% static 'scripts/friendRequestActions.js'%}"></script>
     <script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
-
 
     {% block scripts %}
     {% endblock scripts %}

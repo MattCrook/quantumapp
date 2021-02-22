@@ -257,6 +257,7 @@ body {
   margin-bottom: 0.9rem;
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 12%;
 }
 
 .modal__btn {
@@ -384,14 +385,14 @@ body {
 .friends_list_container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1%;
+  /* margin-bottom: 12%; */
 }
 
 .no_friends {
   color: rgb(201, 201, 201);
   margin-left: 45%;
-  margin-top: 12%;
-  margin-bottom: 12%;
+  margin-top: 13%;
+  margin-bottom: 8%;
   font: 150 1em helvetica neue, open sans, sans-serif;
 }
 
@@ -419,6 +420,7 @@ body {
   justify-content: space-between;
   color: rgb(212, 212, 212);
   border-bottom: 1px solid rgb(83, 83, 83);
+  margin-bottom: 3%;
 }
 
 .friend_profile_pic {
@@ -465,7 +467,6 @@ body {
 }
 
 /********************* Search Quantum Bar *******************/
-
 
 #search_quantum_results {
   padding-bottom: 5%;
@@ -750,8 +751,10 @@ body {
 /************************ Notifications **********/
 
 .notifications {
+  margin-top: 5%;
   margin-bottom: 12%;
 }
+
 
 .notifications_header {
   color: rgb(209, 209, 209);
@@ -812,7 +815,6 @@ body {
   font: 150 1em helvetica neue, open sans, sans-serif;
   margin-top: 9%;
   margin-right: 2%;
-  margin-bottom: 5%;
 }
 
 .notification_type {
@@ -1001,4 +1003,12 @@ body {
   color: rgb(194, 194, 194);
   border-left: 1px solid #b4b4b4;
   border-right: 1px solid #b4b4b4;
+}
+
+.accepted_banner {
+  color: rgb(238, 238, 238);
+  font: 150 1em helvetica neue, open sans, sans-serif;
+  font-variant: small-caps;
+  font-style: italic;
+  margin-right: 6%;
 }

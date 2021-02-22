@@ -29,7 +29,6 @@ const loadUsersAndFriends = async () => {
       getFriendRequests(),
     ]);
     const currentUser = data[0];
-    console.log({currentUser})
     const allUsers = data[1];
     const allFriendshipProfiles = data[2];
     const allSenderAndReceiver = data[3];
