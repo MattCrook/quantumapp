@@ -1,7 +1,9 @@
 {% extends 'shared/base.html' %}
 {% load static %}
 
-
+{% block css %}
+<link rel="stylesheet" href="{% static 'styles/login.css' %}" />
+{% endblock %}
 
 
 {% block content %}
@@ -45,7 +47,7 @@
             </button>
             <button id="login_help" class="btn btn-primary mb-2">
                 <i class="fas fa-question-circle"></i>
-                <a href="{% url 'social:begin' 'auth0' %}">Help</a>
+                <a href="#help_modal" data-micromodal-trigger="help_modal" class="login_help_button">Help</a>
             </button>
         </div>
     </div>
@@ -54,6 +56,44 @@
     <p id="signature_font_login">
         Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i" class="fas fa-trademark"></i>
     </p>
+</div>
+
+
+
+<div class="help_modal micromodal-slide" id="help_modal" aria-hidden="true">
+    <div class="help_modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="help_modal__container" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+            <header class="help_modal__header">
+                <div class="help_modal_title">Help <i class="far fa-question-circle"></i></div>
+                <button class="help_modal__close" aria-label="Close modal" data-micromodal-close></button>
+            </header>
+            <main class="help_modal__content" id="help-modal-content">
+                <div class="help_modal_txt_container">
+                    For admin or superusers, please sign in with your email and admin pass code.
+                </div>
+                <div class="help_modal_txt_container">
+                    For regular Quantum users, sign in with Auth0 to continue to group/ private chat.
+                </div>
+                <div class="help_modal_txt_container">
+                    If there is a problem with your account or login, please contact Quantum Support.
+                    <li>To contact Support, click your profile picture and select "Support" from the dropdown.</li>
+                </div>
+                <div class="thank_you">
+                    Thank You For Using Quantum Coasters!
+                </div>
+                <footer class="help_modal__footer">
+                    <button class="help_modal__btn" data-micromodal-close
+                        aria-label="Close this dialog window">Close</button>
+                </footer>
+                <div class="signature">
+                    <p id="signature_font_friends_list">
+                        Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i"
+                            class="fas fa-trademark"></i>
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

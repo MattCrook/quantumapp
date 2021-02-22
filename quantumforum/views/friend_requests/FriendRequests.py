@@ -1,4 +1,5 @@
-from rest_framework.authentication import authenticate, SessionAuthentication, BasicAuthentication, RemoteUserAuthentication, TokenAuthentication
+from rest_framework.authentication import authenticate, SessionAuthentication, TokenAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet
@@ -19,14 +20,14 @@ import datetime
 class FriendRequestSerializer(serializers.ModelSerializer):
         class Meta:
             model = FriendRequestModel
-            fields = ('id', 'sender_and_receiver', 'status_code', 'last_updated_by')
+            fields = ('id', 'sender_and_receiver', 'status_code', 'last_updated_by', 'sent_date', 'last_updated')
             depth = 2
 
 
 
 class FriendRequests(ViewSet):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication]
 
     def list(self, request):
         all_friend_requests = FriendRequestModel.objects.all()
@@ -74,7 +75,24 @@ class FriendRequests(ViewSet):
 
 
     def update(self, request):
-        pass
+        try:
+            UserModel = get_user_model()
+            friend_request = FriendRequestModel.objects.get(pk=request.data['id'])
+
+            if 'statusCode' in request.data and request.data['statusCode']:
+                status_code = StatusCodeModel.objects.get(pk=request.data['statusCode'])
+                friend_request.status_code = status_code
+
+            if 'lastUpdatedBy' in request.data and request.data['lastUpdatedBy']:
+                last_updated_by = UserModel.objects.get(pk=request.data['lastUpdatedBy'])
+                friend_request.last_updated_by = last_updated_by
+
+            friend_request.last_updated = datetime.datetime.now()
+            friend_request.save()
+            return Response({"Success": True}, status=status.HTTP_200_OK)
+
+        except Exception as ex:
+            return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def destroy(self, request, pk=None):
@@ -87,12 +105,3 @@ class FriendRequests(ViewSet):
             return Response({'message': ex.args}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-# @api_view(('GET', 'POST'))
-# @authentication_classes([SessionAuthentication, JSONWebTokenAuthentication])
-# @permission_classes([IsAuthenticated])
-# def friend_request_view(request):
-#     pass

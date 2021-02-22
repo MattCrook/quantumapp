@@ -132,21 +132,30 @@ const handleShowNotifications = () => {
       );
       setIsLoading(false);
       loading();
+      const notificationsContainer = document.querySelector(".notifications");
+      notificationsContainer.style.display = "block";
+      notificationsContainer.innerHTML = "";
 
       allUsersFriendRequests.forEach(friendRequest => {
         const hasNotifications = friendRequest.sender_and_receiver.addressee && friendRequest.sender_and_receiver.addressee.id === currentUser.id ? true : false;
         const notification = "Friend Request";
-          showNotificationsBody(friendRequest.sender_and_receiver.requester, hasNotifications, notification);
+          showNotificationsBody(friendRequest.sender_and_receiver.requester, hasNotifications, notification, friendRequest);
       })
     })
   });
 };
 
-const showNotificationsBody = (friend, hasNotifications, notification) => {
+const showNotificationsBody = (friend, hasNotifications, notification, friendRequest) => {
   const notificationsContainer = document.querySelector(".notifications");
+  const footer = document.getElementById("footer");
+  footer.style.display = "block";
+  // Clear out footer bc in loop so only show last iteration of loop to show one close button.
+  footer.innerHTML = "";
+  const showFooter = renderFooter();
+  footer.innerHTML += showFooter
+
   notificationsContainer.style.display = "block";
-  notificationsContainer.innerHTML = "";
-  const renderNotificationCards = renderNotifications(friend, hasNotifications, notification);
+  const renderNotificationCards = renderNotifications(friend, hasNotifications, notification, friendRequest);
   notificationsContainer.innerHTML += renderNotificationCards;
 };
 
@@ -155,25 +164,27 @@ const handleShowFriendsList = () => {
   const friendsListModalContainer = document.querySelector(".friends_list");
   const friendsButton = document.querySelector(".friends_header");
   const notificationsContainer = document.querySelector(".notifications");
+  const footer = document.getElementById("footer");
 
   friendsButton.addEventListener("click", () => {
     notificationsButton.style.display = "block";
     friendsListModalContainer.style.display = "block";
     friendsButton.style.display = "none";
     notificationsContainer.style.display = "none";
+    footer.style.display = "none";
   });
 };
 
-function renderNotifications(friend, hasNotifications, notification) {
+function renderNotifications(friend, hasNotifications, notification, friendRequest) {
   const defaultProfilePicture = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
   let profilePicture;
   friend && friend.image && friend.image.image ? profilePicture = friend.image.image : profilePicture = defaultProfilePicture;
 
   if (hasNotifications) {
     return `
-        <main class="modal__content" id="notifications-content">
+        <main class="modal__content" id="notifications-content" data-friendRequest="${friendRequest.id}">
         <div class="friends_list_container">
-            <div class="friend_card">
+            <div class="friend_card" data-id="${friend.id}">
                 <div id="friend_card_container_1">
                     <div class="friend_profile_pic">
                         <img class="friend_card_img" src="${profilePicture}" />
@@ -181,45 +192,47 @@ function renderNotifications(friend, hasNotifications, notification) {
                     <div class="friend_name">${friend.first_name} ${friend.last_name}</div>
                     <div class="notification_type">${notification}</div>
                 </div>
-                <div id="friend_card_container_2">
-                    <div class="accept_button">Accept</div>
-                    <div class="decline_button">Decline</div>
-                    <div class="block_button">Block User</div>
+                <div id="friend_card_container_2" data-id="${friend.id}">
+                    <div class="accept_button" data-id="${friend.id}" data-friendRequest="${friendRequest.id}">Accept</div>
+                    <div class="decline_button" data-id="${friend.id}" data-friendRequest="${friendRequest.id}">Decline</div>
+                    <div class="block_button" data-id="${friend.id}" data-friendRequest="${friendRequest.id}">Block User</div>
                 </div>
             </div>
         </div>
-
-        <footer class="modal__footer">
-            <button class="modal__btn" data-micromodal-close
-                aria-label="Close this dialog window">Close</button>
-        </footer>
       </main>
     `;
   } else if (!hasNotifications) {
+    // In loop of users list so only show one "None" and one "Close" button which is last iteration of loop when no notifications.
+    const notificationsContainer = document.querySelector(".notifications");
+    notificationsContainer.innerHTML = "";
     return `
     <main class="modal__content" id="notifications-content">
       <div class="no_notifications_container">
           <div class="no_notifications">None</div>
       </div>
-      <footer class="modal__footer">
-          <button class="modal__btn" data-micromodal-close
-              aria-label="Close this dialog window">Close</button>
-      </footer>
     </main>
     `;
   } else {
+    // In loop of users list so only show one "None" and one Clos button which is last iteration of loop.
+    const notificationsContainer = document.querySelector(".notifications");
+    notificationsContainer.innerHTML = "";
     return `
     <main class="modal__content" id="notifications-content">
     <div class="error_container>
         <div class="no_notifications">Oops! Something went wrong loading your notifications.</div>
     </div>
-    <footer class="modal__footer">
-        <button class="modal__btn" data-micromodal-close
-            aria-label="Close this dialog window">Close</button>
-    </footer>
   </main>
     `;
   }
+}
+
+function renderFooter() {
+  return `
+      <footer class="modal__footer">
+      <button class="modal__btn" data-micromodal-close
+          aria-label="Close this dialog window">Close</button>
+    </footer>
+  `;
 }
 
 const initNav = () => {

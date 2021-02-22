@@ -142,6 +142,25 @@ export async function getFriendRequests() {
   }
 }
 
+export async function updateFriendRequest(data) {
+  try {
+    let cookie = getCookie("csrftoken");
+    const token = sessionStorage.getItem("token");
+    const response = await fetch(`${remoteUrl}/api/friend_requests/${data.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": cookie,
+        Authorization: "Token " + token,
+      },
+      body: JSON.stringify(data),
+    });
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function getAllUsersFriendsFromReceiver(userId) {
   const token = sessionStorage.getItem("token");
   const response = await fetch(`${remoteUrl}/api/friendships?addressee=${userId}`, {
@@ -158,7 +177,7 @@ export async function sendAppLoginData(payload) {
   try {
     const token = sessionStorage.getItem("token");
     const response = await fetch(`${remoteUrl}/api/app_login_data`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Token " + token,

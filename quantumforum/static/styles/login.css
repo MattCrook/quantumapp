@@ -121,8 +121,6 @@
   font-size: 9px;
 }
 
-
-
 /**********************Row Login Buttons Auth0************************/
 
 #row {
@@ -314,4 +312,221 @@ img {
 }
 .spinner--steps2 {
   animation: anim-rotate 1s infinite steps(12);
+}
+
+/**************************\
+  Basic Modal Styles
+\**************************/
+
+.help_modal {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
+    segoe ui, arial, sans-serif;
+}
+
+.help_modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.help_modal__container {
+  background-color: rgb(223, 223, 223);
+  padding: 30px;
+  width: 40%;
+  max-height: 100vh;
+  border-radius: 4px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.help_modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(134, 134, 134);
+}
+
+.help_modal__title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  color: #e7e6e6;
+  box-sizing: border-box;
+}
+
+.help_modal__close {
+  background: transparent;
+  border: 0;
+  color: #f06d6d;
+}
+
+.help_modal__header .help_modal__close:before {
+  content: "\2715";
+}
+
+.help_modal__content {
+  margin-top: 2rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.help_modal__btn {
+  font-size: 0.875rem;
+  font-variant: small-caps;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #0e0e0e;
+  color: rgba(219, 219, 219, 0.8);
+  border-radius: 0.25rem;
+  border-style: none;
+  border-width: 0;
+  cursor: pointer;
+  -webkit-appearance: button;
+  text-transform: none;
+  overflow: visible;
+  line-height: 1.15;
+  margin: 0;
+  will-change: transform;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: -webkit-transform 0.25s ease-out;
+  transition: transform 0.25s ease-out;
+  transition: transform 0.25s ease-out, -webkit-transform 0.25s ease-out;
+}
+
+.help_modal__btn:focus,
+.help_modal__btn:hover {
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);
+  color: rgb(241, 241, 241);
+}
+
+/**************************\
+      Demo Animation Style
+    \**************************/
+@keyframes mmfadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mmfadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes mmslideIn {
+  from {
+    transform: translateY(15%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes mmslideOut {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10%);
+  }
+}
+
+.micromodal-slide {
+  display: none;
+}
+
+.micromodal-slide.is-open {
+  display: block;
+}
+
+.micromodal-slide[aria-hidden="false"] .help_modal__overlay {
+  animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="false"] .help_modal__container {
+  animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .help_modal__overlay {
+  animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .help_modal__container {
+  animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide .help_modal__container,
+.micromodal-slide .help_modal__overlay {
+  will-change: transform;
+}
+
+.help_modal__footer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5%;
+}
+
+#modal {
+  background: rgb(201, 201, 201);
+  border-radius: 3px 3px 3px 3px;
+}
+
+.help_modal_title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+.help_modal_title i {
+  margin-left: 8px;
+}
+
+.help_modal_txt_container {
+  font: 150 1em helvetica neue, open sans, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: 10%;
+}
+
+.help_modal_txt_container li {
+  font: 150 0.9em helvetica neue, open sans, sans-serif;
+  padding-left: 2%;
+  margin-top: 10px;
+  margin-bottom: 8%;
+  font-style: italic;
+}
+
+.thank_you {
+  display: flex;
+  justify-content: center;
+  font: 150 0.8em helvetica neue, open sans, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 35px;
 }

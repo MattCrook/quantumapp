@@ -29,6 +29,7 @@ const loadUsersAndFriends = async () => {
       getFriendRequests(),
     ]);
     const currentUser = data[0];
+    console.log({currentUser})
     const allUsers = data[1];
     const allFriendshipProfiles = data[2];
     const allSenderAndReceiver = data[3];
@@ -65,15 +66,20 @@ function handleUserSearchInput(userList, friendList) {
 function initNavSearchInput(userList, friendRequestList, allFriendshipProfiles, currentUser) {
   const searchResults = document.getElementById("search_quantum_results");
   searchResults.innerHTML = "";
-  userList.forEach((userProfile) => {
-    let row;
-    const friendRequestStatusData = filterUserFriends(userProfile, friendRequestList, allFriendshipProfiles);
-    userProfile.image
-      ? (row = renderRowWithImage(friendRequestStatusData, userProfile, currentUser))
-      : (row = renderRowNoImage(friendRequestStatusData, userProfile, currentUser));
-    userSearchResultRows.push(row);
-    searchResults.innerHTML += row;
-  });
+  if (Array.isArray(userList) && userList.length > 0) {
+    userList.forEach((userProfile) => {
+      let row;
+      const friendRequestStatusData = filterUserFriends(userProfile, friendRequestList, allFriendshipProfiles);
+      userProfile.image
+        ? (row = renderRowWithImage(friendRequestStatusData, userProfile, currentUser))
+        : (row = renderRowNoImage(friendRequestStatusData, userProfile, currentUser));
+      userSearchResultRows.push(row);
+      searchResults.innerHTML += row;
+    });
+  } else {
+    const noUsers = renderNoUserList();
+    searchResults.innerHTML += noUsers;
+  }
 }
 
 // Finding the user ID of the current friend in the loop, and return where the Ids match.
@@ -221,6 +227,12 @@ function renderDeniedIcon(userProfileId) {
 function renderBlockedIcon(userProfileId) {
   return `
     <i id="fa_blocked_friend_request" class="fas fa-ban" data-id="${userProfileId}"></i>
+  `;
+}
+
+function renderNoUserList() {
+  return `
+  <div class="no_user_list">None</div>
   `;
 }
 
