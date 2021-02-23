@@ -260,6 +260,13 @@ body {
   margin-bottom: 12%;
 }
 
+.group_chat_modal__content {
+  margin-top: 2rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.8);
+}
+
 .modal__btn {
   font-size: 0.875rem;
   font-variant: small-caps;
@@ -385,7 +392,12 @@ body {
 .friends_list_container {
   display: flex;
   flex-direction: column;
-  /* margin-bottom: 12%; */
+}
+
+.group_chat_friends_list_container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12%;
 }
 
 .no_friends {
@@ -469,7 +481,7 @@ body {
 /********************* Search Quantum Bar *******************/
 
 #search_quantum_results {
-  padding-bottom: 5%;
+  padding-bottom: 12%;
 }
 #search_quantum_results_master_container {
   position: absolute;

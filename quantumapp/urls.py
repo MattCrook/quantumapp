@@ -8,14 +8,14 @@ from django.conf.urls.static import static
 from django.conf import settings
 from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView, UsersFriendsApiView, FriendsJoinApiView
 from quantumapi.views import login_user, register_user, auth0_logout, get_user_session
-# from quantumapi.views import get_authuser
 from quantumapi.views import Credentials as CredentialsView
 from quantumapi.views import Feedback as FeedbackView
 from quantumapi.views import BugReports as BugReportView
-from quantumforum.views import FriendRequests as FriendRequestView
-from quantumforum.views import StatusCodes as StatusCodeView
-from quantumforum.views import Friendships as FriendshipView
+from quantumapi.views import FriendRequests as FriendRequestView
+from quantumapi.views import StatusCodes as StatusCodeView
+from quantumapi.views import Friendships as FriendshipView
 from rest_framework.authtoken.views import obtain_auth_token
+# from quantumapi.views import get_authuser
 
 
 app_name = "quantumapp"

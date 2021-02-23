@@ -130,37 +130,67 @@ def login_user(request):
 
                             # Get the most recent entry on Credentials, which would have just posted/ updated
                             # from the user logging in thru auth0. (In App.js and Auth0Context)
-                            credentials = Credential.objects.get(user_id=authenticated_user.id)
-                            all_transactions = json.loads(credentials.transactions)
-                            transaction_items_keys = all_transactions['transactions'].keys()
-                            transactions_values = all_transactions['transactions'].values()
+                            has_credentials = Credential.objects.filter(user_id=authenticated_user.id).exists()
+                            credentials = Credential.objects.get(user_id=authenticated_user.id) if has_credentials else None
 
-                            codes = []
-                            for c in transaction_items_keys:
-                                codes.append(c)
+                            if credentials is not None:
+                                all_transactions = json.loads(credentials.transactions)
+                                transaction_items_keys = all_transactions['transactions'].keys()
+                                transactions_values = all_transactions['transactions'].values()
 
-                            transactions = []
-                            for t in transactions_values:
-                                transactions.append(t)
+                                codes = [c for c in transaction_items_keys]
+                                transactions = [t for t in transactions_values]
 
-                            handles = [handle for handle in codes] if len(codes) > 0 else {}
-                            code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
-                            handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
-                            code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                                # for c in transaction_items_keys:
+                                #     codes.append(c)
 
-                            all_backends = backends(request)
-                            user_backends = all_backends.get('backends')
-                            auth0_backend = user_backends['backends'][1]
-                            openId_backend = user_backends['backends'][0]
-                            user_assoc_backends = user_backends.get('associated')
+                                # for t in transactions_values:
+                                #     transactions.append(t)
 
-                            if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
-                                # user_association = Association.objects.get(assoc_type=user_assoc_backends)
-                                user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
+                                handles = [handle for handle in codes] if len(codes) > 0 else {}
+                                code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
+                                handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
+                                code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+
+                                all_backends = backends(request)
+                                user_backends = all_backends.get('backends')
+                                auth0_backend = user_backends['backends'][1]
+                                openId_backend = user_backends['backends'][0]
+                                user_assoc_backends = user_backends.get('associated')
+
+                                if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
+                                    # user_association = Association.objects.get(assoc_type=user_assoc_backends)
+                                    user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
+                                else:
+                                    user_association = Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=auth0_backend)
+
+                                auth_user = {
+                                        "valid": True,
+                                        "id": user.id,
+                                        "first_name": user.first_name,
+                                        "last_name": user.last_name,
+                                        "email": user.email,
+                                        "username": user.username,
+                                        "auth0_identifier": user.auth0_identifier,
+                                        "QuantumToken": key,
+                                        "accessToken": remote_user_auth[1],
+                                        "management_api_token": management_api_token,
+                                        "session": session.session_key,
+                                        "csrf": csrf,
+                                        "user_social_auth": user_social_auth.id,
+                                        "account_email": account_email.id,
+                                        "management_user": management_api_user,
+                                        "social_account": social_account.id,
+                                        "social_app": social_app.id,
+                                        "email_confirmation": True,
+                                        "has_credentials": True,
+                                        "credentials_id": credentials.id
+                                    }
+                                data = json.dumps(auth_user)
+                                return HttpResponse(data, content_type='application/json')
+
                             else:
-                                user_association = Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=auth0_backend)
-
-                            auth_user = {
+                                auth_user = {
                                     "valid": True,
                                     "id": user.id,
                                     "first_name": user.first_name,
@@ -179,11 +209,11 @@ def login_user(request):
                                     "social_account": social_account.id,
                                     "social_app": social_app.id,
                                     "email_confirmation": True,
-                                    # 'user_association': user_association.id,
+                                    "has_credentials": False,
                                 }
 
-                            data = json.dumps(auth_user)
-                            return HttpResponse(data, content_type='application/json')
+                                data = json.dumps(auth_user)
+                                return HttpResponse(data, content_type='application/json')
                         except Exception as ex:
                             return Response({'Final data Validation Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                     else:

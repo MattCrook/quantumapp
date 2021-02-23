@@ -17,7 +17,9 @@ import datetime
 import socket
 import os
 import json
-from django.forms.models import model_to_dict
+
+# from django.forms.models import model_to_dict
+
 
 
 class AppLoginDataSerializer(serializers.Serializer):
@@ -65,8 +67,6 @@ class AppLoginDataSerializer(serializers.Serializer):
     # auth_user = UserSerializer(read_only=True)
 
 
-
-    id = serializers.IntegerField(label='ID', read_only=True)
     auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
     email = serializers.EmailField()
     management_api_user = serializers.JSONField()
@@ -87,7 +87,7 @@ class AppLoginDataSerializer(serializers.Serializer):
     user_logs = serializers.JSONField()
     resource_servers = serializers.JSONField()
     management_api_keys = serializers.JSONField()
-    # device_credentials = serializers.JSONField()
+    device_credentials = serializers.CharField()
     rest_auth_session = serializers.CharField()
     management_session_id = serializers.CharField()
     management_session_user = serializers.CharField()
@@ -106,30 +106,9 @@ class AppLoginDataSerializer(serializers.Serializer):
     def create(self, validated_data):
         return AppLoginDataModel.objects.create(**validated_data)
 
-
-
-
-    # def get_auth_user(self, obj):
-    #     print(obj)
-    #     print('IN GET_AUTH_USER')
-    #     serialized_user = UserSerializer(instance=obj.auth_user)
-    #     return serialized_user.data
-
-
-    # def to_representation(self, value):
-    #     UserModel = get_user_model()
-    #     if isinstance(value, AppLoginDataModel):
-    #         serializer = UserSerializer(value.auth_user)
-    #     else:
-    #         raise Exception('Unexpected type of tagged object')
-
-    #     return serializer.data
-
-
-
     class Meta:
         model = AppLoginDataModel
-        fields = ['id', 'auth_user', 'email', 'management_api_user', 'access_token', 'management_api_token', 'rest_auth_token', 'strategy', 'strategy_type', 'prompts', 'recent_attempts', 'total_logins', 'ip_address', 'oauth_endpoint_scopes', 'openid_configuration', 'grants', 'client_grants', 'connections', 'user_logs', 'resource_servers', 'management_api_keys', 'rest_auth_session', 'management_session_id', 'management_session_user', 'connection', 'connection_id', 'location_info', 'last_login_ip', 'social_user', 'client_name', 'updated_at']
+        fields = ['id', 'auth_user', 'email', 'management_api_user', 'access_token', 'management_api_token', 'rest_auth_token', 'strategy', 'strategy_type', 'prompts', 'recent_attempts', 'total_logins', 'ip_address', 'oauth_endpoint_scopes', 'openid_configuration', 'grants', 'client_grants', 'connections', 'user_logs', 'resource_servers', 'management_api_keys', 'device_credentials', 'rest_auth_session', 'management_session_id', 'management_session_user', 'connection', 'connection_id', 'location_info', 'last_login_ip', 'social_user', 'client_name', 'updated_at']
         depth = 2
 
 
@@ -140,10 +119,10 @@ class AppLoginDataView(ViewSet):
     def list(self, request):
         try:
             all_login_data = AppLoginDataModel.objects.all()
-            # user_id = self.request.query_params.get("auth_user_id", None)
+            user_id = self.request.query_params.get("auth_user_id", None)
 
-            # if user_id is not None:
-            #     all_login_data = all_login_data.filter(auth_user_id=user_id)
+            if user_id is not None:
+                all_login_data = all_login_data.filter(auth_user_id=user_id)
 
 
             serializer = AppLoginDataSerializer(all_login_data, many=True, context={'request': request})
@@ -170,6 +149,8 @@ class AppLoginDataView(ViewSet):
         try:
             auth_user = request.user
             auth_token = request.auth
+            device = socket.gethostname()
+
 
             oauth_endpoint = management_api_oath_endpoint(AUTH0_DOMAIN)
             serialized_management_api_token = json.loads(oauth_endpoint)
@@ -233,6 +214,7 @@ class AppLoginDataView(ViewSet):
                 'user_logs': all_user_logs,
                 'resource_servers': management_resource_servers,
                 'management_api_keys': api_keys,
+                'device_credentials': device,
                 'rest_auth_session': request.data['sessionId'],
                 'management_session_id': management_session,
                 'management_session_user': management_session_user,

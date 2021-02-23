@@ -19,13 +19,14 @@ class StatusCodeSerializer(serializers.ModelSerializer):
 
 
 class StatusCodes(ViewSet):
-    # permission_classes = [IsAuthenticated]
-    # authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [SessionAuthentication, TokenAuthentication]
 
     def list(self, request):
         all_status_codes = StatusCodeModel.objects.all()
         serializer = StatusCodeSerializer(all_status_codes, many=True, context={'request': request})
         return Response(serializer.data)
+
 
     def retrieve(self, request, pk=None):
         try:

@@ -9,12 +9,27 @@ from rest_framework.authentication import RemoteUserAuthentication, TokenAuthent
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import socket
 import os
+import json
+import datetime
 
 
 class LoginInfoSerializer(serializers.ModelSerializer):
+
+    user = serializers.DictField()
+    email = serializers.CharField()
+    recent_attempts = serializers.IntegerField()
+    total_logins = serializers.IntegerField()
+    ip_address = serializers.IPAddressField()
+    browser = serializers.CharField()
+    version = serializers.CharField()
+    platform = serializers.CharField()
+    app_codename = serializers.CharField()
+    host_computer_name = serializers.CharField()
+    id_token = serializers.DictField()
+    date = serializers.DateTimeField()
+
     class Meta:
         model = LoginHistoryModel
-        # url = serializers.HyperlinkedIdentityField(view_name='loginhistory', lookup_field='id')
         fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'date')
         depth = 1
 
@@ -32,7 +47,31 @@ class LoginInfoView(ViewSet):
         if user_id is not None:
             data = LoginHistoryModel.objects.filter(user_id=user_id)
 
-        serializer = LoginInfoSerializer(data, many=True, context={'request': request})
+        queryset_data = []
+
+        for instance in data:
+            login_info_instance = {
+                "user": instance.user.to_dict(),
+                "email": instance.email,
+                "recent_attempts": instance.recent_attempts,
+                "total_logins": instance.total_logins,
+                "ip_address": instance.ip_address,
+                "browser": instance.browser,
+                "version": instance.version,
+                "platform": instance.platform,
+                "app_codename": instance.app_codename,
+                "host_computer_name": instance.host_computer_name,
+                "id_token": json.loads(instance.id_token),
+                "date": instance.date
+            }
+            serializer = LoginInfoSerializer(data=login_info_instance, context={'request': request})
+            valid = serializer.is_valid()
+            if valid:
+                queryset_data.append(serializer.data)
+            else:
+                print(serializer.errors)
+
+        serializer = LoginInfoSerializer(queryset_data, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -86,11 +125,30 @@ class LoginInfoView(ViewSet):
             login_info.platform = request.data["platform"]
             login_info.app_codename = request.data["app_code_name"]
             login_info.host_computer_name = hostname
-            login_info.id_token = request.data['id_token']
+            login_info.id_token = json.dumps(request.data['id_token'])
+            login_info.date = datetime.datetime.now()
 
-            login_info.save()
-            serializer = LoginInfoSerializer(login_info, context={'request': request})
-            return Response(serializer.data)
+            data = {
+                "user": user.to_dict(),
+                "email": request.data["email"],
+                "recent_attempts": request.data["recent_attempts"],
+                "total_logins": logins,
+                "ip_address": ipv4s[-1],
+                "browser": request.data["browser"],
+                "version": request.data["version"],
+                "platform": request.data["platform"],
+                "app_codename": request.data["app_code_name"],
+                "host_computer_name": hostname,
+                "id_token": request.data['id_token'],
+                "date": datetime.datetime.now()
+            }
+            serializer = LoginInfoSerializer(data=data, context={'request': request})
+            valid = serializer.is_valid()
+            if valid:
+                login_info.save()
+                return Response(serializer.data)
+            else:
+                return Response({'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as ex:
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
