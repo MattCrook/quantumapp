@@ -10,6 +10,7 @@ from quantumforum.models import FriendRequest as FriendRequestModel
 from quantumforum.models import Friendships as FriendshipsJoin
 from quantumforum.models import StatusCode as StatusCodeModel
 from quantumapi.models import UserProfile as UserProfileModel
+from quantumforum.models import UsersFriends
 from django.contrib.auth import get_user_model
 import datetime
 
@@ -51,6 +52,7 @@ class FriendRequests(ViewSet):
         try:
             UserModel = get_user_model()
             sender_user = request.user
+            current_user_profile = UserProfileModel.objects.get(user_id=sender_user.id)
             receiver_id = request.data['receiver']
             receiver_user_profile = UserProfileModel.objects.get(pk=receiver_id)
             receiver = UserModel.objects.get(pk=receiver_user_profile.user_id)
@@ -67,6 +69,11 @@ class FriendRequests(ViewSet):
             new_friend_request.sent_date = datetime.datetime.now()
             new_friend_request.last_updated = datetime.datetime.now()
             new_friend_request.save()
+
+            friends = UsersFriends()
+            friends.user_profile = current_user_profile
+            friends.save()
+
 
             serializer = FriendRequestSerializer(new_friend_request, context={'request': request})
             return Response(serializer.data)
@@ -89,6 +96,9 @@ class FriendRequests(ViewSet):
                 friend_request.last_updated_by = last_updated_by
 
             friend_request.last_updated = datetime.datetime.now()
+
+            # if status_code.id == 2:
+            #     users_friends = UsersFriends.objects.
             friend_request.save()
             serializer = FriendRequestSerializer(friend_request, context={'request': request})
             return Response(serializer.data)

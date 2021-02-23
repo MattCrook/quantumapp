@@ -2,13 +2,16 @@ from django.db import models
 from django.urls import reverse
 from quantumapi.models import UserProfile
 from django.contrib.auth import get_user_model
-from quantumforum.models import FriendRequest
+from quantumforum.models import FriendRequest, FriendsJoin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 UserModel = get_user_model()
 
 class UsersFriends(models.Model):
     user_profile = models.ForeignKey(UserProfile, blank=True, null=True, on_delete=models.CASCADE)
-    friends = models.ManyToManyField("Friendships")
+    friends = models.ManyToManyField("FriendRequest", through="FriendsJoin", )
 
     class Meta:
         verbose_name = ("Friend")
@@ -47,3 +50,13 @@ class UsersFriends(models.Model):
 
     def __str__(self):
         return f'{self.user_profile.user.email}'
+
+
+# @receiver(post_save, sender=FriendsJoin)
+# def create_users_friends(sender, instance, created, **kwargs):
+#     if created:
+#         UsersFriends.objects.create(friends=instance)
+
+# @receiver(post_save, sender=FriendsJoin)
+# def save_users_friends(sender, instance, **kwargs):
+#     instance.friends.save()
