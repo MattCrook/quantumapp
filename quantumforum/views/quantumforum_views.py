@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, resolve_url
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from quantumapi.models import Credential, Messages
 from quantumapi.models import UserProfile as UserProfileModel
 from django.contrib.sessions.backends.db import SessionStore
@@ -34,6 +34,9 @@ from rest_framework.permissions import IsAuthenticated
 from social_core.pipeline.user import user_details
 from social_core.utils import get_strategy, module_member
 
+# from httplib2 import Http
+from social_django.models import DjangoStorage
+
 
 import datetime
 import json
@@ -47,21 +50,79 @@ from social_core.actions import user_is_authenticated
 # success_url_allowed_hosts = []
 
 
-
+# @permission_required([IsAuthenticated])
+# @login_required
 def index(request, chat_type=None):
     print("IN Index")
     user = request.user
-    # is_authenticated = user_is_authenticated(user)
-    chat_type = 'group_chat'
-    context = {
-        'CLIENT_URL': REACT_APP_FORUM_URL,
-        'user': user,
-    }
-    if user.is_authenticated:
-        if chat_type == 'group_chat':
-            return redirect(reverse('quantumforum:group_chat'))
-        elif chat_type == 'private_chat':
-            return redirect(private_chat)
+    is_auth = request.user.is_authenticated
+    is_remote_authenticated = user_is_authenticated(user)
+    if is_auth:
+
+        if user and hasattr(user, 'social_auth'):
+            is_social_auth = user.social_auth.filter(user_id=user.id).exists()
+            if is_social_auth:
+                social_user = user.social_auth.get(user_id=user.id)
+                provider = social_user.provider
+                if provider == 'auth0':
+                    auth0user = user.social_auth.get(provider='auth0')
+                    userdata = {
+                        'user_id': auth0user.uid,
+                        'name': user.first_name,
+                        'picture': auth0user.extra_data['picture'],
+                        'email': auth0user.extra_data['email'],
+                        'token': auth0user.extra_data['access_token']
+                    }
+                    user_id = auth0user.user_id
+                    chat_type = 'group_chat'
+                    context = {
+                        'CLIENT_URL': REACT_APP_FORUM_URL,
+                        'user': user,
+                        'auth0User': auth0user,
+                        'userdata': json.dumps(userdata, indent=4),
+                    }
+
+                    if chat_type == 'group_chat':
+                        return redirect(reverse('quantumforum:group_chat'))
+                    elif chat_type == 'private_chat':
+                        return redirect(private_chat)
+
+            # elif provider == 'google-oauth2':
+            #     UserModel = get_user_model()
+            #     auth_user = UserModel.objects.get(username=user)
+            #     user_id = auth_user.id
+            #     status = True
+
+            #     if not request.user.is_authenticated:
+            #         return HttpResponseRedirect('login')
+
+            #     storage = DjangoStorage(CredentialsModel, 'user_id', request.user, 'credential')
+            #     credential = storage.get()
+            #     try:
+            #         access_token = credential.access_token
+            #         resp, cont = Http().request("https://www.googleapis.com/auth/gmail.readonly",
+            #                                     headers={'Host': 'www.googleapis.com',
+            #                                             'Authorization': access_token})
+            #     except:
+            #         status = False
+            #         print('Not Found')
+
+            #     template = 'home/home.html'
+            #     context = {
+            #         'user': user_data,
+            #         'admin_user': admin_user,
+            #         'status': status,
+            #         'credential': credential
+            #     }
+            #     return render(request, template, context)
+
+            # chat_type = 'group_chat'
+            # context = {
+            #     'CLIENT_URL': REACT_APP_FORUM_URL,
+            #     'user': user,
+            # }
+
+
     else:
         return redirect(reverse('quantumforum:login'))
 
@@ -70,6 +131,7 @@ def index(request, chat_type=None):
 @authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 @login_required
+@permission_required([IsAuthenticated])
 def private_chat(request):
     UserModel = get_user_model()
     backend_list = get_backends()

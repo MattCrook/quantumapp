@@ -74,7 +74,6 @@ class Credentials(ViewSet):
                     "audience": credentials_instance.audience,
                     "scope": credentials_instance.scope,
                     "transactions": json.loads(credentials_instance.transactions),
-                    # "codes": credentials_instance.codes.split(','),
                     "codes": json.loads(credentials_instance.codes),
                     "nonce": credentials_instance.nonce,
                     "access_token": credentials_instance.access_token,
@@ -102,10 +101,10 @@ class Credentials(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             credentials_instance = CredentialModel.objects.get(pk=pk)
-
-            user_id = self.request.query_params.get("user_id", None);
-            if user_id is not None:
-                credentials_instance = credentials_instance.filter(user_id=user_id)
+            # user_id = self.request.query_params.get("user_id", None);
+            # if user_id is not None:
+            #     credentials_instance = CredentialModel.objects.filter(user_id=user_id)
+                # credentials_queryset = credentials_queryset.filter(user_id=user_id)
 
             credentials = {
                 "id": credentials_instance.id,
@@ -174,10 +173,12 @@ class Credentials(ViewSet):
                     transactions = {}
 
                 user = request.user
-                has_credentials = CredentialModel.objects.filter(user_id=user.id).exists()
+                # has_credentials = CredentialModel.objects.filter(user_id=user.id).exists()
 
                 # if has_credentials and user_sub == user.auth0_identifier:
                 #     credential_instance = CredentialModel.objects.get(user_id=user.id)
+                #     # existing_credential_instance.delete()
+
                 #     credential_instance.user = user
                 #     credential_instance.user_sub = request.data['user_sub']
                 #     credential_instance.domain = API_IDENTIFIER
@@ -195,6 +196,7 @@ class Credentials(ViewSet):
                 #     credential_instance.csrf_token = csrftoken
                 #     credential_instance.cookies = request.data["cookies"]
                 #     credential_instance.updated_at = request.data["updated_at"]
+                #     credential_instance.save()
 
 
                 #     credentials = {
@@ -219,12 +221,12 @@ class Credentials(ViewSet):
                 #     serializer = CredentialsSerializer(data=credentials, context={'request': request})
                 #     valid = serializer.is_valid()
                 #     if valid:
-                #         credential_instance.save()
                 #         return Response(serializer.data)
                 #     else:
                 #         return HttpResponse(serializer.errors)
 
                 # else:
+
                 new_credential_instance = CredentialModel.objects.create(
                     user=user,
                     user_sub=user_sub,

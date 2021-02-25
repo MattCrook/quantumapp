@@ -339,9 +339,9 @@ function handleAlert(statusCode) {
   }
 }
 
-const init = () => {
+const initSearch = () => {
   loadUsersAndFriends();
   handleClickInInput();
 };
 
-init();
+initSearch();

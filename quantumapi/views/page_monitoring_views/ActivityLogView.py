@@ -13,6 +13,11 @@ import datetime
 
 
 class ActivityLogSerializer(serializers.ModelSerializer):
+
+    user = serializers.DictField()
+    action = serializers.DictField()
+    date = serializers.DateTimeField()
+
     class Meta:
         model = ActivityLogModel
         fields = ('id', 'user', 'action', 'date')
@@ -29,7 +34,23 @@ class ActivityLogView(ViewSet):
         if user_id is not None:
             data = ActivityLogModel.objects.filter(user_id=user_id)
 
-        serializer = ActivityLogSerializer(data, many=True, context={'request': request})
+        activity_log_queryset = []
+
+        for instance in data:
+            activity_log_instance = {
+                "id": instance.id,
+                "user": instance.user.to_dict(),
+                "action": json.loads(instance.action),
+                "date": instance.date,
+            }
+            serializer = ActivityLogSerializer(data=activity_log_instance, context={'request': request})
+            valid = serializer.is_valid()
+            if valid:
+                activity_log_queryset.append(serializer.data)
+            else:
+                return Response(serializer.errors)
+
+        serializer = ActivityLogSerializer(activity_log_queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -87,24 +108,37 @@ class ActivityLogView(ViewSet):
                 # and array of objects of actions for the user.
                 if len(user_activity_for_incoming_date) > 0:
                     activity_log_object = user_activity_for_incoming_date[0]
-                    activity_log = add_action_to_existing_actions(request, activity_log_object)
+                    activity_log_serializer = add_action_to_existing_actions(request, activity_log_object)
 
                 elif len(new_date) > 0:
                     activity_log_object = new_date[0]
-                    activity_log = create_new_action(request, user, activity_log_object)
+                    activity_log_serializer = create_new_action(request, user, activity_log_object)
 
-                return Response(activity_log.data)
+                return Response(activity_log_serializer.data)
 
             else:
                 new_activity_log = ActivityLogModel()
                 new_activity_log.user = user
                 req_data_actions = request.data["event"]["action"]
-                serialized_actions = json.dumps({"event": req_data_actions})
-                new_activity_log.action = serialized_actions
-
+                actions = json.dumps({"event": req_data_actions})
+                new_activity_log.action = actions
+                new_activity_log.date = datetime.datetime.now()
                 new_activity_log.save()
-                serializer = ActivityLogSerializer(new_activity_log, context={'request': request})
-                return Response(serializer.data)
+
+                data = {
+                    "user": user.to_dict(),
+                    "action": json.loads(actions),
+                    "date": datetime.datetime.now()
+                }
+
+                serializer = ActivityLogSerializer(data=data, context={'request': request})
+                valid = serializer.is_valid()
+
+                if valid:
+                    return Response(serializer.data)
+                else:
+                    return Response({'Serializer Errors': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         except Exception as ex:
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -143,8 +177,18 @@ def add_action_to_existing_actions(request, activity_log_action):
         actions["event"] = events_list
         activity_log.action = json.dumps(actions)
         activity_log.save()
-        serializer = ActivityLogSerializer(activity_log, context={'request': request})
-        return serializer
+
+        data = {
+            "user": request.user.to_dict(),
+            "action": json.loads(actions),
+            "date": datetime.datetime.now()
+        }
+        serializer = ActivityLogSerializer(data=data, context={'request': request})
+        valid = serializer.is_valid()
+        if valid:
+            return serializer
+        else:
+            return serializer.errors
 
     except Exception as ex:
         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -155,12 +199,21 @@ def create_new_action(request, user, activity_log_action):
         new_activity_log = ActivityLogModel()
         new_activity_log.user = user
         req_data_actions = request.data["event"]["action"]
-        serialized_actions = json.dumps({"event": req_data_actions})
-        new_activity_log.action = serialized_actions
-
+        actions = json.dumps({"event": req_data_actions})
+        new_activity_log.action = actions
         new_activity_log.save()
-        serializer = ActivityLogSerializer(new_activity_log, context={'request': request})
-        return serializer
+
+        data = {
+            "user": user.to_dict(),
+            "action": json.loads(actions),
+            "date": datetime.datetime.now()
+        }
+        serializer = ActivityLogSerializer(data=data, context={'request': request})
+        valid = serializer.is_valid()
+        if valid:
+            return serializer
+        else:
+            return serializer.errors
 
     except Exception as ex:
         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

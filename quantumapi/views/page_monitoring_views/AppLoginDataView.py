@@ -23,81 +23,36 @@ import json
 
 
 class AppLoginDataSerializer(serializers.Serializer):
-    UserModel = get_user_model()
 
-
-    # auth_user_id = UserSerializer()
-    # email = serializers.EmailField()
-    # management_api_user = serializers.DictField()
-    # access_token = serializers.CharField()
-    # management_api_token = serializers.CharField()
-    # rest_auth_token = serializers.CharField()
-    # strategy = serializers.CharField()
-    # strategy_type = serializers.CharField()
-    # prompts = serializers.ListField()
-    # recent_attempts = serializers.IntegerField()
-    # total_logins = serializers.IntegerField()
-    # ip_address = serializers.IPAddressField(protocol='both')
-    # oauth_endpoint_scopes = serializers.CharField()
-    # openid_configuration = serializers.DictField()
-    # grants = serializers.ListField()
-    # client_grants = serializers.ListField()
-    # connections = serializers.ListField()
-    # user_logs = serializers.ListField()
-    # resource_servers = serializers.ListField()
-    # management_api_keys = serializers.ListField()
-    # device_credentials = serializers.ListField()
-    # rest_auth_session = serializers.CharField()
-    # management_session_id = serializers.CharField()
-    # management_session_user = serializers.CharField()
-    # connection = serializers.CharField()
-    # connection_id = serializers.CharField()
-    # location_info = serializers.DictField()
-    # last_login_ip = serializers.IPAddressField(protocol='both')
-    # # social_user = serializers.SerializerMethodField()
-    # # social_user = UserSocialAuthSerializer()
-    # social_user = serializers.PrimaryKeyRelatedField(queryset=UserSocialAuth.objects.all())
-    # client_name = serializers.CharField()
-    # updated_at = serializers.DateTimeField()
-
-
-    # auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
-    # auth_user = UserSerializer(read_only=True)
-    # auth_user = serializers.SerializerMethodField(method_name='get_auth_user')
-    # auth_user = UserSerializer(read_only=True)
-
-
-    auth_user = serializers.PrimaryKeyRelatedField(queryset=UserModel.objects.all())
+    auth_user = serializers.DictField()
     email = serializers.EmailField()
-    management_api_user = serializers.JSONField()
+    management_api_user = serializers.DictField()
     access_token = serializers.CharField()
     management_api_token = serializers.CharField()
     rest_auth_token = serializers.CharField()
     strategy = serializers.CharField()
     strategy_type = serializers.CharField()
-    prompts = serializers.JSONField()
+    prompts = serializers.ListField()
     recent_attempts = serializers.IntegerField()
     total_logins = serializers.IntegerField()
     ip_address = serializers.IPAddressField(protocol='both')
     oauth_endpoint_scopes = serializers.CharField()
-    openid_configuration = serializers.JSONField()
-    grants = serializers.JSONField()
-    client_grants = serializers.JSONField()
-    connections = serializers.JSONField()
-    user_logs = serializers.JSONField()
-    resource_servers = serializers.JSONField()
-    management_api_keys = serializers.JSONField()
+    openid_configuration = serializers.DictField()
+    grants = serializers.ListField()
+    client_grants = serializers.ListField()
+    connections = serializers.ListField()
+    user_logs = serializers.ListField()
+    resource_servers = serializers.ListField()
+    management_api_keys = serializers.ListField()
     device_credentials = serializers.CharField()
     rest_auth_session = serializers.CharField()
     management_session_id = serializers.CharField()
     management_session_user = serializers.CharField()
     connection = serializers.CharField()
     connection_id = serializers.CharField()
-    location_info = serializers.JSONField()
+    location_info = serializers.DictField()
     last_login_ip = serializers.IPAddressField(protocol='both')
-    # social_user = serializers.SerializerMethodField()
-    # social_user = UserSocialAuthSerializer()
-    social_user = serializers.PrimaryKeyRelatedField(queryset=UserSocialAuth.objects.all())
+    social_user = serializers.DictField()
     client_name = serializers.CharField()
     updated_at = serializers.DateTimeField()
 
@@ -118,19 +73,60 @@ class AppLoginDataView(ViewSet):
 
     def list(self, request):
         try:
-            all_login_data = AppLoginDataModel.objects.all()
+            all_app_data = AppLoginDataModel.objects.all()
             user_id = self.request.query_params.get("auth_user_id", None)
 
             if user_id is not None:
-                all_login_data = all_login_data.filter(auth_user_id=user_id)
+                all_app_data = all_app_data.filter(auth_user_id=user_id)
 
+            app_data_queryset = []
 
-            serializer = AppLoginDataSerializer(all_login_data, many=True, context={'request': request})
-            # serializer.is_valid()
+            for instance in all_app_data:
+                data = {
+                    'auth_user': instance.auth_user.to_dict(),
+                    'email': instance.auth_user.email,
+                    'management_api_user': instance.management_user,
+                    'access_token': instance.auth_token,
+                    'management_api_token': instance.token,
+                    'rest_auth_token': instance.rest_auth_token.key,
+                    'strategy': instance.strategy,
+                    'strategy_type': instance.strategy_type,
+                    'prompts': instance.prompts,
+                    'recent_attempts': instance.request.data['recent_attempts'],
+                    'total_logins': instance.management_user.get('logins_count'),
+                    'ip_address': instance.log_ip,
+                    'oauth_endpoint_scopes': instance.scopes,
+                    'openid_configuration': instance.open_id_config,
+                    'grants': instance.grants,
+                    'client_grants': instance.client_grants,
+                    'connections': instance.connections,
+                    'user_logs': instance.all_user_logs,
+                    'resource_servers': instance.management_resource_servers,
+                    'management_api_keys': instance.api_keys,
+                    'device_credentials': instance.device,
+                    'rest_auth_session': request.data['sessionId'],
+                    'management_session_id': instance.management_session,
+                    'management_session_user': instance.management_session_user,
+                    'connection': instance.connection,
+                    'connection_id': instance.connection_id,
+                    'location_info': instance.location_info,
+                    'last_login_ip': instance.last_ip,
+                    'social_user': instance.social_user,
+                    'client_name': instance.client_name,
+                    'updated_at': datetime.datetime.now(),
+                }
+                serializer = AppLoginDataSerializer(data=data, context={'request': request})
+                valid = serializer.is_valid()
+                if valid:
+                    app_data_queryset.append(serializer.data)
+                else:
+                    print(serializer.errors)
+
+            serializer = AppLoginDataSerializer(app_data_queryset, many=True, context={'request': request})
             return Response(serializer.data)
+
         except Exception as ex:
             return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            # return Response({'Error': ex.args, 'Serializer Errors': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def retrieve(self, request, pk=None):
@@ -191,10 +187,18 @@ class AppLoginDataView(ViewSet):
             prompts = success_login['details']['prompts'] if len(success_login['details']['prompts']) > 0 else {}
             management_session_user = prompts[0].get('session_user') if len(prompts)> 0 else ""
             rest_auth_token = TokenModel.objects.get(user=auth_user) if request.user else ""
+            user_social_auth = auth_user.social_auth.get(user_id=auth_user.id)
 
-            # 'auth_user': auth_user.to_dict(),
+            social_user_dict = {
+                "id": user_social_auth.id,
+                "uid": user_social_auth.uid,
+                "provider": user_social_auth.provider,
+                "user_id": user_social_auth.user_id,
+                "extra_data": user_social_auth.extra_data
+            }
+
             data = {
-                'auth_user': auth_user.id,
+                'auth_user': auth_user.to_dict(),
                 'email': auth_user.email,
                 'management_api_user': management_user,
                 'access_token': auth_token,
@@ -222,7 +226,7 @@ class AppLoginDataView(ViewSet):
                 'connection_id': connection_id,
                 'location_info': location_info,
                 'last_login_ip': last_ip,
-                'social_user': auth_user.social_auth.get(user_id=auth_user.id).id,
+                'social_user': social_user_dict,
                 'client_name': client_name,
                 'updated_at': datetime.datetime.now(),
             }

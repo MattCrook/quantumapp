@@ -7,6 +7,8 @@ from quantumapi.models import LoginHistory as LoginHistoryModel
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from quantumapi.views.auth.management_api_services import retrieve_user_logs, management_api_oath_endpoint
+from quantumapp.settings import AUTH0_DOMAIN
 import socket
 import os
 import json
@@ -26,11 +28,12 @@ class LoginInfoSerializer(serializers.ModelSerializer):
     app_codename = serializers.CharField()
     host_computer_name = serializers.CharField()
     id_token = serializers.DictField()
+    user_logs = serializers.DictField()
     date = serializers.DateTimeField()
 
     class Meta:
         model = LoginHistoryModel
-        fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'date')
+        fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'user_logs', 'date')
         depth = 1
 
 
@@ -62,6 +65,7 @@ class LoginInfoView(ViewSet):
                 "app_codename": instance.app_codename,
                 "host_computer_name": instance.host_computer_name,
                 "id_token": json.loads(instance.id_token),
+                "user_logs": json.loads(instance.user_logs),
                 "date": instance.date
             }
             serializer = LoginInfoSerializer(data=login_info_instance, context={'request': request})
@@ -98,6 +102,10 @@ class LoginInfoView(ViewSet):
             # token_from_cookies = successful_authenticator.get_token_from_cookies(COOKIES)
             # token_from_request = successful_authenticator.get_token_from_request()
             # user_from_token = successful_authenticator.authenticate_credentials()
+            oauth_endpoint = management_api_oath_endpoint(AUTH0_DOMAIN)
+            management_api_access_token = json.loads(oauth_endpoint)
+            token = management_api_access_token['access_token']
+            all_user_logs = retrieve_user_logs(AUTH0_DOMAIN, token, request.user.auth0_identifier.replace(".", "|"))
 
 
             user_id = request.data['user_id']
@@ -126,6 +134,7 @@ class LoginInfoView(ViewSet):
             login_info.app_codename = request.data["app_code_name"]
             login_info.host_computer_name = hostname
             login_info.id_token = json.dumps(request.data['id_token'])
+            login_info.user_logs = json.dumps({"logs": all_user_logs})
             login_info.date = datetime.datetime.now()
 
             data = {
@@ -140,6 +149,7 @@ class LoginInfoView(ViewSet):
                 "app_codename": request.data["app_code_name"],
                 "host_computer_name": hostname,
                 "id_token": request.data['id_token'],
+                "user_logs": {"logs": all_user_logs},
                 "date": datetime.datetime.now()
             }
             serializer = LoginInfoSerializer(data=data, context={'request': request})

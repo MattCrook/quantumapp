@@ -66,7 +66,7 @@ class Auth0(BaseOAuth2):
         id_token = response.get('id_token')
         jwks = request.urlopen('https://' + self.setting('DOMAIN') + '/.well-known/jwks.json')
         issuer = 'https://' + self.setting('DOMAIN') + '/'
-        print(issuer)
+        print('{In Auth0 Backend}', issuer)
         audience = self.setting('KEY')  # CLIENT_ID
         payload = jwt.decode(id_token, jwks.read(), algorithms=['RS256'], audience=audience, issuer=issuer)
         strategy = self.strategy

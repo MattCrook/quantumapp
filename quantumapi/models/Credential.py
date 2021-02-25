@@ -1,6 +1,7 @@
 import json
 from quantumapi.models import User
 from django.db import models
+from django.db.models import F
 
 
 
@@ -27,7 +28,7 @@ class Credential(models.Model):
     class Meta:
         verbose_name = ("credential")
         verbose_name_plural = ("credentials")
-        ordering = ("user", )
+        get_latest_by = "updated_at"
 
     def __str__(self):
         return f'{self.user.username} -- {self.user_sub} -- {self.session}'

@@ -121,6 +121,10 @@
   font-size: 9px;
 }
 
+.btn i {
+  margin-right: 5px;
+}
+
 /**********************Row Login Buttons Auth0************************/
 
 #row {
@@ -152,7 +156,7 @@
 
 #login_with_auth0 img {
   border: none;
-  margin-right: 1px;
+  margin-right: 5px;
 }
 
 #auth0_img {
@@ -194,6 +198,15 @@
 }
 
 #login_help:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+#login_with_google {
+  background-color: #1442da;
+  border: none;
+}
+
+#login_with_google:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 

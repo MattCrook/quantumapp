@@ -8,7 +8,9 @@
 
 {% block content %}
 <div id="login_container" class="login-container">
-    <div id="login_card" class="login-card" style="display: none;">
+    <!-- <div id="login_card" class="login-card" style="display: none;"> -->
+        <div id="login_card" class="login-card">
+
         <div class="login_card_title">
             <h2>Login</h2>
             <button class="card_close"></button>
@@ -23,8 +25,7 @@
             {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
-                <li id="error_message" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
-                </li>
+                <li id="error_message" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
                 {% endfor %}
             </ul>
             {% endif %}
@@ -34,16 +35,22 @@
         <div id="login_buttons_card_wrapper" class="col-md-8 mx-auto social-container my-2 order-md-1">
 
             <button id="login_with_auth0" class="btn btn-primary mb-2">
-                <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 26px;">
+                <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 22px;">
                 <a href="{% url 'social:begin' 'auth0' %}" title="Auth0">Login with Auth0</a>
+            </button>
+            {% if not status %}
+            <button id="login_with_google" class="btn btn-primary mb-2">
+                <a href="{% url 'social:begin' 'google-oauth2' %}" onclick="gmailAuthenticate()" title="Google"> <i
+                        class="fab fa-google"></i> Login with Google</a>
+            </button>
+            {% endif %}
+            <button id="login_with_email" class="btn btn-primary mb-2">
+                <i class="fas fa-envelope"></i>
+                <a>Login with Email</a>
             </button>
             <button id="back_to_quantum_coaters" class="btn btn-primary mb-2">
                 <i class="fas fa-caret-square-left"></i>
                 <a href="{{CLIENT_URL}}">Back To Quantum Coasters</a>
-            </button>
-            <button id="login_with_email" class="btn btn-primary mb-2">
-                <i class="fas fa-envelope"></i>
-                <a>Login with Email</a>
             </button>
             <button id="login_help" class="btn btn-primary mb-2">
                 <i class="fas fa-question-circle"></i>
@@ -98,6 +105,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript" src="{% static 'scripts/loginEventListeners.js' %}"></script>
 <script type="text/javascript">
 
     const showLoginWithEmailCard = () => {
@@ -133,6 +141,21 @@
 <script type="module">
     import {sendAppLoginData} from "{% static 'scripts/services.js'%}"
 
+
+</script>
+<script type="text/javascript">
+
+    // For Google Oauth
+function gmailAuthenticate(){
+    $.ajax({
+        type: "GET",
+        url: "ajax/gmailAuthenticate",
+        // data: '',
+        success: function (data) {
+            console.log('Done')
+        }
+    });
+  };
 
 </script>
 {% endblock%}

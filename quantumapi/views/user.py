@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from django.contrib.auth.decorators import login_required
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.cache import SessionStore
 import json
@@ -19,12 +20,8 @@ import json
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # def get_queryset(self):
-    #     return super().get_queryset()
-    
     class Meta:
         model = get_user_model()
-        # token = serializers.SerializerMethodField()
         fields = ('id', 'email', 'first_name', 'last_name', 'password', 'username',
                   'last_login', 'is_staff', 'date_joined', 'groups', 'user_permissions', 'auth0_identifier', 'is_superuser', 'is_active',  )
         # extra_kwargs = {'password': {'write_only': True}}
@@ -155,7 +152,8 @@ def get_user_session(request):
 
 
 
-@authentication_classes([SessionAuthentication, TokenAuthentication])
+# @login_required
+@authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_auth_user(request):
     try:
@@ -166,8 +164,11 @@ def get_auth_user(request):
             if session is not None:
                 decoded_session_data = session_queryset.get_decoded()
             auth_token = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+            session_auth = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
             django_token = TokenModel.objects.get(user_id=auth_user.id).key
-            if auth_token == django_token:
+            sessionid_from_cookie = request.COOKIES.get('sessionid')
+            # if django_token == auth_token:
+            if session.session_key == sessionid_from_cookie:
                 user_profile = UserProfile.objects.get(user_id=auth_user.id)
                 user_credits = Credit.objects.filter(userProfile_id=user_profile.id)
 

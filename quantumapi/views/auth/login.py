@@ -131,7 +131,7 @@ def login_user(request):
                             # Get the most recent entry on Credentials, which would have just posted/ updated
                             # from the user logging in thru auth0. (In App.js and Auth0Context)
                             has_credentials = Credential.objects.filter(user_id=authenticated_user.id).exists()
-                            credentials = Credential.objects.get(user_id=authenticated_user.id) if has_credentials else None
+                            credentials = Credential.objects.filter(user_id=authenticated_user.id).latest() if has_credentials else None
 
                             if credentials is not None:
                                 all_transactions = json.loads(credentials.transactions)
@@ -140,12 +140,6 @@ def login_user(request):
 
                                 codes = [c for c in transaction_items_keys]
                                 transactions = [t for t in transactions_values]
-
-                                # for c in transaction_items_keys:
-                                #     codes.append(c)
-
-                                # for t in transactions_values:
-                                #     transactions.append(t)
 
                                 handles = [handle for handle in codes] if len(codes) > 0 else {}
                                 code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
@@ -159,7 +153,6 @@ def login_user(request):
                                 user_assoc_backends = user_backends.get('associated')
 
                                 if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
-                                    # user_association = Association.objects.get(assoc_type=user_assoc_backends)
                                     user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
                                 else:
                                     user_association = Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=auth0_backend)
