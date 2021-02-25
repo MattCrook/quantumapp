@@ -173,60 +173,6 @@ class Credentials(ViewSet):
                     transactions = {}
 
                 user = request.user
-                # has_credentials = CredentialModel.objects.filter(user_id=user.id).exists()
-
-                # if has_credentials and user_sub == user.auth0_identifier:
-                #     credential_instance = CredentialModel.objects.get(user_id=user.id)
-                #     # existing_credential_instance.delete()
-
-                #     credential_instance.user = user
-                #     credential_instance.user_sub = request.data['user_sub']
-                #     credential_instance.domain = API_IDENTIFIER
-                #     credential_instance.client_id = SOCIAL_AUTH_AUTH0_KEY
-                #     credential_instance.redirect_uri = request.data["redirect_uri"]
-                #     credential_instance.audience = request.data["audience"]
-                #     credential_instance.scope = request.data["scope"]
-                #     credential_instance.transactions = json.dumps(all_transactions),
-                #     credential_instance.codes = json.dumps({"transaction_codes": codes}),
-                #     credential_instance.nonce = request.data["nonce"]
-                #     credential_instance.access_token = request.data["access_token"]
-                #     credential_instance.django_token = request.data["django_token"]
-                #     credential_instance.session = json.dumps(decoded_session),
-                #     credential_instance.session_id = session_id
-                #     credential_instance.csrf_token = csrftoken
-                #     credential_instance.cookies = request.data["cookies"]
-                #     credential_instance.updated_at = request.data["updated_at"]
-                #     credential_instance.save()
-
-
-                #     credentials = {
-                #         "user": user.to_dict(),
-                #         "user_sub": user_sub,
-                #         "domain": API_IDENTIFIER,
-                #         "client_id": SOCIAL_AUTH_AUTH0_KEY,
-                #         "redirect_uri": request.data['redirect_uri'],
-                #         "audience": request.data['audience'],
-                #         "scope": request.data['scope'],
-                #         "transactions": all_transactions,
-                #         "codes": {"transaction_codes": codes},
-                #         "nonce": request.data['nonce'],
-                #         "access_token": request.data['access_token'],
-                #         "django_token": request.data['django_token'],
-                #         "session": decoded_session,
-                #         "session_id": session_id,
-                #         "csrf_token": csrftoken,
-                #         "cookies": request.data['cookies'],
-                #         "updated_at": request.data['updated_at'],
-                #     }
-                #     serializer = CredentialsSerializer(data=credentials, context={'request': request})
-                #     valid = serializer.is_valid()
-                #     if valid:
-                #         return Response(serializer.data)
-                #     else:
-                #         return HttpResponse(serializer.errors)
-
-                # else:
-
                 new_credential_instance = CredentialModel.objects.create(
                     user=user,
                     user_sub=user_sub,
@@ -245,7 +191,7 @@ class Credentials(ViewSet):
                     csrf_token=csrftoken,
                     cookies=json.dumps(request.data["cookies"]),
                     updated_at=request.data["updated_at"],
-                    )
+                )
 
                 credentials = {
                     "user": user.to_dict(),
@@ -320,6 +266,10 @@ class Credentials(ViewSet):
 
 
 
+
+
+
+
 # @renderer_classes((JSONRenderer))
 # @api_view(('GET', 'POST'))
 # @permission_classes([IsAuthenticated])
@@ -344,3 +294,58 @@ class Credentials(ViewSet):
         #     """, (session_id, ))
         # data = db_cursor.fetchone()
         # print(data)
+
+
+
+                # has_credentials = CredentialModel.objects.filter(user_id=user.id).exists()
+                # if has_credentials and user_sub == user.auth0_identifier:
+                #     credential_instance = CredentialModel.objects.get(user_id=user.id)
+                #     # existing_credential_instance.delete()
+
+                #     credential_instance.user = user
+                #     credential_instance.user_sub = request.data['user_sub']
+                #     credential_instance.domain = API_IDENTIFIER
+                #     credential_instance.client_id = SOCIAL_AUTH_AUTH0_KEY
+                #     credential_instance.redirect_uri = request.data["redirect_uri"]
+                #     credential_instance.audience = request.data["audience"]
+                #     credential_instance.scope = request.data["scope"]
+                #     credential_instance.transactions = json.dumps(all_transactions),
+                #     credential_instance.codes = json.dumps({"transaction_codes": codes}),
+                #     credential_instance.nonce = request.data["nonce"]
+                #     credential_instance.access_token = request.data["access_token"]
+                #     credential_instance.django_token = request.data["django_token"]
+                #     credential_instance.session = json.dumps(decoded_session),
+                #     credential_instance.session_id = session_id
+                #     credential_instance.csrf_token = csrftoken
+                #     credential_instance.cookies = request.data["cookies"]
+                #     credential_instance.updated_at = request.data["updated_at"]
+                #     credential_instance.save()
+
+
+                #     credentials = {
+                #         "user": user.to_dict(),
+                #         "user_sub": user_sub,
+                #         "domain": API_IDENTIFIER,
+                #         "client_id": SOCIAL_AUTH_AUTH0_KEY,
+                #         "redirect_uri": request.data['redirect_uri'],
+                #         "audience": request.data['audience'],
+                #         "scope": request.data['scope'],
+                #         "transactions": all_transactions,
+                #         "codes": {"transaction_codes": codes},
+                #         "nonce": request.data['nonce'],
+                #         "access_token": request.data['access_token'],
+                #         "django_token": request.data['django_token'],
+                #         "session": decoded_session,
+                #         "session_id": session_id,
+                #         "csrf_token": csrftoken,
+                #         "cookies": request.data['cookies'],
+                #         "updated_at": request.data['updated_at'],
+                #     }
+                #     serializer = CredentialsSerializer(data=credentials, context={'request': request})
+                #     valid = serializer.is_valid()
+                #     if valid:
+                #         return Response(serializer.data)
+                #     else:
+                #         return HttpResponse(serializer.errors)
+
+                # else:

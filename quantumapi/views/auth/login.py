@@ -58,10 +58,12 @@ def login_user(request):
         if request.method == 'POST':
             user = request.user
             is_authenticated = user_is_authenticated(user)
+            id_token = json.loads(req_body['id_token'])
 
-            if user.email == req_body['email'] and user.auth0_identifier.split('.')[1] == req_body['password'] and is_authenticated:
+            if user.email == req_body['email'] and user.auth0_identifier.split('.')[1] == id_token['sub'].split('|')[1] and is_authenticated:
                 email = req_body['email']
-                password = user.auth0_identifier.split('.')[1]
+                # password = user.auth0_identifier.split('.')[1]
+                password = id_token['sub'].split('|')[1]
                 auth0_identifier = req_body['uid']
                 auth0_uid = auth0_identifier.replace("|", ".")
                 authenticated_user = authenticate(auth0_identifier=auth0_uid, password=password)
@@ -88,7 +90,6 @@ def login_user(request):
                         provider = social_user.provider
                         extra_data = req_body['extra_data']
                         extra_data['access_token'] = request.auth
-                        id_token = json.loads(req_body['id_token'])
                         nonce = id_token['nonce']
                         exp = id_token['exp']
                         iat = id_token['iat']
@@ -216,7 +217,7 @@ def login_user(request):
                     data = json.dumps({"valid": False, "Error": 'Unable to Authenticate Credentials'})
                     return HttpResponse(data, content_type='application/json', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:
-                data = json.dumps({"valid": False, "Error": 'Email did not match email we have for this accout.'})
+                data = json.dumps({"valid": False, "Message": 'Email did not match email we have for this accout.'})
                 return HttpResponse(data, content_type='application/json', status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

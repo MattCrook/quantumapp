@@ -145,6 +145,7 @@ QUANTUM_COASTERS_API_ID = '5e711bac91a8780913c58961'
 # AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
 AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/'
 AUTH0_MANAGEMENT_API_ID = '5e6d3e555847e208d7c16e1c'
+MANAGEMENT_API_PAYLOAD = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}"
 
 
 # Auth0 Credentials for Quantum Application
