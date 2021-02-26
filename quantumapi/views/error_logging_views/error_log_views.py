@@ -16,6 +16,7 @@ import socket
 
 class ErrorLogViewSerializer(serializers.ModelSerializer):
 
+    id = serializers.IntegerField(label='ID', read_only=True)
     user = serializers.DictField()
     environment = serializers.DictField()
     error_message = serializers.CharField()
@@ -30,10 +31,28 @@ class ErrorLogViewSerializer(serializers.ModelSerializer):
     host_ip = serializers.CharField()
     date = serializers.DateTimeField()
 
+
+    def create(self, validated_data):
+        new_error_log = ErrorLogModel()
+        new_error_log.user = validated_data.user
+        new_error_log.environment = validated_data.environment
+        new_error_log.error_message = validated_data.error_message
+        new_error_log.stack = validated_data.stack
+        new_error_log.component = validated_data.component
+        new_error_log.calling_function = validated_data.calling_function
+        new_error_log.key = validated_data.key
+        new_error_log.session = validated_data.session
+        new_error_log.request_data = validated_data.request_data
+        new_error_log.headers = validated_data.headers
+        new_error_log.host_ip = validated_data.host_ip
+        new_error_log.date = validated_data.time
+        new_error_log.save()
+        return new_error_log
+
     class Meta:
         model = ErrorLogModel
         # url = serializers.HyperlinkedIdentityField(view_name='errorlogview', lookup_field='id')
-        fields = ('id', 'url', 'user', 'environment', 'error_message', 'stack', 'component', 'calling_function',
+        fields = ('id', 'user', 'environment', 'error_message', 'stack', 'component', 'calling_function',
                   'key', 'session', 'request_data', 'headers', 'host_ip', 'date')
         depth = 1
 
@@ -272,22 +291,21 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
 
 def create_new_error_log_entry(request, session, time):
     try:
-
-        new_error_log = ErrorLogModel()
-        new_error_log.user = request.user
-        new_error_log.environment = request.stream.META
-        new_error_log.error_message = request.data['message']
-        new_error_log.stack = request.data['stack']
-        new_error_log.component = request.data['component']
-        new_error_log.calling_function = request.data['callingFunction']
-        new_error_log.key = request.auth
-        new_error_log.session = session
-        new_error_log.request_data = request.data
-        new_error_log.headers = request.stream.headers
-        ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
-        new_error_log.host_ip = ipv4s[-1]
-        new_error_log.date = time
-        new_error_log.save()
+        # new_error_log = ErrorLogModel()
+        # new_error_log.user = request.user
+        # new_error_log.environment = request.stream.META
+        # new_error_log.error_message = request.data['message']
+        # new_error_log.stack = request.data['stack']
+        # new_error_log.component = request.data['component']
+        # new_error_log.calling_function = request.data['callingFunction']
+        # new_error_log.key = request.auth
+        # new_error_log.session = session
+        # new_error_log.request_data = request.data
+        # new_error_log.headers = request.stream.headers
+        # ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+        # new_error_log.host_ip = ipv4s[-1]
+        # new_error_log.date = time
+        # new_error_log.save()
 
 
         ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
@@ -310,6 +328,7 @@ def create_new_error_log_entry(request, session, time):
 
         serializer = ErrorLogViewSerializer(data=data, context={'request': request})
         if serializer.is_valid() is True:
+            serializer.create(serializer.validated_data)
             return serializer
         else:
             return serializer.errors

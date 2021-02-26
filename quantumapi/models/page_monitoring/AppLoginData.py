@@ -43,7 +43,7 @@ class AppLoginData(models.Model):
     class Meta:
         verbose_name = ("app Login Data")
         verbose_name_plural = ("app Login Data")
-        ordering = ("auth_user", )
+        ordering = ["updated_at"]
 
     def __str__(self):
         return f'{self.email} -- {self.updated_at}'
