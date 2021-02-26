@@ -25,6 +25,7 @@ import json
 
 class CredentialsSerializer(serializers.ModelSerializer):
 
+    id = serializers.IntegerField(label='ID')
     user = serializers.DictField()
     user_sub = serializers.CharField()
     domain = serializers.CharField()
@@ -101,10 +102,6 @@ class Credentials(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             credentials_instance = CredentialModel.objects.get(pk=pk)
-            # user_id = self.request.query_params.get("user_id", None);
-            # if user_id is not None:
-            #     credentials_instance = CredentialModel.objects.filter(user_id=user_id)
-                # credentials_queryset = credentials_queryset.filter(user_id=user_id)
 
             credentials = {
                 "id": credentials_instance.id,
@@ -127,7 +124,7 @@ class Credentials(ViewSet):
                 "updated_at": credentials_instance.updated_at,
             }
 
-            serializer = CredentialsSerializer(instance=credentials_instance, data=credentials, context={'request': request})
+            serializer = CredentialsSerializer(data=credentials, context={'request': request})
             valid = serializer.is_valid()
             if valid:
                 return Response(serializer.data)

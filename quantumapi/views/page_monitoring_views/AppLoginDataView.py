@@ -24,6 +24,7 @@ import json
 
 class AppLoginDataSerializer(serializers.Serializer):
 
+    id = serializers.IntegerField(label='ID')
     auth_user = serializers.DictField()
     email = serializers.EmailField()
     management_api_user = serializers.DictField()

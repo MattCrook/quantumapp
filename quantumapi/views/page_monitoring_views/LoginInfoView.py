@@ -17,6 +17,7 @@ import datetime
 
 class LoginInfoSerializer(serializers.ModelSerializer):
 
+    id = serializers.IntegerField(label='ID')
     user = serializers.DictField()
     email = serializers.CharField()
     recent_attempts = serializers.IntegerField()

@@ -14,6 +14,7 @@ import datetime
 
 class ActivityLogSerializer(serializers.ModelSerializer):
 
+    id = serializers.IntegerField(label='ID')
     user = serializers.DictField()
     action = serializers.DictField()
     date = serializers.DateTimeField()
