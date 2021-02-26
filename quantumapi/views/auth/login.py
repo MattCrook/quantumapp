@@ -132,7 +132,8 @@ def login_user(request):
                             # Get the most recent entry on Credentials, which would have just posted/ updated
                             # from the user logging in thru auth0. (In App.js and Auth0Context)
                             has_credentials = Credential.objects.filter(user_id=authenticated_user.id).exists()
-                            credentials = Credential.objects.filter(user_id=authenticated_user.id).latest() if has_credentials else None
+                            # credentials = Credential.objects.filter(user_id=authenticated_user.id).latest() if has_credentials else None
+                            credentials = Credential.objects.get(user_id=authenticated_user.id)
 
                             if credentials is not None:
                                 all_transactions = json.loads(credentials.transactions)

@@ -4,18 +4,36 @@ from rest_framework import serializers, status, authentication, permissions
 from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import ErrorLog as ErrorLogModel
+from quantumapi.models import Credential as CredentialModel
 from django.contrib.sessions.models import Session
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 import datetime
+import socket
 
 
 class ErrorLogViewSerializer(serializers.ModelSerializer):
+
+    user = serializers.DictField()
+    environment = serializers.DictField()
+    error_message = serializers.CharField()
+    stack = serializers.CharField()
+    environment = serializers.DictField()
+    component = serializers.CharField()
+    calling_function = serializers.CharField()
+    key = serializers.CharField()
+    session = serializers.CharField()
+    request_data = serializers.DictField()
+    headers = serializers.DictField()
+    host_ip = serializers.CharField()
+    date = serializers.DateTimeField()
+
     class Meta:
         model = ErrorLogModel
-        fields = ('id', 'user', 'environment', 'error_message', 'stack', 'component', 'calling_function',
+        # url = serializers.HyperlinkedIdentityField(view_name='errorlogview', lookup_field='id')
+        fields = ('id', 'url', 'user', 'environment', 'error_message', 'stack', 'component', 'calling_function',
                   'key', 'session', 'request_data', 'headers', 'host_ip', 'date')
         depth = 1
 
@@ -73,11 +91,15 @@ class ErrorLogView(ViewSet):
             date_strftime_string = date_strftime.split(" ")
 
             if request.session is not None:
-                session = request.session.session_key
+                if request.session.session_key is not None:
+                    session = request.session.session_key
+                else:
+                    credential = CredentialModel.objects.filter(user_id=request.user.id).latest()
+                    session = credential.session_id
             elif Session.objects.filter(session_key=request.data['sessionId']).exists():
                 session = Session.objects.get(session_key=request.data['sessionId'])
             else:
-                session = None
+                session = 'no session data'
 
             try:
                 # if incoming date (from client) does not match current date (set on backend) then skip.
@@ -232,7 +254,8 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
             error_log.session = session
             error_log.request_data = request.data
             error_log.headers = request.stream.headers
-            error_log.host_ip = request.META['REMOTE_ADDR']
+            ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+            error_log.host_ip = ipv4s[-1]
             error_log.date = time
 
             error_log.save()
@@ -249,6 +272,7 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
 
 def create_new_error_log_entry(request, session, time):
     try:
+
         new_error_log = ErrorLogModel()
         new_error_log.user = request.user
         new_error_log.environment = request.stream.META
@@ -260,12 +284,35 @@ def create_new_error_log_entry(request, session, time):
         new_error_log.session = session
         new_error_log.request_data = request.data
         new_error_log.headers = request.stream.headers
-        new_error_log.host_ip = request.META['REMOTE_ADDR']
+        ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+        new_error_log.host_ip = ipv4s[-1]
         new_error_log.date = time
-
         new_error_log.save()
-        serialized_data = ErrorLogViewSerializer(new_error_log, context={'request': request})
-        return serialized_data
+
+
+        ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+
+        data = {
+            "user": request.user.to_dict(),
+            "environment": {"stream": request.stream.META},
+            "error_message": request.data['message'],
+            "stack": request.data['stack'],
+            "component": request.data['component'],
+            "calling_function": request.data['callingFunction'],
+            "key": request.auth,
+            "session": session,
+            "request_data": request.data,
+            "headers": {key:value for (key,value) in request.stream.headers.items()},
+            "host_ip": ipv4s[-1],
+            "date": time,
+        }
+
+
+        serializer = ErrorLogViewSerializer(data=data, context={'request': request})
+        if serializer.is_valid() is True:
+            return serializer
+        else:
+            return serializer.errors
     except Exception as ex:
         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

@@ -6,7 +6,7 @@ from django.dispatch import receiver
 
 class Tracktype(models.Model):
 
-    name = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=100, null=True)
 
 
     class Meta:
