@@ -201,9 +201,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     # 'social_core.backends.auth0.Auth0OAuth2',
 )
-# FOR DJANGO WEB APP BACKEND
-# 'quantumapi.auth0_views.Auth0',
-
 
 ROOT_URLCONF = 'quantumapp.urls'
 
@@ -305,11 +302,7 @@ LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
-
-
 # GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
-
-
 
 
 # Social Auth Configs (For Django full stack app)
@@ -329,8 +322,6 @@ SOCIAL_AUTH_LOGIN_URL = '/forum/login/'
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/group_chat/'
 SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/index/'
-
-
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [

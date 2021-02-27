@@ -5,18 +5,18 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
 
-WORKDIR /api
+WORKDIR /quantumapp
 
 RUN pip install --upgrade pip
 
-COPY requirements.txt /api/
+COPY requirements.txt /quantumapp/
 RUN pip install -r requirements.txt
 
 ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
 ENV STATIC_ROOT=quantumforum.static
+ENV MEDIA_ROOT=var/www/html/media
 
-
-COPY . /api/
+COPY . /quantumapp/
 
 
 # RUN manage.py collectstatic
