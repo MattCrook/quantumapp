@@ -127,6 +127,7 @@ class ActivityLogView(ViewSet):
                 new_activity_log.save()
 
                 data = {
+                    "id": new_activity_log.id,
                     "user": user.to_dict(),
                     "action": json.loads(actions),
                     "date": datetime.datetime.now()
@@ -180,6 +181,7 @@ def add_action_to_existing_actions(request, activity_log_action):
         activity_log.save()
 
         data = {
+            "id": activity_log.id,
             "user": request.user.to_dict(),
             "action": json.loads(actions),
             "date": datetime.datetime.now()
@@ -205,6 +207,7 @@ def create_new_action(request, user, activity_log_action):
         new_activity_log.save()
 
         data = {
+            "id": new_activity_log.id,
             "user": user.to_dict(),
             "action": json.loads(actions),
             "date": datetime.datetime.now()

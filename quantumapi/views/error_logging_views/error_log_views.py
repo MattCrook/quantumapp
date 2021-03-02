@@ -309,6 +309,7 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
             error_log.date = time
 
             data = {
+                "id": error_log.id,
                 "user": request.user.to_dict(),
                 "environment": {"stream": request.stream.META},
                 "error_message": request.data['message'],
@@ -357,8 +358,10 @@ def create_new_error_log_entry(request, session, time):
         new_error_log.headers = headers_to_str
         new_error_log.host_ip = ipv4s[-1]
         new_error_log.date = time
+        new_error_log.save()
 
         data = {
+            "id": new_error_log.id,
             "user": request.user.to_dict(),
             "environment": {"stream": request.stream.META},
             "error_message": request.data['message'],
@@ -376,7 +379,6 @@ def create_new_error_log_entry(request, session, time):
 
         serializer = ErrorLogViewSerializer(data=data, context={'request': request})
         if serializer.is_valid() is True:
-            new_error_log.save()
             return serializer
         else:
             return serializer.errors
@@ -405,5 +407,3 @@ def update_or_create(request, data, session, time):
 
 def return_empty_response(data):
     return Response(data, status=status.HTTP_200_OK)
-
-# python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json

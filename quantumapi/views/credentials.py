@@ -98,7 +98,6 @@ class Credentials(ViewSet):
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
     def retrieve(self, request, pk=None):
         try:
             credentials_instance = CredentialModel.objects.get(pk=pk)
@@ -191,6 +190,7 @@ class Credentials(ViewSet):
                 )
 
                 credentials = {
+                    "id": new_credential_instance.id,
                     "user": user.to_dict(),
                     "user_sub": user_sub,
                     "domain": API_IDENTIFIER,
@@ -226,40 +226,70 @@ class Credentials(ViewSet):
 
 
     def update(self, request, pk=None):
-        try:
-            if request.method == "PATCH":
-                req_data = request.data
-                print('Auth0Data: REQDATA', req_data)
-                current_user_id = req_data['user_id']
-                current_auth0data_id = req_data['id']
-                auth0data = CredentialModel.objects.get(pk=current_auth0data_id)
+        pass
 
-                if 'nonce' in req_data:
-                    auth0data.nonce = req_data['nonce']
 
-                if 'access_token' in req_data:
-                    auth0data.access_token = req_data['access_token']
+    def destroy(self, request, pk=None):
+        pass
 
-                if 'updated_at' in req_data:
-                    auth0data.updated_at = req_data['updated_at']
 
-                if 'session' in req_data:
-                    auth0data.quantum_session = req_data['session']
 
-                if 'django_token' in req_data:
-                    auth0data.django_token = req_data['django_token']
 
-                auth0data.save()
 
-            elif request.method == 'PUT':
-                data = CredentialModel.objects.get(pk=pk)
-                if 'django_token' in request.data:
-                    data.django_token = request.data['django_token']
 
-                data.save()
-            return Response({"Success": "Data successfully updated"}, status=status.HTTP_204_NO_CONTENT)
-        except Exception as ex:
-            return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def update(self, request, pk=None):
+    #     try:
+    #         if request.method == "PATCH":
+    #             req_data = request.data
+    #             print('Auth0Data: REQDATA', req_data)
+    #             current_user_id = req_data['user_id']
+    #             current_auth0data_id = req_data['id']
+    #             auth0data = CredentialModel.objects.get(pk=current_auth0data_id)
+
+    #             if 'nonce' in req_data:
+    #                 auth0data.nonce = req_data['nonce']
+
+    #             if 'access_token' in req_data:
+    #                 auth0data.access_token = req_data['access_token']
+
+    #             if 'updated_at' in req_data:
+    #                 auth0data.updated_at = req_data['updated_at']
+
+    #             if 'session' in req_data:
+    #                 auth0data.quantum_session = req_data['session']
+
+    #             if 'django_token' in req_data:
+    #                 auth0data.django_token = req_data['django_token']
+
+    #             auth0data.save()
+
+    #         elif request.method == 'PUT':
+    #             data = CredentialModel.objects.get(pk=pk)
+    #             if 'django_token' in request.data:
+    #                 data.django_token = request.data['django_token']
+
+    #             data.save()
+    #         return Response({"Success": "Data successfully updated"}, status=status.HTTP_204_NO_CONTENT)
+    #     except Exception as ex:
+    #         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

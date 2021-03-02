@@ -92,6 +92,7 @@ class AppLoginDataView(ViewSet):
                     "extra_data": instance.social_user.extra_data
                 }
                 data = {
+                    'id': instance.id,
                     'auth_user': instance.auth_user.to_dict(),
                     'email': instance.auth_user.email,
                     'management_api_user': json.loads(instance.management_api_user),
@@ -242,6 +243,7 @@ class AppLoginDataView(ViewSet):
             }
 
             data = {
+                'id': new_app_login_data.id,
                 'auth_user': auth_user.to_dict(),
                 'email': auth_user.email,
                 'management_api_user': management_user,

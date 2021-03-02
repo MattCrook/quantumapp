@@ -55,6 +55,7 @@ class LoginInfoView(ViewSet):
 
         for instance in data:
             login_info_instance = {
+                "id": instance.id,
                 "user": instance.user.to_dict(),
                 "email": instance.email,
                 "recent_attempts": instance.recent_attempts,
@@ -137,8 +138,10 @@ class LoginInfoView(ViewSet):
             login_info.id_token = json.dumps(request.data['id_token'])
             login_info.user_logs = json.dumps({"logs": all_user_logs})
             login_info.date = datetime.datetime.now()
+            login_info.save()
 
             data = {
+                "id": login_info.id,
                 "user": user.to_dict(),
                 "email": request.data["email"],
                 "recent_attempts": request.data["recent_attempts"],
@@ -156,7 +159,6 @@ class LoginInfoView(ViewSet):
             serializer = LoginInfoSerializer(data=data, context={'request': request})
             valid = serializer.is_valid()
             if valid:
-                login_info.save()
                 return Response(serializer.data)
             else:
                 return Response({'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
