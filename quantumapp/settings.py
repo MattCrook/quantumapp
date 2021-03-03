@@ -109,8 +109,8 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -176,6 +176,7 @@ CSRF_COOKIE_SECURE = False
 
 # # Use with Ngnix configuration
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
 
 
 # Custom User Model - models.User/ views.UserViewset

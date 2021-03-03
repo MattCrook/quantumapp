@@ -6,7 +6,7 @@ from .messages import Message
 from .userProfile import UserProfiles, UserProfileSerializer
 from .credit import Credits
 from .auth import login_user, register_user, auth0_logout
-from .user import Users, UserSerializer, get_user_session
+from .user import Users, UserSerializer, get_user_session, get_user_from_token
 # from .user import get_authuser
 from .images import Images
 from .credentials import Credentials

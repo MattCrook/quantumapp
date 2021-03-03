@@ -204,6 +204,55 @@ def get_auth_user(request):
 
 
 
+# @permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+@api_view(['GET', 'POST'])
+def get_user_from_token(request):
+    try:
+        if request.method == 'POST':
+            successful_auth = request.auth
+            token = TokenModel.objects.get(key=successful_auth)
+            auth_user_id = token.user_id
+            user_profile = UserProfile.objects.get(user_id=auth_user_id)
+            user_credits = Credit.objects.filter(userProfile_id=user_profile.id)
+
+            if request.session and request.session.session_key:
+                session_queryset = Session.objects.get(session_key=request.session.session_key)
+                decoded_session_data = session_queryset.get_decoded()
+                session = session_queryset.session_key
+            else:
+                session = None
+
+
+            user_profile_dict = {
+                'id': user_profile.id,
+                'image_id': user_profile.image.id if user_profile.image else None,
+                'credits': [c.rollerCoaster_id for c in user_credits],
+                'address': user_profile.address,
+                'user_id': user_profile.user.id
+            }
+
+            return_data = {
+                "id": user_profile.user.id,
+                "first_name": user_profile.user.first_name,
+                "last_name": user_profile.user.last_name,
+                "email": user_profile.user.email,
+                "username": user_profile.user.username,
+                'auth0_identifier': user_profile.user.auth0_identifier,
+                "is_staff": user_profile.user.is_staff,
+                "is_superuser": user_profile.user.is_superuser,
+                "token": token,
+                "session": session,
+                'session_data': decoded_session_data,
+                'user_profile': user_profile_dict
+            }
+            return HttpResponse(json.dumps(return_data), content_type='application/json')
+
+
+    except Exception as ex:
+        error = {'Exception': ex.args}
+        return HttpResponse(json.dumps(error), content_type='application/json')
+
 
 # class Users(viewsets.ModelViewSet):
     # queryset = UserModel.objects.all()
