@@ -1,3 +1,4 @@
+{% comment %} 
 To create react app in django app
 
 cd ./quantumadminapp && npm init -y
@@ -10,3 +11,9 @@ in package.json
     "dev": "webpack --mode development --entry ./src/index.js --output-path ./static/frontend",
     "build": "webpack --mode production --entry ./src/index.js --output-path ./static/frontend"
 },
+
+
+env variables:
+https://www.freecodecamp.org/news/how-to-implement-runtime-environment-variables-with-create-react-app-docker-and-nginx-7f9d42a91d70/ 
+
+{% endcomment %}
