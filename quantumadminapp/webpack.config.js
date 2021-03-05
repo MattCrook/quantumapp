@@ -58,6 +58,15 @@ const webpack = require("webpack");
 //   fonts: path.join(NAMES.assets, NAMES.fonts),
 // };
 
+const NAMES = {
+  images: "images",
+  assets: "assets",
+};
+
+const ASSETS = {
+  images: path.join(NAMES.assets, NAMES.images),
+};
+
 // module.exports = {
 //   entry: { app: "./index.js" }, // Start bundling
 //   output: {
@@ -66,8 +75,8 @@ const webpack = require("webpack");
 //   },
 
 module.exports = {
-  // entry: ".src/index.js",
-  // mode: "development",
+  entry: ".src/index.js",
+  mode: "development",
   // output: {
   //   path: path.join(__dirname, "dist/"), // Output to dist directory
   //   filename: "[name].js", // Emit app.js by capturing entry name
@@ -109,36 +118,13 @@ module.exports = {
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
         use: [
-          // {
-          //   loader: "image-webpack-loader",
-          //   options: {
-          //     mozjpeg: {
-          //       progressive: true,
-          //       quality: 65,
-          //     },
-
-          //     optipng: {
-          //       enabled: false,
-          //     },
-          //     pngquant: {
-          //       quality: [0.65, 0.9],
-          //       speed: 4,
-          //     },
-          //     gifsicle: {
-          //       interlaced: false,
-          //     },
-
-          //     webp: {
-          //       quality: 75,
-          //     },
-          //   },
-          // },
           {
             loader: "file-loader",
             options: {
               name: "[name].[ext]",
-              // outputPath: "media/",
-              // publicPath: "media/",
+              outputPath: ASSETS.images,
+              // outputPath: "static/",
+              // publicPath: "static/",
             },
           },
           {
@@ -149,6 +135,30 @@ module.exports = {
           },
         ],
       },
+      // {
+      //   loader: "image-webpack-loader",
+      //   options: {
+      //     mozjpeg: {
+      //       progressive: true,
+      //       quality: 65,
+      //     },
+
+      //     optipng: {
+      //       enabled: false,
+      //     },
+      //     pngquant: {
+      //       quality: [0.65, 0.9],
+      //       speed: 4,
+      //     },
+      //     gifsicle: {
+      //       interlaced: false,
+      //     },
+
+      //     webp: {
+      //       quality: 75,
+      //     },
+      //   },
+      // },
       // {
       //   test: /\.(png|jpg|gif)$/i,
       //   use: [
