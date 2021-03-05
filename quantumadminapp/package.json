@@ -1,11 +1,11 @@
 {
-  "name": "quantumadminapp",
+  "name": "quantumadmin",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "chmod +x ./env.sh && ./env.sh && cp env-config.js ./public/ && webpack --mode development --entry ./src/index.js --output-path ./static/quantumadminapp",
-    "watch": "webpack --mode development --entry ./src/index.js --output-path ./static/quantumadminapp --watch",
+    "watch": "webpack --mode development --entry ./src/index.js --output-path ./quantumadminapp --watch",
     "build": "webpack --mode production --entry ./src/index.js --output-path ./static/build"
   },
   "keywords": [],
