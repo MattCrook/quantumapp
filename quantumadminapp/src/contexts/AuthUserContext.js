@@ -6,7 +6,7 @@ export const useAuthUser = () => useContext(AuthUserContext);
 
 export const AuthUserProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [authUser, setAuthUser] = useState([]);
   const [userProfile, setUserProfile] = useState([]);
   const [authToken, setAuthToken] = useState([]);
@@ -36,6 +36,10 @@ export const AuthUserProvider = ({ children }) => {
         if (credential === currentUser.email) {
           setIsAuthenticated(true);
         }
+        setIsLoading(false);
+      } else {
+        console.log("AuthUserContext: NOTLOGGEDIN");
+        setIsLoading(false);
       }
     };
     initAuthUser();
