@@ -66,9 +66,9 @@ const webpack = require("webpack");
 //   },
 
 module.exports = {
-  entry: ".src/index.js",
-  mode: "development",
-  //   output: {
+  // entry: ".src/index.js",
+  // mode: "development",
+  // output: {
   //   path: path.join(__dirname, "dist/"), // Output to dist directory
   //   filename: "[name].js", // Emit app.js by capturing entry name
   // },
@@ -137,8 +137,14 @@ module.exports = {
             loader: "file-loader",
             options: {
               name: "[name].[ext]",
-              outputPath: "media/",
-              publicPath: "media/",
+              // outputPath: "media/",
+              // publicPath: "media/",
+            },
+          },
+          {
+            loader: "url-loader",
+            options: {
+              encoding: "utf8",
             },
           },
         ],
@@ -170,17 +176,17 @@ module.exports = {
       //     },
       //   ],
       // },
-      {
-        test: /\.svg$/i,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              encoding: "utf8",
-            },
-          },
-        ],
-      },
+      // {
+      //   test: /\.svg$/i,
+      //   use: [
+      //     {
+      //       loader: "url-loader",
+      //       options: {
+      //         encoding: "utf8",
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.txt$/i,
         use: "raw-loader",
