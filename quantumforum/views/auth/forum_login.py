@@ -25,7 +25,7 @@ def login_user(request):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             email = login_form.cleaned_data.get('email')
-            # password = login_form.cleaned_data.get('password')
+            password = login_form.cleaned_data.get('password')
 
             try:
                 UserModel = get_user_model()
@@ -75,6 +75,11 @@ def login_user(request):
             error_message = login_form.errors.as_data()
             if 'email' in error_message:
                 messages.add_message(request, messages.ERROR, list(error_message['email'][0])[0])
+                return redirect(reverse('quantumforum:login'))
+            else:
+                print("[ERROR MESSAGE]", error_message)
+                error_message = "Invalid Email"
+                messages.add_message(request, messages.ERROR, error_message)
                 return redirect(reverse('quantumforum:login'))
 
     else:

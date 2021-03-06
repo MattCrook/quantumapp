@@ -36,13 +36,14 @@ class AppLoginData(models.Model):
     last_login_ip = models.TextField(null=True, blank=True)
     social_user = models.ForeignKey(UserSocialAuth, null=True, blank=True, on_delete=models.CASCADE)
     client_name = models.CharField(max_length=40, null=True, blank=True)
+    tenant_settings = models.TextField(null=True, blank=True)
     updated_at = models.DateTimeField()
 
 
     class Meta:
         verbose_name = ("app Login Data")
         verbose_name_plural = ("app Login Data")
-        ordering = ("auth_user", )
+        ordering = ["updated_at"]
 
     def __str__(self):
         return f'{self.email} -- {self.updated_at}'

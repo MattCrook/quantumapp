@@ -53,6 +53,7 @@ ALLOWED_HOSTS = ['localhost', '8000']
 
 
 INSTALLED_APPS = [
+    'webpack_loader',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -91,6 +92,13 @@ CHANNEL_LAYERS = {
     },
 }
 
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'BUNDLE_DIR_NAME': 'app/',
+    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+  }
+}
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -109,8 +117,8 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
         # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -145,6 +153,7 @@ QUANTUM_COASTERS_API_ID = '5e711bac91a8780913c58961'
 # AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
 AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/'
 AUTH0_MANAGEMENT_API_ID = '5e6d3e555847e208d7c16e1c'
+MANAGEMENT_API_PAYLOAD = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}"
 
 
 # Auth0 Credentials for Quantum Application
@@ -177,6 +186,7 @@ CSRF_COOKIE_SECURE = False
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 
+
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
 
@@ -200,9 +210,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     # 'social_core.backends.auth0.Auth0OAuth2',
 )
-# FOR DJANGO WEB APP BACKEND
-# 'quantumapi.auth0_views.Auth0',
-
 
 ROOT_URLCONF = 'quantumapp.urls'
 
@@ -304,11 +311,7 @@ LOGIN_URL = '/login/auth0'
 LOGIN_REDIRECT_URL = '/home'
 LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
-
-
 # GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
-
-
 
 
 # Social Auth Configs (For Django full stack app)
@@ -328,8 +331,6 @@ SOCIAL_AUTH_LOGIN_URL = '/forum/login/'
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/group_chat/'
 SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/index/'
-
-
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [

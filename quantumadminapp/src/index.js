@@ -1,12 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-// import { BrowserRouter as Router } from "react-router-dom";
+import {AuthUserProvider} from "./contexts/AuthUserContext";
 import AdminApp from "./AdminApp";
-// import "./index.css";
+import '@babel/polyfill'
+// import '@babel/core'
+// import '@babel/preset-env'
+// import '@babel/preset-react'
 
-// The Context from React Router must be present in the component tree at a higher level
-// for Auth0ProviderWithHistory to access the useHistory() hook from React Router.
+
 
 ReactDOM.render(
-    <AdminApp />, document.getElementById("app")
+  <AuthUserProvider>
+    <AdminApp />
+  </AuthUserProvider>,
+  document.getElementById("app")
 );

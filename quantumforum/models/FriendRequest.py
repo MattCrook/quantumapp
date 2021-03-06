@@ -16,7 +16,8 @@ class FriendRequest(models.Model):
     sender_and_receiver = models.ForeignKey("Friendships", on_delete=models.CASCADE)
     status_code = models.ForeignKey("StatusCode", on_delete=models.CASCADE)
     last_updated_by = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    sent_date = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    last_updated = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
 
     class Meta:
         verbose_name = ("friend Request")

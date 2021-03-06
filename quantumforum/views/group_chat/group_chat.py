@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, resolve_url
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from quantumapi.models import Credential, Messages
 from quantumapi.models import UserProfile as UserProfileModel
 from django.contrib.sessions.models import Session
@@ -22,10 +22,11 @@ import datetime
 
 
 
+# @permission_required([IsAuthenticated])
+# @authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
+# @permission_classes([IsAuthenticated])
 
-@authentication_classes([SessionAuthentication, TokenAuthentication, JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
-@login_required
+@login_required(redirect_field_name='login')
 def group_chat_view(request):
     if request.method == 'GET':
         user = request.user

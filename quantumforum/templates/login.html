@@ -1,12 +1,16 @@
 {% extends 'shared/base.html' %}
 {% load static %}
 
-
+{% block css %}
+<link rel="stylesheet" href="{% static 'styles/login.css' %}" />
+{% endblock %}
 
 
 {% block content %}
 <div id="login_container" class="login-container">
-    <div id="login_card" class="login-card" style="display: none;">
+    <!-- <div id="login_card" class="login-card" style="display: none;"> -->
+        <div id="login_card" class="login-card">
+
         <div class="login_card_title">
             <h2>Login</h2>
             <button class="card_close"></button>
@@ -21,8 +25,7 @@
             {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
-                <li id="error_message" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
-                </li>
+                <li id="error_message" {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
                 {% endfor %}
             </ul>
             {% endif %}
@@ -32,20 +35,26 @@
         <div id="login_buttons_card_wrapper" class="col-md-8 mx-auto social-container my-2 order-md-1">
 
             <button id="login_with_auth0" class="btn btn-primary mb-2">
-                <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 26px;">
+                <img id="auth0_img" src="../../static/images/iconfinder_auth0_4691528.svg" style="width: 22px;">
                 <a href="{% url 'social:begin' 'auth0' %}" title="Auth0">Login with Auth0</a>
+            </button>
+            {% if not status %}
+            <button id="login_with_google" class="btn btn-primary mb-2">
+                <a href="{% url 'social:begin' 'google-oauth2' %}" onclick="gmailAuthenticate()" title="Google"> <i
+                        class="fab fa-google"></i> Login with Google</a>
+            </button>
+            {% endif %}
+            <button id="login_with_email" class="btn btn-primary mb-2">
+                <i class="fas fa-envelope"></i>
+                <a>Login with Email</a>
             </button>
             <button id="back_to_quantum_coaters" class="btn btn-primary mb-2">
                 <i class="fas fa-caret-square-left"></i>
                 <a href="{{CLIENT_URL}}">Back To Quantum Coasters</a>
             </button>
-            <button id="login_with_email" class="btn btn-primary mb-2">
-                <i class="fas fa-envelope"></i>
-                <a>Login with Email</a>
-            </button>
             <button id="login_help" class="btn btn-primary mb-2">
                 <i class="fas fa-question-circle"></i>
-                <a href="{% url 'social:begin' 'auth0' %}">Help</a>
+                <a href="#help_modal" data-micromodal-trigger="help_modal" class="login_help_button">Help</a>
             </button>
         </div>
     </div>
@@ -55,9 +64,48 @@
         Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i" class="fas fa-trademark"></i>
     </p>
 </div>
+
+
+
+<div class="help_modal micromodal-slide" id="help_modal" aria-hidden="true">
+    <div class="help_modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="help_modal__container" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+            <header class="help_modal__header">
+                <div class="help_modal_title">Help <i class="far fa-question-circle"></i></div>
+                <button class="help_modal__close" aria-label="Close modal" data-micromodal-close></button>
+            </header>
+            <main class="help_modal__content" id="help-modal-content">
+                <div class="help_modal_txt_container">
+                    For admin or superusers, please sign in with your email and admin pass code.
+                </div>
+                <div class="help_modal_txt_container">
+                    For regular Quantum users, sign in with Auth0 to continue to group/ private chat.
+                </div>
+                <div class="help_modal_txt_container">
+                    If there is a problem with your account or login, please contact Quantum Support.
+                    <li>To contact Support, click your profile picture and select "Support" from the dropdown.</li>
+                </div>
+                <div class="thank_you">
+                    Thank You For Using Quantum Coasters!
+                </div>
+                <footer class="help_modal__footer">
+                    <button class="help_modal__btn" data-micromodal-close
+                        aria-label="Close this dialog window">Close</button>
+                </footer>
+                <div class="signature">
+                    <p id="signature_font_friends_list">
+                        Made by <a href="https://matt-crook-io.now.sh/">Quantum Coasters</a><i id="i"
+                            class="fas fa-trademark"></i>
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript" src="{% static 'scripts/loginEventListeners.js' %}"></script>
 <script type="text/javascript">
 
     const showLoginWithEmailCard = () => {
@@ -93,6 +141,21 @@
 <script type="module">
     import {sendAppLoginData} from "{% static 'scripts/services.js'%}"
 
+
+</script>
+<script type="text/javascript">
+
+    // For Google Oauth
+function gmailAuthenticate(){
+    $.ajax({
+        type: "GET",
+        url: "ajax/gmailAuthenticate",
+        // data: '',
+        success: function (data) {
+            console.log('Done')
+        }
+    });
+  };
 
 </script>
 {% endblock%}

@@ -7,15 +7,34 @@ from quantumapi.models import LoginHistory as LoginHistoryModel
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from quantumapi.views.auth.management_api_services import retrieve_user_logs, management_api_oath_endpoint
+from quantumapp.settings import AUTH0_DOMAIN
 import socket
 import os
+import json
+import datetime
 
 
 class LoginInfoSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(label='ID')
+    user = serializers.DictField()
+    email = serializers.CharField()
+    recent_attempts = serializers.IntegerField()
+    total_logins = serializers.IntegerField()
+    ip_address = serializers.IPAddressField()
+    browser = serializers.CharField()
+    version = serializers.CharField()
+    platform = serializers.CharField()
+    app_codename = serializers.CharField()
+    host_computer_name = serializers.CharField()
+    id_token = serializers.DictField()
+    user_logs = serializers.DictField()
+    date = serializers.DateTimeField()
+
     class Meta:
         model = LoginHistoryModel
-        # url = serializers.HyperlinkedIdentityField(view_name='loginhistory', lookup_field='id')
-        fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'date')
+        fields = ('id', 'user', 'email', 'recent_attempts', 'ip_address', 'browser', 'version', 'platform', 'app_codename', 'host_computer_name', 'total_logins', 'id_token', 'user_logs', 'date')
         depth = 1
 
 
@@ -32,7 +51,33 @@ class LoginInfoView(ViewSet):
         if user_id is not None:
             data = LoginHistoryModel.objects.filter(user_id=user_id)
 
-        serializer = LoginInfoSerializer(data, many=True, context={'request': request})
+        queryset_data = []
+
+        for instance in data:
+            login_info_instance = {
+                "id": instance.id,
+                "user": instance.user.to_dict(),
+                "email": instance.email,
+                "recent_attempts": instance.recent_attempts,
+                "total_logins": instance.total_logins,
+                "ip_address": instance.ip_address,
+                "browser": instance.browser,
+                "version": instance.version,
+                "platform": instance.platform,
+                "app_codename": instance.app_codename,
+                "host_computer_name": instance.host_computer_name,
+                "id_token": json.loads(instance.id_token),
+                "user_logs": json.loads(instance.user_logs),
+                "date": instance.date
+            }
+            serializer = LoginInfoSerializer(data=login_info_instance, context={'request': request})
+            valid = serializer.is_valid()
+            if valid:
+                queryset_data.append(serializer.data)
+            else:
+                print(serializer.errors)
+
+        serializer = LoginInfoSerializer(queryset_data, many=True, context={'request': request})
         return Response(serializer.data)
 
 
@@ -59,6 +104,10 @@ class LoginInfoView(ViewSet):
             # token_from_cookies = successful_authenticator.get_token_from_cookies(COOKIES)
             # token_from_request = successful_authenticator.get_token_from_request()
             # user_from_token = successful_authenticator.authenticate_credentials()
+            oauth_endpoint = management_api_oath_endpoint(AUTH0_DOMAIN)
+            management_api_access_token = json.loads(oauth_endpoint)
+            token = management_api_access_token['access_token']
+            all_user_logs = retrieve_user_logs(AUTH0_DOMAIN, token, request.user.auth0_identifier.replace(".", "|"))
 
 
             user_id = request.data['user_id']
@@ -86,11 +135,33 @@ class LoginInfoView(ViewSet):
             login_info.platform = request.data["platform"]
             login_info.app_codename = request.data["app_code_name"]
             login_info.host_computer_name = hostname
-            login_info.id_token = request.data['id_token']
-
+            login_info.id_token = json.dumps(request.data['id_token'])
+            login_info.user_logs = json.dumps({"logs": all_user_logs})
+            login_info.date = datetime.datetime.now()
             login_info.save()
-            serializer = LoginInfoSerializer(login_info, context={'request': request})
-            return Response(serializer.data)
+
+            data = {
+                "id": login_info.id,
+                "user": user.to_dict(),
+                "email": request.data["email"],
+                "recent_attempts": request.data["recent_attempts"],
+                "total_logins": logins,
+                "ip_address": ipv4s[-1],
+                "browser": request.data["browser"],
+                "version": request.data["version"],
+                "platform": request.data["platform"],
+                "app_codename": request.data["app_code_name"],
+                "host_computer_name": hostname,
+                "id_token": request.data['id_token'],
+                "user_logs": {"logs": all_user_logs},
+                "date": datetime.datetime.now()
+            }
+            serializer = LoginInfoSerializer(data=data, context={'request': request})
+            valid = serializer.is_valid()
+            if valid:
+                return Response(serializer.data)
+            else:
+                return Response({'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as ex:
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

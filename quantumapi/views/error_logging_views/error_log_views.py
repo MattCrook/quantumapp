@@ -4,19 +4,38 @@ from rest_framework import serializers, status, authentication, permissions
 from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import ErrorLog as ErrorLogModel
+from quantumapi.models import Credential as CredentialModel
 from django.contrib.sessions.models import Session
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 import datetime
+import socket
+from collections import OrderedDict
 
 
 class ErrorLogViewSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField(label='ID')
+    user = serializers.DictField()
+    environment = serializers.DictField()
+    error_message = serializers.CharField()
+    stack = serializers.CharField()
+    environment = serializers.DictField()
+    component = serializers.CharField()
+    calling_function = serializers.CharField()
+    key = serializers.CharField()
+    session = serializers.CharField()
+    request_data = serializers.DictField()
+    headers = serializers.DictField()
+    host_ip = serializers.CharField()
+    date = serializers.DateTimeField()
+
+
     class Meta:
         model = ErrorLogModel
-        fields = ('id', 'user', 'environment', 'error_message', 'stack', 'component', 'calling_function',
-                  'key', 'session', 'request_data', 'headers', 'host_ip', 'date')
+        fields = ('id', 'user', 'environment', 'error_message', 'stack', 'component', 'calling_function', 'key', 'session', 'request_data', 'headers', 'host_ip', 'date')
         depth = 1
 
 
@@ -26,7 +45,7 @@ class ErrorLogView(ViewSet):
 
     def list(self, request):
         try:
-            data = ErrorLogModel.objects.all()
+            error_log_queryset = ErrorLogModel.objects.all()
             user_id = self.request.query_params.get("user_id", None)
             component = self.request.query_params.get("component", None)
             calling_function = self.request.query_params.get("calling_function", None)
@@ -34,33 +53,78 @@ class ErrorLogView(ViewSet):
             error_message = self.request.query_params.get("error_message", None)
 
             if user_id is not None:
-                data = ErrorLogModel.objects.filter(user_id=user_id)
+                error_log_queryset = ErrorLogModel.objects.filter(user_id=user_id)
 
             if component is not None:
-                data = ErrorLogModel.objects.filter(component=component)
+                error_log_queryset = ErrorLogModel.objects.filter(component=component)
 
             if calling_function is not None:
-                data = ErrorLogModel.objects.filter(calling_function=calling_function)
+                error_log_queryset = ErrorLogModel.objects.filter(calling_function=calling_function)
 
             if key is not None:
-                data = ErrorLogModel.objects.filter(key=key)
+                error_log_queryset = ErrorLogModel.objects.filter(key=key)
 
             if error_message is not None:
-                data = ErrorLogModel.objects.filter(error_message=error_message)
+                error_log_queryset = ErrorLogModel.objects.filter(error_message=error_message)
 
-            serializer = ErrorLogViewSerializer(data, many=True, context={'request': request})
+            serialized_data = []
+            for instance in error_log_queryset:
+
+                error_log = {
+                    "id": instance.id,
+                    "user": instance.user.to_dict(),
+                    "environment": json.loads(instance.environment),
+                    "error_message": instance.error_message,
+                    "stack": instance.stack,
+                    "component": instance.component,
+                    "calling_function": instance.calling_function,
+                    "key": instance.key,
+                    "session": instance.session,
+                    "request_data": json.loads(instance.request_data),
+                    "headers": json.loads(instance.headers),
+                    "host_ip": instance.host_ip,
+                    "date": instance.date
+                }
+
+                serializer = ErrorLogViewSerializer(data=error_log, context={'request': request})
+                if serializer.is_valid() is True:
+                    serialized_data.append(serializer.data)
+                else:
+                    return Response({'Serializer Error': serializer.errors}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            serializer = ErrorLogViewSerializer(serialized_data, many=True, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
-            return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def retrieve(self, request, pk=None):
         try:
             data = ErrorLogModel.objects.get(pk=pk)
-            serializer = ErrorLogViewSerializer(data, context={'request': request})
-            return Response(serializer.data)
+
+            instance = {
+                "id": data.id,
+                "user": data.user.to_dict(),
+                "environment": json.loads(data.environment),
+                "error_message": data.error_message,
+                "stack": data.stack,
+                "component": data.component,
+                "calling_function": data.calling_function,
+                "key": data.key,
+                "session": data.session,
+                "request_data": json.loads(data.request_data),
+                "headers": json.loads(data.headers),
+                "host_ip": data.host_ip,
+                "date": data.date
+            }
+
+            serializer = ErrorLogViewSerializer(data=instance, context={'request': request})
+            if serializer.is_valid() is True:
+                return Response(serializer.data)
+            else:
+                return serializer.errors
         except Exception as ex:
-            return Response({'message': ex}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def create(self, request):
@@ -73,11 +137,15 @@ class ErrorLogView(ViewSet):
             date_strftime_string = date_strftime.split(" ")
 
             if request.session is not None:
-                session = request.session.session_key
+                if request.session.session_key is not None:
+                    session = request.session.session_key
+                else:
+                    credential = CredentialModel.objects.filter(user_id=request.user.id).latest()
+                    session = credential.session_id
             elif Session.objects.filter(session_key=request.data['sessionId']).exists():
                 session = Session.objects.get(session_key=request.data['sessionId'])
             else:
-                session = None
+                session = 'no session data'
 
             try:
                 # if incoming date (from client) does not match current date (set on backend) then skip.
@@ -221,23 +289,45 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
         schemas = set()
 
         for log in user_error_logs:
+            ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+            headers = {key: value for (key, value) in request.stream.headers.items()}
+            headers_to_dict = dict(headers)
+            headers_to_str = json.dumps(headers_to_dict)
+
             error_log = ErrorLogModel.objects.get(pk=log.id)
             error_log.user = request.user
-            error_log.environment = request.stream.META
+            error_log.environment = json.dumps({"stream": request.stream.META})
             error_log.error_message = request.data['message']
             error_log.stack = request.data['stack']
             error_log.component = request.data['component']
             error_log.calling_function = request.data['callingFunction']
             error_log.key = request.auth
             error_log.session = session
-            error_log.request_data = request.data
-            error_log.headers = request.stream.headers
-            error_log.host_ip = request.META['REMOTE_ADDR']
+            error_log.request_data = json.dumps(request.data)
+            error_log.headers = headers_to_str
+            error_log.host_ip = ipv4s[-1]
             error_log.date = time
 
+            data = {
+                "id": error_log.id,
+                "user": request.user.to_dict(),
+                "environment": {"stream": request.stream.META},
+                "error_message": request.data['message'],
+                "stack": request.data['stack'],
+                "component": request.data['component'],
+                "calling_function": request.data['callingFunction'],
+                "key": request.auth,
+                "session": session,
+                "request_data": request.data,
+                "headers": headers,
+                "host_ip": ipv4s[-1],
+                "date": time,
+            }
+
+        serializer = ErrorLogViewSerializer(data=data, context={'request': request})
+        if serializer.is_valid() is True:
             error_log.save()
-            serialized_updated_log = ErrorLogViewSerializer(error_log, context={'request': request})
-            schemas.add(serialized_updated_log)
+            schemas.add(serializer)
 
         serializer = list(schemas)
         return serializer[0]
@@ -249,23 +339,49 @@ def update_existing_entry_with_latest_data(request, user_error_logs, session, ti
 
 def create_new_error_log_entry(request, session, time):
     try:
+        ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
+
+        headers = {key: value for (key, value) in request.stream.headers.items()}
+        headers_to_dict = dict(headers)
+        headers_to_str = json.dumps(headers_to_dict)
+
         new_error_log = ErrorLogModel()
         new_error_log.user = request.user
-        new_error_log.environment = request.stream.META
+        new_error_log.environment = json.dumps({"stream": request.stream.META})
         new_error_log.error_message = request.data['message']
         new_error_log.stack = request.data['stack']
         new_error_log.component = request.data['component']
         new_error_log.calling_function = request.data['callingFunction']
         new_error_log.key = request.auth
         new_error_log.session = session
-        new_error_log.request_data = request.data
-        new_error_log.headers = request.stream.headers
-        new_error_log.host_ip = request.META['REMOTE_ADDR']
+        new_error_log.request_data = json.dumps(request.data)
+        new_error_log.headers = headers_to_str
+        new_error_log.host_ip = ipv4s[-1]
         new_error_log.date = time
-
         new_error_log.save()
-        serialized_data = ErrorLogViewSerializer(new_error_log, context={'request': request})
-        return serialized_data
+
+        data = {
+            "id": new_error_log.id,
+            "user": request.user.to_dict(),
+            "environment": {"stream": request.stream.META},
+            "error_message": request.data['message'],
+            "stack": request.data['stack'],
+            "component": request.data['component'],
+            "calling_function": request.data['callingFunction'],
+            "key": request.auth,
+            "session": session,
+            "request_data": request.data,
+            "headers": headers,
+            "host_ip": ipv4s[-1],
+            "date": time,
+        }
+
+
+        serializer = ErrorLogViewSerializer(data=data, context={'request': request})
+        if serializer.is_valid() is True:
+            return serializer
+        else:
+            return serializer.errors
     except Exception as ex:
         return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -291,5 +407,3 @@ def update_or_create(request, data, session, time):
 
 def return_empty_response(data):
     return Response(data, status=status.HTTP_200_OK)
-
-# python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json

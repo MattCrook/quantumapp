@@ -6,7 +6,7 @@ import {
   useGroup,
   useAddedToGroup,
 } from "./hooks.js";
-import { getAllUsersFriends, retrieveUserProfile, retrieveUserSessionData } from "./services.js";
+import { getAllUsersFriends, retrieveUserProfile } from "./services.js";
 
 
 // const [addedToGroup, addedToGroup] = useAddedToGroup();
@@ -317,11 +317,11 @@ function renderCheckIcon(uid) {
 
 
 
-const setSessionStorage = async () => {
-  const userSession = await retrieveUserSessionData();
-  sessionStorage.setItem("token", userSession.token);
-  sessionStorage.setItem("session_hash", userSession.auth_hash_data.auth_session);
-}
+// const setSessionStorage = async () => {
+//   const userSession = await retrieveUserSessionData();
+//   sessionStorage.setItem("token", userSession.token);
+//   sessionStorage.setItem("session_hash", userSession.auth_hash_data.auth_session);
+// }
 
 const showCreateGroupForm = () => {
   const createNewGroupContainer = document.getElementById("new_group_create_form_container");
@@ -348,7 +348,7 @@ const init = () => {
   showCreateGroupForm();
   closeCreateGroupForm();
   initFriendsSearchAndCreateGroupForm();
-  setSessionStorage();
+  // setSessionStorage();
 }
 
 

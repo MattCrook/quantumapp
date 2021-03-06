@@ -1,5 +1,4 @@
 {% extends 'shared/base.html' %}
-
 {% load static %}
 
 
@@ -7,14 +6,13 @@
 <link rel="stylesheet" href="{% static 'styles/group_chat.css' %}" />
 {% endblock %}
 
+{% if request.user.is_authenticated %}
 {% block content %}
-{% if user.is_authenticated %}
 
 <div class="group_chat_main_container">
     <div class="current_group_chats_container">
         <div class="current_group_chats_title_wrapper">
             <div class="current_group_chats_title">Group Chats
-                <!-- <i class="far fa-comments"></i> -->
                 <i class="fas fa-comments"></i>
             </div>
         </div>
@@ -32,7 +30,6 @@
     <div class="add_new_group_container">
         <div class="create_new_group_btn_wrapper">
             <div class="create_new_group_chat_btn">Create New Group<i class="fas fa-comment-alt"></i>
-                <!-- <i class="fas fa-users"></i> -->
             </div>
         </div>
 
@@ -99,9 +96,6 @@
                 </div>
                 <div class="active_friend_list_item">{{friend.first_name}} {{friend.last_name}}</div>
                 <i id="i_active_friends_end" class="far fa-check-circle"></i>
-
-                <!-- <i class="fas fa-user-minus"></i>
-                    <i class="fas fa-user-slash"></i> -->
             </div>
             {% endfor %}
             {% else %}
@@ -125,8 +119,8 @@
                 </div>
                 <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
             </header>
-            <main class="modal__content" id="modal-5-content">
-                <div class="friends_list_container">
+            <main class="group_chat_modal__content" id="modal-5-content">
+                <div class="group_chat_friends_list_container">
                     <div id="results"></div>
                 </div>
                 <footer class="modal__footer">
@@ -144,15 +138,12 @@
     </div>
 </div>
 
-<!-- if error with data or in except send to error page. So put error in context and send here where the template will pick it up. -->
-{% else %}
-<div>
-    <a href="{% url 'quantumforum:error' %}">Error Page</a>
-</div>
-{% endif %}
 
 {% endblock %}
+{% endif %}
 
 {% block scripts %}
+<script type="module" src="{% static 'scripts/navEventListeners.js'%}"></script>
 <script type="module" src="{% static 'scripts/createGroupForm.js'%}"></script>
+<script type="module" src="{% static 'scripts/navSearchUsers.js'%}"></script>
 {% endblock %}

@@ -1,18 +1,9 @@
-import {
-  getAllUsersFriends,
-  getUserList,
-  getUser,
-  sendFriendRequest,
-  getFriendships,
-  getFriendRequests,
-  postActivityLogError,
-} from "./services.js";
-
+import { getUser, getFriendships, getFriendRequests, postActivityLogError } from "./services.js";
+import { initActions } from "./friendRequestActions.js";
 
 let isLoading = false;
 const setIsLoading = (newState) => (isLoading = newState);
 const useIsLoading = () => isLoading;
-
 
 const renderLoading = () => {
   return `
@@ -23,8 +14,7 @@ const renderLoading = () => {
       </div>
     </main>
   `;
-}
-
+};
 
 const showLoading = () => {
   const loadingDiv = document.getElementById("loading_main_container");
@@ -37,7 +27,6 @@ const hideLoading = () => {
   const loadingDiv = document.getElementById("loading_main_container");
   loadingDiv.innerHTML = "";
 };
-
 
 const loading = () => {
   const isLoading = useIsLoading();
@@ -117,36 +106,71 @@ const handleShowNotifications = () => {
     setIsLoading(true);
     loading();
 
-    Promise.all([getUser(), getFriendships(), getFriendRequests()]).then(response => {
+    Promise.all([getUser(), getFriendships(), getFriendRequests()]).then((response) => {
       const currentUser = response[0];
       const allSenderAndReceiver = response[1];
       const allFriendRequests = response[2];
-      const friendRequestsUserHasSent = allSenderAndReceiver.filter((request) => request.requester.id === currentUser.id);
+      const friendRequestsUserHasSent = allSenderAndReceiver.filter(
+        (request) => request.requester.id === currentUser.id
+      );
       const friendRequestsUserHasReceived = allSenderAndReceiver.filter(
         (request) => request.addressee.id === currentUser.id
       );
+
       const allSentAndReceivedFriendships = [...friendRequestsUserHasSent, ...friendRequestsUserHasReceived];
       const senderAndReceiverIds = allSentAndReceivedFriendships.map((friendship) => friendship.id);
-      const allUsersFriendRequests = allFriendRequests.filter(
-        (friendRequest) => !senderAndReceiverIds.includes(friendRequest.sender_and_receiver_id)
+
+      const allUsersFriendRequests = allFriendRequests.filter((friendRequest) => !senderAndReceiverIds.includes(friendRequest.sender_and_receiver_id)
       );
+      const activePendingFriendRequests = allFriendRequests.filter((friendRequest) =>
+          !senderAndReceiverIds.includes(friendRequest.sender_and_receiver_id) && friendRequest.status_code.id === 1
+      );
+      console.log({ activePendingFriendRequests });
+      const hasActivePendingFriendRequests = Array.isArray(activePendingFriendRequests) && activePendingFriendRequests.length > 0;
+
+      initActions();
       setIsLoading(false);
       loading();
 
-      allUsersFriendRequests.forEach(friendRequest => {
-        const hasNotifications = friendRequest.sender_and_receiver.addressee && friendRequest.sender_and_receiver.addressee.id === currentUser.id ? true : false;
-        const notification = "Friend Request";
-          showNotificationsBody(friendRequest.sender_and_receiver.requester, hasNotifications, notification);
-      })
-    })
+      const notificationsContainer = document.querySelector(".notifications");
+      notificationsContainer.style.display = "block";
+      notificationsContainer.innerHTML = "";
+
+      if (hasActivePendingFriendRequests) {
+        activePendingFriendRequests.forEach((friendRequest) => {
+          const hasNotifications =
+            friendRequest.sender_and_receiver.addressee &&
+            friendRequest.sender_and_receiver.addressee.id === currentUser.id &&
+            friendRequest.status_code.id === 1
+              ? true
+              : false;
+          const notification = "Friend Request";
+          showNotificationsBody(friendRequest.sender_and_receiver.requester, hasNotifications, notification, friendRequest);
+        });
+      } else {
+        const notificationsContainer = document.querySelector(".notifications");
+        const footer = document.getElementById("footer");
+        const none = showNoNotificationsBody();
+        const showFooter = renderFooter();
+        footer.style.display = "block";
+        // Clear out footer bc in loop so only show last iteration of loop to show one close button.
+        footer.innerHTML = "";
+        notificationsContainer.innerHTML += none;
+        footer.innerHTML += showFooter;
+      }
+    });
   });
 };
 
-const showNotificationsBody = (friend, hasNotifications, notification) => {
+const showNotificationsBody = (friend, hasNotifications, notification, friendRequest) => {
   const notificationsContainer = document.querySelector(".notifications");
-  notificationsContainer.style.display = "block";
-  notificationsContainer.innerHTML = "";
-  const renderNotificationCards = renderNotifications(friend, hasNotifications, notification);
+  const footer = document.getElementById("footer");
+  footer.style.display = "block";
+  // Clear out footer bc in loop so only show last iteration of loop to show one close button.
+  footer.innerHTML = "";
+  const showFooter = renderFooter();
+  footer.innerHTML += showFooter;
+  const renderNotificationCards = renderNotifications(friend, hasNotifications, notification, friendRequest);
   notificationsContainer.innerHTML += renderNotificationCards;
 };
 
@@ -155,72 +179,65 @@ const handleShowFriendsList = () => {
   const friendsListModalContainer = document.querySelector(".friends_list");
   const friendsButton = document.querySelector(".friends_header");
   const notificationsContainer = document.querySelector(".notifications");
+  const footer = document.getElementById("footer");
 
   friendsButton.addEventListener("click", () => {
     notificationsButton.style.display = "block";
     friendsListModalContainer.style.display = "block";
     friendsButton.style.display = "none";
     notificationsContainer.style.display = "none";
+    footer.style.display = "none";
   });
 };
 
-function renderNotifications(friend, hasNotifications, notification) {
+function renderNotifications(friend, hasNotifications, notification, friendRequest) {
   const defaultProfilePicture = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
   let profilePicture;
-  friend && friend.image && friend.image.image ? profilePicture = friend.image.image : profilePicture = defaultProfilePicture;
+  friend && friend.image && friend.image.image
+    ? (profilePicture = friend.image.image)
+    : (profilePicture = defaultProfilePicture);
 
   if (hasNotifications) {
     return `
-        <main class="modal__content" id="notifications-content">
-        <div class="friends_list_container">
-            <div class="friend_card">
-                <div id="friend_card_container_1">
-                    <div class="friend_profile_pic">
-                        <img class="friend_card_img" src="${profilePicture}" />
-                    </div>
-                    <div class="friend_name">${friend.first_name} ${friend.last_name}</div>
-                    <div class="notification_type">${notification}</div>
-                </div>
-                <div id="friend_card_container_2">
-                    <div class="accept_button">Accept</div>
-                    <div class="decline_button">Decline</div>
-                    <div class="block_button">Block User</div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="modal__footer">
-            <button class="modal__btn" data-micromodal-close
-                aria-label="Close this dialog window">Close</button>
-        </footer>
-      </main>
-    `;
-  } else if (!hasNotifications) {
-    return `
-    <main class="modal__content" id="notifications-content">
-      <div class="no_notifications_container">
-          <div class="no_notifications">None</div>
+      <div class="friends_list_container" data-friendrequest="${friendRequest.id}">
+          <div class="friend_card" data-id="${friend.id}">
+              <div id="friend_card_container_1">
+                  <div class="friend_profile_pic">
+                      <img class="friend_card_img" src="${profilePicture}" />
+                  </div>
+                  <div class="friend_name">${friend.first_name} ${friend.last_name}</div>
+                  <div class="notification_type">${notification}</div>
+              </div>
+              <div id="friend_card_container_2" data-id="${friend.id}">
+                  <div class="accept_button" data-id="${friend.id}" data-friendrequest="${friendRequest.id}">Accept</div>
+                  <div class="decline_button" data-id="${friend.id}" data-friendrequest="${friendRequest.id}">Decline</div>
+                  <div class="block_button" data-id="${friend.id}" data-friendrequest="${friendRequest.id}">Block User</div>
+              </div>
+          </div>
       </div>
-      <footer class="modal__footer">
-          <button class="modal__btn" data-micromodal-close
-              aria-label="Close this dialog window">Close</button>
-      </footer>
-    </main>
-    `;
-  } else {
-    return `
-    <main class="modal__content" id="notifications-content">
-    <div class="error_container>
-        <div class="no_notifications">Oops! Something went wrong loading your notifications.</div>
-    </div>
-    <footer class="modal__footer">
-        <button class="modal__btn" data-micromodal-close
-            aria-label="Close this dialog window">Close</button>
-    </footer>
-  </main>
     `;
   }
 }
+
+function renderFooter() {
+  return `
+      <footer class="modal__footer">
+      <button class="modal__btn" data-micromodal-close
+          aria-label="Close this dialog window">Close</button>
+    </footer>
+  `;
+}
+
+function showNoNotificationsBody() {
+  return `
+      <main class="modal__content" id="notifications-content">
+          <div class="no_notifications_container">
+            <div class="no_notifications">None</div>
+          </div>
+        </main>
+  `;
+}
+
 
 const initNav = () => {
   showModal();

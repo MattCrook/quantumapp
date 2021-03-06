@@ -234,7 +234,7 @@ body {
 
 .modal__title {
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 8px;
   font-weight: 600;
   font-size: 1.1rem;
   line-height: 1.25;
@@ -253,6 +253,14 @@ body {
 }
 
 .modal__content {
+  margin-top: 2rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 12%;
+}
+
+.group_chat_modal__content {
   margin-top: 2rem;
   margin-bottom: 0.9rem;
   line-height: 1.5;
@@ -276,7 +284,8 @@ body {
   text-transform: none;
   overflow: visible;
   line-height: 1.15;
-  margin: 0;
+  width: 20%;
+  margin-right: 1%;
   will-change: transform;
   -moz-osx-font-smoothing: grayscale;
   -webkit-backface-visibility: hidden;
@@ -383,13 +392,19 @@ body {
 .friends_list_container {
   display: flex;
   flex-direction: column;
+}
+
+.group_chat_friends_list_container {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 12%;
 }
 
 .no_friends {
   color: rgb(201, 201, 201);
-  margin-left: 46%;
-  margin-top: 12%;
+  margin-left: 45%;
+  margin-top: 13%;
+  margin-bottom: 8%;
   font: 150 1em helvetica neue, open sans, sans-serif;
 }
 
@@ -417,6 +432,7 @@ body {
   justify-content: space-between;
   color: rgb(212, 212, 212);
   border-bottom: 1px solid rgb(83, 83, 83);
+  margin-bottom: 3%;
 }
 
 .friend_profile_pic {
@@ -437,26 +453,36 @@ body {
   object-fit: cover;
 }
 
+.signature {
+  display: flex;
+  justify-content: center;
+}
+
+.signature p {
+  text-align: center;
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: 0.85em;
+  color: #aaaaaa;
+}
+
+.signature a {
+  color: #aaaaaa;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
 #signature_font_friends_list {
-  font: 150 0.4em helvetica neue, open sans, sans-serif;
-  letter-spacing: 2px;
+  font: 260 0.65em helvetica neue, open sans, sans-serif;
+  letter-spacing: 5px;
+  color: rgb(94, 94, 94);
 }
 
 /********************* Search Quantum Bar *******************/
 
-/* #search_quantum_results { */
-/* position: absolute;
-  left: 50%;
-  top: 7%;
-  width: 21%;
-  z-index: 1000;
-  border-radius: 4px;
-  box-shadow: 0 12px 15px 5px rgba(0, 0, 0, 0.089), 0 17px 50px 0 rgba(0, 0, 0, 0.075); */
-/* background: white; */
-/* background: rgba(0, 0, 0, 0.726);
-  border: none; */
-/* } */
-
+#search_quantum_results {
+  padding-bottom: 12%;
+}
 #search_quantum_results_master_container {
   position: absolute;
   left: 50%;
@@ -488,10 +514,14 @@ body {
 }
 
 #fa_question_results_header {
-  color: rgb(245, 245, 245);
+  color: rgb(214, 214, 214);
   margin-left: 93%;
   margin-top: 4%;
   cursor: pointer;
+}
+
+#fa_question_results_header:hover {
+  color: rgb(253, 253, 253);
 }
 
 .overlay {
@@ -520,8 +550,8 @@ body {
   align-items: center;
   width: 100%;
   margin-bottom: 1%;
-  padding-left: 4%;
-  padding-right: 3%;
+  padding-left: 6%;
+  padding-right: 5%;
 }
 
 .search_result_wrapper:hover {
@@ -653,6 +683,17 @@ body {
   border-left: 1px solid #b4b4b4;
   border-right: 1px solid #b4b4b4;
 }
+
+.no_user_list {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 15px;
+  color: rgb(173, 173, 173);
+  margin-bottom: 10%;
+}
 /******************************/
 /******************* Profile Dropdown **************************/
 
@@ -721,10 +762,17 @@ body {
 
 /************************ Notifications **********/
 
+.notifications {
+  margin-top: 5%;
+  margin-bottom: 12%;
+}
+
+
 .notifications_header {
   color: rgb(209, 209, 209);
   font: 150 1em helvetica neue, open sans, sans-serif;
   cursor: pointer;
+  margin-top: 1%;
 }
 
 .notifications_header i {
@@ -770,15 +818,15 @@ body {
 .no_notifications_container {
   display: flex;
   justify-content: center;
-  margin-top: 10%;
-  margin-bottom: 12%;
+  margin-top: 8%;
+  margin-bottom: 8%;
 }
 
 .no_notifications {
   color: rgb(201, 201, 201);
   font: 150 1em helvetica neue, open sans, sans-serif;
-  margin-top: 8%;
-  margin-right: 1%;
+  margin-top: 9%;
+  margin-right: 2%;
 }
 
 .notification_type {
@@ -788,7 +836,6 @@ body {
   font-variant: small-caps;
   font-style: italic;
 }
-
 
 .accept_button {
   display: flex;
@@ -850,7 +897,6 @@ body {
   border-right: 1px solid #b4b4b4;
 }
 
-
 .decline_button {
   display: flex;
   justify-content: center;
@@ -911,8 +957,6 @@ body {
   border-right: 1px solid #b4b4b4;
 }
 
-
-
 .block_button {
   display: flex;
   justify-content: center;
@@ -971,4 +1015,12 @@ body {
   color: rgb(194, 194, 194);
   border-left: 1px solid #b4b4b4;
   border-right: 1px solid #b4b4b4;
+}
+
+.accepted_banner {
+  color: rgb(238, 238, 238);
+  font: 150 1em helvetica neue, open sans, sans-serif;
+  font-variant: small-caps;
+  font-style: italic;
+  margin-right: 6%;
 }

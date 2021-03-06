@@ -12,7 +12,7 @@ class ActivityLog(models.Model):
     class Meta:
         verbose_name = ("Activity Log")
         verbose_name_plural = ("Activity Logs")
-        ordering = ("user", )
+        ordering = ["date"]
 
     def __str__(self):
         return f'{self.user.username} -- {self.action} -- {self.date}'

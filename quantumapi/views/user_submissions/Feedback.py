@@ -40,7 +40,7 @@ class Feedback(ViewSet):
             serializer = FeedbackSerializer(new_feedback_submission, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as ex:
-            return Response({'Error: ': ex.args}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Error:': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def retrieve(self, request, pk=None):
         try:

@@ -6,16 +6,16 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView, UsersFriendsApiView
-from quantumapi.views import login_user, register_user, auth0_logout, get_user_session
-# from quantumapi.views import get_authuser
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView, UsersFriendsApiView, FriendsJoinApiView
+from quantumapi.views import login_user, register_user, auth0_logout, get_user_session, get_user_from_token
 from quantumapi.views import Credentials as CredentialsView
 from quantumapi.views import Feedback as FeedbackView
 from quantumapi.views import BugReports as BugReportView
-from quantumforum.views import FriendRequests as FriendRequestView
-from quantumforum.views import StatusCodes as StatusCodeView
-from quantumforum.views import Friendships as FriendshipView
+from quantumapi.views import FriendRequests as FriendRequestView
+from quantumapi.views import StatusCodes as StatusCodeView
+from quantumapi.views import Friendships as FriendshipView
 from rest_framework.authtoken.views import obtain_auth_token
+# from quantumapi.views import get_authuser
 
 
 app_name = "quantumapp"
@@ -47,6 +47,8 @@ router.register(r'friendships', FriendshipView, 'friendship')
 router.register(r'app_login_data', AppLoginDataView, 'app_login_data')
 router.register(r'group_chats', GroupChatApiView, 'group_chat')
 router.register(r'friends', UsersFriendsApiView, 'friends')
+router.register(r'friends_join', FriendsJoinApiView, 'friends_join')
+
 
 
 
@@ -67,12 +69,12 @@ urlpatterns = [
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
     # path('get_user/', get_user),
     path('get_user_session/', get_user_session),
+    path('api/get_user_from_token', get_user_from_token),
 
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
     path('', include('quantumforum.urls', namespace='quantumforum')),
     path('', include('quantumadminapp.urls', namespace='quantumadminapp')),
-
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

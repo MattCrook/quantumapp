@@ -16,7 +16,9 @@ class LoginHistory(models.Model):
     platform = models.CharField(max_length=200, null=True, blank=True)
     app_codename = models.CharField(max_length=50, null=True, blank=True)
     id_token = models.TextField(null=True, blank=True)
+    user_logs = models.TextField(null=True, blank=True)
     date = models.DateTimeField(default=timezone.now)
+
 
     class Meta:
         verbose_name = ("login history")

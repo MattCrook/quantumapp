@@ -19,3 +19,7 @@ http://chromedriver.chromium.org/downloads
 migrations for quantumforum (because new app must include module to create migrations folder)
 python manage.py makemigrations quantumforum
 python manage.py migrate
+
+
+# fixtures
+# python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json

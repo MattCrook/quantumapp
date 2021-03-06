@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from quantumapi.models import BlogContributorApplication as BlogContributorApplicationModel
 from quantumapi.models import User as UserModel
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import datetime
 
