@@ -53,6 +53,7 @@ ALLOWED_HOSTS = ['localhost', '8000']
 
 
 INSTALLED_APPS = [
+    'webpack_loader',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -89,6 +90,13 @@ CHANNEL_LAYERS = {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
+}
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'BUNDLE_DIR_NAME': 'app/',
+    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+  }
 }
 
 
