@@ -22,6 +22,9 @@ npm install url-loader --save-dev
  npm install image-webpack-loader --save-dev
  npm install --save-dev html-webpack-plugin
  npm install --save-dev webpack-dev-server
+ 
+ npm install --save-dev webpack-bundle-tracker
+ pip install django-webpack-loader
 
  ( or all together, order important)
  npm install sass-loader node-sass style-loader css-loader --save-dev

@@ -94,7 +94,7 @@ CHANNEL_LAYERS = {
 
 WEBPACK_LOADER = {
   'DEFAULT': {
-    'BUNDLE_DIR_NAME': 'quantumadminapp/',
+    'BUNDLE_DIR_NAME': 'quantumadmin/',
     'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
   }
 }
