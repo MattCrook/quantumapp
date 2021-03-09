@@ -11,13 +11,13 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     pathinfo: true,
-    path: path.resolve("./quantumadminapp/static"),
+    path: path.resolve(__dirname, "quantumadminapp/static"),
     // filename: "[name].js", // Emit app.js by capturing entry name
     filename: "js/bundle.js",
     chunkFilename: 'js/[name].chunk.js',
     // clean: true,
     // publicPath: "static/app/",
-    publicPath: "/",
+    publicPath: "static/",
   },
   resolve: {
     alias: {
