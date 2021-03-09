@@ -53,7 +53,6 @@ ALLOWED_HOSTS = ['localhost', '8000']
 
 
 INSTALLED_APPS = [
-    'webpack_loader',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,6 +77,7 @@ INSTALLED_APPS = [
     'quantumapi',
     'quantumforum',
     'quantumadminapp',
+    'webpack_loader',
 ]
 
 # Config/ routing for Websockets/ chat
@@ -92,15 +92,26 @@ CHANNEL_LAYERS = {
     },
 }
 
-WEBPACK_LOADER = {
-  'DEFAULT': {
-    'BUNDLE_DIR_NAME': 'quantumadmin/',
-    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
-  }
-}
+# WEBPACK_LOADER = {
+#   'DEFAULT': {
+#     'BUNDLE_DIR_NAME': '',
+#     'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+#   }
+# }
 # STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'assets'),
+#     os.path.join(BASE_DIR, 'quantumadminapp/static/'),
 # )
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'static',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+    }
+}
 
 
 MIDDLEWARE = [
