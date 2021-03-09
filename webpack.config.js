@@ -104,7 +104,7 @@ module.exports = {
             loader: "url-loader",
             options: {
               limit: 8000,
-              name: 'static/media/[name].[hash:8].[ext]',
+              name: 'media/[name].[hash:8].[ext]',
               // name: "assets/[name].[md5:hash:hex:8].[ext]",
               // name: "media/[hash]-[name].[ext]",
               // encoding: "utf8",
@@ -119,7 +119,7 @@ module.exports = {
           {
             loader: "file-loader",
             options: {
-              name: 'static/media/[name].[hash:8].[ext]',
+              name: 'media/[name].[hash:8].[ext]',
               // name: "assets/[name].[md5:hash:hex:8].[ext]",
               // name: "media/[hash]-[name].[ext]",
               // path: path.resolve(__dirname, "images"),
