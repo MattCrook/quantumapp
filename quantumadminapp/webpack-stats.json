@@ -1,1 +1,1 @@
-{"status":"done","publicPath":"http://localhost:8000/static/quantumadmin","chunks":{"main":[{"name":"js/main.js","publicPath":"http://localhost:8000/static/quantumadminjs/main.js","path":"/Users/matt.crook/code/personal/quantumcoasters/quantumapp/quantumadminapp/static/quantumadmin/js/main.js"}]}}
+{"status":"done","publicPath":"/static/quantumadmin/","chunks":{"main":[{"name":"js/main.js","publicPath":"/static/quantumadmin/js/main.js","path":"/Users/matt.crook/code/personal/quantumcoasters/quantumapp/quantumadminapp/static/quantumadmin/js/main.js"}]}}

@@ -9,7 +9,7 @@
   text-align: center;
   font-family: Helvetica, Arial, Sans-Serif;
   font-size: 0.85em;
-  color: #aaaaaa;
+  color: #c5c5c5;
 }
 
 .signature a {
@@ -19,21 +19,23 @@
 }
 
 #signature_font {
-  font: 260 0.65em helvetica neue, open sans, sans-serif;
+  font: 260 0.85em helvetica neue, open sans, sans-serif;
   letter-spacing: 2px;
-  color: rgb(82, 82, 82);
+  color: rgb(116, 116, 116);
 }
 
 /********************************************/
 
-.bg-img {
-  background-image: url("../images/wallpaper.jpg");
+.bg_image {
+  /* background-image: url("../../media/2657aeea59db557.jpg"); */
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: cover;
-  background-color: white;
-  margin: 3%;
+  background-size: auto;
+  background-color: rgb(8, 8, 8);
+  margin-left: 14%;
+  margin-top: 1%;
+  width: 70%;
 }
 
 /*********************** Loading Graphic *****************/
@@ -137,3 +139,28 @@
 }
 
 /**************************/
+
+.logo_banner {
+  color: white;
+  position: absolute;
+  z-index: 1;
+  left: 700px;
+  top: 80%;
+}
+
+.logo_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 30px;
+}
+
+.add-shadow {
+  text-shadow: rgba(0, 0, 0, 0.705) 1px 1px !important;
+}
+
+#landing_page_container {
+  background: #000;
+  border-top: 1px solid rgb(59, 59, 59);
+  height: 55rem;
+}

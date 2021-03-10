@@ -21,10 +21,9 @@ module.exports = function (_env, argv) {
       // path: path.resolve(__dirname, "public/"),
       filename: "js/[name].js",
       chunkFilename: "js/[name].chunk.js",
-      publicPath: "static/quantumadmin",
+      publicPath: "/static/quantumadmin/"
       // publicPath: "/public/",
       // publicPath: "http://localhost:8000/static/quantumadmin",
-
     },
     devtool: isDevelopment && "cheap-module-source-map",
     devServer: {
@@ -64,6 +63,12 @@ module.exports = function (_env, argv) {
                 url: true,
               },
             },
+            {
+              loader: "resolve-url-loader",
+              options: {
+                sourceMap: true,
+              },
+            },
           ],
         },
         {
@@ -74,7 +79,7 @@ module.exports = function (_env, argv) {
               loader: "url-loader",
               options: {
                 limit: 8192,
-                name: "/images/[name].[ext]",
+                name: "images/[name].[ext]",
                 // name: "images/[name].[hash:8].[ext]",
               },
             },
@@ -94,7 +99,7 @@ module.exports = function (_env, argv) {
             {
               loader: require.resolve("file-loader"),
               options: {
-                name: "/images/[name].[ext]",
+                name: "images/[name].[ext]",
                 // name: "images/[name].[hash:8].[ext]",
               },
             },
