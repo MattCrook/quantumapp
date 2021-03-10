@@ -11,9 +11,14 @@ npm install @material-ui/icons --save -dev
 babel-loader
 css-loader
 npm install img-loader --save-dev
+
+Css loaders:
+npm install -D css-loader style-loader mini-css-extract-plugin
 npm install --save-dev style-loader
 npm install sass-loader --save-dev
 node-sass
+
+
 npm install file-loader --save-dev
 npm install url-loader --save-dev
  npm install raw-loader --save-dev
@@ -28,6 +33,24 @@ npm install url-loader --save-dev
 
  ( or all together, order important)
  npm install sass-loader node-sass style-loader css-loader --save-dev
+
+For svg:
+npm install -D @svgr/webpack
+
+
+ For babel config:
+ npm install -D @babel/preset-env @babel/preset-react @babel/runtime @babel/plugin-transform-runtime @babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties babel-plugin-transform-react-remove-prop-types @babel/plugin-transform-react-inline-elements @babel/plugin-transform-react-constant-elements
+
+
+/*************/
+TopTal React Webpack config Article:
+https://www.toptal.com/react/webpack-react-tutorial-pt-1
+/*************/
+
+
+Optimizing:
+npm install -D terser-webpack-plugin optimize-css-assets-webpack-plugin
+
 
 in package.json
 "scripts": {

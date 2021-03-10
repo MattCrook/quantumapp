@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'quantumapi',
     'quantumforum',
     'quantumadminapp',
-    'webpack_loader',
+    # 'webpack_loader',
 ]
 
 # Config/ routing for Websockets/ chat
@@ -92,26 +92,18 @@ CHANNEL_LAYERS = {
     },
 }
 
-# WEBPACK_LOADER = {
-#   'DEFAULT': {
-#     'BUNDLE_DIR_NAME': '',
-#     'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
-#   }
-# }
+
+
 # STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'quantumadminapp/static/'),
+#     os.path.join(BASE_DIR, 'quantumadminapp/'),
 # )
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'quantumadminapp/static'),
-)
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': '',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
-    }
-}
+# WEBPACK_LOADER = {
+#     'DEFAULT': {
+#         'BUNDLE_DIR_NAME': '',
+#         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+#     }
+# }
 
 
 MIDDLEWARE = [
