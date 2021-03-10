@@ -18,9 +18,13 @@ module.exports = function (_env, argv) {
     output: {
       pathinfo: true,
       path: path.resolve(__dirname, "./static/quantumadmin"),
+      // path: path.resolve(__dirname, "public/"),
       filename: "js/[name].js",
       chunkFilename: "js/[name].chunk.js",
-      publicPath: "/static/quantumadmin",
+      publicPath: "static/quantumadmin",
+      // publicPath: "/public/",
+      // publicPath: "http://localhost:8000/static/quantumadmin",
+
     },
     devtool: isDevelopment && "cheap-module-source-map",
     devServer: {

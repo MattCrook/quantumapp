@@ -92,8 +92,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-
-
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'quantumadminapp/'),
 # )
@@ -231,8 +229,7 @@ CORS_ORIGIN_WHITELIST = (
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'quantumforum/templates')],
-        'DIRS': [],
+        'DIRS': [[os.path.join(BASE_DIR, "build")],],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -309,8 +306,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
 
 # For Quantum Coasters React app
 LOGIN_URL = '/login/auth0'
