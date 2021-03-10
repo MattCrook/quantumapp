@@ -8,10 +8,12 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = {
   mode: "development",
   // context: path.resolve(__dirname, "quantumadminapp/"),
-  context: __dirname,
-  entry: ".quantumadmin/static/js/main.js",
-
+  // context: __dirname,
+  // entry: "./quantumadminapp/src/index.js",
   // entry: "./src/index.js",
+  entry: {
+    main: path.resolve(__dirname, 'quantumadminapp/src/index.js'),
+  },
   output: {
     pathinfo: true,
     path: path.resolve(__dirname, "quantumadminapp/static"),
@@ -20,13 +22,20 @@ module.exports = {
     chunkFilename: "js/[name].chunk.js",
     // clean: true,
     // publicPath: "static/app/",
-    publicPath: "/",
+    publicPath: "/static/",
   },
   resolve: {
-    alias: {
-      src: path.resolve(__dirname, "./src"),
-    },
+    extensions: ['*', '.js', '.jsx'],
+    modules: [
+        path.resolve(__dirname, 'quantumadminapp/src'),
+        path.resolve(__dirname, 'node_modules'),
+    ],
   },
+  // resolve: {
+  //   alias: {
+  //     src: path.resolve(__dirname, "./src"),
+  //   },
+  // },
   devtool: "inline-source-map",
   devServer: {
     contentBase: path.join(__dirname, "dist/"),
@@ -73,17 +82,17 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader",
-            options: {
-              minimize: true,
-            },
-          },
-        ],
-      },
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: "html-loader",
+      //       options: {
+      //         minimize: true,
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.txt$/i,
         use: "raw-loader",
