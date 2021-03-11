@@ -76,7 +76,7 @@ INSTALLED_APPS = [
     'channels',
     'quantumapi',
     'quantumforum',
-    'quantumadminapp',
+    'quantumadminapp.apps.QuantumadminappConfig',
     # 'webpack_loader',
 ]
 

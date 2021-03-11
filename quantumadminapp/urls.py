@@ -7,8 +7,9 @@ from quantumapp import settings
 app_name = 'quantumadminapp'
 
 urlpatterns = [
-    # path('quantumadmin/', index, name='index'),
-    path('', index),
+    path('', index, name='index'),
+    path('login/', index),
+
 ]
 #  + static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
