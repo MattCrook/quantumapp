@@ -56,7 +56,7 @@ def register_user(request):
             user.last_name = req_body['last_name']
             user.username = req_body['username']
             user.email = req_body['email']
-            password = req_body['auth0_identifier'].split(".")[1]
+            password = request.user.auth0_identifier.split('.')[1]
             user.set_password(password)
             user.save()
 
@@ -71,65 +71,60 @@ def register_user(request):
 
             if authenticated_user is not None:
                 remote_authenticated_user = request.successful_authenticator.authenticate(request)
-                # associate_user('django.contrib.auth.backends.RemoteUserBackend', req_body['uid'], user, req_body['provider'])
+
                 if remote_authenticated_user is not None:
                     management_api_token_endpoint = management_api_oath_endpoint(AUTH0_DOMAIN)
                     management_api_token = json.loads(management_api_token_endpoint)
                     management_api_jwt = management_api_token['access_token']
                     management_api_user = get_management_api_user(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
 
-
                     token = TokenModel.objects.create(user=remote_authenticated_user[0])
                     key = token.key
 
                     extra_data = req_body['extra_data']
                     extra_data['access_token'] = remote_authenticated_user[1]
-                    social_user = remote_authenticated_user[0].social_auth.get_or_create(user_id=remote_authenticated_user[0].id, provider=req_body['provider'], extra_data=extra_data, uid=req_body['auth0_identifier'].replace(".", "|"))
 
                     backend_data = backends(request)
                     user_current_backend = authenticated_user.backend
-                    storage = authenticated_user.storage
-                    # user_backend_data = user_backends_data(authenticated_user, backend_data, storage)
 
-                    # association = storage.association
-                    # code_from_storage = storage.code
-                    # nonce_from_storage = storage.nonce
-                    # partial = storage.partial
-                    # social_user_from_storage = storage.user
                     auth0_backend = backend_data['backends']['backends'][1]
                     openId_backend = backend_data['backends']['backends'][0]
                     associated_backends = backend_data['backends'].get('associated')
 
                     # return csrf token for POST form. side effect is have @csrf_protect
-                    csrf = get_token(request)
-                    provider = req_body['provider']
-                    # extra_data = req_body['extra_data']
+                    csrf = req_body['csrf_token'] if 'csrf_token' in req_body and req_body['csrf_token'] else get_token(request)
                     id_token = json.loads(req_body['id_token'])
                     nonce = id_token['nonce']
                     exp = id_token['exp']
                     iat = id_token['iat']
-                    # assoc_type = "username-password-authentication"
+                    extra_data = req_body['extra_data']
+                    extra_data['access_token'] = id_token['__raw']
+                    identities = management_api_user.get('identities')[0]
+                    provider = identities.get('provider')
+
+                    # The 'connection' in the auth0 returned result
+                    assoc_type = identities.get('connection')
 
                     all_transactions = req_body['transactions']
-                    transaction_items_keys = all_transactions['transactions'].keys()
-                    transactions_values = all_transactions['transactions'].values()
+                    transaction_items_keys = all_transactions.keys()
+                    transactions_values = all_transactions.values()
 
-                    transactions = []
-                    for t in transactions_values:
-                        transactions.append(t)
+                    codes = [c for c in transaction_items_keys]
+                    transactions = [t for t in transactions_values]
 
-                    codes = []
-                    for c in transaction_items_keys:
-                        codes.append(c)
-
-                    code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
-                    code = codes[0] if len(codes) > 0 else {}
+                    handles = [handle for handle in codes] if len(codes) > 0 else {}
+                    code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
                     handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
+                    code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+
+                    code = codes[0] if len(codes) > 0 else {}
+
 
                     # associate_user('openid', social_user.uid, authenticated_user, social_user)
+                    social_user = remote_authenticated_user[0].social_auth.get_or_create(user_id=remote_authenticated_user[0].id, provider=provider, extra_data=extra_data, uid=req_body['auth0_identifier'].replace(".", "|"))
+                    # is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists()
 
-                    is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists()
-                    if is_association:
+                    if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
                         user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
                     else:
                         user_association = Association.objects.create(
@@ -138,25 +133,25 @@ def register_user(request):
                             secret=code_verifier,
                             issued=iat,
                             lifetime=exp,
-                            assoc_type=auth0_backend
-                        )
+                            assoc_type=assoc_type
+                            )
 
                     social_account = SocialAccount()
-                    social_account.user = authenticated_user
+                    social_account.user = remote_authenticated_user[0]
                     social_account.uid = req_body['uid']
                     social_account.provider = provider
                     social_account.extra_data = management_api_user
                     social_account.save()
 
                     account_email = EmailAddress.objects.get_or_create(
-                        user=authenticated_user,
+                        user=social_account.user,
                         email=authenticated_user.email,
                         verified=True,
                         primary=True
                         )
 
                     social_auth_nonce = Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
-                    user_socialauth_code = Code.objects.create(email=account_email[0], code=code, verified=True)
+                    user_socialauth_code = Code.objects.create(email=account_email[0], code=codes[0], verified=True)
 
                     social_app = SocialApp.objects.get_or_create(
                         provider=provider,
@@ -174,7 +169,7 @@ def register_user(request):
                         app_id=social_app[0].id,
                         account_id=social_account.id,
                         token=id_token,
-                        token_secret=remote_authenticated_user[1],
+                        token_secret=id_token['__raw'],
                         expires_at=expires_at
                         )
 
@@ -196,6 +191,7 @@ def register_user(request):
                         sent=datetime.datetime.now()
                         )
 
+                    # Turning into Set then back to List to filter out Duplicates (#ToDo-not needed.)
                     social_app_to_list = list(social_app)
                     social_app_data = social_app_to_list[0]
 
@@ -215,7 +211,7 @@ def register_user(request):
                         'account_email_id': account_email[0].id,
                         'management_user': management_api_user,
                         'social_account_id': social_account.id,
-                        'social_app_id': social_app_data.pk,
+                        'social_app_id': social_app_data.id,
                         'social_app_name': social_app_data.name,
                         "social_token_id": social_token.id,
                         'association_id': user_association.id,
@@ -226,9 +222,13 @@ def register_user(request):
                     data = json.dumps({"DjangoUser": auth_user})
                     return HttpResponse(data, content_type='application/json')
                 else:
-                    pass
+                    error = "Remote authentication failed. Remote Authenticated User was None."
+                    data = json.dumps({"Remote Authentication Error": error})
+                    return HttpResponse(data, content_type='application/json')
             else:
-                pass
+                error = "Authentication failed. Authenticated User was None."
+                data = json.dumps({"Authentication Error": error})
+                return HttpResponse(data, content_type='application/json')
 
     except Exception as ex:
-        return Response(ex, content_type='application/json')
+        return Response(ex.args, content_type='application/json')
