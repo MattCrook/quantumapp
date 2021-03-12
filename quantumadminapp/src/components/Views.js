@@ -7,7 +7,6 @@ import Login from "./auth/Login";
 
 const Views = (props) => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();
-  // console.log(isLoggedIn)
 
   return (
     <React.Fragment>
@@ -29,7 +28,7 @@ const Views = (props) => {
           if (!isLoading && !isAuthenticated && !isLoggedIn) {
             return <Login {...props} />;
           } else {
-            return <Home {...props} />;
+            return <LandingPage {...props}  />;
           }
         }}
       />

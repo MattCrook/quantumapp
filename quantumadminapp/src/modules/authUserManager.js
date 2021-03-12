@@ -1,9 +1,21 @@
 // import '@babel/preset-env'
 import env from "../../env-config.json";
 const remoteURL = env.API_URL;
-console.log(remoteURL)
+
 
 const authUserManager = {
+  async adminLogin(payload) {
+    const result = await fetch(`${remoteURL}/rest-auth/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      Accept: "application/json",
+      body: JSON.stringify(payload),
+    });
+    return await result.json();
+  },
+
   async getCurrentUserFromToken(token) {
     const data = await fetch(`${remoteURL}/api/get_user_from_token/`, {
       method: "POST",

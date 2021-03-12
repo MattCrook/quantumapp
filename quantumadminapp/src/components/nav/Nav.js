@@ -47,7 +47,7 @@ const NavBar = (props) => {
               <div className="logout">Logout</div>
             ) : (
               <>
-                <div className="login" onClick={() => props.history.push("login/")}>Login</div>
+                <div className="login" onClick={() => props.history.push("/quantumadmin/login")}>Login</div>
                 <LockOpenIcon style={{ color: 'white', fontSize: 18, marginBottom: 4 }} />
               </>
             )}

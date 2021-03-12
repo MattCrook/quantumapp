@@ -17,7 +17,7 @@ export const AuthUserProvider = ({ children }) => {
   const [hasCredential, setHasCredential] = useState(hasLoginCredential());
 
   const setDjangoToken = (resp) => {
-    sessionStorage.setItem("QuantumToken", resp.QuantumToken);
+    sessionStorage.setItem("QuantumToken", resp.token);
     setIsLoggedIn(hasLoggedIn());
   };
 
