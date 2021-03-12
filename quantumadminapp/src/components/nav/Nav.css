@@ -71,3 +71,53 @@
   border-radius: 50%;
   object-fit: cover;
 }
+
+
+
+
+.back_to_landing_page {
+  padding: 5px 15px;
+  margin-right: 2%;
+  color: rgb(219, 218, 218);
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.back_to_landing_page::before {
+  content: "";
+  position: absolute;
+  bottom: 0%;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background: rgb(226, 226, 226);
+  display: block;
+  -webkit-transform-origin: right top;
+  -ms-transform-origin: right top;
+  transform-origin: right top;
+  -webkit-transform: scale(0, 1);
+  -ms-transform: scale(0, 1);
+  transform: scale(0, 1);
+  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);
+}
+
+.back_to_landing_page:hover::before {
+  color: rgb(255, 255, 255);
+  -webkit-transform-origin: left top;
+  -ms-transform-origin: left top;
+  transform-origin: left top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1);
+}
+
+.back_to_landing_page:hover {
+  color: rgb(255, 255, 255);
+}

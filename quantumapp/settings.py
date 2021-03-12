@@ -53,7 +53,6 @@ ALLOWED_HOSTS = ['localhost', '8000']
 
 
 INSTALLED_APPS = [
-    'webpack_loader',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +76,8 @@ INSTALLED_APPS = [
     'channels',
     'quantumapi',
     'quantumforum',
-    'quantumadminapp',
+    'quantumadminapp.apps.QuantumadminappConfig',
+    # 'webpack_loader',
 ]
 
 # Config/ routing for Websockets/ chat
@@ -92,12 +92,14 @@ CHANNEL_LAYERS = {
     },
 }
 
-WEBPACK_LOADER = {
-  'DEFAULT': {
-    'BUNDLE_DIR_NAME': 'app/',
-    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
-  }
-}
+
+
+# WEBPACK_LOADER = {
+#     'DEFAULT': {
+#         'BUNDLE_DIR_NAME': '',
+#         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
+#     }
+# }
 
 
 MIDDLEWARE = [
@@ -225,7 +227,7 @@ CORS_ORIGIN_WHITELIST = (
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'quantumforum/templates')],
+        # 'DIRS': [[os.path.join(BASE_DIR, "quantumadminapp")],],
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -303,8 +305,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "media")
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
 
 # For Quantum Coasters React app
 LOGIN_URL = '/login/auth0'

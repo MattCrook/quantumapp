@@ -74,7 +74,7 @@ urlpatterns = [
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
     path('', include('quantumforum.urls', namespace='quantumforum')),
-    path('', include('quantumadminapp.urls', namespace='quantumadminapp')),
+    path('quantumadmin/', include('quantumadminapp.urls', namespace='quantumadminapp')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
