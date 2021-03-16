@@ -4,6 +4,8 @@ import { useAuthUser } from "../contexts/AuthUserContext";
 import LandingPage from "./home/LandingPage";
 import Home from "./home/Home";
 import Login from "./auth/Login";
+import Register from "./auth/Register";
+
 
 const Views = (props) => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();
@@ -27,6 +29,17 @@ const Views = (props) => {
         render={(props) => {
           if (!isLoading && !isAuthenticated && !isLoggedIn) {
             return <Login {...props} />;
+          } else {
+            return <LandingPage {...props}  />;
+          }
+        }}
+      />
+      <Route
+        exact
+        path="/quantumadmin/register"
+        render={(props) => {
+          if (!isLoading && !isAuthenticated && !isLoggedIn) {
+            return <Register {...props} />;
           } else {
             return <LandingPage {...props}  />;
           }

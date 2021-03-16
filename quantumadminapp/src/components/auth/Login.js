@@ -1,6 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import LoginNav from "../nav/LoginNav";
-import AuthForm from "./LoginForm";
+import AuthForm from "./forms/LoginForm";
 import authUserManager from "../../modules/authUserManager";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import "./styles/Login.css";
@@ -11,21 +11,40 @@ const Login = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidating, setIsValidating] = useState(false);
   const [success, setSuccess] = useState(false);
-  const email = useRef();
-  const password = useRef();
+  const [email, setEmail] = useState({});
+  const [password, setPassword] = useState({});
+
   const showError = (message) => {
     setIsValidating(false);
     setError(true);
     setErrorMessage(message);
   };
 
+
+
+  const handleEmail = (e) => {
+    const formState = { ...email };
+    formState[e.target.id] = e.target.value;
+    setEmail(formState);
+  };
+
+  const handlePassword = (e) => {
+    const formState = { ...password };
+    formState[e.target.id] = e.target.value;
+    setPassword(formState);
+  };
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsValidating(true);
+
     const loginCredentials = {
-      email: email.current.value,
-      password: password.current.value,
+      email: email,
+      password: password,
     };
+    console.log(loginCredentials)
 
     try {
       const response = await authUserManager.adminLogin(loginCredentials);
@@ -49,9 +68,11 @@ const Login = (props) => {
       <LoginNav {...props} />
       <div id="login_master_container">
         <AuthForm
-          handleSubmit={handleSubmit}
           email={email}
           password={password}
+          handleSubmit={handleSubmit}
+          handleEmail={handleEmail}
+          handlePassword={handlePassword}
           {...props}
         />
         {isValidating ? (

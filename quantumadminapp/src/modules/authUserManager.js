@@ -5,7 +5,18 @@ const remoteURL = env.API_URL;
 
 const authUserManager = {
   async adminLogin(payload) {
-    const result = await fetch(`${remoteURL}/rest-auth/login/`, {
+    const result = await fetch(`${remoteURL}/quantumadmin/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      Accept: "application/json",
+      body: JSON.stringify(payload),
+    });
+    return await result.json();
+  },
+  async registerAdminUser(payload) {
+    const result = await fetch(`${remoteURL}/quantumadmin/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
