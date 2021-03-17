@@ -16,15 +16,19 @@ const authUserManager = {
     return await result.json();
   },
   async registerAdminUser(payload) {
-    const result = await fetch(`${remoteURL}/quantumadmin/register/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      Accept: "application/json",
-      body: JSON.stringify(payload),
-    });
-    return await result.json();
+    try {
+      const result = await fetch(`${remoteURL}/quantumadmin/register/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        Accept: "application/json",
+        body: JSON.stringify(payload),
+      });
+      return await result.json();
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   async getCurrentUserFromToken(token) {

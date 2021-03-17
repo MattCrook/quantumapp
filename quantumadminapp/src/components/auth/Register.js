@@ -6,7 +6,7 @@ import RegisterForm from "./forms/RegisterForm";
 import "./styles/Register.css";
 
 const Register = (props) => {
-  const [credentials, setCredentials] = useState({});
+  const [credentials, setCredentials] = useState({email: "", username: "", oldPassword: "", newPassword: "", newPassword2: ""});
   const { setDjangoToken, setAuthToken } = useAuthUser();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,6 +28,7 @@ const Register = (props) => {
     e.preventDefault();
 
     var registerFormData = {
+      email: credentials.email,
       username: credentials.username,
       oldPassword: credentials.oldPassword,
       newPassword: credentials.newPassword,
@@ -38,14 +39,15 @@ const Register = (props) => {
     }
 
     try {
-      var registeredAdminUser = authUserManager.registerAdminUser(registerFormData);
+      var registeredAdminUser = await authUserManager.registerAdminUser(registerFormData);
       if (registeredAdminUser.valid === true) {
         setIsValidating(false);
         setSuccess(true);
-        setAuthToken(response.token);
-        setDjangoToken(response);
-        sessionStorage.setItem("email", response.email);
-        props.history.push("/quantumadmin/home");
+        setAuthToken(registeredAdminUser.token);
+        setDjangoToken(registeredAdminUser);
+        sessionStorage.setItem("email", registeredAdminUser.email);
+        // ToDo: set is logged in to true (user profile table)
+        props.history.push("/quantumadmin");
       }
     } catch (error) {
       console.log(error);

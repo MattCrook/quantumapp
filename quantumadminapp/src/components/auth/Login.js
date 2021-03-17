@@ -54,7 +54,8 @@ const Login = (props) => {
         setDjangoToken(response);
         setAuthToken(response.token);
         sessionStorage.setItem("email", response.email);
-        props.history.push("quantumadmin/home");
+        // Todo: set logged in to true (user profile table)
+        props.history.push("quantumadmin/");
       } else {
         showError("Credentials you entered are incorrect.");
       }

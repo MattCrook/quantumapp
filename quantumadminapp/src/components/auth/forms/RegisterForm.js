@@ -30,39 +30,52 @@ const RegisterForm = (props) => {
           id="auth_form"
           className={classes.root}
           noValidate
-          autoComplete="off"
+          // autoComplete="off"
         >
-          <TextField label="Username" color="secondary">
-            <Input
-              id="username"
-              type="text"
-              value={props.username}
-              onChange={props.handleEmail}
-            />
+          <TextField
+            id="email"
+            label="Email"
+            color="secondary"
+            type="email"
+            onChange={props.handleInput}
+          >
+            <Input value={props.credentials.email} />
           </TextField>
-          <TextField label="Old Password" color="secondary">
-            <Input
-              id="old_password"
-              type="password"
-              value={props.old_password}
-              onChange={props.handleEmail}
-            />
+          <TextField
+            id="username"
+            type="text"
+            label="Username"
+            color="secondary"
+            onChange={props.handleInput}
+          >
+            <Input value={props.credentials.username} />
           </TextField>
-          <TextField label="New Password" color="secondary">
-            <Input
-              id="new_password"
-              type="password"
-              value={props.password1}
-              onChange={props.handleEmail}
-            />
+          <TextField
+            id="oldPassword"
+            type="password"
+            label="Old Password"
+            color="secondary"
+            onChange={props.handleInput}
+          >
+            <Input value={props.credentials.oldPassword} />
           </TextField>
-          <TextField label="Confirm New Password" color="secondary">
-            <Input
-              id="new_password2"
-              type="password"
-              value={props.password2}
-              onChange={props.handleEmail}
-            />
+          <TextField
+            id="newPassword"
+            type="password"
+            label="New Password"
+            color="secondary"
+            onChange={props.handleInput}
+          >
+            <Input value={props.credentials.newPassword} />
+          </TextField>
+          <TextField
+            id="newPassword2"
+            label="Confirm New Password"
+            type="password"
+            color="secondary"
+            onChange={props.handleInput}
+          >
+            <Input value={props.credentials.newPassword2} />
           </TextField>
           <div className="register_btn_wrapper">
             <button className="admin_login_submit_button" type="submit">

@@ -13083,8 +13083,9 @@ var Login = function Login(props) {
                 setSuccess(true);
                 setDjangoToken(response);
                 setAuthToken(response.token);
-                sessionStorage.setItem("email", response.email);
-                props.history.push("quantumadmin/home");
+                sessionStorage.setItem("email", response.email); // Todo: set logged in to true (user profile table)
+
+                props.history.push("quantumadmin/");
               } else {
                 showError("Credentials you entered are incorrect.");
               }
@@ -13182,7 +13183,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 
 var Register = function Register(props) {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_5__.useState)({}),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_5__.useState)({
+    email: "",
+    username: "",
+    oldPassword: "",
+    newPassword: "",
+    newPassword2: ""
+  }),
       _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3__.default)(_useState, 2),
       credentials = _useState2[0],
       setCredentials = _useState2[1];
@@ -13233,6 +13240,7 @@ var Register = function Register(props) {
             case 0:
               e.preventDefault();
               registerFormData = {
+                email: credentials.email,
                 username: credentials.username,
                 oldPassword: credentials.oldPassword,
                 newPassword: credentials.newPassword,
@@ -13243,28 +13251,38 @@ var Register = function Register(props) {
                 showError("Passwords did not match.");
               }
 
-              try {
-                registeredAdminUser = _modules_authUserManager__WEBPACK_IMPORTED_MODULE_7__.default.registerAdminUser(registerFormData);
+              _context.prev = 3;
+              _context.next = 6;
+              return _modules_authUserManager__WEBPACK_IMPORTED_MODULE_7__.default.registerAdminUser(registerFormData);
 
-                if (registeredAdminUser.valid === true) {
-                  setIsValidating(false);
-                  setSuccess(true);
-                  setAuthToken(response.token);
-                  setDjangoToken(response);
-                  sessionStorage.setItem("email", response.email);
-                  props.history.push("/quantumadmin/home");
-                }
-              } catch (error) {
-                console.log(error);
-                showError("There was a problem. Please try again.");
+            case 6:
+              registeredAdminUser = _context.sent;
+
+              if (registeredAdminUser.valid === true) {
+                setIsValidating(false);
+                setSuccess(true);
+                setAuthToken(registeredAdminUser.token);
+                setDjangoToken(registeredAdminUser);
+                sessionStorage.setItem("email", registeredAdminUser.email); // ToDo: set is logged in to true (user profile table)
+
+                props.history.push("/quantumadmin");
               }
 
-            case 4:
+              _context.next = 14;
+              break;
+
+            case 10:
+              _context.prev = 10;
+              _context.t0 = _context["catch"](3);
+              console.log(_context.t0);
+              showError("There was a problem. Please try again.");
+
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, null, [[3, 10]]);
     }));
 
     return function handleSubmit(_x) {
@@ -13426,40 +13444,48 @@ var RegisterForm = function RegisterForm(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
     id: "auth_form",
     className: classes.root,
-    noValidate: true,
-    autoComplete: "off"
+    noValidate: true // autoComplete="off"
+
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__.default, {
-    label: "Username",
-    color: "secondary"
+    id: "email",
+    label: "Email",
+    color: "secondary",
+    type: "email",
+    onChange: props.handleInput
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__.default, {
+    value: props.credentials.email
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__.default, {
     id: "username",
     type: "text",
-    value: props.username,
-    onChange: props.handleEmail
+    label: "Username",
+    color: "secondary",
+    onChange: props.handleInput
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__.default, {
+    value: props.credentials.username
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__.default, {
+    id: "oldPassword",
+    type: "password",
     label: "Old Password",
-    color: "secondary"
+    color: "secondary",
+    onChange: props.handleInput
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__.default, {
-    id: "old_password",
-    type: "password",
-    value: props.old_password,
-    onChange: props.handleEmail
+    value: props.credentials.oldPassword
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__.default, {
+    id: "newPassword",
+    type: "password",
     label: "New Password",
-    color: "secondary"
+    color: "secondary",
+    onChange: props.handleInput
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__.default, {
-    id: "new_password",
-    type: "password",
-    value: props.password1,
-    onChange: props.handleEmail
+    value: props.credentials.newPassword
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__.default, {
+    id: "newPassword2",
     label: "Confirm New Password",
-    color: "secondary"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__.default, {
-    id: "new_password2",
     type: "password",
-    value: props.password2,
-    onChange: props.handleEmail
+    color: "secondary",
+    onChange: props.handleInput
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_4__.default, {
+    value: props.credentials.newPassword2
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "register_btn_wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
@@ -13891,7 +13917,8 @@ var authUserManager = {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
+              _context2.prev = 0;
+              _context2.next = 3;
               return fetch("".concat(remoteURL, "/quantumadmin/register/"), {
                 method: "POST",
                 headers: {
@@ -13901,20 +13928,25 @@ var authUserManager = {
                 body: JSON.stringify(payload)
               });
 
-            case 2:
+            case 3:
               result = _context2.sent;
-              _context2.next = 5;
+              _context2.next = 6;
               return result.json();
 
-            case 5:
+            case 6:
               return _context2.abrupt("return", _context2.sent);
 
-            case 6:
+            case 9:
+              _context2.prev = 9;
+              _context2.t0 = _context2["catch"](0);
+              console.log(_context2.t0);
+
+            case 12:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2);
+      }, _callee2, null, [[0, 9]]);
     }))();
   },
   getCurrentUserFromToken: function getCurrentUserFromToken(token) {

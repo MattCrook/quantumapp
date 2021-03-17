@@ -322,6 +322,9 @@ LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
 # GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
 
+# QuantumAdminApp
+QUANTUMADMIN_REGISTER_URL = 'register/'
+
 
 # Social Auth Configs (For Django full stack app)
 # https://readthedocs.org/projects/python-social-auth/downloads/pdf/latest/
