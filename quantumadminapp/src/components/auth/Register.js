@@ -47,7 +47,7 @@ const Register = (props) => {
         setDjangoToken(registeredAdminUser);
         sessionStorage.setItem("email", registeredAdminUser.email);
         // ToDo: set is logged in to true (user profile table)
-        props.history.push("/quantumadmin");
+        props.history.push("/");
       }
     } catch (error) {
       console.log(error);

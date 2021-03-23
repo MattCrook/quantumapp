@@ -1,8 +1,10 @@
 from functools import wraps
 from urllib import request
 from jose import jwt
-from social_core.backends.open_id import BaseOAuth2
+from social_core.backends.open_id import BaseOAuth2, OpenIdAuth
 from django.http import JsonResponse
+from social_core.backends.open_id_connect import OpenIdConnectAssociation, OpenIdConnectAuth
+
 # from social_core.backends.oauth import BaseOAuth2
 # import jwt
 
@@ -82,13 +84,63 @@ class Auth0(BaseOAuth2):
 
 
 
-# class Auth0OpenID(OpenIDAuth):
-#     name = 'auth0'
+class QuantumAdminOpenID(OpenIdConnectAuth):
+    OIDC_ENDPOINT = "https://dev-405n1e6w.auth0.com/.well-known/openid-configuration"
+    ID_TOKEN_MAX_AGE = 600
+    DEFAULT_SCOPE = ['openid', 'profile', 'email']
+    EXTRA_DATA = ['id_token', 'refresh_token', ('sub', 'id')]
+    REDIRECT_STATE = False
+    ACCESS_TOKEN_METHOD = 'POST'
+    REVOKE_TOKEN_METHOD = 'GET'
+    ID_KEY = 'sub'
+    USERNAME_KEY = 'username'
+    ID_TOKEN_ISSUER = 'https://dev-405n1e6w.auth0.com/'
+    ACCESS_TOKEN_URL = 'https://dev-405n1e6w.auth0.com/oauth/token'
+    AUTHORIZATION_URL = 'https://dev-405n1e6w.auth0.com/authorize'
+    REVOKE_TOKEN_URL = 'https://dev-405n1e6w.auth0.com/oauth/revoke'
+    USERINFO_URL = 'https://dev-405n1e6w.auth0.com/userinfo'
+    JWKS_URI = 'https://dev-405n1e6w.auth0.com/.well-known/jwks.json'
+    JWT_DECODE_OPTIONS = dict()
+    name = 'quantum_openid'
 
 
 
 
 
+
+# from google.appengine.api import users
+# from social_core.backends.base import BaseAuth
+# from social_core.exceptions import AuthException
+
+# class GoogleAppEngineAuth(BaseAuth):
+#     """GoogleAppengine authentication backend"""
+#     name = 'google-appengine'
+
+#     def get_user_id(self, details, response):
+#         """Return current user id."""
+#         user = users.get_current_user()
+#         if user:
+#             return user.user_id()
+
+#     def get_user_details(self, response):
+#         """Return user basic information (id and email only)."""
+#         user = users.get_current_user()
+#         return {'username': user.user_id(),
+#                 'email': user.email(),
+#                 'fullname': '',
+#                 'first_name': '',
+#                 'last_name': ''}
+
+#     def auth_url(self):
+#         """Build and return complete URL."""
+#         return users.create_login_url(self.redirect_uri)
+
+#     def auth_complete(self, *args, **kwargs):
+#         """Completes login process, must return user instance."""
+#         if not users.get_current_user():
+#             raise AuthException('Authentication error')
+#         kwargs.update({'response': '', 'backend': self})
+#         return self.strategy.authenticate(*args, **kwargs)
 
 # Adding public and private endpoints.
 # The @api_view decorator can be added to all endpoints that indicate that the method requires authentication.

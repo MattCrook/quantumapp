@@ -2,6 +2,21 @@
 import env from "../../env-config.json";
 const remoteURL = env.API_URL;
 
+function getCookie(cookieName) {
+  let name = cookieName + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let cookieArray = decodedCookie.split(";");
+  for (let i = 0; i < cookieArray.length; i++) {
+    let cookie = cookieArray[i];
+    while (cookie.charAt(0) === " ") {
+      cookie = cookie.substring(1);
+    }
+    if (cookie.indexOf(name) === 0) {
+      return cookie.substring(name.length, cookie.length);
+    }
+  }
+  return "";
+}
 
 const authUserManager = {
   async adminLogin(payload) {
@@ -32,17 +47,24 @@ const authUserManager = {
   },
 
   async getCurrentUserFromToken(token) {
-    const data = await fetch(`${remoteURL}/api/get_user_from_token/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Token " + token,
-      },
-      Accept: "application/json",
-    });
-    return await data.json();
+    try {
+      let cookie = getCookie("csrftoken");
+      const data = await fetch(`${remoteURL}/api/get_user_from_token/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": cookie,
+          Authorization: "Token " + token,
+        },
+        Accept: "application/json",
+        body: JSON.stringify({"Token": token}),
+      });
+      return await data.json();
+    } catch (error) {
+      console.log(error)
+    }
   },
-  async getUserProfileFromAuthUser(uid) {
+  async getUserProfileFromAuthUser(uid, token) {
     const data = await fetch(`${remoteURL}/api/userprofiles?user_id=${uid}`, {
       method: "GET",
       headers: {

@@ -1,8 +1,8 @@
 import http.client
 import requests as req
-from quantumapp.settings import MANAGEMENT_API_PAYLOAD
+from quantumapp.settings import MANAGEMENT_API_PAYLOAD, MANAGEMENT_API_AUTHORIZATION_CODE
 
-
+# For servers to directly request a token with the client credentials
 def management_api_oath_endpoint(domain):
     conn = http.client.HTTPSConnection(domain)
     payload = MANAGEMENT_API_PAYLOAD
@@ -12,6 +12,24 @@ def management_api_oath_endpoint(domain):
     data = res.read()
     return data.decode("utf-8")
 
+# For web apps to exchange an authorization code for a token
+def management_api_openid_authorization_codes(domain):
+    conn = http.client.HTTPSConnection(domain)
+    payload = MANAGEMENT_API_AUTHORIZATION_CODE
+    headers = {'content-type': "application/json"}
+    conn.request("POST", "/oauth/token", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    return data.decode("utf-8")
+
+# def openid_connect_authorize_endpoint(domain):
+#     conn = http.client.HTTPSConnection(domain)
+#     payload = AUTHORIZATION_PAYLOAD
+#     headers = {'content-type': "application/json"}
+#     conn.request("GET", "/authorize", payload, headers)
+#     res = conn.getresponse()
+#     data = res.read()
+#     return data.decode("utf-8")
 
 def get_open_id_config(domain, token):
     URL = "https://" + domain + "/.well-known/openid-configuration"

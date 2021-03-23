@@ -7,8 +7,14 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 
 
-const Views = (props) => {
+const Views = () => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();
+  console.log({isAuthenticated})
+  console.log({isLoading})
+  console.log({isLoggedIn})
+  console.log({ authUser })
+  
+
 
   return (
     <React.Fragment>

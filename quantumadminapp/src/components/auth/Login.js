@@ -8,9 +8,9 @@ import "./styles/Login.css";
 const Login = (props) => {
   const { setDjangoToken, setAuthToken } = useAuthUser();
   const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isValidating, setIsValidating] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // error message
+  const [isValidating, setIsValidating] = useState(false); // progress loading circle
+  const [success, setSuccess] = useState(false); // success login check
   const [email, setEmail] = useState({});
   const [password, setPassword] = useState({});
 
@@ -44,7 +44,7 @@ const Login = (props) => {
       email: email,
       password: password,
     };
-    console.log(loginCredentials)
+    console.log({loginCredentials})
 
     try {
       const response = await authUserManager.adminLogin(loginCredentials);
@@ -55,7 +55,7 @@ const Login = (props) => {
         setAuthToken(response.token);
         sessionStorage.setItem("email", response.email);
         // Todo: set logged in to true (user profile table)
-        props.history.push("quantumadmin/");
+        props.history.push("/quantumadmin");
       } else {
         showError("Credentials you entered are incorrect.");
       }

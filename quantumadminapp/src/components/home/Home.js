@@ -5,7 +5,7 @@ const Home = (props) => {
   return (
     <>
       <NavBar {...props} />
-      <div>Home</div>
+      <div style={{color: "white"}}>Home</div>
     </>
   );
 };
