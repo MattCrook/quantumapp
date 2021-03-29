@@ -11046,6 +11046,36 @@ exports.default = _default;
 
 /***/ }),
 
+/***/ "./node_modules/@material-ui/icons/Lock.js":
+/*!*************************************************!*\
+  !*** ./node_modules/@material-ui/icons/Lock.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
+
+var _interopRequireWildcard = __webpack_require__(/*! @babel/runtime/helpers/interopRequireWildcard */ "./node_modules/@babel/runtime/helpers/interopRequireWildcard.js");
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports.default = void 0;
+
+var React = _interopRequireWildcard(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+
+var _createSvgIcon = _interopRequireDefault(__webpack_require__(/*! ./utils/createSvgIcon */ "./node_modules/@material-ui/icons/utils/createSvgIcon.js"));
+
+var _default = (0, _createSvgIcon.default)( /*#__PURE__*/React.createElement("path", {
+  d: "M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+}), 'Lock');
+
+exports.default = _default;
+
+/***/ }),
+
 /***/ "./node_modules/@material-ui/icons/LockOpen.js":
 /*!*****************************************************!*\
   !*** ./node_modules/@material-ui/icons/LockOpen.js ***!
@@ -13645,8 +13675,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../contexts/AuthUserContext */ "./src/contexts/AuthUserContext.js");
-/* harmony import */ var _material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/icons/LockOpen */ "./node_modules/@material-ui/icons/LockOpen.js");
+/* harmony import */ var _material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/icons/LockOpen */ "./node_modules/@material-ui/icons/LockOpen.js");
+/* harmony import */ var _material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/icons/Lock */ "./node_modules/@material-ui/icons/Lock.js");
 /* harmony import */ var _Nav_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Nav.css */ "./src/components/nav/Nav.css");
+
 
 
 
@@ -13676,7 +13708,7 @@ var NavBar = function NavBar(props) {
     className: "nav_action_button"
   }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "nav_action_button"
-  }, "Monitoring"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Monitoring "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "nav_action_button"
   }, "api dashboard"))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "nav_end"
@@ -13694,18 +13726,24 @@ var NavBar = function NavBar(props) {
     alt: "My Avatar"
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "login_logout_wrapper"
-  }, !isLoading && isAuthenticated && isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, !isLoading && isAuthenticated && isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "logout"
-  }, "Logout") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Logout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_3__.default, {
+    style: {
+      color: 'white',
+      fontSize: 18,
+      marginBottom: 14
+    }
+  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "login",
     onClick: function onClick() {
       return props.history.push("/quantumadmin/login");
     }
-  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_3__.default, {
+  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_4__.default, {
     style: {
       color: 'white',
       fontSize: 18,
-      marginBottom: 4
+      marginBottom: 14
     }
   }))))));
 };
@@ -14244,7 +14282,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".nav_main_container {\n  background-color: black;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  align-items: center;\n  border-bottom: 1px solid rgb(124, 124, 124);\n}\n\n.nav_start {\n  margin-left: 1%;\n  margin-top: 2%;\n  margin-bottom: 2%;\n}\n\n.nav_middle {\n  width: 25%;\n}\n\n.nav_buttons {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: space-between;\n}\n\n.title_wrapper {\n  display: flex;\n  align-items: center;\n}\n\n.title {\n  color: white;\n  text-transform: uppercase;\n  font: 260 1.1em helvetica neue, open sans, sans-serif;\n}\n.nav_action_button {\n  color: white;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n\n.nav_end {\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  flex-direction: row;\n  width: 11%;\n  margin-right: 1%;\n}\n\n.login_logout_wrapper {\n display: flex;\n align-items: center;\n}\n\n.login {\n  color: white;\n  text-transform: uppercase;\n  font-size: 13px;\n  margin-right: 8px;\n  cursor: pointer;\n}\n\n.logout {\n  color: white;\n}\n\n#nav-profile-pic {\n  width: 48px;\n  height: 48px;\n  border-radius: 50%;\n  object-fit: cover;\n}\n\n\n\n\n.back_to_landing_page {\n  padding: 5px 15px;\n  margin-right: 2%;\n  color: rgb(219, 218, 218);\n  font-family: sans-serif;\n  text-transform: uppercase;\n  text-align: center;\n  position: relative;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 13px;\n  cursor: pointer;\n}\n\n.back_to_landing_page::before {\n  content: \"\";\n  position: absolute;\n  bottom: 0%;\n  left: 0px;\n  width: 100%;\n  height: 1px;\n  background: rgb(226, 226, 226);\n  display: block;\n  -webkit-transform-origin: right top;\n  -ms-transform-origin: right top;\n  transform-origin: right top;\n  -webkit-transform: scale(0, 1);\n  -ms-transform: scale(0, 1);\n  transform: scale(0, 1);\n  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n}\n\n.back_to_landing_page:hover::before {\n  color: rgb(255, 255, 255);\n  -webkit-transform-origin: left top;\n  -ms-transform-origin: left top;\n  transform-origin: left top;\n  -webkit-transform: scale(1, 1);\n  -ms-transform: scale(1, 1);\n  transform: scale(1, 1);\n}\n\n.back_to_landing_page:hover {\n  color: rgb(255, 255, 255);\n}\n", "",{"version":3,"sources":["webpack://./Nav.css"],"names":[],"mappings":"AAAA;EACE,uBAAuB;EACvB,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;EACnB,mBAAmB;EACnB,2CAA2C;AAC7C;;AAEA;EACE,eAAe;EACf,cAAc;EACd,iBAAiB;AACnB;;AAEA;EACE,UAAU;AACZ;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,mBAAmB;EACnB,8BAA8B;AAChC;;AAEA;EACE,aAAa;EACb,mBAAmB;AACrB;;AAEA;EACE,YAAY;EACZ,yBAAyB;EACzB,qDAAqD;AACvD;AACA;EACE,YAAY;EACZ,yBAAyB;EACzB,eAAe;AACjB;;AAEA;EACE,aAAa;EACb,6BAA6B;EAC7B,mBAAmB;EACnB,mBAAmB;EACnB,UAAU;EACV,gBAAgB;AAClB;;AAEA;CACC,aAAa;CACb,mBAAmB;AACpB;;AAEA;EACE,YAAY;EACZ,yBAAyB;EACzB,eAAe;EACf,iBAAiB;EACjB,eAAe;AACjB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,iBAAiB;AACnB;;;;;AAKA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,yBAAyB;EACzB,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,kBAAkB;EAClB,qBAAqB;EACrB,qBAAqB;EACrB,eAAe;EACf,eAAe;AACjB;;AAEA;EACE,WAAW;EACX,kBAAkB;EAClB,UAAU;EACV,SAAS;EACT,WAAW;EACX,WAAW;EACX,8BAA8B;EAC9B,cAAc;EACd,mCAAmC;EACnC,+BAA+B;EAC/B,2BAA2B;EAC3B,8BAA8B;EAC9B,0BAA0B;EAC1B,sBAAsB;EACtB,2DAA2D;EAC3D,mDAAmD;AACrD;;AAEA;EACE,yBAAyB;EACzB,kCAAkC;EAClC,8BAA8B;EAC9B,0BAA0B;EAC1B,8BAA8B;EAC9B,0BAA0B;EAC1B,sBAAsB;AACxB;;AAEA;EACE,yBAAyB;AAC3B","sourcesContent":[".nav_main_container {\n  background-color: black;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  align-items: center;\n  border-bottom: 1px solid rgb(124, 124, 124);\n}\n\n.nav_start {\n  margin-left: 1%;\n  margin-top: 2%;\n  margin-bottom: 2%;\n}\n\n.nav_middle {\n  width: 25%;\n}\n\n.nav_buttons {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: space-between;\n}\n\n.title_wrapper {\n  display: flex;\n  align-items: center;\n}\n\n.title {\n  color: white;\n  text-transform: uppercase;\n  font: 260 1.1em helvetica neue, open sans, sans-serif;\n}\n.nav_action_button {\n  color: white;\n  text-transform: uppercase;\n  cursor: pointer;\n}\n\n.nav_end {\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  flex-direction: row;\n  width: 11%;\n  margin-right: 1%;\n}\n\n.login_logout_wrapper {\n display: flex;\n align-items: center;\n}\n\n.login {\n  color: white;\n  text-transform: uppercase;\n  font-size: 13px;\n  margin-right: 8px;\n  cursor: pointer;\n}\n\n.logout {\n  color: white;\n}\n\n#nav-profile-pic {\n  width: 48px;\n  height: 48px;\n  border-radius: 50%;\n  object-fit: cover;\n}\n\n\n\n\n.back_to_landing_page {\n  padding: 5px 15px;\n  margin-right: 2%;\n  color: rgb(219, 218, 218);\n  font-family: sans-serif;\n  text-transform: uppercase;\n  text-align: center;\n  position: relative;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 13px;\n  cursor: pointer;\n}\n\n.back_to_landing_page::before {\n  content: \"\";\n  position: absolute;\n  bottom: 0%;\n  left: 0px;\n  width: 100%;\n  height: 1px;\n  background: rgb(226, 226, 226);\n  display: block;\n  -webkit-transform-origin: right top;\n  -ms-transform-origin: right top;\n  transform-origin: right top;\n  -webkit-transform: scale(0, 1);\n  -ms-transform: scale(0, 1);\n  transform: scale(0, 1);\n  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n}\n\n.back_to_landing_page:hover::before {\n  color: rgb(255, 255, 255);\n  -webkit-transform-origin: left top;\n  -ms-transform-origin: left top;\n  transform-origin: left top;\n  -webkit-transform: scale(1, 1);\n  -ms-transform: scale(1, 1);\n  transform: scale(1, 1);\n}\n\n.back_to_landing_page:hover {\n  color: rgb(255, 255, 255);\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".nav_main_container {\n  background-color: black;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  align-items: center;\n  border-bottom: 1px solid rgb(124, 124, 124);\n}\n\n.nav_start {\n  margin-left: 1%;\n  margin-top: 2%;\n  margin-bottom: 2%;\n}\n\n.nav_middle {\n  width: 25%;\n}\n\n.nav_buttons {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: space-between;\n}\n\n.title_wrapper {\n  display: flex;\n  align-items: center;\n}\n\n.title {\n  color: white;\n  text-transform: uppercase;\n  font: 260 1.1em helvetica neue, open sans, sans-serif;\n}\n.nav_action_button {\n  color: rgb(212, 212, 212);\n  text-transform: uppercase;\n  cursor: pointer;\n}\n\n.nav_action_button:hover {\n  color: white;\n}\n\n.nav_end {\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  flex-direction: row;\n  width: 11%;\n  margin-right: 1%;\n}\n\n.login_logout_wrapper {\n display: flex;\n align-items: center;\n}\n\n.login {\n  color: white;\n  text-transform: uppercase;\n  font-size: 13px;\n  margin-right: 8px;\n  cursor: pointer;\n}\n\n.logout {\n  color: rgb(209, 209, 209);\n  cursor: pointer;\n  text-transform: uppercase;\n  font-size: 13px;\n}\n\n.logout:hover {\n  color: white;\n}\n\n#nav-profile-pic {\n  width: 48px;\n  height: 48px;\n  border-radius: 50%;\n  object-fit: cover;\n}\n\n\n\n\n.back_to_landing_page {\n  padding: 5px 15px;\n  margin-right: 2%;\n  color: rgb(219, 218, 218);\n  font-family: sans-serif;\n  text-transform: uppercase;\n  text-align: center;\n  position: relative;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 13px;\n  cursor: pointer;\n}\n\n.back_to_landing_page::before {\n  content: \"\";\n  position: absolute;\n  bottom: 0%;\n  left: 0px;\n  width: 100%;\n  height: 1px;\n  background: rgb(226, 226, 226);\n  display: block;\n  -webkit-transform-origin: right top;\n  -ms-transform-origin: right top;\n  transform-origin: right top;\n  -webkit-transform: scale(0, 1);\n  -ms-transform: scale(0, 1);\n  transform: scale(0, 1);\n  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n}\n\n.back_to_landing_page:hover::before {\n  color: rgb(255, 255, 255);\n  -webkit-transform-origin: left top;\n  -ms-transform-origin: left top;\n  transform-origin: left top;\n  -webkit-transform: scale(1, 1);\n  -ms-transform: scale(1, 1);\n  transform: scale(1, 1);\n}\n\n.back_to_landing_page:hover {\n  color: rgb(255, 255, 255);\n}\n", "",{"version":3,"sources":["webpack://./Nav.css"],"names":[],"mappings":"AAAA;EACE,uBAAuB;EACvB,aAAa;EACb,8BAA8B;EAC9B,mBAAmB;EACnB,mBAAmB;EACnB,2CAA2C;AAC7C;;AAEA;EACE,eAAe;EACf,cAAc;EACd,iBAAiB;AACnB;;AAEA;EACE,UAAU;AACZ;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,mBAAmB;EACnB,8BAA8B;AAChC;;AAEA;EACE,aAAa;EACb,mBAAmB;AACrB;;AAEA;EACE,YAAY;EACZ,yBAAyB;EACzB,qDAAqD;AACvD;AACA;EACE,yBAAyB;EACzB,yBAAyB;EACzB,eAAe;AACjB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,aAAa;EACb,6BAA6B;EAC7B,mBAAmB;EACnB,mBAAmB;EACnB,UAAU;EACV,gBAAgB;AAClB;;AAEA;CACC,aAAa;CACb,mBAAmB;AACpB;;AAEA;EACE,YAAY;EACZ,yBAAyB;EACzB,eAAe;EACf,iBAAiB;EACjB,eAAe;AACjB;;AAEA;EACE,yBAAyB;EACzB,eAAe;EACf,yBAAyB;EACzB,eAAe;AACjB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,kBAAkB;EAClB,iBAAiB;AACnB;;;;;AAKA;EACE,iBAAiB;EACjB,gBAAgB;EAChB,yBAAyB;EACzB,uBAAuB;EACvB,yBAAyB;EACzB,kBAAkB;EAClB,kBAAkB;EAClB,qBAAqB;EACrB,qBAAqB;EACrB,eAAe;EACf,eAAe;AACjB;;AAEA;EACE,WAAW;EACX,kBAAkB;EAClB,UAAU;EACV,SAAS;EACT,WAAW;EACX,WAAW;EACX,8BAA8B;EAC9B,cAAc;EACd,mCAAmC;EACnC,+BAA+B;EAC/B,2BAA2B;EAC3B,8BAA8B;EAC9B,0BAA0B;EAC1B,sBAAsB;EACtB,2DAA2D;EAC3D,mDAAmD;AACrD;;AAEA;EACE,yBAAyB;EACzB,kCAAkC;EAClC,8BAA8B;EAC9B,0BAA0B;EAC1B,8BAA8B;EAC9B,0BAA0B;EAC1B,sBAAsB;AACxB;;AAEA;EACE,yBAAyB;AAC3B","sourcesContent":[".nav_main_container {\n  background-color: black;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row;\n  align-items: center;\n  border-bottom: 1px solid rgb(124, 124, 124);\n}\n\n.nav_start {\n  margin-left: 1%;\n  margin-top: 2%;\n  margin-bottom: 2%;\n}\n\n.nav_middle {\n  width: 25%;\n}\n\n.nav_buttons {\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: space-between;\n}\n\n.title_wrapper {\n  display: flex;\n  align-items: center;\n}\n\n.title {\n  color: white;\n  text-transform: uppercase;\n  font: 260 1.1em helvetica neue, open sans, sans-serif;\n}\n.nav_action_button {\n  color: rgb(212, 212, 212);\n  text-transform: uppercase;\n  cursor: pointer;\n}\n\n.nav_action_button:hover {\n  color: white;\n}\n\n.nav_end {\n  display: flex;\n  justify-content: space-evenly;\n  align-items: center;\n  flex-direction: row;\n  width: 11%;\n  margin-right: 1%;\n}\n\n.login_logout_wrapper {\n display: flex;\n align-items: center;\n}\n\n.login {\n  color: white;\n  text-transform: uppercase;\n  font-size: 13px;\n  margin-right: 8px;\n  cursor: pointer;\n}\n\n.logout {\n  color: rgb(209, 209, 209);\n  cursor: pointer;\n  text-transform: uppercase;\n  font-size: 13px;\n}\n\n.logout:hover {\n  color: white;\n}\n\n#nav-profile-pic {\n  width: 48px;\n  height: 48px;\n  border-radius: 50%;\n  object-fit: cover;\n}\n\n\n\n\n.back_to_landing_page {\n  padding: 5px 15px;\n  margin-right: 2%;\n  color: rgb(219, 218, 218);\n  font-family: sans-serif;\n  text-transform: uppercase;\n  text-align: center;\n  position: relative;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 13px;\n  cursor: pointer;\n}\n\n.back_to_landing_page::before {\n  content: \"\";\n  position: absolute;\n  bottom: 0%;\n  left: 0px;\n  width: 100%;\n  height: 1px;\n  background: rgb(226, 226, 226);\n  display: block;\n  -webkit-transform-origin: right top;\n  -ms-transform-origin: right top;\n  transform-origin: right top;\n  -webkit-transform: scale(0, 1);\n  -ms-transform: scale(0, 1);\n  transform: scale(0, 1);\n  -webkit-transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n  transition: transform 0.4s cubic-bezier(1, 0, 0, 1);\n}\n\n.back_to_landing_page:hover::before {\n  color: rgb(255, 255, 255);\n  -webkit-transform-origin: left top;\n  -ms-transform-origin: left top;\n  transform-origin: left top;\n  -webkit-transform: scale(1, 1);\n  -ms-transform: scale(1, 1);\n  transform: scale(1, 1);\n}\n\n.back_to_landing_page:hover {\n  color: rgb(255, 255, 255);\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
