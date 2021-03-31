@@ -22,9 +22,12 @@ import json
 from django.contrib.auth import get_backends
 from social_core.actions import user_is_authenticated, do_auth
 
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 
 
-@csrf_exempt
+# @csrf_exempt
+@api_view(['GET', 'POST'])
 def login_admin_user(request):
     try:
         req_body = json.loads(request.body.decode())

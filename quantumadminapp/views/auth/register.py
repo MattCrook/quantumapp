@@ -12,11 +12,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 import json
 
 from rest_auth.models import TokenModel
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 
 
 
 
-@csrf_exempt
+# @csrf_exempt
+@api_view(['GET, POST'])
 def register_admin_user(request):
     try:
         if request.method == 'POST':

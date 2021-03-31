@@ -55,7 +55,7 @@ const Login = (props) => {
         setAuthToken(response.token);
         sessionStorage.setItem("email", response.email);
         // Todo: set logged in to true (user profile table)
-        props.history.push("/quantumadmin");
+        props.history.push("/quantumadmin/");
       } else {
         showError("Credentials you entered are incorrect.");
       }

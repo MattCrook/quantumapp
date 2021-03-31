@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.7'
 
 services:
   # db:
@@ -17,6 +17,7 @@ services:
       - static_volume:/quantumapp/quantumforum/static
       - media_volume:/quantumapp/media
       - images_volume:/quantumapp/media/images
+      - db_data:/db.sqlite3
     container_name: quantumapp
     environment:
       ENV DJANGO_SETTINGS_MODULE: quantumapp.settings
@@ -33,7 +34,6 @@ services:
       AUTH0_CLIENT_SECRET: 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
       API_IDENTIFIER: https://api.quantumcoasters.com
       QUANTUM_COASTERS_API_ID: '5e711bac91a8780913c58961'
-      # AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
       AUTH0_OPEN_ID_SERVER_URL: 'https://dev-405n1e6w.auth0.com/api/v2/'
       AUTH0_MANAGEMENT_API_ID: '5e6d3e555847e208d7c16e1c'
       MANAGEMENT_API_PAYLOAD: "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}"
@@ -53,11 +53,25 @@ services:
         'http://127.0.0.1:8000',
       ]"
       SOCIAL_AUTH_URL_NAMESPACE: 'social'
-
+      ALLOWED_HOSTS: "['localhost', '8000']"
+      REACT_APP_FORUM_URL: http://localhost:3000/forum
+      REACT_APP_HOME: http://localhost:3000/home
+      REACT_APP_USER_PROFILE: http://localhost:3000/user/profile/credits
     # command: gunicorn quantumapp.wsgi --bind 0.0.0.0:8000
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
+  # quantumadminapp:
+  #   build: .
+  #   # volumes:
+  #   #   - .:/quantumadminapp
+  #   #   - quantumadmin_static:/quantumapp/quantumadminapp/static
+  #   #   - quantumadmin_images:/quantumapp/quantumadminapp/images
+  #   container_name: quantumadminapp
+  #   environment:
+  #     API_URL: http://localhost:8000
+  #   command: npm run watch
+
 
 #   nginx:
 #     image: nginx:latest
@@ -71,7 +85,11 @@ services:
 #       - frontend
 
 volumes:
+  db_data:
   quantumapp:
   static_volume:
   media_volume:
   images_volume:
+  # quantumadminapp:
+  # quantumadmin_static:
+  # quantumadmin_images:

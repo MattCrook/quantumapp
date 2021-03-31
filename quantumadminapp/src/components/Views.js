@@ -20,7 +20,7 @@ const Views = () => {
     <React.Fragment>
       <Route
         exact
-        path="/quantumadmin"
+        path="/quantumadmin/"
         render={(props) => {
           if (!isLoading && authUser && isAuthenticated && isLoggedIn) {
             return <Home {...props} />;
@@ -31,12 +31,12 @@ const Views = () => {
       />
       <Route
         exact
-        path="/quantumadmin/login"
+        path="/quantumadmin/login/"
         render={(props) => {
           if (!isLoading && !isAuthenticated && !isLoggedIn) {
             return <Login {...props} />;
           } else {
-            return <LandingPage {...props}  />;
+            return <LandingPage {...props} />;
           }
         }}
       />

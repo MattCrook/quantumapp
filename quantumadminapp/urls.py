@@ -8,8 +8,10 @@ app_name = 'quantumadminapp'
 
 urlpatterns = [
     path('', index, name='index'),
-    path('login/', login_admin_user, name='login_admin_user'),
-    path('register/', register_admin_user, name='register_admin_user'),
+    path('login/', index, name='index'),
+    path('register/', index, name='index'),
+    # path('login/', login_admin_user, name='login_admin_user'),
+    # path('register/', register_admin_user, name='register_admin_user'),
 ]
 #  + static(settings.IMAGES_URL, document_root=settings.IMAGES_ROOT)
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

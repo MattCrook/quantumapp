@@ -2,15 +2,15 @@ FROM node:12
 
 WORKDIR /quantumadminapp
 
-COPY package*.json ./
+COPY package.json /quantumadminapp/
 
-RUN npm ci
-# RUN npm install
+# RUN npm ci
+RUN npm install
 
 COPY . .
 
-ENV API_URL=http://localhost:8000
+# ENV API_URL=http://localhost:8000
 
-EXPOSE 8000
+# EXPOSE 8000
 
-CMD ["npm", "run", "watch"]
+# CMD ["npm", "run", "watch"]
