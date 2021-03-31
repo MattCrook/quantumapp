@@ -150,13 +150,14 @@ API_IDENTIFIER = 'https://api.quantumcoasters.com'
 QUANTUM_COASTERS_API_ID = '5e711bac91a8780913c58961'
 
 
-
 # Management API
+# SCOPES = ['openid', 'profile', 'offline_access', 'name', 'given_name', 'family_name', 'nickname', 'email', 'email_verified', 'picture', 'created_at', 'identities', 'phone', 'address']
 # AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
 AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/'
 AUTH0_MANAGEMENT_API_ID = '5e6d3e555847e208d7c16e1c'
 MANAGEMENT_API_PAYLOAD = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}"
-
+MANAGEMENT_API_AUTHORIZATION_CODE = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"authorization_code\"}"
+# AUTHORIZATION_PAYLOAD = "{\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"scope\":\"openid\",\"response_type\":\"code\",\"client_id\":\"wnZJ4f90z3QCVelk8LXp6Uuxwi7hBeEE\", \"redirect_uri\":\"undefined\", \"state\":\"undefined\"}"
 
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
@@ -210,7 +211,9 @@ AUTHENTICATION_BACKENDS = (
     'quantumapi.auth0_backend.Auth0',
     'django.contrib.auth.backends.RemoteUserBackend',
     'django.contrib.auth.backends.ModelBackend',
-    # 'social_core.backends.auth0.Auth0OAuth2',
+    # 'social_core.backends.open_id_connect.OpenIdConnectAuth'
+    'quantumapi.auth0_backend.QuantumAdminOpenID',
+
 )
 
 ROOT_URLCONF = 'quantumapp.urls'
@@ -322,6 +325,9 @@ LOGOUT_URL = 'logout/'
 LOGOUT_REDIRECT_URL = '/'
 # GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
 
+# QuantumAdminApp
+QUANTUMADMIN_REGISTER_URL = 'register/'
+
 
 # Social Auth Configs (For Django full stack app)
 # https://readthedocs.org/projects/python-social-auth/downloads/pdf/latest/
@@ -375,10 +381,6 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.debug.debug',
 )
 
-# SOCIAL_AUTH_AUTHENTICATION_BACKENDS = (
-#     'social_core.backends.open_id.OpenIdAuth'
-# )
-
 # Django All-Auth Settings
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 
@@ -389,9 +391,9 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-# ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 # ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'None'
 # ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'None'
 

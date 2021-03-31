@@ -1,0 +1,19 @@
+.back_to_previous {
+  display: flex;
+  font-size: 14px;
+  text-decoration: underline !important;
+  transition: 0.2s all ease;
+  margin-left: 89%;
+  margin-top: 2%;
+  cursor: pointer;
+}
+
+.back_to_previous:hover {
+  color: rgb(139, 138, 138);
+}
+
+.register_btn_wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 14% !important;
+}

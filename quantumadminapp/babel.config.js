@@ -2,9 +2,9 @@ module.exports = {
     presets: [
       [
         "@babel/preset-env",
-        {
-          modules: false
-        }
+        // {
+        //   modules: false
+        // }
       ],
       "@babel/preset-react"
     ],
@@ -29,3 +29,18 @@ module.exports = {
       }
     }
   };
+
+
+
+  // module.exports = {
+  //   env: {
+  //     test: {
+  //       plugins: ['transform-class-properties'],
+  //       presets: [
+  //         '@babel/preset-env',
+  //         '@babel/preset-react',
+  //         '@babel/preset-typescript'
+  //       ]
+  //     }
+  //   }
+  // };

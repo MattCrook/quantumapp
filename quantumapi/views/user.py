@@ -204,32 +204,37 @@ def get_auth_user(request):
 
 
 
-# @permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
+@authentication_classes([TokenAuthentication, SessionAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(['GET', 'POST'])
 def get_user_from_token(request):
     try:
         if request.method == 'POST':
-            successful_auth = request.auth
-            token = TokenModel.objects.get(key=successful_auth)
+            successful_auth = request.successful_authenticator
+            user_session = request.session._session
+            token = TokenModel.objects.get(key=request.data['Token'])
             auth_user_id = token.user_id
-            user_profile = UserProfile.objects.get(user_id=auth_user_id)
-            user_credits = Credit.objects.filter(userProfile_id=user_profile.id)
 
-            if request.session and request.session.session_key:
-                session_queryset = Session.objects.get(session_key=request.session.session_key)
-                decoded_session_data = session_queryset.get_decoded()
-                session = session_queryset.session_key
+            if str(auth_user_id) == user_session['_auth_user_id']:
+                user_profile = UserProfile.objects.get(user_id=auth_user_id)
+                user_credits = Credit.objects.filter(userProfile_id=user_profile.id)
+
+                if request.session and request.session.session_key:
+                    session_queryset = Session.objects.get(session_key=request.session.session_key)
+                    decoded_session_data = session_queryset.get_decoded()
+                    session = session_queryset.session_key
+                else:
+                    session = None
             else:
-                session = None
+                auth_user_id = None
 
 
             user_profile_dict = {
-                'id': user_profile.id,
-                'image_id': user_profile.image.id if user_profile.image else None,
-                'credits': [c.rollerCoaster_id for c in user_credits],
-                'address': user_profile.address,
-                'user_id': user_profile.user.id
+                "id": user_profile.id,
+                "image_id": user_profile.image.id if user_profile.image else None,
+                "credits": [c.rollerCoaster_id for c in user_credits],
+                "address": user_profile.address,
+                "user_id": user_profile.user.id
             }
 
             return_data = {
@@ -241,9 +246,9 @@ def get_user_from_token(request):
                 'auth0_identifier': user_profile.user.auth0_identifier,
                 "is_staff": user_profile.user.is_staff,
                 "is_superuser": user_profile.user.is_superuser,
-                "token": token,
+                "token": token.key,
                 "session": session,
-                'session_data': decoded_session_data,
+                'session_data': decoded_session_data if session is not None else {},
                 'user_profile': user_profile_dict
             }
             return HttpResponse(json.dumps(return_data), content_type='application/json')

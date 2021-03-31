@@ -4,16 +4,23 @@ import { useAuthUser } from "../contexts/AuthUserContext";
 import LandingPage from "./home/LandingPage";
 import Home from "./home/Home";
 import Login from "./auth/Login";
+import Register from "./auth/Register";
 
-const Views = (props) => {
+
+const Views = () => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();
-  // console.log(isLoggedIn)
+  console.log({isAuthenticated})
+  console.log({isLoading})
+  console.log({isLoggedIn})
+  console.log({ authUser })
+  
+
 
   return (
     <React.Fragment>
       <Route
         exact
-        path="/quantumadmin"
+        path="/quantumadmin/"
         render={(props) => {
           if (!isLoading && authUser && isAuthenticated && isLoggedIn) {
             return <Home {...props} />;
@@ -24,12 +31,23 @@ const Views = (props) => {
       />
       <Route
         exact
-        path="/quantumadmin/login"
+        path="/quantumadmin/login/"
         render={(props) => {
           if (!isLoading && !isAuthenticated && !isLoggedIn) {
             return <Login {...props} />;
           } else {
-            return <Home {...props} />;
+            return <LandingPage {...props} />;
+          }
+        }}
+      />
+      <Route
+        exact
+        path="/quantumadmin/register"
+        render={(props) => {
+          if (!isLoading && !isAuthenticated && !isLoggedIn) {
+            return <Register {...props} />;
+          } else {
+            return <LandingPage {...props}  />;
           }
         }}
       />

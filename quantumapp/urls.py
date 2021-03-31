@@ -69,8 +69,7 @@ urlpatterns = [
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),
     # path('get_user/', get_user),
     path('get_user_session/', get_user_session),
-    path('api/get_user_from_token', get_user_from_token),
-
+    path('api/get_user_from_token/', get_user_from_token),
     path('rest-auth/logout/', include('rest_auth.registration.urls')),
     path('social-auth/', include('social_django.urls', namespace="social")),
     path('', include('quantumforum.urls', namespace='quantumforum')),

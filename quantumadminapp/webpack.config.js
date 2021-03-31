@@ -158,39 +158,3 @@ module.exports = function (_env, argv) {
     ].filter(Boolean),
   };
 };
-
-// ],
-// plugins: [
-//   new CleanWebpackPlugin(),
-//   new BundleTracker({
-//     path: __dirname,
-//     filename: "./webpack-stats.json",
-//   }),
-
-// resolve: { extensions: ["*", ".js", ".jsx"] },
-// output: {
-//   path: path.resolve("./quantumadminapp/static/app/"),
-//   filename: "[name].js", // Emit app.js by capturing entry name
-//   clean: true,
-//   publicPath: "static/app/",
-// },
-
-// {
-//   loader: "resolve-url-loader",
-//   options: {
-//     sourceMap: true,
-//   },
-// },
-// ],
-
-// {
-//   test: /\.html$/,
-//   use: [
-//     {
-//       loader: "html-loader",
-//       options: {
-//         minimize: true,
-//       },
-//     },
-//   ],
-// },

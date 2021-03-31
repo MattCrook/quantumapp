@@ -1,11 +1,21 @@
-import React from "react";
+import React, {useState} from "react";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+import LockIcon from '@material-ui/icons/Lock';
+
 import "./Nav.css";
 
 const NavBar = (props) => {
-  const { isLoading, userProfile, isAuthenticated, isLoggedIn } = useAuthUser();
   const defaultProfilePicture = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
+  const { isLoading, userProfile, isAuthenticated, isLoggedIn } = useAuthUser();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleProfileDropdown = () => {
+    
+  }
+
+
+
   return (
     <>
       <div className="nav_main_container">
@@ -18,7 +28,7 @@ const NavBar = (props) => {
         <div className="nav_middle">
           <div className="nav_buttons">
             <div className="nav_action_button">Home</div>
-            <div className="nav_action_button">Monitoring</div>
+            <div className="nav_action_button">Monitoring </div>
             <div className="nav_action_button">api dashboard</div>
           </div>
         </div>
@@ -44,11 +54,14 @@ const NavBar = (props) => {
           </div>
           <div className="login_logout_wrapper">
             {!isLoading && isAuthenticated && isLoggedIn ? (
+              <>
               <div className="logout">Logout</div>
+                <LockIcon style={{ color: 'white', fontSize: 18, marginBottom: 14 }} />
+                </>
             ) : (
               <>
-                <div className="login" onClick={() => props.history.push("login/")}>Login</div>
-                <LockOpenIcon style={{ color: 'white', fontSize: 18, marginBottom: 4 }} />
+                <div className="login" onClick={() => props.history.push("/quantumadmin/login")}>Login</div>
+                <LockOpenIcon style={{ color: 'white', fontSize: 18, marginBottom: 14 }} />
               </>
             )}
           </div>
