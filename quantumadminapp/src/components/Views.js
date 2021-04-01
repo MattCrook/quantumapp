@@ -51,6 +51,17 @@ const Views = () => {
           }
         }}
       />
+      <Route
+        exact
+        path="/quantumadmin/logging/"
+        render={(props) => {
+          if (!isLoading && isAuthenticated && isLoggedIn) {
+            return <LoggingView {...props} />;
+          } else {
+            return <LandingPage {...props}  />;
+          }
+        }}
+      />
     </React.Fragment>
   );
 };

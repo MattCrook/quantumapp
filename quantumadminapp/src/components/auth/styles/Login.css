@@ -144,10 +144,10 @@ label + .MuiInput-formControl {
 }
 
 .MuiSvgIcon-root {
-  color: rgb(207, 206, 206) !important;
+  /* color: rgb(207, 206, 206) !important;
   font-size: 19px !important;
   margin-top: 10px !important;
-  margin-left: 10px !important;
+  margin-left: 10px !important; */
   cursor: pointer;
 }
 
