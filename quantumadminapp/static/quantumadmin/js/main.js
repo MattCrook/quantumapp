@@ -12969,7 +12969,7 @@ var Views = function Views() {
   });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     exact: true,
-    path: "/quantumadmin",
+    path: "/quantumadmin/",
     render: function render(props) {
       if (!isLoading && authUser && isAuthenticated && isLoggedIn) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_home_Home__WEBPACK_IMPORTED_MODULE_3__.default, props);
@@ -12979,7 +12979,7 @@ var Views = function Views() {
     }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     exact: true,
-    path: "/quantumadmin/login",
+    path: "/quantumadmin/login/",
     render: function render(props) {
       if (!isLoading && !isAuthenticated && !isLoggedIn) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_auth_Login__WEBPACK_IMPORTED_MODULE_4__.default, props);
@@ -12989,7 +12989,7 @@ var Views = function Views() {
     }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     exact: true,
-    path: "/quantumadmin/register",
+    path: "/quantumadmin/register/",
     render: function render(props) {
       if (!isLoading && !isAuthenticated && !isLoggedIn) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_auth_Register__WEBPACK_IMPORTED_MODULE_5__.default, props);
@@ -13047,7 +13047,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var Login = function Login(props) {
   var _useAuthUser = (0,_contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_9__.useAuthUser)(),
       setDjangoToken = _useAuthUser.setDjangoToken,
-      setAuthToken = _useAuthUser.setAuthToken;
+      setAuthToken = _useAuthUser.setAuthToken,
+      setIsAuthenticated = _useAuthUser.setIsAuthenticated;
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_5__.useState)(false),
       _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3__.default)(_useState, 2),
@@ -13104,7 +13105,7 @@ var Login = function Login(props) {
 
   var handleSubmit = /*#__PURE__*/function () {
     var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().mark(function _callee(e) {
-      var loginCredentials, response;
+      var loginCredentials, response, origin;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -13114,15 +13115,20 @@ var Login = function Login(props) {
               loginCredentials = {
                 email: email,
                 password: password
-              };
+              }; // Todo: hash the password or hide it so it is not out in plain sight in the request.
+
               console.log({
                 loginCredentials: loginCredentials
               });
               _context.prev = 4;
               _context.next = 7;
-              return _modules_authUserManager__WEBPACK_IMPORTED_MODULE_8__.default.adminLogin(loginCredentials);
+              return _modules_authUserManager__WEBPACK_IMPORTED_MODULE_8__.default.getCSRFCookieForLogin();
 
             case 7:
+              _context.next = 9;
+              return _modules_authUserManager__WEBPACK_IMPORTED_MODULE_8__.default.adminLogin(loginCredentials);
+
+            case 9:
               response = _context.sent;
 
               if (response.valid === true) {
@@ -13130,27 +13136,31 @@ var Login = function Login(props) {
                 setSuccess(true);
                 setDjangoToken(response);
                 setAuthToken(response.token);
-                sessionStorage.setItem("email", response.email); // Todo: set logged in to true (user profile table)
+                sessionStorage.setItem("email", response.email);
+                setIsAuthenticated(true); // Todo: set logged in to true (user profile table)
+                // props.history.push("/quantumadmin/");
 
-                props.history.push("/quantumadmin");
+                origin = window.location.origin;
+                window.location.href = origin + '/quantumadmin/';
               } else {
                 showError("Credentials you entered are incorrect.");
               }
 
-              _context.next = 14;
+              _context.next = 17;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](4);
+              console.log(_context.t0);
               showError("Error logging in. Please try again.");
 
-            case 14:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[4, 11]]);
+      }, _callee, null, [[4, 13]]);
     }));
 
     return function handleSubmit(_x) {
@@ -13673,11 +13683,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../contexts/AuthUserContext */ "./src/contexts/AuthUserContext.js");
-/* harmony import */ var _material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/icons/LockOpen */ "./node_modules/@material-ui/icons/LockOpen.js");
-/* harmony import */ var _material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/icons/Lock */ "./node_modules/@material-ui/icons/Lock.js");
-/* harmony import */ var _Nav_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Nav.css */ "./src/components/nav/Nav.css");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../contexts/AuthUserContext */ "./src/contexts/AuthUserContext.js");
+/* harmony import */ var _material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/icons/LockOpen */ "./node_modules/@material-ui/icons/LockOpen.js");
+/* harmony import */ var _material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/icons/Lock */ "./node_modules/@material-ui/icons/Lock.js");
+/* harmony import */ var _Nav_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Nav.css */ "./src/components/nav/Nav.css");
+
 
 
 
@@ -13685,61 +13697,73 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var NavBar = function NavBar(props) {
-  var _useAuthUser = (0,_contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_1__.useAuthUser)(),
+  var defaultProfilePicture = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
+
+  var _useAuthUser = (0,_contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_2__.useAuthUser)(),
       isLoading = _useAuthUser.isLoading,
       userProfile = _useAuthUser.userProfile,
       isAuthenticated = _useAuthUser.isAuthenticated,
-      isLoggedIn = _useAuthUser.isLoggedIn;
+      isLoggedIn = _useAuthUser.isLoggedIn,
+      adminLogout = _useAuthUser.adminLogout;
 
-  var defaultProfilePicture = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false),
+      _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__.default)(_useState, 2),
+      isOpen = _useState2[0],
+      setIsOpen = _useState2[1];
+
+  var handleProfileDropdown = function handleProfileDropdown() {};
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_main_container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_start"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "title_wrapper"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "title"
-  }, "Quantum Coasters Admin"))), !isLoading && isAuthenticated && isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Quantum Coasters Admin"))), !isLoading && isAuthenticated && isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_middle"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_buttons"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_action_button"
-  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_action_button"
-  }, "Monitoring "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Monitoring "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_action_button"
-  }, "api dashboard"))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "api dashboard"))) : null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_end"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "nav_profile_dropdown"
-  }, !isLoading && userProfile.image ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+  }, !isLoading && userProfile.image ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("img", {
     "data-testid": "home-profile-pic-testid",
     id: "nav-profile-pic",
     src: userProfile.image.image,
     alt: "My Avatar"
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("img", {
     "data-testid": "home-profile-pic-testid",
     id: "nav-profile-pic",
     src: defaultProfilePicture,
     alt: "My Avatar"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "login_logout_wrapper"
-  }, !isLoading && isAuthenticated && isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "logout"
-  }, "Logout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_3__.default, {
+  }, !isLoading && isAuthenticated && isLoggedIn ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
+    className: "logout",
+    onClick: function onClick() {
+      return adminLogout();
+    }
+  }, "Logout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_4__.default, {
     style: {
       color: 'white',
       fontSize: 18,
       marginBottom: 14
     }
-  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "login",
     onClick: function onClick() {
       return props.history.push("/quantumadmin/login");
     }
-  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_4__.default, {
+  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_5__.default, {
     style: {
       color: 'white',
       fontSize: 18,
@@ -13906,9 +13930,79 @@ var AuthUserProvider = function AuthUserProvider(_ref) {
 
     initAuthUser();
   }, []);
+
+  var adminLogout = /*#__PURE__*/function () {
+    var _ref3 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee2() {
+      var csrf, response, origin;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              sessionStorage.removeItem("QuantumToken");
+              sessionStorage.removeItem("email");
+              _context2.prev = 2;
+              csrf = getCookie('csrftoken');
+              _context2.next = 6;
+              return fetch("http://localhost:8000/quantumadmin/admin_logout/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrf
+                }
+              });
+
+            case 6:
+              response = _context2.sent;
+
+              if (response.ok) {
+                origin = window.location.origin;
+                window.location.href = origin + '/quantumadmin/';
+              }
+
+              throw new Error("Request Failed");
+
+            case 11:
+              _context2.prev = 11;
+              _context2.t0 = _context2["catch"](2);
+              console.log(_context2.t0);
+
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[2, 11]]);
+    }));
+
+    return function adminLogout() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
+  function getCookie(cookieName) {
+    var name = cookieName + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var cookieArray = decodedCookie.split(";");
+
+    for (var i = 0; i < cookieArray.length; i++) {
+      var cookie = cookieArray[i];
+
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+
+    return "";
+  }
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(AuthUserContext.Provider, {
     value: {
       isAuthenticated: isAuthenticated,
+      setIsAuthenticated: setIsAuthenticated,
       isLoading: isLoading,
       setIsLoading: setIsLoading,
       userProfile: userProfile,
@@ -13923,7 +14017,8 @@ var AuthUserProvider = function AuthUserProvider(_ref) {
       setDjangoToken: setDjangoToken,
       hasCredential: hasCredential,
       hasLoginCredential: hasLoginCredential,
-      setHasCredential: setHasCredential
+      setHasCredential: setHasCredential,
+      adminLogout: adminLogout
     }
   }, children);
 };
@@ -13972,7 +14067,7 @@ function getCookie(cookieName) {
 }
 
 var authUserManager = {
-  adminLogin: function adminLogin(payload) {
+  getCSRFCookieForLogin: function getCSRFCookieForLogin() {
     return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee() {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
@@ -13980,13 +14075,12 @@ var authUserManager = {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return fetch("".concat(remoteURL, "/quantumadmin/login/"), {
-                method: "POST",
+              return fetch("".concat(remoteURL, "/quantumadmin/api/get_csrf_silently"), {
+                method: "GET",
                 headers: {
                   "Content-Type": "application/json"
                 },
-                Accept: "application/json",
-                body: JSON.stringify(payload)
+                Accept: "application/json"
               });
 
             case 2:
@@ -14005,19 +14099,21 @@ var authUserManager = {
       }, _callee);
     }))();
   },
-  registerAdminUser: function registerAdminUser(payload) {
+  adminLogin: function adminLogin(payload) {
     return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee2() {
-      var result;
+      var csrf_cookie, result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.prev = 0;
+              csrf_cookie = getCookie("csrftoken");
               _context2.next = 3;
-              return fetch("".concat(remoteURL, "/quantumadmin/register/"), {
+              return fetch("".concat(remoteURL, "/quantumadmin/login/complete/"), {
                 method: "POST",
+                mode: 'same-origin',
                 headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrf_cookie
                 },
                 Accept: "application/json",
                 body: JSON.stringify(payload)
@@ -14031,31 +14127,66 @@ var authUserManager = {
             case 6:
               return _context2.abrupt("return", _context2.sent);
 
-            case 9:
-              _context2.prev = 9;
-              _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0);
-
-            case 12:
+            case 7:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 9]]);
+      }, _callee2);
     }))();
   },
-  getCurrentUserFromToken: function getCurrentUserFromToken(token) {
+  registerAdminUser: function registerAdminUser(payload) {
     return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee3() {
-      var cookie, data;
+      var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              _context3.next = 3;
+              return fetch("".concat(remoteURL, "/quantumadmin/register/"), {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                Accept: "application/json",
+                body: JSON.stringify(payload)
+              });
+
+            case 3:
+              result = _context3.sent;
+              _context3.next = 6;
+              return result.json();
+
+            case 6:
+              return _context3.abrupt("return", _context3.sent);
+
+            case 9:
+              _context3.prev = 9;
+              _context3.t0 = _context3["catch"](0);
+              console.log(_context3.t0);
+
+            case 12:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 9]]);
+    }))();
+  },
+  getCurrentUserFromToken: function getCurrentUserFromToken(token) {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee4() {
+      var cookie, data;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
               cookie = getCookie("csrftoken");
-              _context3.next = 4;
+              _context4.next = 4;
               return fetch("".concat(remoteURL, "/api/get_user_from_token/"), {
                 method: "POST",
+                mode: 'same-origin',
                 headers: {
                   "Content-Type": "application/json",
                   "X-CSRFToken": cookie,
@@ -14068,34 +14199,34 @@ var authUserManager = {
               });
 
             case 4:
-              data = _context3.sent;
-              _context3.next = 7;
+              data = _context4.sent;
+              _context4.next = 7;
               return data.json();
 
             case 7:
-              return _context3.abrupt("return", _context3.sent);
+              return _context4.abrupt("return", _context4.sent);
 
             case 10:
-              _context3.prev = 10;
-              _context3.t0 = _context3["catch"](0);
-              console.log(_context3.t0);
+              _context4.prev = 10;
+              _context4.t0 = _context4["catch"](0);
+              console.log(_context4.t0);
 
             case 13:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, null, [[0, 10]]);
+      }, _callee4, null, [[0, 10]]);
     }))();
   },
   getUserProfileFromAuthUser: function getUserProfileFromAuthUser(uid, token) {
-    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee4() {
+    return (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee5() {
       var data;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee4$(_context4) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.next = 2;
+              _context5.next = 2;
               return fetch("".concat(remoteURL, "/api/userprofiles?user_id=").concat(uid), {
                 method: "GET",
                 headers: {
@@ -14105,19 +14236,19 @@ var authUserManager = {
               });
 
             case 2:
-              data = _context4.sent;
-              _context4.next = 5;
+              data = _context5.sent;
+              _context5.next = 5;
               return data.json();
 
             case 5:
-              return _context4.abrupt("return", _context4.sent);
+              return _context5.abrupt("return", _context5.sent);
 
             case 6:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4);
+      }, _callee5);
     }))();
   }
 };

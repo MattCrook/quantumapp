@@ -7,7 +7,7 @@ import "./Nav.css";
 
 const NavBar = (props) => {
   const defaultProfilePicture = "https://aesusdesign.com/wp-content/uploads/2019/06/mans-blank-profile-768x768.png";
-  const { isLoading, userProfile, isAuthenticated, isLoggedIn } = useAuthUser();
+  const { isLoading, userProfile, isAuthenticated, isLoggedIn, adminLogout } = useAuthUser();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleProfileDropdown = () => {
@@ -55,7 +55,7 @@ const NavBar = (props) => {
           <div className="login_logout_wrapper">
             {!isLoading && isAuthenticated && isLoggedIn ? (
               <>
-              <div className="logout">Logout</div>
+              <div className="logout" onClick={() => adminLogout()}>Logout</div>
                 <LockIcon style={{ color: 'white', fontSize: 18, marginBottom: 14 }} />
                 </>
             ) : (

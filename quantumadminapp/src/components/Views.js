@@ -42,7 +42,7 @@ const Views = () => {
       />
       <Route
         exact
-        path="/quantumadmin/register"
+        path="/quantumadmin/register/"
         render={(props) => {
           if (!isLoading && !isAuthenticated && !isLoggedIn) {
             return <Register {...props} />;

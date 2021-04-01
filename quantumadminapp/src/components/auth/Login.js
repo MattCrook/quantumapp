@@ -6,7 +6,7 @@ import { useAuthUser } from "../../contexts/AuthUserContext";
 import "./styles/Login.css";
 
 const Login = (props) => {
-  const { setDjangoToken, setAuthToken } = useAuthUser();
+  const { setDjangoToken, setAuthToken, setIsAuthenticated } = useAuthUser();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); // error message
   const [isValidating, setIsValidating] = useState(false); // progress loading circle
@@ -19,7 +19,6 @@ const Login = (props) => {
     setError(true);
     setErrorMessage(message);
   };
-
 
 
   const handleEmail = (e) => {
@@ -35,7 +34,6 @@ const Login = (props) => {
   };
 
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsValidating(true);
@@ -44,9 +42,12 @@ const Login = (props) => {
       email: email,
       password: password,
     };
+    // Todo: hash the password or hide it so it is not out in plain sight in the request.
     console.log({loginCredentials})
 
     try {
+      await authUserManager.getCSRFCookieForLogin();
+
       const response = await authUserManager.adminLogin(loginCredentials);
       if (response.valid === true) {
         setIsValidating(false);
@@ -54,12 +55,16 @@ const Login = (props) => {
         setDjangoToken(response);
         setAuthToken(response.token);
         sessionStorage.setItem("email", response.email);
+        setIsAuthenticated(true);
         // Todo: set logged in to true (user profile table)
-        props.history.push("/quantumadmin/");
+        // props.history.push("/quantumadmin/");
+        const origin = window.location.origin;
+        window.location.href = origin + '/quantumadmin/';
       } else {
         showError("Credentials you entered are incorrect.");
       }
     } catch (error) {
+      console.log(error)
       showError("Error logging in. Please try again.");
     }
   };
