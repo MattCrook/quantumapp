@@ -114,9 +114,6 @@ const Home = (props) => {
       <div>Currently logged in as</div>
       <div>Last login</div>
       <div>Current time</div>
-
-
-
     </>
   );
 };

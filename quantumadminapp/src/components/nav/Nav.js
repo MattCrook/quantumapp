@@ -5,7 +5,11 @@ import LockIcon from '@material-ui/icons/Lock';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import VerticalSplitOutlinedIcon from '@material-ui/icons/VerticalSplitOutlined';
-import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
+// import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
+import StorageIcon from '@material-ui/icons/Storage';
+// import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import env from "../../../env-config.json";
 import "./Nav.css";
 
 const NavBar = (props) => {
@@ -17,6 +21,20 @@ const NavBar = (props) => {
     setIsOpen(!isOpen);
   };
 
+  const redirectToDjangoAdmin = () => {
+    const adminURI = env.DJANGO_ADMIN_URI;
+    window.location.href = adminURI
+  };
+
+  const redirectToRestFrameworkAdmin = () => {
+    const drfURI = env.REST_FRAMEWORK_ADMIN_URI;
+    window.location.href = drfURI
+  };
+
+  const redirectToRestFrameworkUserDetails = () => {
+    const drfURI = env.REST_FRAMEWORK_ADMIN_URI_USER_DETAILS;
+    window.location.href = drfURI
+  };
 
 
   return (
@@ -67,14 +85,17 @@ const NavBar = (props) => {
                 <AccountCircleIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
                 </div>
                 <div className="dropdown_row_wrapper">
-                <div className="dropdown_item">Django Admin</div>
+                <div className="dropdown_item" onClick={() => redirectToDjangoAdmin()}>Django Admin</div>
                 <VerticalSplitOutlinedIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
                 </div>
                   <div className="dropdown_row_wrapper" style={{ marginBottom: 3 }}>
-                <div className="dropdown_item">Rest Framework Admin</div>
-                <LanguageOutlinedIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
+                <div className="dropdown_item" onClick={() => redirectToRestFrameworkAdmin()}>Rest Framework Admin</div>
+                <StorageIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
+              </div>
+              <div className="dropdown_row_wrapper" style={{ marginBottom: 3 }}>
+                <div className="dropdown_item" onClick={() => redirectToRestFrameworkUserDetails()}>Rest Framework Admin User Details</div>
+                <PermIdentityIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
                 </div>
-
             </div>
           ) : null}
           <div className="login_logout_wrapper">
