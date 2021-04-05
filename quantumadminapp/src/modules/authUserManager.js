@@ -19,11 +19,24 @@ function getCookie(cookieName) {
 }
 
 const authUserManager = {
-  async adminLogin(payload) {
-    const result = await fetch(`${remoteURL}/quantumadmin/login/`, {
-      method: "POST",
+  async getCSRFCookieForLogin() {
+    const result = await fetch(`${remoteURL}/quantumadmin/api/get_csrf_silently`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
+      },
+      Accept: "application/json",
+    });
+    return await result.json();
+  },
+  async adminLogin(payload) {
+    let csrf_cookie = getCookie("csrftoken");
+    const result = await fetch(`${remoteURL}/quantumadmin/login/complete/`, {
+      method: "POST",
+      mode: 'same-origin',
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrf_cookie,
       },
       Accept: "application/json",
       body: JSON.stringify(payload),
@@ -51,6 +64,7 @@ const authUserManager = {
       let cookie = getCookie("csrftoken");
       const data = await fetch(`${remoteURL}/api/get_user_from_token/`, {
         method: "POST",
+        mode: 'same-origin',
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": cookie,

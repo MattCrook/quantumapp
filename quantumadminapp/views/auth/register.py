@@ -18,8 +18,8 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 
 
 
-# @csrf_exempt
 @api_view(['GET, POST'])
+@csrf_exempt
 def register_admin_user(request):
     try:
         if request.method == 'POST':

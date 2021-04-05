@@ -7,13 +7,10 @@ WORKDIR /quantumapp
 
 RUN pip install --upgrade pip
 
-COPY requirements.txt ./
+COPY requirements.txt* .
 RUN pip install -r requirements.txt
 
 # RUN docker run -p 6379:6379 -d redis:5
 
+# COPY . /quantumapp/
 COPY . .
-
-# RUN manage.py collectstatic
-# RUN python manage.py makemigrations
-# RUN python manage.py migrate

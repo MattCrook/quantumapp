@@ -52,11 +52,51 @@ export const AuthUserProvider = ({ children }) => {
     initAuthUser();
   }, []);
 
+  const adminLogout = async () => {
+    sessionStorage.removeItem("QuantumToken");
+    sessionStorage.removeItem("email");
+    try {
+      const csrf = getCookie('csrftoken');
+      const response = await fetch("http://localhost:8000/quantumadmin/admin_logout/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrf,
+        },
+      });
+      if (response.ok) {
+        const origin = window.location.origin;
+        window.location.href = origin + '/quantumadmin/'
+      }
+      throw new Error("Request Failed");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  function getCookie(cookieName) {
+    let name = cookieName + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let cookieArray = decodedCookie.split(";");
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return "";
+  }
+
+
 
   return (
     <AuthUserContext.Provider
       value={{
         isAuthenticated,
+        setIsAuthenticated,
         isLoading,
         setIsLoading,
         userProfile,
@@ -72,6 +112,7 @@ export const AuthUserProvider = ({ children }) => {
         hasCredential,
         hasLoginCredential,
         setHasCredential,
+        adminLogout,
       }}
     >
       {children}

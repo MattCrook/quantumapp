@@ -2,7 +2,7 @@ FROM node:12
 
 WORKDIR /quantumadminapp
 
-COPY package.json /quantumadminapp/
+COPY package.json .
 
 # RUN npm ci
 RUN npm install
@@ -13,4 +13,4 @@ COPY . .
 
 # EXPOSE 8000
 
-# CMD ["npm", "run", "watch"]
+CMD ["npm", "run", "watch"]

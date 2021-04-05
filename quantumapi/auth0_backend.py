@@ -101,7 +101,8 @@ class QuantumAdminOpenID(OpenIdConnectAuth):
     USERINFO_URL = 'https://dev-405n1e6w.auth0.com/userinfo'
     JWKS_URI = 'https://dev-405n1e6w.auth0.com/.well-known/jwks.json'
     JWT_DECODE_OPTIONS = dict()
-    name = 'quantum_openid'
+    name = 'openid'
+
 
 
 
@@ -141,6 +142,8 @@ class QuantumAdminOpenID(OpenIdConnectAuth):
 #             raise AuthException('Authentication error')
 #         kwargs.update({'response': '', 'backend': self})
 #         return self.strategy.authenticate(*args, **kwargs)
+
+
 
 # Adding public and private endpoints.
 # The @api_view decorator can be added to all endpoints that indicate that the method requires authentication.

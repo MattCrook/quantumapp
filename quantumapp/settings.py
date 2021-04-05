@@ -120,9 +120,9 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework.permissions.AllowAny',
-        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
+    # These are set globally, as the global authentication schemes. Can also set on a per view basis.
+    # Using authentication_classes = [JSONWebTokenAuthentication]..etc...
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
@@ -162,8 +162,10 @@ MANAGEMENT_API_AUTHORIZATION_CODE = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1e
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
 SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+
 # Quantum Coasters Key
 SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
+
 # Quantum Coasters Secret
 SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
 SOCIAL_AUTH_AUTH0_SCOPE = [
@@ -211,9 +213,8 @@ AUTHENTICATION_BACKENDS = (
     'quantumapi.auth0_backend.Auth0',
     'django.contrib.auth.backends.RemoteUserBackend',
     'django.contrib.auth.backends.ModelBackend',
-    # 'social_core.backends.open_id_connect.OpenIdConnectAuth'
     'quantumapi.auth0_backend.QuantumAdminOpenID',
-
+    # 'social_core.backends.open_id_connect.OpenIdConnectAuth'
 )
 
 ROOT_URLCONF = 'quantumapp.urls'
@@ -354,15 +355,15 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
 
 SOCIAL_AUTH_USER_MODEL = 'quantumapi.User'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-# SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email', 'username']
 SOCIAL_AUTH_CLEAN_USERNAMES = True
+# SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email', 'username']
 # SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
 #     'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', 'https://dev-405n1e6w.auth0.com/'
 #     ]
 
 # SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', 'localhost', '8000',]
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
 

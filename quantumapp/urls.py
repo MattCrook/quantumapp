@@ -59,11 +59,13 @@ router.register(r'friends_join', FriendsJoinApiView, 'friends_join')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    # api-auth is login view for the rest-auth admin api view.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token),
     path('accounts/', include('django.contrib.auth.urls')),
     path('rest-auth/login/', login_user),
     path('rest-auth/registration/', register_user),
+    # rest-auth is the api-admin view authentication...
     path('rest-auth/', include('rest_auth.urls')),
     path('account/', include('allauth.urls')),
     url(r'^rest-auth/registration/verify-email/(?P<key>.+)/$', ConfirmEmailView, name='account_confirm_email'),

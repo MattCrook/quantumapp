@@ -14,8 +14,8 @@ class UsersFriends(models.Model):
     friends = models.ManyToManyField("FriendRequest", through="FriendsJoin", )
 
     class Meta:
-        verbose_name = ("Friend")
-        verbose_name_plural = ("Friends")
+        verbose_name = ("UserFriend")
+        verbose_name_plural = ("UsersFriends")
 
 
     @staticmethod
