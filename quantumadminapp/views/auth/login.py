@@ -64,6 +64,9 @@ def login_admin_user(request):
                     "management_jwt": management_api_jwt,
                     "id_token": management_api_jwt,
                     "management_user": management_api_admin_user,
+                    # "last_login": authenticated_user.last_login,
+                    "is_superuser": authenticated_user.is_superuser,
+                    "is_staff": authenticated_user.is_staff,
                      }
                 data = json.dumps(data)
                 return HttpResponse(data, content_type='application/json')

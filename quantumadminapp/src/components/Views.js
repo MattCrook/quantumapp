@@ -6,15 +6,12 @@ import Home from "./home/Home";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 
-
 const Views = () => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();
-  console.log({isAuthenticated})
-  console.log({isLoading})
-  console.log({isLoggedIn})
-  console.log({ authUser })
-  
-
+  console.log({ isAuthenticated });
+  console.log({ isLoading });
+  console.log({ isLoggedIn });
+  console.log({ authUser });
 
   return (
     <React.Fragment>
@@ -23,7 +20,15 @@ const Views = () => {
         path="/quantumadmin/"
         render={(props) => {
           if (!isLoading && authUser && isAuthenticated && isLoggedIn) {
-            return <Home {...props} />;
+            return (
+              <Home
+                authUser={authUser}
+                isAuthenticated={isAuthenticated}
+                isLoading={isLoading}
+                isLoggedIn={isLoggedIn}
+                {...props}
+              />
+            );
           } else {
             return <LandingPage {...props} />;
           }
@@ -47,7 +52,7 @@ const Views = () => {
           if (!isLoading && !isAuthenticated && !isLoggedIn) {
             return <Register {...props} />;
           } else {
-            return <LandingPage {...props}  />;
+            return <LandingPage {...props} />;
           }
         }}
       />
@@ -58,7 +63,7 @@ const Views = () => {
           if (!isLoading && isAuthenticated && isLoggedIn) {
             return <LoggingView {...props} />;
           } else {
-            return <LandingPage {...props}  />;
+            return <LandingPage {...props} />;
           }
         }}
       />

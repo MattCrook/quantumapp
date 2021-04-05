@@ -203,7 +203,7 @@ def get_auth_user(request):
         return HttpResponse(json.dumps(error), content_type='application/json')
 
 
-
+# Called from QuantumAdminApp on re-render of page to re-authenticate user.
 @authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsAuthenticated])
 @api_view(['GET', 'POST'])
@@ -249,7 +249,8 @@ def get_user_from_token(request):
                 "token": token.key,
                 "session": session,
                 'session_data': decoded_session_data if session is not None else {},
-                'user_profile': user_profile_dict
+                'user_profile': user_profile_dict,
+                "last_login": str(user_profile.user.last_login),
             }
             return HttpResponse(json.dumps(return_data), content_type='application/json')
 
