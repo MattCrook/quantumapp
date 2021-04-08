@@ -13605,11 +13605,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _nav_Nav__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../nav/Nav */ "./src/components/nav/Nav.js");
-/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../env-config.json */ "./env-config.json");
-/* harmony import */ var _api_endpoints__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../api-endpoints */ "./api-endpoints.js");
-/* harmony import */ var _styles_ApiDashboard_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./styles/ApiDashboard.css */ "./src/components/api-dashboard/styles/ApiDashboard.css");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _nav_Nav__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../nav/Nav */ "./src/components/nav/Nav.js");
+/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../env-config.json */ "./env-config.json");
+/* harmony import */ var _api_endpoints__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api-endpoints */ "./api-endpoints.js");
+/* harmony import */ var _modules_services__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../modules/services */ "./src/modules/services.js");
+/* harmony import */ var _styles_ApiDashboard_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./styles/ApiDashboard.css */ "./src/components/api-dashboard/styles/ApiDashboard.css");
+
+
+
+
 
 
 
@@ -13617,10 +13626,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ApiDashboard = function ApiDashboard(props) {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
+      _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__.default)(_useState, 2),
+      health = _useState2[0],
+      setHealth = _useState2[1];
+
   var endpoints = function endpoints() {
-    var entries = Object.entries(_api_endpoints__WEBPACK_IMPORTED_MODULE_3__.api_endpoints_config);
+    var entries = Object.entries(_api_endpoints__WEBPACK_IMPORTED_MODULE_6__.api_endpoints_config);
     var rows = entries.map(function (entry, i) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
         key: i,
         className: "api_endpoint_item"
       }, "\"", entry[0], "\": \"", entry[1], "\"");
@@ -13628,27 +13642,58 @@ var ApiDashboard = function ApiDashboard(props) {
     return rows;
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_nav_Nav__WEBPACK_IMPORTED_MODULE_1__.default, props), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(function () {
+    var getApiHealth = /*#__PURE__*/function () {
+      var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
+        var health;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return (0,_modules_services__WEBPACK_IMPORTED_MODULE_7__.healthCheck)();
+
+              case 2:
+                health = _context.sent;
+                console.log("health", health);
+                setHealth(health);
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      return function getApiHealth() {
+        return _ref.apply(this, arguments);
+      };
+    }();
+
+    getApiHealth();
+  }, []);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(react__WEBPACK_IMPORTED_MODULE_3__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_nav_Nav__WEBPACK_IMPORTED_MODULE_4__.default, props), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     id: "quantumapi_root_container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "title_wrapper"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "quantumapi_title"
-  }, "QuantumAPI")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "QuantumAPI")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoints"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info_container"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "GET /api/"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "GET /api/"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "HTTP 200 OK"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "HTTP 200 OK"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "Allow: GET, HEAD, OPTIONS"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Allow: GET, HEAD, OPTIONS"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "Content-Type: application/json"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, "Content-Type: application/json"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "Vary: Accept")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, endpoints()))));
+  }, "Vary: Accept")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", null, endpoints()))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ApiDashboard);
@@ -15362,6 +15407,73 @@ var authUserManager = {
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (authUserManager);
+
+/***/ }),
+
+/***/ "./src/modules/services.js":
+/*!*********************************!*\
+  !*** ./src/modules/services.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "healthCheck": () => (/* binding */ healthCheck)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../env-config.json */ "./env-config.json");
+
+
+
+var remoteURL = _env_config_json__WEBPACK_IMPORTED_MODULE_2__.API_URL;
+function healthCheck() {
+  return _healthCheck.apply(this, arguments);
+}
+
+function _healthCheck() {
+  _healthCheck = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().mark(function _callee() {
+    var token, response;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default().wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            token = sessionStorage.getItem("QuantumToken");
+            _context.next = 4;
+            return fetch("".concat(remoteURL, "/api/health"), {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Token ".concat(token)
+              }
+            });
+
+          case 4:
+            response = _context.sent;
+            console.log(response);
+            _context.next = 8;
+            return response.json();
+
+          case 8:
+            return _context.abrupt("return", _context.sent);
+
+          case 11:
+            _context.prev = 11;
+            _context.t0 = _context["catch"](0);
+            console.log(_context.t0);
+
+          case 14:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee, null, [[0, 11]]);
+  }));
+  return _healthCheck.apply(this, arguments);
+}
 
 /***/ }),
 

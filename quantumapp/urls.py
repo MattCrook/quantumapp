@@ -6,7 +6,7 @@ from django.conf.urls import url, include
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
-from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView, UsersFriendsApiView, FriendsJoinApiView
+from quantumapi.views import RollerCoasters, Manufacturers, Parks, Tracktypes, UserProfiles, Message, Credits, Users, Images, News, BlogContributorApplications, ActivityLogView, LoginInfoView, CalendarEvents, ErrorLogView, AppLoginDataView, GroupChatApiView, UsersFriendsApiView, FriendsJoinApiView, HealthCheck
 from quantumapi.views import login_user, register_user, auth0_logout, get_user_session, get_user_from_token
 from quantumapi.views import Credentials as CredentialsView
 from quantumapi.views import Feedback as FeedbackView
@@ -52,13 +52,11 @@ router.register(r'friends_join', FriendsJoinApiView, 'friends_join')
 
 
 
-
-
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/health/', HealthCheck),
+
     # api-auth is login view for the rest-auth admin api view.
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api-token-auth/', obtain_auth_token),

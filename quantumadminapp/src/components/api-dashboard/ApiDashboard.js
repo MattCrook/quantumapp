@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../nav/Nav";
 import env from "../../../env-config.json";
 import { api_endpoints_config } from "../../../api-endpoints";
+import { healthCheck } from "../../modules/services";
 import "./styles/ApiDashboard.css";
 
 const ApiDashboard = (props) => {
+  const [health, setHealth] = useState([]);
   const endpoints = () => {
     const entries = Object.entries(api_endpoints_config);
     const rows = entries.map((entry, i) => {
@@ -16,6 +18,15 @@ const ApiDashboard = (props) => {
     });
     return rows;
   };
+
+  useEffect(() => {
+    const getApiHealth = async () => {
+      const health = await healthCheck();
+      console.log("health", health);
+      setHealth(health);
+    };
+    getApiHealth();
+  }, []);
 
   return (
     <>
