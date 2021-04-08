@@ -8,7 +8,7 @@
   justify-content: center;
   width: 33%;
   margin-top: 5%;
-  margin-left: 33%;
+  margin-left: 33.5%;
   border: 1px solid rgb(90, 90, 90);
 }
 
@@ -153,4 +153,65 @@ label + .MuiInput-formControl {
 
 .MuiSvgIcon-root:hover {
   color: #ffffff !important;
+}
+
+/*************** Help Modal ************/
+.help_modal_title {
+  border-bottom: 1px solid rgb(138, 138, 138);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.help_modal_title i {
+  margin-left: 8px;
+}
+
+.help_modal_exit_btn {
+  display: flex;
+  justify-content: center;
+  margin-left: 30%;
+  margin-right: 30%;
+  border: 1px solid black;
+  background-color: black;
+  color: white;
+  margin-top: 40px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: 0.2s all ease;
+}
+
+.help_modal_exit_btn_text {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.help_modal_exit_btn:hover {
+  box-shadow: 0 0.5em 0.5em -0.2em #222222;
+  -webkit-transform: translateY(-0.15em);
+  transform: translateY(-0.15em);
+}
+
+.signature {
+  display: flex;
+  justify-content: center;
+}
+
+.signature p {
+  text-align: center;
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: 0.85em;
+  color: #aaaaaa;
+}
+
+.signature a {
+  color: #aaaaaa;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+#signature_font_help_modal {
+  font: 260 0.55em helvetica neue, open sans, sans-serif;
+  letter-spacing: 4px;
+  color: rgb(94, 94, 94);
 }
