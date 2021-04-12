@@ -5,7 +5,7 @@ import LockIcon from '@material-ui/icons/Lock';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import VerticalSplitOutlinedIcon from '@material-ui/icons/VerticalSplitOutlined';
-// import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
+import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
 import StorageIcon from '@material-ui/icons/Storage';
 // import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
@@ -36,6 +36,11 @@ const NavBar = (props) => {
     window.location.href = drfURI
   };
 
+const redirectToRestAPIRoot = () => {
+  const apiRootURI = env.REST_FRAMEWORK_API_ROOT;
+  window.location.href = apiRootURI
+};
+
 
   return (
     <>
@@ -48,10 +53,10 @@ const NavBar = (props) => {
               {!isLoading && isAuthenticated && isLoggedIn ? (
         <div className="nav_middle">
           <div className="nav_buttons">
-            <div className="nav_action_button">Home</div>
+            <div className="nav_action_button" onClick={() => props.history.push("/quantumadmin/")}>Home</div>
               <div className="nav_action_button">Monitoring </div>
-              <div className="nav_action_button">Logging </div>
-            <div className="nav_action_button">api dashboard</div>
+              <div className="nav_action_button" onClick={() => props.history.push("/quantumadmin/logging/")}>Logging </div>
+            <div className="nav_action_button" onClick={() => props.history.push("/quantumadmin/api-dashboard/")}>api dashboard</div>
           </div>
         </div>
               ) : null}
@@ -95,6 +100,10 @@ const NavBar = (props) => {
               <div className="dropdown_row_wrapper" style={{ marginBottom: 3 }}>
                 <div className="dropdown_item" onClick={() => redirectToRestFrameworkUserDetails()}>Rest Framework Admin User Details</div>
                 <PermIdentityIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
+              </div>
+              <div className="dropdown_row_wrapper" style={{ marginBottom: 3 }}>
+                <div className="dropdown_item" onClick={() => redirectToRestAPIRoot()}>Rest Framework API Root</div>
+                <LanguageOutlinedIcon style={{ color: 'rgb(206, 206, 206)', fontSize: 17, marginRight: 6}} />
                 </div>
             </div>
           ) : null}

@@ -14,6 +14,8 @@ urlpatterns = [
     path('register/', index, name='index'),
     path('api/get_csrf_silently/', get_csrf_and_forward_to_login),
     path('admin_logout/', logout_admin_user),
+    path('api-dashboard/', index, name='index'),
+
     # path('login/', login_admin_user, name='login_admin_user'),
     # path('admin_login/', login_admin_user, name='admin_login'),
     # path('register/', register_admin_user, name='register_admin_user'),

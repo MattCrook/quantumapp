@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { Input } from "@material-ui/core";
 import HelpIcon from '@material-ui/icons/Help';
+import LoginHelpModal from "../HelpModal";
 import "../styles/Login.css"
 
 const useStyles = makeStyles((theme) => ({
@@ -22,6 +23,15 @@ const useStyles = makeStyles((theme) => ({
 
 const AuthForm = (props) => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 
   return (
@@ -39,9 +49,11 @@ const AuthForm = (props) => {
           </div>
           <div id="register_link_wrapper">
           <div className="register_admin_link" onClick={() => props.history.push("/quantumadmin/register/")}>Register Your Admin Account </div>
-          <HelpIcon />
+          <HelpIcon style={{ color: 'rgb(187, 187, 187)', fontSize: 18, marginTop: 18, marginLeft: 6}} onClick={handleOpen}/>
           </div>
         </form>
+        <LoginHelpModal open={open} handleClose={handleClose} {...props} />
+
       </div>
     </>
   );

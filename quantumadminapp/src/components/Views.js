@@ -5,6 +5,7 @@ import LandingPage from "./home/LandingPage";
 import Home from "./home/Home";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
+import ApiDashboard from "./api-dashboard/ApiDashboard";
 
 const Views = () => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();
@@ -62,6 +63,17 @@ const Views = () => {
         render={(props) => {
           if (!isLoading && isAuthenticated && isLoggedIn) {
             return <LoggingView {...props} />;
+          } else {
+            return <LandingPage {...props} />;
+          }
+        }}
+      />
+      <Route
+        exact
+        path="/quantumadmin/api-dashboard/"
+        render={(props) => {
+          if (!isLoading && isAuthenticated && isLoggedIn) {
+            return <ApiDashboard {...props} />;
           } else {
             return <LandingPage {...props} />;
           }

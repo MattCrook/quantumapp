@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { Input } from "@material-ui/core";
-import HelpIcon from "@material-ui/icons/Help";
 import "../styles/Register.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +29,7 @@ const RegisterForm = (props) => {
           id="auth_form"
           className={classes.root}
           noValidate
-          // autoComplete="off"
+          autoComplete="off"
         >
           <TextField
             id="email"

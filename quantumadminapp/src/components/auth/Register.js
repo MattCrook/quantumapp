@@ -63,7 +63,7 @@ const Register = (props) => {
         onClick={() => props.history.push("/quantumadmin/login")}
       >
         {" "}
-        &lt; Back To Previous
+        &lt; Back To Login
       </div>
       <div id="register_form_master_container">
         <RegisterForm
