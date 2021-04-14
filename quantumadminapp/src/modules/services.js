@@ -11,8 +11,7 @@ export async function healthCheck() {
         Authorization: `Token ${token}`,
       },
     });
-      console.log(response)
-    return await response.json();
+    return response;
   } catch (err) {
     console.log(err);
   }

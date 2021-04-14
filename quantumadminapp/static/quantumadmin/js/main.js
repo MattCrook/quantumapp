@@ -13628,15 +13628,42 @@ __webpack_require__.r(__webpack_exports__);
 var ApiDashboard = function ApiDashboard(props) {
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
       _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__.default)(_useState, 2),
-      health = _useState2[0],
-      setHealth = _useState2[1];
+      response = _useState2[0],
+      setResponse = _useState2[1];
+
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
+      _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__.default)(_useState3, 2),
+      health = _useState4[0],
+      setHealth = _useState4[1];
+
+  var defaultSchema = "None Selected";
+
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(defaultSchema),
+      _useState6 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__.default)(_useState5, 2),
+      endpoint = _useState6[0],
+      setEndpoint = _useState6[1];
+
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)([]),
+      _useState8 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1__.default)(_useState7, 2),
+      schema = _useState8[0],
+      setSchema = _useState8[1];
+
+  var handleSelectSchema = function handleSelectSchema(e) {
+    var index = e.target.id;
+    var entries = Object.entries(_api_endpoints__WEBPACK_IMPORTED_MODULE_6__.api_endpoints_config);
+    var selectedSchema = entries[index];
+    var selectedSchemaName = selectedSchema[0];
+    setEndpoint(selectedSchemaName);
+  };
 
   var endpoints = function endpoints() {
     var entries = Object.entries(_api_endpoints__WEBPACK_IMPORTED_MODULE_6__.api_endpoints_config);
     var rows = entries.map(function (entry, i) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
         key: i,
-        className: "api_endpoint_item"
+        id: i,
+        className: "api_endpoint_item",
+        onClick: handleSelectSchema
       }, "\"", entry[0], "\": \"", entry[1], "\"");
     });
     return rows;
@@ -13645,7 +13672,7 @@ var ApiDashboard = function ApiDashboard(props) {
   (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(function () {
     var getApiHealth = /*#__PURE__*/function () {
       var _ref = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__.default)( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee() {
-        var health;
+        var healthResponse, respJson;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -13654,11 +13681,16 @@ var ApiDashboard = function ApiDashboard(props) {
                 return (0,_modules_services__WEBPACK_IMPORTED_MODULE_7__.healthCheck)();
 
               case 2:
-                health = _context.sent;
-                console.log("health", health);
-                setHealth(health);
+                healthResponse = _context.sent;
+                setResponse(healthResponse);
+                _context.next = 6;
+                return healthResponse.json();
 
-              case 5:
+              case 6:
+                respJson = _context.sent;
+                setHealth(respJson);
+
+              case 8:
               case "end":
                 return _context.stop();
             }
@@ -13674,6 +13706,8 @@ var ApiDashboard = function ApiDashboard(props) {
     getApiHealth();
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(react__WEBPACK_IMPORTED_MODULE_3__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_nav_Nav__WEBPACK_IMPORTED_MODULE_4__.default, props), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    id: "api_root_schema_master_container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     id: "quantumapi_root_container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "title_wrapper"
@@ -13685,15 +13719,39 @@ var ApiDashboard = function ApiDashboard(props) {
     className: "endpoint_info_container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "GET /api/"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+  }, "GET /api/"), response.status === 200 && response.ok === true ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(react__WEBPACK_IMPORTED_MODULE_3__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "status_container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "HTTP 200 OK"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+  }, "HTTP 200 OK"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("i", {
+    id: "ok",
+    className: "far fa-check-circle"
+  }))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(react__WEBPACK_IMPORTED_MODULE_3__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "status_container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "endpoint_info"
+  }, "HTTP 500 FAILED"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("i", {
+    id: "fail",
+    className: "fas fa-exclamation-triangle"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
   }, "Allow: GET, HEAD, OPTIONS"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
   }, "Content-Type: application/json"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
     className: "endpoint_info"
-  }, "Vary: Accept")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", null, endpoints()))));
+  }, "Vary: Accept")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    id: "endpoints_list"
+  }, endpoints()))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "schema_container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "title_wrapper"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "quantumapi_title"
+  }, "API Endpoint Schema")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "endpoint_info_container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("div", {
+    className: "endpoint_info"
+  }, "Endpoint: ", endpoint)))));
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ApiDashboard);
@@ -15453,24 +15511,19 @@ function _healthCheck() {
 
           case 4:
             response = _context.sent;
-            console.log(response);
-            _context.next = 8;
-            return response.json();
+            return _context.abrupt("return", response);
 
           case 8:
-            return _context.abrupt("return", _context.sent);
-
-          case 11:
-            _context.prev = 11;
+            _context.prev = 8;
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
 
-          case 14:
+          case 11:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 11]]);
+    }, _callee, null, [[0, 8]]);
   }));
   return _healthCheck.apply(this, arguments);
 }
@@ -15580,7 +15633,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_cssWithMappingToString_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#quantumapi_root_container {\n    border: 1px solid rgb(105, 105, 105);\n    margin-top: 2%;\n    width: 30%;\n    margin-left: 2%;\n}\n\n.title_wrapper {\n    display: flex;\n    justify-content: center;\n}\n.quantumapi_title {\n    color: rgb(231, 231, 231);\n    font-size: 16px;\n    margin-bottom: 2%;\n    margin-left: 2%;\n    text-transform: uppercase;\n    font-weight: 300;\n    margin-top: 5px;\n}\n\n.endpoint_info_container {\n    margin-bottom: 3%;\n}\n.endpoint_info {\n    margin-left: 2%;\n    font-size: 13px;\n    font-weight: 200;\n}\n\n.api_endpoint_item {\n    color: rgb(214, 214, 214);\n    margin-left: 2%;\n    margin-bottom: 3px;\n}\n", "",{"version":3,"sources":["webpack://./ApiDashboard.css"],"names":[],"mappings":"AAAA;IACI,oCAAoC;IACpC,cAAc;IACd,UAAU;IACV,eAAe;AACnB;;AAEA;IACI,aAAa;IACb,uBAAuB;AAC3B;AACA;IACI,yBAAyB;IACzB,eAAe;IACf,iBAAiB;IACjB,eAAe;IACf,yBAAyB;IACzB,gBAAgB;IAChB,eAAe;AACnB;;AAEA;IACI,iBAAiB;AACrB;AACA;IACI,eAAe;IACf,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,yBAAyB;IACzB,eAAe;IACf,kBAAkB;AACtB","sourcesContent":["#quantumapi_root_container {\n    border: 1px solid rgb(105, 105, 105);\n    margin-top: 2%;\n    width: 30%;\n    margin-left: 2%;\n}\n\n.title_wrapper {\n    display: flex;\n    justify-content: center;\n}\n.quantumapi_title {\n    color: rgb(231, 231, 231);\n    font-size: 16px;\n    margin-bottom: 2%;\n    margin-left: 2%;\n    text-transform: uppercase;\n    font-weight: 300;\n    margin-top: 5px;\n}\n\n.endpoint_info_container {\n    margin-bottom: 3%;\n}\n.endpoint_info {\n    margin-left: 2%;\n    font-size: 13px;\n    font-weight: 200;\n}\n\n.api_endpoint_item {\n    color: rgb(214, 214, 214);\n    margin-left: 2%;\n    margin-bottom: 3px;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#api_root_schema_master_container {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n}\n#quantumapi_root_container {\n    border: 1px solid rgb(88, 88, 88);\n    margin-top: 2%;\n    width: 32%;\n    margin-left: 2%;\n}\n\n.title_wrapper {\n    display: flex;\n    justify-content: center;\n}\n.quantumapi_title {\n    color: rgb(231, 231, 231);\n    font-size: 16px;\n    margin-bottom: 2%;\n    margin-left: 2%;\n    text-transform: uppercase;\n    font-weight: 300;\n    margin-top: 5px;\n}\n\n.endpoint_info_container {\n    margin-bottom: 3%;\n}\n.endpoint_info {\n    margin-left: 2%;\n    font-size: 13px;\n    font-weight: 200;\n}\n\n.api_endpoint_item {\n    color: rgb(214, 214, 214);\n    margin-left: 2%;\n    margin-bottom: 3px;\n}\n\n.api_endpoint_item:hover {\n    cursor: pointer;\n    color: white\n}\n\n\n.status_container {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n}\n.status_container i {\n    margin-left: 10px;\n}\n\n#ok {\n    color: green;\n}\n\n#fail {\n    color: red;\n    font-size: 12px;\n}\n\n.schema_container {\n    width: 32%;\n    border: 1px solid rgb(88, 88, 88);\n    margin-top: 2%;\n\n\n\n}\n", "",{"version":3,"sources":["webpack://./ApiDashboard.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,mBAAmB;IACnB,8BAA8B;AAClC;AACA;IACI,iCAAiC;IACjC,cAAc;IACd,UAAU;IACV,eAAe;AACnB;;AAEA;IACI,aAAa;IACb,uBAAuB;AAC3B;AACA;IACI,yBAAyB;IACzB,eAAe;IACf,iBAAiB;IACjB,eAAe;IACf,yBAAyB;IACzB,gBAAgB;IAChB,eAAe;AACnB;;AAEA;IACI,iBAAiB;AACrB;AACA;IACI,eAAe;IACf,eAAe;IACf,gBAAgB;AACpB;;AAEA;IACI,yBAAyB;IACzB,eAAe;IACf,kBAAkB;AACtB;;AAEA;IACI,eAAe;IACf;AACJ;;;AAGA;IACI,aAAa;IACb,mBAAmB;IACnB,mBAAmB;AACvB;AACA;IACI,iBAAiB;AACrB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,UAAU;IACV,eAAe;AACnB;;AAEA;IACI,UAAU;IACV,iCAAiC;IACjC,cAAc;;;;AAIlB","sourcesContent":["#api_root_schema_master_container {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n}\n#quantumapi_root_container {\n    border: 1px solid rgb(88, 88, 88);\n    margin-top: 2%;\n    width: 32%;\n    margin-left: 2%;\n}\n\n.title_wrapper {\n    display: flex;\n    justify-content: center;\n}\n.quantumapi_title {\n    color: rgb(231, 231, 231);\n    font-size: 16px;\n    margin-bottom: 2%;\n    margin-left: 2%;\n    text-transform: uppercase;\n    font-weight: 300;\n    margin-top: 5px;\n}\n\n.endpoint_info_container {\n    margin-bottom: 3%;\n}\n.endpoint_info {\n    margin-left: 2%;\n    font-size: 13px;\n    font-weight: 200;\n}\n\n.api_endpoint_item {\n    color: rgb(214, 214, 214);\n    margin-left: 2%;\n    margin-bottom: 3px;\n}\n\n.api_endpoint_item:hover {\n    cursor: pointer;\n    color: white\n}\n\n\n.status_container {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n}\n.status_container i {\n    margin-left: 10px;\n}\n\n#ok {\n    color: green;\n}\n\n#fail {\n    color: red;\n    font-size: 12px;\n}\n\n.schema_container {\n    width: 32%;\n    border: 1px solid rgb(88, 88, 88);\n    margin-top: 2%;\n\n\n\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

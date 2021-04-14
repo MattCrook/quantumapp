@@ -1,7 +1,12 @@
+#api_root_schema_master_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 #quantumapi_root_container {
-    border: 1px solid rgb(105, 105, 105);
+    border: 1px solid rgb(88, 88, 88);
     margin-top: 2%;
-    width: 30%;
+    width: 32%;
     margin-left: 2%;
 }
 
@@ -32,4 +37,37 @@
     color: rgb(214, 214, 214);
     margin-left: 2%;
     margin-bottom: 3px;
+}
+
+.api_endpoint_item:hover {
+    cursor: pointer;
+    color: white
+}
+
+
+.status_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.status_container i {
+    margin-left: 10px;
+}
+
+#ok {
+    color: green;
+}
+
+#fail {
+    color: red;
+    font-size: 12px;
+}
+
+.schema_container {
+    width: 32%;
+    border: 1px solid rgb(88, 88, 88);
+    margin-top: 2%;
+
+
+
 }
