@@ -12,7 +12,7 @@ from .images import Images
 from .credentials import Credentials
 from .news_view import News
 from .blog_applications import BlogContributorApplications
-from .page_monitoring_views import LoginInfoView, ActivityLogView, AppLoginDataView, HealthCheck
+from .page_monitoring_views import LoginInfoView, ActivityLogView, AppLoginDataView, health_check
 from .calendar_events import CalendarEvents
 from .error_logging_views import ErrorLogView
 from .user_submissions import Feedback, BugReports

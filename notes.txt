@@ -23,3 +23,17 @@ python manage.py migrate
 
 # fixtures
 # python manage.py dumpdata > /Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures/datadump.json
+
+Generating OpenAPI Schemas
+https://www.django-rest-framework.org/api-guide/schemas/
+
+pip install pyyaml uritemplate
+
+python manage.py generateschema --format openapi > openapi-schema.yml
+python manage.py generateschema --format openapi > openapi-schema.json
+
+usage: manage.py generateschema [-h] [--title TITLE] [--url URL] [--description DESCRIPTION]
+                                [--format {openapi,openapi-json}] [--urlconf URLCONF] [--generator_class GENERATOR_CLASS]
+                                [--version] [-v {0,1,2,3}] [--settings SETTINGS] [--pythonpath PYTHONPATH] [--traceback]
+                                [--no-color] [--force-color] [--skip-checks]
+manage.py generateschema: error: unrecognized arguments: --file openapi-schema.yml
