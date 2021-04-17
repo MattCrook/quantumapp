@@ -47,7 +47,7 @@ const cancelNewGroup = () => {
   const URL = window.origin;
   const cancelButton = document.querySelector(".cancel_group");
   cancelButton.addEventListener("click", async (e) => {
-    console.log(e);
+    console.log("groupChatStagingEvents", e);
     e.preventDefault();
       const confirm = window.confirm("Are you sure you want to delete this group?");
       if (confirm) {

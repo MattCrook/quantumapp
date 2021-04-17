@@ -35,11 +35,11 @@ const loadUsersAndFriends = async () => {
     const allFriendRequests = data[4];
 
     const friendRequestsUserHasSent = allSenderAndReceiver.filter((request) => request.requester.id === currentUser.id);
-    const friendRequestsUserHasReceived = allSenderAndReceiver.filter(
-      (request) => request.addressee.id === currentUser.id
-    );
+    const friendRequestsUserHasReceived = allSenderAndReceiver.filter((request) => request.addressee.id === currentUser.id);
+
     const allSentAndReceivedFriendships = [...friendRequestsUserHasSent, ...friendRequestsUserHasReceived];
     const senderAndReceiverIds = allSentAndReceivedFriendships.map((friendship) => friendship.id);
+
     const allUsersFriendRequests = allFriendRequests.filter(
       (friendRequest) => !senderAndReceiverIds.includes(friendRequest.sender_and_receiver_id)
     );
@@ -187,7 +187,6 @@ function renderWhichIcon(friendRequestStatusData, userProfileId, currentUser) {
   if (hasNotification) {
     handleAlert(statusCode);
   }
-
   return icon;
 }
 
@@ -248,7 +247,7 @@ function renderSearchResults(userList, friendRequestList, searchQuery) {
     .forEach(async (userProfile) => {
       let row;
       const friendRequestStatusData = filterUserFriends(userProfile.id, friendRequestList);
-      console.log("friendRequest2", friendRequestStatusData);
+      console.log("friendRequest2 - navSearchUsers.js: ", friendRequestStatusData);
       userProfile.image
         ? (row = renderRowWithImage(friendRequestStatusData, userProfile))
         : (row = renderRowNoImage(friendRequestStatusData, userProfile));
