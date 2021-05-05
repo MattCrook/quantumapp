@@ -34,6 +34,7 @@ export const AuthUserProvider = ({ children }) => {
         const token = sessionStorage.getItem("QuantumToken");
         setAuthToken(token);
         const currentUser = await authUserManager.getCurrentUserFromToken(token);
+        console.log(currentUser)
         setAuthUser(currentUser);
         const currentUserProfile = await authUserManager.getUserProfileFromAuthUser(currentUser.id, token);
         setUserProfile(currentUserProfile);

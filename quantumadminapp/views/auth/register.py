@@ -1,4 +1,4 @@
-from quantumapi.views.auth.management_api_services import management_api_oath_endpoint
+from quantumapi.views.auth.management_api_services import management_api_oath_endpoint, get_management_api_user, get_open_id_config, management_api_openid_authorization_codes
 from quantumapp import settings
 from quantumapi.models import UserProfile
 from quantumadminapp.views import index
@@ -18,7 +18,7 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 
 
 
-@api_view(['GET, POST'])
+# @api_view(['GET, POST'])
 @csrf_exempt
 def register_admin_user(request):
     try:
@@ -31,7 +31,7 @@ def register_admin_user(request):
             raw_password = req_body['oldPassword']
             is_valid_username = req_body['username'] == admin_user.auth0_identifier
 
-            if admin_user.auth0_identifier == 'auth0.' + raw_password and is_valid_username:
+            if admin_user.auth0_identifier == 'auth0|' + raw_password and is_valid_username:
                 new_password = req_body['newPassword']
                 admin_user.set_password(new_password)
                 admin_user.save()
@@ -45,6 +45,13 @@ def register_admin_user(request):
                 authenticated_user = authenticate(auth0_identifier=req_body['username'], password=new_password)
                 if authenticated_user is not None:
                     token = TokenModel.objects.create(user=authenticated_user)
+                    management_api_oauth_endpoint_result = management_api_oath_endpoint(settings.AUTH0_DOMAIN)
+                    management_api_token = json.loads(management_api_oauth_endpoint_result)
+                    management_api_jwt = management_api_token['access_token']
+                    management_api_admin_user = get_management_api_user(settings.AUTH0_DOMAIN, management_api_jwt, authenticated_user.auth0_identifier.replace(".", "|"))
+                    openid_endpoint = get_open_id_config(settings.AUTH0_DOMAIN, management_api_jwt)
+                    # Logging in creates a session. need this as get_user_from_token endpoint currently looks at the request.session to grab the user_id
+                    login(request, authenticated_user, backend='quantumapi.auth0_backend.QuantumAdminOpenID')
 
                     data = {
                         "valid": True,
@@ -57,6 +64,10 @@ def register_admin_user(request):
                         "user_profile_id": new_userprofile.id,
                         "is_staff": admin_user.is_staff,
                         "is_superuser": admin_user.is_superuser,
+                        "management_api_token": management_api_token,
+                        "management_jwt": management_api_jwt,
+                        "id_token": management_api_jwt,
+                        "management_user": management_api_admin_user
                     }
                     return HttpResponse(json.dumps(data), content_type='application/json')
                 else:

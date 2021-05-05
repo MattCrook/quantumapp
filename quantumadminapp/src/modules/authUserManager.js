@@ -45,7 +45,7 @@ const authUserManager = {
   },
   async registerAdminUser(payload) {
     try {
-      const result = await fetch(`${remoteURL}/quantumadmin/register/`, {
+      const result = await fetch(`${remoteURL}/quantumadmin/register/complete/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
