@@ -6,12 +6,19 @@ import RegisterForm from "./forms/RegisterForm";
 import "./styles/Register.css";
 
 const Register = (props) => {
-  const [credentials, setCredentials] = useState({email: "", username: "", oldPassword: "", newPassword: "", newPassword2: ""});
-  const { setDjangoToken, setAuthToken } = useAuthUser();
+  const [credentials, setCredentials] = useState({
+    email: "",
+    username: "",
+    oldPassword: "",
+    newPassword: "",
+    newPassword2: "",
+  });
+  const { setDjangoToken, setAuthToken, setIsAuthenticated } = useAuthUser();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidating, setIsValidating] = useState(false);
   const [success, setSuccess] = useState(false);
+  // ToDo: set warning/ spinner alerts
   const showError = (message) => {
     setIsValidating(false);
     setError(true);
@@ -43,11 +50,17 @@ const Register = (props) => {
       if (registeredAdminUser.valid === true) {
         setIsValidating(false);
         setSuccess(true);
-        setAuthToken(registeredAdminUser.token);
         setDjangoToken(registeredAdminUser);
+        setAuthToken(registeredAdminUser.token);
         sessionStorage.setItem("email", registeredAdminUser.email);
+        setIsAuthenticated(true);
+
         // ToDo: set is logged in to true (user profile table)
-        props.history.push("/");
+        // props.history.push("/quantumadmin/");
+        const origin = window.location.origin;
+        window.location.href = origin + "/quantumadmin/";
+      } else {
+        showError("Credentials you entered are incorrect.");
       }
     } catch (error) {
       console.log(error);
@@ -58,10 +71,7 @@ const Register = (props) => {
   return (
     <>
       <LoginNav {...props} />
-      <div
-        className="back_to_previous"
-        onClick={() => props.history.push("/quantumadmin/login")}
-      >
+      <div className="back_to_previous" onClick={() => props.history.push("/quantumadmin/login")}>
         {" "}
         &lt; Back To Login
       </div>
@@ -72,6 +82,22 @@ const Register = (props) => {
           handleSubmit={handleSubmit}
           {...props}
         />
+        {isValidating ? (
+          <div className="validating_email_container">
+            <div id="auth_spinner"></div>
+          </div>
+        ) : null}
+        {error ? (
+          <div className="error_message_container">
+            <i id="fa_triangle" className="fas fa-exclamation-triangle"></i>
+            <div className="error_message">{errorMessage}</div>
+          </div>
+        ) : null}
+        {success ? (
+          <div className="success_check_wrapper">
+            <i id="auth_check" className="fas fa-check-circle"></i>
+          </div>
+        ) : null}
       </div>
     </>
   );

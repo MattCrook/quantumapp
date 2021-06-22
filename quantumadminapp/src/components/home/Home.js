@@ -1,12 +1,25 @@
-import React from "react";
+import React, {useEffect}from "react";
 import NavBar from "../nav/Nav";
 import "./styles/Home.css";
 
 const Home = (props) => {
+  const [authMethod, setAuthMethod] = useState('');
+  const [backend, setBackend] = useState('');
 
   let currentDate = new Date().toLocaleString("en-US");
   const lastLoginDatetime = props.authUser.last_login.split("+")[0]
   const lastLogin = new Date(lastLoginDatetime).toLocaleString("en-US");
+
+  useEffect(() => {
+    const requestData = async () => {
+      const response = await getRequestData();
+      
+      
+    }
+
+  }, []);
+
+
 
   return (
     <>
