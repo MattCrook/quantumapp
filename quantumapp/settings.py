@@ -49,7 +49,7 @@ SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '8000']
+ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
 
 
 INSTALLED_APPS = [

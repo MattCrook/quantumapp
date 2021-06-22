@@ -1,6 +1,7 @@
 FROM node:12
 
-WORKDIR /quantumadminapp
+# WORKDIR /quantumadminapp
+WORKDIR /usr/source/app/quantumadminapp
 
 COPY package.json .
 
