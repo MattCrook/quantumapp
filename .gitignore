@@ -115,6 +115,7 @@ env.bak/
 venv.bak/
 QuantumEnv/
 venv/
+venv/*
 
 
 # Spyder project settings
@@ -151,4 +152,10 @@ vscode/
 node_modules/
 /node_modules
 .node_modules/
+node_modules/*
 .DS_Store
+
+old-docker-compose-example.yaml
+notes.txt
+datadump.json
+Dockerfile.no-compose.example
