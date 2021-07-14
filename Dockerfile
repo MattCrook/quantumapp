@@ -49,7 +49,7 @@ ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 
-# EXPOSE 8000
+EXPOSE 8000
 
 # ENTRYPOINT [ "python" ]
-# CMD [ "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

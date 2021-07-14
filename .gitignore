@@ -156,6 +156,6 @@ node_modules/*
 .DS_Store
 
 old-docker-compose-example.yaml
-notes.txt
+notes.txt*
 datadump.json
 Dockerfile.no-compose.example
