@@ -1,0 +1,27 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'styles/error_page.css' %}" />
+    <title>Error</title>
+</head>
+
+<body>
+    <div class="index_error_page_title">QuantumApp</div>
+    <div class="index_error_page_message">Oops! Looks like there was an error.</div>
+    <div class="index_error_page_message">Please click the applicable link to get to your desired location.</div>
+<div class="index_error_btn_wrapper">
+    <button class="error_btn"><a class="error_a" href="{{CLIENT_URL}}">Quantum Coasters</a></button>
+    <button class="error_btn"><a class="error_a" href="{{FORUM_URL}}">Quantum Forum</a></button>
+    <button class="error_btn"><a class="error_a" href="{{ADMIN_URL}}">Quantum Admin</a></button>
+    {% comment %} ToDo - add help modal {% endcomment %}
+    <button class="error_btn"><a class="error_a" href="">Help</a></button>
+</div>
+</body>
+
+</html>

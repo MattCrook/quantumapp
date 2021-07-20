@@ -137,6 +137,9 @@ REST_FRAMEWORK = {
 REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
 REACT_APP_HOME = 'http://localhost:3000/home'
 REACT_APP_USER_PROFILE = 'http://localhost:3000/user/profile/credits'
+CLIENT_URL = 'http://localhost:3000'
+FORUM_URL = 'http://localhost:8000/quantumforum/'
+ADMIN_URL = 'http://localhost:8000/quantumadmin/'
 
 
 

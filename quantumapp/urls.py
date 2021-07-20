@@ -15,6 +15,7 @@ from quantumapi.views import FriendRequests as FriendRequestView
 from quantumapi.views import StatusCodes as StatusCodeView
 from quantumapi.views import Friendships as FriendshipView
 from rest_framework.authtoken.views import obtain_auth_token
+from quantumapi.extras import index_redirect
 # from quantumapi.views import get_authuser
 
 
@@ -53,6 +54,7 @@ router.register(r'friends_join', FriendsJoinApiView, 'friends_join')
 
 
 urlpatterns = [
+    path('', index_redirect),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/health/', health_check),

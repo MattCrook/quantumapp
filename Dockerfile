@@ -11,14 +11,17 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 # don't check for pip updates
 # ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+
+# Create virtual env for docker container to run python in
 ENV PATH "/venv/bin:$PATH"
 
-# WORKDIR /quantumapp
+# COPY Pipfile Pipfile.lock /opt/src/
 
 RUN pip install --upgrade pip
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+# Old - with just requirements.txt file no Pipfile
+COPY requirements.dev.txt .
+RUN pip install -r requirements.dev.txt
 
 # install redis
 # python3 -m pip install channels_redis
@@ -45,7 +48,7 @@ COPY . .
 ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
 ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
 
-# RUN manage.py collectstatic
+# RUN pipenv run python3 manage.py collectstatic
 # RUN python manage.py makemigrations
 # RUN python manage.py migrate
 
