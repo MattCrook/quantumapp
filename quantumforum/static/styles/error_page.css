@@ -20,3 +20,23 @@
   color: black;
   padding: 10px 20px;
 }
+
+
+
+.index_error_page_title {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 30px;
+}
+
+.index_error_page_message {
+
+  margin-top: 10px;
+  text-align: center;
+}
+
+
+.index_error_btn_wrapper {
+  margin-left: 30%;
+  margin-right: 20px;
+}

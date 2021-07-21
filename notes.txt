@@ -37,3 +37,11 @@ usage: manage.py generateschema [-h] [--title TITLE] [--url URL] [--description 
                                 [--version] [-v {0,1,2,3}] [--settings SETTINGS] [--pythonpath PYTHONPATH] [--traceback]
                                 [--no-color] [--force-color] [--skip-checks]
 manage.py generateschema: error: unrecognized arguments: --file openapi-schema.yml
+
+
+
+docker build -t quantumapp:latest .
+docker run -it -d -p 8000:8000 quantumapp
+
+docker tag quantumapp:latest mgcrook11/quantum-coasters:1.0
+docker push mgcrook11/quantum-coasters:1.0

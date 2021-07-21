@@ -1,0 +1,60 @@
+FROM python:3.8-buster AS builder
+
+# don't write pyc file
+ENV PYTHONDONTWRITEBYTECODE 1
+# don't buffer log message submission
+ENV PYTHONUNBUFFERED 1
+
+COPY Pipfile Pipfile.lock /opt/src/
+
+# Must not have a requirements.txt file - This is a ToDo:
+# Get the latest verion of pip, install the currently supported version
+# of pipenv, generate our requirements files from Pipfile.lock, and
+# install our base set of dependencies that will be used in both the
+# downstream dev and prod builds
+RUN pip install -U pip \
+    && pip install pipenv \
+    && pipenv lock -r > requirements.txt \
+    && pip install -r requirements.txt
+
+
+# install redis
+RUN python3 -m pip install channels_redis
+RUN python3 -m pip install selenium
+RUN docker run -p 6379:6379 -d redis:5
+
+#######################################
+# App stage #
+# Smaller official Debian-based Python image
+FROM python:3.8-slim-buster AS app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PIP_DISABLE_PIP_VERSION_CHECK 1
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /root/.pyenv/versions/${PYTHON_VERSION_GLOBAL}/ \
+    /root/.pyenv/versions/${PYTHON_VERSION_GLOBAL}/
+
+# Copy in development dependencies and install them
+COPY --from=builder /opt/src/requirements.txt .
+
+COPY . .
+
+ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
+ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
+
+# RUN pipenv run python3 manage.py collectstatic
+# RUN python manage.py makemigrations
+# RUN python manage.py migrate
+
+
+# Make sure to rehash the copied bits from the base image
+# so pyenv knows where to find all the things
+RUN pyenv rehash \
+    && pip install -r requirements.txt
+
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
