@@ -1,21 +1,31 @@
-import React, {useEffect}from "react";
+import React, {useEffect, useState}from "react";
+import { useAuthUser } from "../../contexts/AuthUserContext";
+import {getRequestData} from "../../modules/services.js"
 import NavBar from "../nav/Nav";
 import "./styles/Home.css";
 
 const Home = (props) => {
-  const [authMethod, setAuthMethod] = useState('');
+  //const [authMethod, setAuthMethod] = useState('');
   const [backend, setBackend] = useState('');
+  const { authUser, authUserData } = useAuthUser();
 
   let currentDate = new Date().toLocaleString("en-US");
   const lastLoginDatetime = props.authUser.last_login.split("+")[0]
   const lastLogin = new Date(lastLoginDatetime).toLocaleString("en-US");
+  console.log(authUserData)
+
+  function getBackend(backendFullname) {
+    const backend = backendFullname.split(".")[1] === "auth0_backend" ? backendFullname.split(".")[2] : backendFullname.split(".")[3]
+    setBackend(backend);
+  }
 
   useEffect(() => {
-    const requestData = async () => {
-      const response = await getRequestData();
-      
-      
-    }
+    // const requestData = async () => {
+    //   const response = await getRequestData();
+    //   console.log(response)
+    // }
+    // requestData();
+    getBackend(authUser.session_data._auth_user_backend)
 
   }, []);
 
@@ -151,7 +161,7 @@ const Home = (props) => {
           </div>
           <div className="side_info_wrapper">
             <div className="side_info_row_title">Auth Method:</div>
-          <div className="side_info_item">OpenIDConnect</div>
+            <div className="side_info_item">{backend}</div>
           </div>
 
           <div className="side_info_wrapper">

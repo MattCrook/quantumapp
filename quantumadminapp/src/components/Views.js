@@ -6,6 +6,7 @@ import Home from "./home/Home";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import ApiDashboard from "./api-dashboard/ApiDashboard";
+import LoggingView from "./logging/LoggingView";
 
 const Views = () => {
   const { isAuthenticated, isLoading, isLoggedIn, authUser } = useAuthUser();

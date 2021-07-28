@@ -1,0 +1,23 @@
+#logging_navigation_container {
+    width: 16%;
+    border: 1px solid rgb(88, 88, 88);
+}
+
+
+.logging_buttons_wrapper {
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+}
+
+.logging_navigation_btn {
+    margin-top: 2%;
+    margin-bottom: 4%;
+    margin-left: 7%;
+    cursor: pointer;
+}
+
+.logging_navigation_btn:hover {
+    color: white;
+    background-color: #111111;;
+}

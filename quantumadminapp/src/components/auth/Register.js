@@ -13,7 +13,7 @@ const Register = (props) => {
     newPassword: "",
     newPassword2: "",
   });
-  const { setDjangoToken, setAuthToken, setIsAuthenticated } = useAuthUser();
+  const { setDjangoToken, setAuthToken, setIsAuthenticated, setAuthUserData } = useAuthUser();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidating, setIsValidating] = useState(false);
@@ -54,6 +54,7 @@ const Register = (props) => {
         setAuthToken(registeredAdminUser.token);
         sessionStorage.setItem("email", registeredAdminUser.email);
         setIsAuthenticated(true);
+        setAuthUserData(registeredAdminUser);
 
         // ToDo: set is logged in to true (user profile table)
         // props.history.push("/quantumadmin/");
