@@ -12,86 +12,52 @@ services:
     build:
         context: .
         dockerfile: Dockerfile
-        args:
+        # args:
           # Pass env variables thorugh to container like this, then in .env file fill the env variable.
-          - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+          # - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     env_file: .env
     volumes:
       - .:/usr/src/app/
       - db_data:/db.sqlite3
-      - quantumforum_static:/usr/src/app/quantumforum/static
-      - quantumforum_images:/usr/src/app/quantumforum/images
+      # - quantumforum_static:/usr/src/app/quantumforum/static
+      # - quantumforum_images:/usr/src/app/quantumforum/images
     environment:
       # ENV STATIC_ROOT: var/www/html/quantumforum/static
       # ENV MEDIA_ROOT: var/www/html/media
-      # ENV DJANGO_SETTINGS_MODULE: quantumapp.settings
+      ENV DJANGO_SETTINGS_MODULE: quantumapp.settings
       ENV STATIC_ROOT: quantumapp/quantumforum/static
       ENV MEDIA_ROOT: quantumapp/media
-      DJANGO_SECRET_KEY: '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
-      REACT_APP_FORUM_URL: http://localhost:3000/forum
-      REACT_APP_HOME: http://localhost:3000/home
-      REACT_APP_USER_PROFILE: http://localhost:3000/user/profile/credits
-      AUTH0_CLIENT_ID: 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
-      AUTH0_DOMAIN: dev-405n1e6w.auth0.com
-      AUTH0_CLIENT_SECRET: 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
-      API_IDENTIFIER: https://api.quantumcoasters.com
-      QUANTUM_COASTERS_API_ID: '5e711bac91a8780913c58961'
-      AUTH0_OPEN_ID_SERVER_URL: 'https://dev-405n1e6w.auth0.com/api/v2/'
-      AUTH0_MANAGEMENT_API_ID: '5e6d3e555847e208d7c16e1c'
-      MANAGEMENT_API_PAYLOAD: "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}"
-      MANAGEMENT_API_AUTHORIZATION_CODE: "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"authorization_code\"}"
-      # Remove trailing slash from routes
-      SOCIAL_AUTH_TRAILING_SLASH: 'False'
-      SOCIAL_AUTH_AUTH0_DOMAIN: dev-405n1e6w.auth0.com
-      SOCIAL_AUTH_AUTH0_KEY: 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
-      SOCIAL_AUTH_AUTH0_SECRET: 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
-      # SOCIAL_AUTH_AUTH0_SCOPE: "[
-      #   'openid',
-      #   'profile',
-      #   'email',
-      # ]"
-      # CORS_ORIGIN_WHITELIST: "[
-      #   'http://127.0.0.1:3000',
-      #   'http://localhost:3000',
-      #   'http://localhost:8000',
-      #   'http://127.0.0.1:8000',
-      # ]"
-      SOCIAL_AUTH_URL_NAMESPACE: 'social'
-      ALLOWED_HOSTS: "['localhost', '8000', '127.0.0.1']"
-      REACT_APP_FORUM_URL: http://localhost:3000/forum
-      REACT_APP_HOME: http://localhost:3000/home
-      REACT_APP_USER_PROFILE: http://localhost:3000/user/profile/credits
     # command: ['bash', 'run.sh']
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python3 manage.py runserver 0.0.0.0:8000
     # command to run with gunicorn as web server
     # command: gunicorn quantumapp.wsgi --bind 0.0.0.0:8000
     ports:
       - 8000:8000
 
-  quantumadminapp:
+  # quantumadminapp:
     # container_name: quantumadminapp
-    build:
-      context: ./quantumadminapp
-    volumes:
-      - .:/usr/src/app/quantumadminapp/
-      - quantumadmin_static:/quantumadminapp/static
-      - quantumadmin_images:/quantumadminapp/images
-    environment:
-      API_URL: http://localhost:8000
-      NODE_ENV: "development"
-      NPM_EXECUTABLE: npm
-      RUN_EXECUTABLE: npm run watch
+    # build:
+    #   context: ./quantumadminapp
+    # volumes:
+    #   - .:/usr/src/app/quantumadminapp/
+    #   - quantumadmin_static:/quantumadminapp/static
+    #   - quantumadmin_images:/quantumadminapp/images
+    # environment:
+    #   API_URL: http://localhost:8000
+    #   NODE_ENV: "development"
+    #   NPM_EXECUTABLE: npm
+    #   RUN_EXECUTABLE: npm run watch
 
 volumes:
   db_data:
-  # quantumapp:
+  quantumapp:
   # static_volume:
   # media_volume:
   # images_volume:
   # quantumapi:
-  quantumadminapp:
-  quantumadmin_static:
-  quantumadmin_images:
+  # quantumadminapp:
+  # quantumadmin_static:
+  # quantumadmin_images:
   # quantumforum:
-  quantumforum_static:
-  quantumforum_images:
+  # quantumforum_static:
+  # quantumforum_images:

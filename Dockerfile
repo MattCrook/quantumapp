@@ -3,7 +3,9 @@ FROM python:3.8-buster AS builder
 
 
 # Setup the virtualenv
-RUN python -m venv /venv
+# RUN python3 -m venv /venv
+RUN pip3 install virtualenv
+RUN virtualenv venv
 
 # don't write pyc file
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -17,11 +19,11 @@ ENV PATH "/venv/bin:$PATH"
 
 # COPY Pipfile Pipfile.lock /opt/src/
 
-RUN pip install --upgrade pip
+RUN pip3 install --upgrade pip
 
 # Old - with just requirements.txt file no Pipfile
-COPY requirements.dev.txt .
-RUN pip install -r requirements.dev.txt
+COPY requirements.prod.txt .
+RUN pip3 install -r requirements.prod.txt --no-cache-dir
 
 # install redis
 # python3 -m pip install channels_redis
@@ -46,12 +48,10 @@ COPY --from=builder /venv /venv
 COPY . .
 
 ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
-ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
-
-# RUN pipenv run python3 manage.py collectstatic
+# ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
 
 
 EXPOSE 8000
 
-ENTRYPOINT ["./entrypoint.sh"]
-# CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+# ENTRYPOINT ["./entrypoint.sh"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

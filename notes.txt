@@ -42,6 +42,7 @@ manage.py generateschema: error: unrecognized arguments: --file openapi-schema.y
 
 docker build -t quantumapp:latest .
 docker run -it -d -p 8000:8000 quantumapp
+docker run -it -d --env-file .env -p 8000:8000 quantumapp
 
 docker tag quantumapp:latest mgcrook11/quantum-coasters:1.0
 docker push mgcrook11/quantum-coasters:1.0
