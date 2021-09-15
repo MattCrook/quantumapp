@@ -173,29 +173,31 @@ class AppLoginDataView(ViewSet):
             tenant_settings = management_tenant_settings(AUTH0_DOMAIN, token)
 
             success_logins = [l for l in all_user_logs if l['type'] == 's']
-            success_exchange_authorization_codes = [l for l in all_user_logs if l['type'] == 'seacft']
-            success_logouts = [l for l in all_user_logs if l['type'] == 'slo']
+            # success_exchange_authorization_codes = [l for l in all_user_logs if l['type'] == 'seacft']
+            # success_logouts = [l for l in all_user_logs if l['type'] == 'slo']
             success_silent_authentications = [l for l in all_user_logs if l['type'] == 'ssa']
             success_login = success_logins[0]
-            success_exchange_authorization_code = success_exchange_authorization_codes[0]
+            # success_exchange_authorization_code = success_exchange_authorization_codes[0]
+            latest_success_silent_authentication = success_silent_authentications[0]
 
-            login_exchange_details = success_exchange_authorization_code.get('details')
-            login_exchange_code = login_exchange_details.get('code')
+            # login_exchange_details = success_exchange_authorization_code.get('details')
+            # login_exchange_code = login_exchange_details.get('code')
             scopes = serialized_management_api_token.get('scope')
             connection = success_login.get('connection')
-            log_date = success_login.get('date')
+            # log_date = success_login.get('date')
             connection_id = success_login.get('connection_id')
             client_name = success_login.get('client_name')
             log_ip = success_login.get('ip')
             location_info = success_login.get('location_info')
             management_session = success_login['details']['session_id']
-            management_user_id = success_login.get('user_id')
-            last_logout_ip = success_logouts[0].get('ip') if len(success_logouts) > 0 else management_user.get('last_ip')
+            # management_user_id = success_login.get('user_id')
+            # last_logout_ip = success_logouts[0].get('ip') if len(success_logouts) > 0 else management_user.get('last_ip')
             last_ip = management_user.get('last_ip')
             strategy = success_login.get('strategy')
             strategy_type = success_login.get('strategy_type')
             prompts = success_login['details']['prompts'] if len(success_login['details']['prompts']) > 0 else {}
-            management_session_user = prompts[0].get('session_user') if len(prompts)> 0 else ""
+            # management_session_user = prompts[0].get('session_user') if len(prompts) > 1 else latest_success_silent_authentication.get('details')['session_id']
+            management_session_user = success_login['details']['session_id'] if len(prompts) > 1 else latest_success_silent_authentication.get('details')['session_id']
             rest_auth_token = TokenModel.objects.get(user=auth_user) if request.user else ""
             user_social_auth = auth_user.social_auth.get(user_id=auth_user.id)
 
@@ -211,7 +213,8 @@ class AppLoginDataView(ViewSet):
                 prompts=json.dumps({"all_prompts": prompts}),
                 recent_attempts=request.data['recent_attempts'],
                 total_logins=management_user.get('logins_count'),
-                ip_address=log_ip,
+                # ip_address=log_ip,
+                ip_address=latest_success_silent_authentication.get('ip'),
                 oauth_endpoint_scopes=scopes,
                 openid_configuration=json.dumps(open_id_config),
                 grants=json.dumps({"all_grants": grants}),
@@ -303,42 +306,3 @@ class AppLoginDataView(ViewSet):
             return Response({'message': ex.args}, status=status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-
-
-
-            # new_app_login_data = AppLoginDataModel()
-            # new_app_login_data.user = auth_user
-            # new_app_login_data.email = auth_user.email
-            # new_app_login_data.management_api_user = management_user
-            # new_app_login_data.access_token = auth_token
-            # new_app_login_data.management_api_token = token
-            # new_app_login_data.rest_auth_token = rest_auth_token.key
-            # new_app_login_data.strategy = strategy
-            # new_app_login_data.strategy_type = strategy_type
-            # new_app_login_data.prompts = prompts
-            # new_app_login_data.recent_attempts = request.data['recent_attempts']
-            # new_app_login_data.total_logins = management_user.get('logins_count')
-            # new_app_login_data.ip_address = log_ip
-            # new_app_login_data.oauth_endpoint_scopes = scopes
-            # new_app_login_data.openid_configuration = open_id_config
-            # new_app_login_data.grants = grants
-            # new_app_login_data.client_grants = client_grants
-            # new_app_login_data.connections = connections
-            # new_app_login_data.user_logs = all_user_logs
-            # new_app_login_data.resource_servers = management_resource_servers
-            # new_app_login_data.management_api_keys = api_keys
-            # new_app_login_data.rest_auth_session = request.session.session_key
-            # new_app_login_data.management_session_id = management_session
-            # new_app_login_data.management_session_user = management_session_user
-            # new_app_login_data.connection = connection
-            # new_app_login_data.connection_id = connection_id
-            # new_app_login_data.location_info = location_info
-            # new_app_login_data.last_login_ip = last_ip
-            # new_app_login_data.social_user_id = auth_user.social_auth.get(user_id=auth_user.id)
-            # new_app_login_data.client_name = client_name
-            # new_app_login_data.updated_at = datetime.datetime.now()
-            # new_app_login_data.save()

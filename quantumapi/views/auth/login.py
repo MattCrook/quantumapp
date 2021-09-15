@@ -61,7 +61,7 @@ def login_user(request):
             id_token = json.loads(req_body['id_token'])
 
             if user.email == req_body['email'] and user.auth0_identifier.split('.')[1] == id_token['sub'].split('|')[1] and is_authenticated:
-                email = req_body['email']
+                # email = req_body['email']
                 # password = user.auth0_identifier.split('.')[1]
                 password = id_token['sub'].split('|')[1]
                 auth0_identifier = req_body['uid']
@@ -90,7 +90,7 @@ def login_user(request):
                         provider = social_user.provider
                         extra_data = req_body['extra_data']
                         extra_data['access_token'] = request.auth
-                        nonce = id_token['nonce']
+                        # nonce = id_token['nonce']
                         exp = id_token['exp']
                         iat = id_token['iat']
                         connection = management_api_user.get('identities')[0]
@@ -114,20 +114,21 @@ def login_user(request):
                             )
 
                         time_now = datetime.datetime.now()
-                        social_token = SocialToken.objects.get_or_create(
-                            account=social_account,
-                            token=user_social_auth.access_token,
-                            token_secret=user_social_auth.tokens,
-                            expires_at = time_now + datetime.timedelta(0, exp),
-                            app = social_app[0]
-                            )
-                        # social_token.token = user_social_auth.access_token
-                        # social_token.token_secret = user_social_auth.tokens
-                        # time_now = datetime.datetime.now()
-                        # expires_at = time_now + datetime.timedelta(0, exp)
-                        # social_token.expires_at = expires_at
-                        # social_token.app_id = social_app.id
-                        # social_token.save()
+                        # social_token = SocialToken.objects.get_or_create(
+                        #     account=social_account,
+                        #     token=user_social_auth.access_token,
+                        #     token_secret=user_social_auth.tokens,
+                        #     expires_at = time_now + datetime.timedelta(0, exp),
+                        #     app = social_app[0]
+                        #     )
+                        social_token = SocialToken.objects.get(account_id=social_account.id) if SocialToken.objects.filter(account_id=social_account.id).exists() else SocialToken(account=social_account)
+                        social_token.token = user_social_auth.access_token
+                        social_token.token_secret = user_social_auth.tokens
+                        time_now = datetime.datetime.now()
+                        expires_at = time_now + datetime.timedelta(0, exp)
+                        social_token.expires_at = expires_at
+                        social_token.app = social_app[0]
+                        social_token.save()
 
 
                         # login user, then grab the credentials and newly created session which is going to be called and returned after login.
@@ -138,7 +139,7 @@ def login_user(request):
                             is_session = Session.objects.filter(session_key=session_user.session_key).exists()
                             if is_session:
                                 session = Session.objects.get(session_key=session_user.session_key)
-                                decoded_session = session.get_decoded()
+                                # decoded_session = session.get_decoded()
                                 # session.save()
                             else:
                                 session = Session.objects.create(user=remote_authenticated_user)

@@ -1,9 +1,10 @@
 import os
-import datetime
-from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
-from datetime import timedelta
-import environ
+import json
+# import datetime
+# from django.conf import settings
+# from django.core.exceptions import ImproperlyConfigured
+# from datetime import timedelta
+# import environ
 # import dotenv
 
 
@@ -41,15 +42,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8boax9dercf7r8hfio78yez768j@5+z2x^9)hh!o18__8kt$ft'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# To set as env, must put into a startup script check if env var DEBUG is true, then export ALLOWED_HOSTS=localhost
+# When DEBUG is True and ALLOWED_HOSTS is empty, the host is validated against ['.localhost', '127.0.0.1', '[::1]'].
+# https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
+# ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
 
 
 INSTALLED_APPS = [
@@ -67,8 +70,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'rest_auth.registration',
     'allauth',
-    'allauth.socialaccount',
     'allauth.account',
+    'allauth.socialaccount',
+    # Included providers for allauth
+    # 'allauth.socialaccount.providers.auth0',
     'corsheaders',
     'social_django',
     'django_filters',
@@ -92,15 +97,12 @@ CHANNEL_LAYERS = {
     },
 }
 
-
-
 # WEBPACK_LOADER = {
 #     'DEFAULT': {
 #         'BUNDLE_DIR_NAME': '',
 #         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
 #     }
 # }
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -134,43 +136,54 @@ REST_FRAMEWORK = {
 }
 
 # env variables sent through context to templates, redirect to Client React App URLS
-REACT_APP_FORUM_URL = 'http://localhost:3000/forum'
-REACT_APP_HOME = 'http://localhost:3000/home'
-REACT_APP_USER_PROFILE = 'http://localhost:3000/user/profile/credits'
-CLIENT_URL = 'http://localhost:3000'
-FORUM_URL = 'http://localhost:8000/quantumforum/'
-ADMIN_URL = 'http://localhost:8000/quantumadmin/'
+REACT_APP_FORUM_URL = os.environ.get('REACT_APP_FORUM_URL')
+REACT_APP_HOME = os.environ.get('REACT_APP_HOME')
+REACT_APP_USER_PROFILE = os.environ.get('REACT_APP_USER_PROFILE')
+CLIENT_URL = os.environ.get('CLIENT_URL')
+FORUM_URL = os.environ.get('FORUM_URL')
+ADMIN_URL = os.environ.get('ADMIN_URL')
 
 
 
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
-AUTH0_CLIENT_ID = 'rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu'
-AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
-AUTH0_CLIENT_SECRET = 'Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7'
+AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID')
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+AUTH0_CLIENT_SECRET = os.environ.get('AUTH0_CLIENT_SECRET')
 
 # Quantum API
-API_IDENTIFIER = 'https://api.quantumcoasters.com'
-QUANTUM_COASTERS_API_ID = '5e711bac91a8780913c58961'
+API_IDENTIFIER = os.environ.get('API_IDENTIFIER')
+QUANTUM_COASTERS_API_ID = os.environ.get('QUANTUM_COASTERS_API_ID')
 
 
 # Management API
 # SCOPES = ['openid', 'profile', 'offline_access', 'name', 'given_name', 'family_name', 'nickname', 'email', 'email_verified', 'picture', 'created_at', 'identities', 'phone', 'address']
-# AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/users/'
-AUTH0_OPEN_ID_SERVER_URL = 'https://dev-405n1e6w.auth0.com/api/v2/'
-AUTH0_MANAGEMENT_API_ID = '5e6d3e555847e208d7c16e1c'
-MANAGEMENT_API_PAYLOAD = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}"
-MANAGEMENT_API_AUTHORIZATION_CODE = "{\"client_id\":\"rXCAbUgNjWCbflgAiUU97Uux1eiXUNZu\",\"client_secret\":\"Xttgkp1Z99NSFJow7Jp2_RNO_MixGlGnwtJhY821KQ7MpVy9DslCddEb_uQamsu7\",\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"grant_type\":\"authorization_code\"}"
-# AUTHORIZATION_PAYLOAD = "{\"audience\":\"https://dev-405n1e6w.auth0.com/api/v2/\",\"scope\":\"openid\",\"response_type\":\"code\",\"client_id\":\"wnZJ4f90z3QCVelk8LXp6Uuxwi7hBeEE\", \"redirect_uri\":\"undefined\", \"state\":\"undefined\"}"
+# AUTH0_OPEN_ID_USERS_SERVER_URL = os.environ.get('AUTH0_OPEN_ID_USERS_SERVER_URL')
+AUTH0_OPEN_ID_SERVER_URL = os.environ.get('AUTH0_OPEN_ID_SERVER_URL')
+AUTH0_MANAGEMENT_API_ID = os.environ.get('AUTH0_MANAGEMENT_API_ID')
+MANAGEMENT_API_PAYLOAD = json.dumps({
+    "client_id": os.environ.get('AUTH0_CLIENT_ID'),
+    "client_secret": os.environ.get('AUTH0_CLIENT_SECRET'),
+    "audience": os.environ.get('AUTH0_OPEN_ID_SERVER_URL'),
+    "grant_type": "client_credentials"
+    })
+MANAGEMENT_API_AUTHORIZATION_CODE = json.dumps({
+    "client_id": os.environ.get('AUTH0_CLIENT_ID'),
+    "client_secret": os.environ.get('AUTH0_CLIENT_SECRET'),
+    "audience": os.environ.get('AUTH0_OPEN_ID_SERVER_URL'),
+    "grant_type": "authorization_code"
+    })
+
+# AUTHORIZATION_PAYLOAD = os.environ.get('AUTHORIZATION_PAYLOAD')
 
 # Auth0 Credentials for Quantum Application
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-405n1e6w.auth0.com'
+SOCIAL_AUTH_AUTH0_DOMAIN = os.environ.get('SOCIAL_AUTH_AUTH0_DOMAIN')
 
 # Quantum Coasters Key
-SOCIAL_AUTH_AUTH0_KEY = 'ouQeFaroORjm08Dp6slPLQaNYri0sNY5'
+SOCIAL_AUTH_AUTH0_KEY = os.environ.get('SOCIAL_AUTH_AUTH0_KEY')
 
 # Quantum Coasters Secret
-SOCIAL_AUTH_AUTH0_SECRET = 'moWYcL19X4PtwLFqtRx2QiB5l7KfzUqIM1LZ31rzXjuWNeJx_w1OJqoueYKP_4kx'
+SOCIAL_AUTH_AUTH0_SECRET = os.environ.get('SOCIAL_AUTH_AUTH0_SECRET')
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
@@ -178,9 +191,9 @@ SOCIAL_AUTH_AUTH0_SCOPE = [
 ]
 
 # Quantum Coasters Machine to Machine
-# AUTH0_CLIENT_ID = 'fEY3uAhpmSRIjOHKHEHusdAkcNTse77C'
-# AUTH0_DOMAIN = "dev-405n1e6w.auth0.com"
-# AUTH0_CLIENT_SECRET = 'qlj7YWFbbiLc4XLg9iQ6rrRF8paSYX_00nHg9DPhC-bQ3k3rv5pKroUmOI4u94ct'
+# AUTH0_MACHINE_TO_MACHINE_CLIENT_ID = os.environ.get('AUTH0_MACHINE_TO_MACHINE_CLIENT_ID')
+# AUTH0_MACHINE_TO_MACHINE_DOMAIN = os.environ.get('AUTH0_MACHINE_TO_MACHINE_DOMAIN')
+# AUTH0_MACHINE_TO_MACHINE_CLIENT_SECRET = os.environ.get('AUTH0_MACHINE_TO_MACHINE_CLIENT_SECRET')
 
 
 # For Testing, to persist session cookies between redirect when redirecting user from login page.
@@ -206,7 +219,7 @@ JWT_AUTH = {
         'quantumapi.utils.jwt_decode_token',
     'JWT_ALGORITHM': 'RS256',
     'JWT_AUDIENCE': API_IDENTIFIER,
-    'JWT_ISSUER': 'https://dev-405n1e6w.auth0.com/',
+    'JWT_ISSUER': os.environ.get('JWT_ISSUER'),
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
 }
 
@@ -221,6 +234,9 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.google.GoogleOAuth',
     # 'social_core.backends.open_id_connect.OpenIdConnectAuth'
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    # 'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -270,11 +286,11 @@ DATABASES = {
     },
     'postgres': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'quantumcoastersdb',
-        'USER': 'matthewcrook',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT'),
     }
 }
 
@@ -327,15 +343,19 @@ STATICFILES_DIRS = (
 
 
 # For Quantum Coasters React app
-LOGIN_URL = '/login/auth0'
-LOGIN_REDIRECT_URL = '/home'
-LOGOUT_URL = 'logout/'
-LOGOUT_REDIRECT_URL = '/'
+# LOGIN_URL = '/login/auth0'
+# LOGIN_REDIRECT_URL = '/home'
+# LOGOUT_URL = 'logout/'
+# LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = os.environ.get('LOGIN_URL')
+LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
+LOGOUT_URL = os.environ.get('LOGOUT_URL')
+LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL')
 # GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
 
 # QuantumAdminApp
-QUANTUMADMIN_REGISTER_URL = 'register/'
-
+# QUANTUMADMIN_REGISTER_URL = 'register/'
+QUANTUMADMIN_REGISTER_URL = os.environ.get('QUANTUMADMIN_REGISTER_URL')
 
 # Social Auth Configs (For Django full stack app)
 # https://readthedocs.org/projects/python-social-auth/downloads/pdf/latest/
@@ -348,13 +368,17 @@ QUANTUMADMIN_REGISTER_URL = 'register/'
 
 # authorize endpoint in Auth0 backend to authorize user.
 # SOCIAL_AUTH_LOGIN_URL = '/authorize/'
-SOCIAL_AUTH_LOGIN_URL = '/forum/login/'
+# SOCIAL_AUTH_LOGIN_URL = '/forum/login/'
+SOCIAL_AUTH_LOGIN_URL = os.environ.get('SOCIAL_AUTH_LOGIN_URL')
+
 
 
 # Redirect url that Auth0 will redirect to after auth0/complete
 # SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/group_chat/'
-SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/index/'
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/group_chat/'
+# SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/index/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = os.environ.get('SOCIAL_AUTH_LOGIN_REDIRECT_URL')
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = os.environ.get('SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL')
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
@@ -364,12 +388,9 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
 SOCIAL_AUTH_USER_MODEL = 'quantumapi.User'
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 SOCIAL_AUTH_CLEAN_USERNAMES = True
-# SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email', 'username']
-# SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = [
-#     'http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', 'https://dev-405n1e6w.auth0.com/'
-#     ]
-
-# SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = ['http://127.0.0.1:3000', 'http://localhost:3000', 'http://localhost:8000', 'localhost', '8000',]
+# SOCIAL_AUTH_PROTECTED_USER_FIELDS = os.environ.get('SOCIAL_AUTH_PROTECTED_USER_FIELDS')
+# SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = os.environ.get('SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS')
+# SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = os.environ.get('SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS')
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
@@ -390,21 +411,36 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.debug.debug',
 )
 
-# Django All-Auth Settings
+# Django All-Auth Settings (SocialAccount)
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
+
+SOCIALACCOUNT_PROVIDERS = {
+    'auth0': {
+        'AUTH0_URL': os.environ.get('SOCIALACCOUNT_DOMAIN'),
+    }
+}
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
+SOCIALACCOUNT_STORE_TOKENS = True
+
+# Email verification
+# https://django-allauth.readthedocs.io/en/latest/views.html#e-mail-verification
+# https://django-allauth.readthedocs.io/en/latest/views.html#e-mails-management-account-email
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
+SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/?verification=1'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/?verification=1'
 # ACCOUNT_CONFIRM_EMAIL_ON_GET = False
 # ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = 'None'
 # ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = 'None'
+
+# Used to override forms, for example: {'signup': 'myapp.forms.SignupForm'}
+# SOCIALACCOUNT_FORMS = {}
 
 SITE_ID = 1
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
