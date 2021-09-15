@@ -66,7 +66,7 @@ class UserProfiles(ViewSet):
             userprofile = UserProfile.objects.get(pk=pk)
             userprofile_user_id = userprofile.user_id
             user = User.objects.get(pk=userprofile_user_id)
-            email = self.request.query_params.get('email', None)
+            # email = self.request.query_params.get('email', None)
             print(request.data)
 
             if 'image' in request.data and request.data['image']:

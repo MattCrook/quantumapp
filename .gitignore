@@ -161,3 +161,4 @@ old-docker-compose-example.yaml
 notes.txt*
 datadump.json
 Dockerfile.no-compose.example
+quantumappenv

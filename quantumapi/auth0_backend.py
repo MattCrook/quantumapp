@@ -1,7 +1,8 @@
 from functools import wraps
 from urllib import request
 from jose import jwt
-from social_core.backends.open_id import BaseOAuth2, OpenIdAuth
+# from social_core.backends.open_id import OpenIdAuth
+from social_core.backends.oauth import BaseOAuth2
 from django.http import JsonResponse
 from social_core.backends.open_id_connect import OpenIdConnectAssociation, OpenIdConnectAuth
 

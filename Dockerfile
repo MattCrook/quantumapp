@@ -49,10 +49,9 @@ ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
 ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
 
 # RUN pipenv run python3 manage.py collectstatic
-# RUN python manage.py makemigrations
-# RUN python manage.py migrate
+
 
 EXPOSE 8000
 
-# ENTRYPOINT [ "python" ]
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["./entrypoint.sh"]
+# CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -35,10 +35,10 @@ from rest_framework_jwt.views import set_cookie_with_token
 from allauth.socialaccount.views import  get_current_site
 
 
-from jose import jwt
+# from jose import jwt
 import datetime
 import json
-import http.client
+#import http.client
 
 
 @api_view(('GET', 'POST'))
@@ -66,7 +66,7 @@ def register_user(request):
             )
             new_userprofile.save()
 
-            email = req_body['email']
+            # email = req_body['email']
             authenticated_user = authenticate(auth0_identifier=req_body['auth0_identifier'], password=password)
 
             if authenticated_user is not None:
@@ -84,12 +84,12 @@ def register_user(request):
                     extra_data = req_body['extra_data']
                     extra_data['access_token'] = remote_authenticated_user[1]
 
-                    backend_data = backends(request)
-                    user_current_backend = authenticated_user.backend
+                    # backend_data = backends(request)
+                    #user_current_backend = authenticated_user.backend
 
-                    auth0_backend = backend_data['backends']['backends'][1]
-                    openId_backend = backend_data['backends']['backends'][0]
-                    associated_backends = backend_data['backends'].get('associated')
+                    #auth0_backend = backend_data['backends']['backends'][1]
+                    #openId_backend = backend_data['backends']['backends'][0]
+                    #associated_backends = backend_data['backends'].get('associated')
 
                     # return csrf token for POST form. side effect is have @csrf_protect
                     csrf = req_body['csrf_token'] if 'csrf_token' in req_body and req_body['csrf_token'] else get_token(request)
@@ -112,12 +112,12 @@ def register_user(request):
                     codes = [c for c in transaction_items_keys]
                     transactions = [t for t in transactions_values]
 
-                    handles = [handle for handle in codes] if len(codes) > 0 else {}
-                    code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
+                    # handles = [handle for handle in codes] if len(codes) > 0 else {}
+                    # code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
                     handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
                     code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
 
-                    code = codes[0] if len(codes) > 0 else {}
+                    # code = codes[0] if len(codes) > 0 else {}
 
 
                     # associate_user('openid', social_user.uid, authenticated_user, social_user)

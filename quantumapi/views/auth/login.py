@@ -7,27 +7,27 @@ from rest_auth.models import TokenModel
 from django.contrib.sessions.models import Session
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer
-from django.views.decorators.csrf import csrf_exempt
+# from rest_framework.renderers import JSONRenderer
+# from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
 from allauth.account.models import EmailAddress
-from allauth.account.models import EmailConfirmation
+# from allauth.account.models import EmailConfirmation
 from social_django.models import UserSocialAuth, Association, Nonce, DjangoAssociationMixin, DjangoUserMixin, Code, DjangoCodeMixin
 
 from .management_api_services import management_api_oath_endpoint, get_management_api_user, get_open_id_config, get_management_api_grants, jwks_endpoint
 
-from django.contrib.auth.views import auth_login
+# from django.contrib.auth.views import auth_login
 from rest_framework.authentication import authenticate
 
-from social_django.views import auth, do_auth
-from social_django.context_processors import backends, user_backends_data
-from social_django.storage import DjangoUserMixin
+# from social_django.views import auth, do_auth
+# from social_django.context_processors import backends, user_backends_data
+# from social_django.storage import DjangoUserMixin
 
-from django.contrib.auth.backends import AllowAllUsersRemoteUserBackend, AllowAllUsersModelBackend, RemoteUserBackend
-from social_core.strategy import OpenIdStore, DEFAULT_AUTH_PIPELINE, BaseStrategy
+# from django.contrib.auth.backends import AllowAllUsersRemoteUserBackend, AllowAllUsersModelBackend, RemoteUserBackend
+# from social_core.strategy import OpenIdStore, DEFAULT_AUTH_PIPELINE, BaseStrategy
 from social_core.backends.auth0 import Auth0OAuth2
 
 from social_core.actions import user_is_authenticated, user_is_active
@@ -39,7 +39,7 @@ from jose import jwt
 import json
 import datetime
 
-from allauth.socialaccount.views import  get_current_site
+# from allauth.socialaccount.views import  get_current_site
 from allauth.socialaccount.models import SocialToken, SocialApp, SocialLogin, SocialAccount
 
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -105,15 +105,30 @@ def login_user(request):
                         account_email = EmailAddress.objects.get(user_id=remote_authenticated_user.id)
                         user_social_auth = UserSocialAuth.objects.get(user_id=remote_authenticated_user.id)
                         social_account = SocialAccount.objects.get(user_id=remote_authenticated_user.id)
-                        social_token = SocialToken.objects.get(account_id=social_account.id)
-                        social_token.token = id_token
-                        social_token.token_secret = request.auth
-                        time_now = datetime.datetime.now()
-                        expires_at = time_now + datetime.timedelta(0, exp)
-                        social_token.expires_at = expires_at
-                        social_token.save()
+                        social_app = SocialApp.objects.get_or_create(
+                            provider=provider,
+                            name="Quantum Coasters",
+                            secret=SOCIAL_AUTH_AUTH0_SECRET,
+                            client_id=AUTH0_CLIENT_ID,
+                            key=SOCIAL_AUTH_AUTH0_KEY
+                            )
 
-                        social_app = SocialApp.objects.get(provider=provider)
+                        time_now = datetime.datetime.now()
+                        social_token = SocialToken.objects.get_or_create(
+                            account=social_account,
+                            token=user_social_auth.access_token,
+                            token_secret=user_social_auth.tokens,
+                            expires_at = time_now + datetime.timedelta(0, exp),
+                            app = social_app[0]
+                            )
+                        # social_token.token = user_social_auth.access_token
+                        # social_token.token_secret = user_social_auth.tokens
+                        # time_now = datetime.datetime.now()
+                        # expires_at = time_now + datetime.timedelta(0, exp)
+                        # social_token.expires_at = expires_at
+                        # social_token.app_id = social_app.id
+                        # social_token.save()
+
 
                         # login user, then grab the credentials and newly created session which is going to be called and returned after login.
                         login(request, social_user.user, backend='quantumapi.auth0_backend.Auth0')
@@ -138,22 +153,22 @@ def login_user(request):
 
                             if credentials is not None:
                                 all_transactions = json.loads(credentials.transactions)
-                                transaction_items_keys = all_transactions['transactions'].keys()
+                                # transaction_items_keys = all_transactions['transactions'].keys()
                                 transactions_values = all_transactions['transactions'].values()
 
-                                codes = [c for c in transaction_items_keys]
+                                # codes = [c for c in transaction_items_keys]
                                 transactions = [t for t in transactions_values]
 
-                                handles = [handle for handle in codes] if len(codes) > 0 else {}
-                                code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
+                                #handles = [handle for handle in codes] if len(codes) > 0 else {}
+                                #code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
                                 handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
                                 code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
 
-                                all_backends = backends(request)
-                                user_backends = all_backends.get('backends')
-                                auth0_backend = user_backends['backends'][1]
-                                openId_backend = user_backends['backends'][0]
-                                user_assoc_backends = user_backends.get('associated')
+                                #all_backends = backends(request)
+                                #user_backends = all_backends.get('backends')
+                                #auth0_backend = user_backends['backends'][1]
+                                #openId_backend = user_backends['backends'][0]
+                                #user_assoc_backends = user_backends.get('associated')
 
                                 if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
                                     user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
@@ -177,7 +192,7 @@ def login_user(request):
                                         "account_email": account_email.id,
                                         "management_user": management_api_user,
                                         "social_account": social_account.id,
-                                        "social_app": social_app.id,
+                                        "social_app": social_app[0].id,
                                         "email_confirmation": True,
                                         "has_credentials": True,
                                         "credentials_id": credentials.id
@@ -203,7 +218,7 @@ def login_user(request):
                                     "account_email": account_email.id,
                                     "management_user": management_api_user,
                                     "social_account": social_account.id,
-                                    "social_app": social_app.id,
+                                    "social_app": social_app[0].id,
                                     "email_confirmation": True,
                                     "has_credentials": False,
                                 }

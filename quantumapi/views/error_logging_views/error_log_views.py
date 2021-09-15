@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status, authentication, permissions
-from django.http import HttpResponse, HttpResponseServerError
+# from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import User as UserModel
 from quantumapi.models import ErrorLog as ErrorLogModel
 from quantumapi.models import Credential as CredentialModel
@@ -12,7 +12,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 import json
 import datetime
 import socket
-from collections import OrderedDict
+# from collections import OrderedDict
 
 
 class ErrorLogViewSerializer(serializers.ModelSerializer):
@@ -140,8 +140,8 @@ class ErrorLogView(ViewSet):
                 if request.session.session_key is not None:
                     session = request.session.session_key
                 else:
-                    credential = CredentialModel.objects.filter(user_id=request.user.id).latest()
-                    session = credential.session_id
+                    session = CredentialModel.objects.filter(user_id=request.user.id).latest().session_id if CredentialModel.objects.filter(user_id=request.user.id).exists() else 'no session data'
+                    # session = credential.session_id
             elif Session.objects.filter(session_key=request.data['sessionId']).exists():
                 session = Session.objects.get(session_key=request.data['sessionId'])
             else:
@@ -169,7 +169,7 @@ class ErrorLogView(ViewSet):
 
                         else:
                             # ToDo: add resolver match to field in Model.
-                            resolver_match = request.stream.resolver_match
+                            # resolver_match = request.stream.resolver_match
                             serializer = create_new_error_log_entry(request, session, time)
 
                         return Response(serializer.data)

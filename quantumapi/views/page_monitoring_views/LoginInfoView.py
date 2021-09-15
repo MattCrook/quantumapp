@@ -94,13 +94,13 @@ class LoginInfoView(ViewSet):
         try:
             hostname = socket.gethostname()
             ipv4s = socket.gethostbyname_ex(socket.gethostname())[-1]
-            host_ip = socket.getfqdn()
-            host_ipv4 = ipv4s[-1]
-            IPAddr = socket.gethostbyname(hostname)
+            # host_ip = socket.getfqdn()
+            # host_ipv4 = ipv4s[-1]
+            # IPAddr = socket.gethostbyname(hostname)
 
-            successful_authenticator = request.successful_authenticator
-            auth_header = successful_authenticator.authenticate_header(request)
-            get_token_from_auth_header = successful_authenticator.get_token_from_authorization_header(auth_header)
+            # successful_authenticator = request.successful_authenticator
+            # auth_header = successful_authenticator.authenticate_header(request)
+            # get_token_from_auth_header = successful_authenticator.get_token_from_authorization_header(auth_header)
             # token_from_cookies = successful_authenticator.get_token_from_cookies(COOKIES)
             # token_from_request = successful_authenticator.get_token_from_request()
             # user_from_token = successful_authenticator.authenticate_credentials()

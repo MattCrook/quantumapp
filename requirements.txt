@@ -25,8 +25,8 @@ django-filter==2.2.0
 django-rest-auth==0.9.5
 djangorestframework==3.11.0
 djangorestframework-queryfields==1.0.0
-djangorestframework-simplejwt==4.4.0
-drf-jwt==1.15.1
+djangorestframework-simplejwt==4.8.0
+drf-jwt==1.19.1
 ecdsa==0.15
 gunicorn==20.0.4
 hiredis==1.1.0
@@ -45,7 +45,7 @@ pyasn1-modules==0.2.8
 pycodestyle==2.6.0
 pycparser==2.20
 PyHamcrest==2.0.2
-PyJWT==1.7.1
+PyJWT
 pylint==2.5.2
 pylint-django==2.0.15
 pylint-plugin-utils==0.6

@@ -215,9 +215,13 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.open_id.OpenIdAuth',
     'quantumapi.auth0_backend.Auth0',
     'django.contrib.auth.backends.RemoteUserBackend',
-    'django.contrib.auth.backends.ModelBackend',
     'quantumapi.auth0_backend.QuantumAdminOpenID',
+    # Take into account that backends must be defined in AUTHENTICATION_BACKENDS or Django won’t pick them when trying to authenticate the user.
+    'social_core.backends.google_openidconnect.GoogleOpenIdConnect',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
     # 'social_core.backends.open_id_connect.OpenIdConnectAuth'
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'quantumapp.urls'
@@ -335,6 +339,7 @@ QUANTUMADMIN_REGISTER_URL = 'register/'
 
 # Social Auth Configs (For Django full stack app)
 # https://readthedocs.org/projects/python-social-auth/downloads/pdf/latest/
+# https://python-social-auth.readthedocs.io/en/latest/configuration/django.html
 
 # The OpenID backend will check for a username key in the values returned by the server, but default to first-name
 # + last-name if that key is missing. It’s possible to indicate the username key in the values If the username is under

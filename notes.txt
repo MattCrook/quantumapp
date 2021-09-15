@@ -45,3 +45,11 @@ docker run -it -d -p 8000:8000 quantumapp
 
 docker tag quantumapp:latest mgcrook11/quantum-coasters:1.0
 docker push mgcrook11/quantum-coasters:1.0
+
+
+sudo pip3 install virtualenv
+or just
+pip3 install virtualenv
+virtualenv <env_name>
+source env_name/bin/activate
+pip3 install -r requirements.txt
