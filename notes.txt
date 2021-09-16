@@ -54,3 +54,5 @@ pip3 install virtualenv
 virtualenv <env_name>
 source env_name/bin/activate
 pip3 install -r requirements.txt
+
+python3 manage.py test

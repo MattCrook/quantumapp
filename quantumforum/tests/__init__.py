@@ -1,1 +1,1 @@
-from .tests import ChatTests
+# from .tests import ChatTests

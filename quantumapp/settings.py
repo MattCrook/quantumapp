@@ -139,10 +139,13 @@ REST_FRAMEWORK = {
 REACT_APP_FORUM_URL = os.environ.get('REACT_APP_FORUM_URL')
 REACT_APP_HOME = os.environ.get('REACT_APP_HOME')
 REACT_APP_USER_PROFILE = os.environ.get('REACT_APP_USER_PROFILE')
-CLIENT_URL = os.environ.get('CLIENT_URL')
-FORUM_URL = os.environ.get('FORUM_URL')
-ADMIN_URL = os.environ.get('ADMIN_URL')
-
+# CLIENT_URL = os.environ.get('CLIENT_URL')
+# FORUM_URL = os.environ.get('FORUM_URL')
+# ADMIN_URL = os.environ.get('ADMIN_URL')
+CLIENT_URL = 'http://localhost:3000'
+# FORUM_URL = 'http://localhost:8000/quantumforum/'
+FORUM_URL = 'http://localhost:8000/index'
+ADMIN_URL = 'http://localhost:8000/quantumadmin/'
 
 
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
@@ -392,7 +395,8 @@ SOCIAL_AUTH_CLEAN_USERNAMES = True
 # SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = os.environ.get('SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS')
 # SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS = os.environ.get('SOCIAL_AUTH_AUTH0_WHITELISTED_DOMAINS')
 
-SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+# SOCIAL_AUTH_POSTGRES_JSONFIELD = True
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
 
