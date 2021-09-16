@@ -1,27 +1,53 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'styles/error_page.css' %}" />
     <title>Error</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="index_error_page_title">QuantumApp</div>
     <div class="index_error_page_message">Oops! Looks like there was an error.</div>
     <div class="index_error_page_message">Please click the applicable link to get to your desired location.</div>
-<div class="index_error_btn_wrapper">
-    <button class="error_btn"><a class="error_a" href="{{CLIENT_URL}}">Quantum Coasters</a></button>
-    <button class="error_btn"><a class="error_a" href="{{FORUM_URL}}">Quantum Forum</a></button>
-    <button class="error_btn"><a class="error_a" href="{{ADMIN_URL}}">Quantum Admin</a></button>
-    {% comment %} ToDo - add help modal {% endcomment %}
-    <button class="error_btn"><a class="error_a" href="">Help</a></button>
-</div>
-</body>
+    <div class="index_error_btn_wrapper">
+      <button class="error_btn"><a class="error_a" href="{{CLIENT_URL}}">Quantum Coasters</a></button>
+      <button class="error_btn"><a class="error_a" href="{{FORUM_URL}}">Quantum Forum</a></button>
+      <button class="error_btn"><a class="error_a" href="{{ADMIN_URL}}">Quantum Admin</a></button>
+      <!-- ToDo - add help modal -->
+      <button class="error_btn"><a id="help_btn_redirect_page" class="error_a">Help</a></button>
+    </div>
 
+    <div id="help_modal_redirect_page" style="display: none">
+      <div class="help_modal_redirect_page_title_wrapper">
+        <div class="help_modal_redirect_page_title">
+          <h2>Help</h2>
+        </div>
+        <button class="card_close"></button>
+      </div>
+      <div class="help_modal_redirect_page_content">
+        Please select the application/ location for which you were trying to navigate to. If you need additional help,
+        please contact support. We apologize for the inconvenience.
+      </div>
+      <button id="contact_support_btn_redirect_page" class="error_btn"><a class="error_a">Contact Support</a></button>
+    </div>
+
+    <script type="text/javascript">
+      const helpButton = document.getElementById("help_btn_redirect_page");
+
+      if (helpButton) {
+        const helpModal = document.getElementById("help_modal_redirect_page");
+        helpButton.addEventListener("click", () => {
+            helpModal.style.display = "block";
+        });
+        const cardClose = document.querySelector(".card_close");
+        cardClose.addEventListener("click", () => {
+          helpModal.style.display = "none";
+        });
+      }
+    </script>
+  </body>
 </html>
