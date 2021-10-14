@@ -26,3 +26,27 @@ Django Rest API backend for [Quantum Coasters](https://github.com/MattCrook/quan
     * Change the default database to be sqlite, instead of postgres.
     * Then run `makemigrations` and `migrate`.
     * This will create a local DB for you to run the app with.
+
+
+## Deploy
+
+Building image with the URI and URL of frontend and back end because dynamic.
+
+These get injected into Dockerfile as ARGS and then set in the environment as ENV variables.
+
+They are the IP of the load balancer, which is the backend
+
+Then the URI of the front end. (Deployed in App Engine)
+
+```
+docker_build_deploy
+```
+* Frontend and backend URLs get passed to Dockerfile as build ARGS
+* Image is built then pushed to Dockerhub
+* They get used to create ENV variables
+* When VM is provisioning it pulls the Image and starts the container, using the `env.deploy` env file, and alreasy has the ENV vars from the ARGs.
+* The `settings.py` file then uses those variables in the application.
+
+ToDo: make more dynamic so the values are not hard coded.
+
+Make separate Settings.py files to use for different envs

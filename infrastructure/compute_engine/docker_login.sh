@@ -16,6 +16,13 @@ sudo apt update
 sudo apt install -y --force-yes docker-ce
 
 USERNAME=$(cat /tmp/docker.username)
+echo "LOADBALANCER IP: *********{$2}*******"
+
+
 cat /tmp/docker.password | sudo docker login -u $USERNAME --password-stdin
-sudo docker pull mgcrook11/quantum-coasters:app-1.0
-sudo docker run -it -d --name quantum-coasters -p 80:3000 mgcrook11/quantum-coasters:app-1.0
+sudo docker pull mgcrook11/quantum-app:1.5
+sudo docker run -it -d --env-file /tmp/.env.deploy -p 80:8000 mgcrook11/quantum-app:1.5
+sudo docker run -p 6379:6379 -d redis:5
+
+apt-get update
+apt-get -y install vim

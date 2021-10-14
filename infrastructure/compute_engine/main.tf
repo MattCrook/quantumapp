@@ -2,7 +2,7 @@ provider "google" {
   project     = var.project
   region      = var.region
   zone        = var.zone
-  credentials = file("default-compute-credentials.json")
+  credentials = file("creds.json")
 }
 
 terraform {
@@ -14,6 +14,11 @@ terraform {
   //     credentials = "./credentials.json"
   // }
 }
+
+resource "google_compute_address" "default" {
+  name = "quantumapp-external-tcp-loadbalancer"
+}
+
 
 resource "random_id" "instance_id" {
   byte_length = 4
@@ -29,10 +34,10 @@ resource "google_service_account" "quantumapp_sa" {
 resource "google_compute_http_health_check" "default" {
   name                = "tf-www-basic-check"
   request_path        = "/"
-  check_interval_sec  = 1
+  check_interval_sec  = 25
   healthy_threshold   = 1
   unhealthy_threshold = 10
-  timeout_sec         = 1
+  timeout_sec         = 10
 }
 
 resource "google_compute_target_pool" "default" {
@@ -45,10 +50,11 @@ resource "google_compute_forwarding_rule" "default" {
   name       = "tf-www-forwarding-rule"
   target     = google_compute_target_pool.default.self_link
   port_range = "80"
+  ip_address = google_compute_address.default.address
 }
 
 resource "google_compute_instance" "www" {
-  count = 2
+  count = 1
 
   name         = "tf-www-${count.index}"
   machine_type = "e2-medium"
@@ -70,59 +76,31 @@ resource "google_compute_instance" "www" {
   }
 
   metadata = {
-    ssh-keys = "root:${file("~/.ssh/rsa_pub.pub")}"
+    ssh-keys = "root:${file("~/.ssh/quantum_rsa.pub")}"
   }
 
-  // provisioner "file" {
-  //   source      = "./install.sh"
-  //   destination = "/tmp/install.sh"
-
-  //   connection {
-  //     host        = self.network_interface.0.access_config.0.nat_ip
-  //     type        = "ssh"
-  //     user        = "root"
-  //     private_key = file("~/.ssh/rsa_pub") # gcloud_id_rsa
-  //     agent       = false
-  //   }
-  // }
-
-  // provisioner "remote-exec" {
-  //   connection {
-  //     host        = self.network_interface.0.access_config.0.nat_ip
-  //     type        = "ssh"
-  //     user        = "root"
-  //     private_key = file("~/.ssh/rsa_pub") # gcloud_id_rsa
-  //     agent       = false
-  //   }
-
-  //   inline = [
-  //     "chmod +x /tmp/install.sh",
-  //     "sudo /tmp/install.sh ${count.index}",
-  //   ]
-  // }
-
   provisioner "file" {
-    source      = "./docker.username"
+    source      = "./.docker.username"
     destination = "/tmp/docker.username"
 
     connection {
       host        = self.network_interface.0.access_config.0.nat_ip
       type        = "ssh"
       user        = "root"
-      private_key = file("~/.ssh/rsa_pub") # gcloud_id_rsa
+      private_key = file("~/.ssh/quantum_rsa")
       agent       = false
     }
   }
 
   provisioner "file" {
-    source      = "./docker.password"
+    source      = "./.docker.password"
     destination = "/tmp/docker.password"
 
     connection {
       host        = self.network_interface.0.access_config.0.nat_ip
       type        = "ssh"
       user        = "root"
-      private_key = file("~/.ssh/rsa_pub") # gcloud_id_rsa
+      private_key = file("~/.ssh/quantum_rsa")
       agent       = false
     }
   }
@@ -135,7 +113,20 @@ resource "google_compute_instance" "www" {
       host        = self.network_interface.0.access_config.0.nat_ip
       type        = "ssh"
       user        = "root"
-      private_key = file("~/.ssh/rsa_pub") # gcloud_id_rsa
+      private_key = file("~/.ssh/quantum_rsa")
+      agent       = false
+    }
+  }
+
+  provisioner "file" {
+    source      = "../../.env.deploy"
+    destination = "/tmp/.env.deploy"
+
+    connection {
+      host        = self.network_interface.0.access_config.0.nat_ip
+      type        = "ssh"
+      user        = "root"
+      private_key = file("~/.ssh/quantum_rsa")
       agent       = false
     }
   }
@@ -145,19 +136,19 @@ resource "google_compute_instance" "www" {
       host        = self.network_interface.0.access_config.0.nat_ip
       type        = "ssh"
       user        = "root"
-      private_key = file("~/.ssh/rsa_pub") # gcloud_id_rsa
+      private_key = file("~/.ssh/quantum_rsa")
       agent       = false
     }
 
     inline = [
       "chmod +x /tmp/docker_login.sh",
-      "sudo /tmp/docker_login.sh ${count.index}",
+      "sudo /tmp/docker_login.sh ${count.index} ${google_compute_address.default.address}",
     ]
   }
 
   service_account {
     email = "${google_service_account.quantumapp_sa.email}"
-    scopes = ["https://www.googleapis.com/auth/compute.readonly", "cloud-platform"]
+    scopes = ["cloud-platform"]
   }
 }
 
@@ -168,7 +159,7 @@ resource "google_compute_firewall" "default" {
 
   allow {
     protocol = "tcp"
-    ports    = ["80"]
+    ports    = ["80", "8000"]
   }
 
   source_ranges = ["0.0.0.0/0"]
@@ -181,8 +172,6 @@ resource "google_compute_firewall" "egress_allow_all" {
   network     = "default"
   # network     = "${data.google_compute_network.default_network.name}"
   direction   = "EGRESS"
-  # priority    = 65535
-  priority    = 1000
   description = "Firewall rule allows all Egress traffic from all IPs and all ports."
 
 

@@ -1,7 +1,10 @@
 Runinng QuantumApp
 docker build -t application:latest .
 docker run -it -d -p 8000:8000 application
-
+sudo docker run -it -d --name quantumapp --env-file .env -p 80:8000 mgcrook11/quantum-app:1.2
+IP of loadbalancer: 35.239.130.209:80
+URI of vercel: https://quantum-application.vercel.app/
+URI of app engine: https://quantum-coasters.uc.r.appspot.com/
 
 
 run docker container image for django channels
@@ -56,3 +59,45 @@ source env_name/bin/activate
 pip3 install -r requirements.txt
 
 python3 manage.py test
+
+######################
+Run DRF with App Engine
+https://rogulski.it/blog/gae-standard-py37-django/
+
+Dockerfile:
+FROM google/cloud-sdk:latest
+RUN mkdir /code
+WORKDIR /code
+
+RUN apt-get update -y && apt-get install build-essential checkinstall python3-pip redis-server -y
+ADD requirements.txt /code/requirements.txt
+RUN pip3 install -r requirements.txt
+ADD . /code/
+
+
+$ gcloud sql instances create [INSTANCE_NAME] --cpu=1 --memory=3840MiB --database-version=POSTGRES_9_6
+$ gcloud sql databases create [DB_NAME] --instance=[INSTANCE_NAME]
+Creating Cloud SQL database...done.
+
+Created database [DB NAME].
+instance: [INSTANCE NAME]
+name: [DB_NAME]
+project: [PROJECT ID]
+
+$ gcloud sql users set-password [USER_NAME] --instance=[INSTANCE_NAME] --password=[PASSWORD]
+$ ./cloud_sql_proxy -instances=<INSTANCE_CONNECTION_NAME>=tcp:3306
+
+runtime: python37
+
+handlers:
+- url: /static
+  static_dir: static/
+- url: .*
+  script: auto
+
+env_variables:
+  POSTGRESQL_CONNECTION_NAME: project:region:db
+  POSTGRES_DB: [DB NAME]
+  POSTGRES_PASSWORD: [DB PASSWORD]
+  POSTGRES_USER: [DB USER]
+  POSTGRES_HOST: [DB HOST]

@@ -8,31 +8,8 @@ import json
 # import dotenv
 
 
-# env = environ.Env(
-#     # set casting, default value
-#     DEBUG=(bool, True),
-#     SECRET_KEY=(str),
-#     AUTH0_CLIENT_ID=(str),
-#     AUTH0_DOMAIN=(str),
-#     AUTH0_CLIENT_SECRET=(str),
-#     API_IDENTIFIER=(str),
-#     AUTH0_OPEN_ID_SERVER_URL=(str),
-#     SOCIAL_AUTH_AUTH0_DOMAIN=(str),
-#     SOCIAL_AUTH_AUTH0_KEY=(str),
-#     SOCIAL_AUTH_AUTH0_SECRET=(str),
-#     JWT_ISSUER=(str)
-# )
-
-
-# AUTH0_CLIENT_ID = env('AUTH0_CLIENT_ID')
-# AUTH0_DOMAIN = env('AUTH0_DOMAIN')
-# AUTH0_CLIENT_SECRET = env('AUTH0_CLIENT_SECRET')
-# API_IDENTIFIER = env('API_IDENTIFIER')
-# AUTH0_OPEN_ID_SERVER_URL = env('AUTH0_OPEN_ID_SERVER_URL')
-# SOCIAL_AUTH_AUTH0_DOMAIN = env('SOCIAL_AUTH_AUTH0_DOMAIN')
-# SOCIAL_AUTH_AUTH0_KEY = env('SOCIAL_AUTH_AUTH0_KEY')
-# SOCIAL_AUTH_AUTH0_SECRET = env('SOCIAL_AUTH_AUTH0_SECRET')
-
+# ToDo: Create separate Settings.py files and depending on env (dev or deployed) use different settings (and env files),
+# To have localhost as dev urls and the deployed URLs as urls
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -51,8 +28,9 @@ DEBUG = True
 # To set as env, must put into a startup script check if env var DEBUG is true, then export ALLOWED_HOSTS=localhost
 # When DEBUG is True and ALLOWED_HOSTS is empty, the host is validated against ['.localhost', '127.0.0.1', '[::1]'].
 # https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
-# ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS')
+
+# ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
@@ -142,10 +120,17 @@ REACT_APP_USER_PROFILE = os.environ.get('REACT_APP_USER_PROFILE')
 # CLIENT_URL = os.environ.get('CLIENT_URL')
 # FORUM_URL = os.environ.get('FORUM_URL')
 # ADMIN_URL = os.environ.get('ADMIN_URL')
-CLIENT_URL = 'http://localhost:3000'
+# CLIENT_URL = 'http://localhost:3000'
+
+BACKEND_IP = os.environ.get('BACKEND_URL')
+BACKEND_URL = str('http://{BACKEND_IP}')
+
+CLIENT_URL = 'https://quantum-coasters.uc.r.appspot.com'
 # FORUM_URL = 'http://localhost:8000/quantumforum/'
-FORUM_URL = 'http://localhost:8000/index'
-ADMIN_URL = 'http://localhost:8000/quantumadmin/'
+# FORUM_URL = 'http://localhost:8000/index'
+# ADMIN_URL = 'http://localhost:8000/quantumadmin/'
+FORUM_URL = '{BACKEND_URL}/index'
+ADMIN_URL = '{BACKEND_URL}/quantumadmin/'
 
 
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
@@ -251,8 +236,8 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'https://quantum-coasters.uc.r.appspot.com',
 )
-
 
 TEMPLATES = [
     {

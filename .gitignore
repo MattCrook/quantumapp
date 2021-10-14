@@ -107,6 +107,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env.deploy
 .venv
 env/
 .env/
@@ -155,6 +156,20 @@ node_modules/
 node_modules/*
 .DS_Store
 .DS_Store/
+
+# Terraform
+creds.json
+**/.terraform/*
+.terraform
+*.terraform
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+.docker.*
+*.cert
+*.key
+
 
 
 old-docker-compose-example.yaml
