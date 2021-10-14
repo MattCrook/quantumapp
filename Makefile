@@ -30,8 +30,14 @@ lock:
 start_dev:
 	pipenv run python3 manage.py runserver
 
-docker_build:
+docker_build_local:
 	docker build -t quantumapp:latest .
+
+docker_build_deploy:
+	docker build \
+		--build-arg DEPLOYED_FRONTEND_URI=https://quantum-coasters.uc.r.appspot.com/ \
+		--build-arg DEPLOYED_BACKEND_URL=http://35.239.130.209 \
+		-t quantumapp:latest .
 
 docker_run:
 	docker run -it -d --env-file .env -p 8000:8000 quantumapp

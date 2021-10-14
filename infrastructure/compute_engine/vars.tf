@@ -20,8 +20,8 @@ variable "zone" {
   default     = "us-central1-c"
 }
 
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  type        = number
-  default     = 8000
-}
+// variable "server_port" {
+//   description = "The port the server will use for HTTP requests"
+//   type        = number
+//   default     = 8000
+// }

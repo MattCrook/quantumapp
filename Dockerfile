@@ -1,6 +1,4 @@
 FROM python:3.8-buster AS builder
-# FROM python:3.7.3
-
 
 # Setup the virtualenv
 # RUN python3 -m venv /venv
@@ -17,23 +15,24 @@ ENV PYTHONUNBUFFERED 1
 # Create virtual env for docker container to run python in
 ENV PATH "/venv/bin:$PATH"
 
-# COPY Pipfile Pipfile.lock /opt/src/
-
 RUN pip3 install --upgrade pip
 
-# Old - with just requirements.txt file no Pipfile
 COPY requirements.prod.txt .
 RUN pip3 install -r requirements.prod.txt --no-cache-dir
 
 # install redis
-# python3 -m pip install channels_redis
-# python3 -m pip install selenium
+RUN python3 -m pip install channels_redis
+RUN python3 -m pip install selenium
 # RUN docker run -p 6379:6379 -d redis:5
 
 #######################################
 # App stage #
 # Smaller official Debian-based Python image
 FROM python:3.8-slim-buster AS app
+
+# ARGS for URLs of the deployed applications. Passed in as arguments when running docker build, or (could..) in docker run:
+ARG DEPLOYED_FRONTEND_URI=https://quantum-coasters.uc.r.appspot.com/
+ARG DEPLOYED_BACKEND_URL=http://35.239.130.209
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -45,13 +44,14 @@ WORKDIR /usr/src/app
 # copy in Python environment
 COPY --from=builder /venv /venv
 
-COPY . .
-
 ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
-# ENV DJANGO_SECRET_KEY "${DJANGO_SECRET_KEY}"
 
+# URLs of the deployed applications. Passed in as arguments when running docker build, or docker run:
+ENV FRONTEND_URI=$DEPLOYED_FRONTEND_URI
+ENV BACKEND_URL=$DEPLOYED_BACKEND_URL
+
+COPY . .
 
 EXPOSE 8000
 
-# ENTRYPOINT ["./entrypoint.sh"]
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
