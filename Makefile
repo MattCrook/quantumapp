@@ -2,6 +2,9 @@ SHELL:=/bin/bash
 REPO := quantumapp
 
 
+init_environment:
+	@chmod +x ./scripts/init_environment.sh && ./scripts/init_environment.sh
+
 venv_create:
 	virtualenv venv
 
@@ -13,6 +16,9 @@ prep_sync:
 
 prep:
 	pipenv install
+
+prep_static:
+	python3 manage.py collectstaic
 
 prep_migrate:
 	pipenv run python3 manage.py makemigrations

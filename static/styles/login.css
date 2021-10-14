@@ -1,0 +1,545 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding-left: 16px;
+  padding-right: 16px;
+  transition: 0.5s all ease;
+}
+
+.login-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  /* transition: 0.3s; */
+  border-radius: 5px;
+  margin-top: 5%;
+  margin-left: 33%;
+  margin-right: 33%;
+  margin-bottom: 4%;
+  text-align: center;
+  background: #f4f7f8;
+  transition: 0.5s all ease;
+}
+
+.login-card h2 {
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+.login_card_title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 56%;
+  margin-left: 42%;
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.login-card form input {
+  background-color: #e8eeef;
+  text-align: center;
+  font-size: 15px;
+  margin-top: 10px;
+  outline: 0;
+  padding: 10px;
+}
+
+.login-card p {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 5px;
+}
+
+.login_btn {
+  position: relative;
+  display: block;
+  padding: 10px;
+  color: #fff;
+  background: black;
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  width: 25%;
+  border: 1px solid rgba(0, 0, 0, 0.753);
+  border-width: 1px 1px 3px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+/* On mouse-over, add a deeper shadow */
+.login-card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.register_btn {
+  font-size: 12px;
+  padding-bottom: 15px;
+  padding-top: 10px;
+  color: rgb(8, 8, 185);
+  border: none;
+  background: #f4f7f8;
+}
+
+.errorlist.nonfield {
+  font-size: 12px;
+  color: rgba(124, 39, 39, 0.795);
+}
+
+.signature {
+  display: flex;
+  justify-content: center;
+}
+
+.signature p {
+  text-align: center;
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: 0.85em;
+  color: #aaaaaa;
+}
+
+.signature a {
+  color: #aaaaaa;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+#signature_font_login {
+  font: 260 0.65em helvetica neue, open sans, sans-serif;
+  letter-spacing: 5px;
+  color: rgb(94, 94, 94);
+}
+
+#i {
+  font-size: 9px;
+}
+
+.btn i {
+  margin-right: 5px;
+}
+
+/**********************Row Login Buttons Auth0************************/
+
+#row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  /* transition: 0.3s; */
+  border-radius: 5px;
+  text-align: center;
+  padding-left: 25%;
+  padding-right: 25%;
+  margin-bottom: 3%;
+  margin-top: 10%;
+  margin-left: 0.5%;
+}
+
+#error_message {
+  font-size: 12px;
+  color: rgb(172, 42, 42);
+}
+
+#login_with_auth0.btn.btn-primary.mb-2 {
+  background-color: rgb(14, 14, 14);
+  color: #eeeff0;
+  border-color: #070707;
+  /* transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out; */
+}
+
+#login_with_auth0 img {
+  border: none;
+  margin-right: 5px;
+}
+
+#auth0_img {
+  filter: sepia(4%) saturate(675%) brightness(0) invert(1) contrast(95%);
+}
+
+.login_sub_header {
+  font-size: 12px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+#login_with_auth0:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid white;
+}
+
+#back_to_quantum_coaters {
+  background-color: #131641;
+  border: none;
+}
+
+#back_to_quantum_coaters:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+#login_with_email {
+  background-color: #227a9c;
+  border: none;
+}
+
+#login_with_email:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+#login_help {
+  background-color: #882c2c;
+  border: none;
+}
+
+#login_help:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+#login_with_google {
+  background-color: #1442da;
+  border: none;
+}
+
+#login_with_google:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card_close {
+  background: transparent;
+  border: 0;
+  color: #f06d6d;
+}
+
+.card_close:before {
+  content: "\2715";
+}
+/****************************************/
+
+img {
+  border: 3px solid #282c34;
+}
+.container-fluid {
+  /* height: 100vh; */
+  background-color: #282c34;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container-fluid > div {
+  width: 85%;
+  min-width: 300px;
+  max-width: 500px;
+}
+.card {
+  width: 100%;
+}
+.social-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background: #f4f7f8;
+}
+.btn a,
+.btn a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.signed_in_p {
+  margin-right: 5%;
+  margin-bottom: 0;
+  font: 150 0.9em helvetica neue, open sans, sans-serif;
+}
+
+.provider_link {
+  margin-bottom: 0;
+  font: 150 0.9em helvetica neue, open sans, sans-serif;
+}
+
+#col_sm {
+  margin-bottom: 0 !important;
+}
+
+.signed_in_as_provider_title {
+  font-weight: 600;
+}
+
+/**************************** Spinner *******************/
+@font-face {
+  font-family: "icomoon";
+  src: url("https://s3.amazonaws.com/icomoon.io/4/Loading/icomoon.eot?#iefix-9haulc") format("embedded-opentype"),
+    url("https://s3.amazonaws.com/icomoon.io/4/Loading/icomoon.ttf?-9haulc") format("truetype"),
+    url("https://s3.amazonaws.com/icomoon.io/4/Loading/icomoon.svg?-9haulc#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  font-family: "icomoon";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-spinner-2:before {
+  content: "\e001";
+}
+
+@keyframes anim-rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  font-size: 4em;
+  height: 1em;
+  line-height: 1;
+  margin: 0.5em;
+  animation: anim-rotate 2s infinite linear;
+  color: rgb(14, 13, 13);
+  text-shadow: 0 0 0.25em rgba(255, 255, 255, 0.3);
+}
+
+.spinner--steps {
+  animation: anim-rotate 1s infinite steps(8);
+}
+.spinner--steps2 {
+  animation: anim-rotate 1s infinite steps(12);
+}
+
+/**************************\
+  Basic Modal Styles
+\**************************/
+
+.help_modal {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
+    segoe ui, arial, sans-serif;
+}
+
+.help_modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.help_modal__container {
+  background-color: rgb(223, 223, 223);
+  padding: 30px;
+  width: 40%;
+  max-height: 100vh;
+  border-radius: 4px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.help_modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(134, 134, 134);
+}
+
+.help_modal__title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  color: #e7e6e6;
+  box-sizing: border-box;
+}
+
+.help_modal__close {
+  background: transparent;
+  border: 0;
+  color: #f06d6d;
+}
+
+.help_modal__header .help_modal__close:before {
+  content: "\2715";
+}
+
+.help_modal__content {
+  margin-top: 2rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.help_modal__btn {
+  font-size: 0.875rem;
+  font-variant: small-caps;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #0e0e0e;
+  color: rgba(219, 219, 219, 0.8);
+  border-radius: 0.25rem;
+  border-style: none;
+  border-width: 0;
+  cursor: pointer;
+  -webkit-appearance: button;
+  text-transform: none;
+  overflow: visible;
+  line-height: 1.15;
+  margin: 0;
+  will-change: transform;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: -webkit-transform 0.25s ease-out;
+  transition: transform 0.25s ease-out;
+  transition: transform 0.25s ease-out, -webkit-transform 0.25s ease-out;
+}
+
+.help_modal__btn:focus,
+.help_modal__btn:hover {
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);
+  color: rgb(241, 241, 241);
+}
+
+/**************************\
+      Demo Animation Style
+    \**************************/
+@keyframes mmfadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mmfadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes mmslideIn {
+  from {
+    transform: translateY(15%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes mmslideOut {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10%);
+  }
+}
+
+.micromodal-slide {
+  display: none;
+}
+
+.micromodal-slide.is-open {
+  display: block;
+}
+
+.micromodal-slide[aria-hidden="false"] .help_modal__overlay {
+  animation: mmfadeIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="false"] .help_modal__container {
+  animation: mmslideIn 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .help_modal__overlay {
+  animation: mmfadeOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide[aria-hidden="true"] .help_modal__container {
+  animation: mmslideOut 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.micromodal-slide .help_modal__container,
+.micromodal-slide .help_modal__overlay {
+  will-change: transform;
+}
+
+.help_modal__footer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5%;
+}
+
+#modal {
+  background: rgb(201, 201, 201);
+  border-radius: 3px 3px 3px 3px;
+}
+
+.help_modal_title {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+.help_modal_title i {
+  margin-left: 8px;
+}
+
+.help_modal_txt_container {
+  font: 150 1em helvetica neue, open sans, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  margin-left: 10%;
+}
+
+.help_modal_txt_container li {
+  font: 150 0.9em helvetica neue, open sans, sans-serif;
+  padding-left: 2%;
+  margin-top: 10px;
+  margin-bottom: 8%;
+  font-style: italic;
+}
+
+.thank_you {
+  display: flex;
+  justify-content: center;
+  font: 150 0.8em helvetica neue, open sans, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 35px;
+}

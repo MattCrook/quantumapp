@@ -1,26 +1,28 @@
 import os
 import json
+import socket
 # import datetime
 # from django.conf import settings
 # from django.core.exceptions import ImproperlyConfigured
 # from datetime import timedelta
 # import environ
 # import dotenv
-
-
+from dotenv import load_dotenv
+from dotenv.main import dotenv_values
+load_dotenv()
 # ToDo: Create separate Settings.py files and depending on env (dev or deployed) use different settings (and env files),
 # To have localhost as dev urls and the deployed URLs as urls
+# config = dotenv_values(".env")
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# environ.Env.read_env()
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-# SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -122,15 +124,22 @@ REACT_APP_USER_PROFILE = os.environ.get('REACT_APP_USER_PROFILE')
 # ADMIN_URL = os.environ.get('ADMIN_URL')
 # CLIENT_URL = 'http://localhost:3000'
 
-BACKEND_IP = os.environ.get('BACKEND_URL')
-BACKEND_URL = str('http://{BACKEND_IP}')
+
 
 CLIENT_URL = 'https://quantum-coasters.uc.r.appspot.com'
 # FORUM_URL = 'http://localhost:8000/quantumforum/'
 # FORUM_URL = 'http://localhost:8000/index'
 # ADMIN_URL = 'http://localhost:8000/quantumadmin/'
-FORUM_URL = '{BACKEND_URL}/index'
-ADMIN_URL = '{BACKEND_URL}/quantumadmin/'
+
+# For if deployed on VM to GCP
+# BACKEND_IP = os.environ.get('BACKEND_URL')
+# BACKEND_URL = str('http://{BACKEND_IP}')
+# FORUM_URL = '{BACKEND_URL}/index'
+# ADMIN_URL = '{BACKEND_URL}/quantumadmin/'
+
+# For if deployed to App Engine
+FORUM_URL = "https://api-dot-quantum-coasters.uc.r.appspot.com/index"
+ADMIN_URL = "https://api-dot-quantum-coasters.uc.r.appspot.com/quantumadmin/"
 
 
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
@@ -263,6 +272,13 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+# Use django-environ to parse the connection string
+# DATABASES = {"default": env.db()}
+
+# # If the flag as been set, configure to use proxy
+# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+#     DATABASES["default"]["HOST"] = "127.0.0.1"
+#     DATABASES["default"]["PORT"] = 5432
 
 DATABASES = {
     'default': {
@@ -319,30 +335,33 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "media")
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, "media")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, '/quantumadminapp/'),
+#     os.path.join(BASE_DIR, '/quantumforum/static/'),
+# ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # For Quantum Coasters React app
-# LOGIN_URL = '/login/auth0'
-# LOGIN_REDIRECT_URL = '/home'
-# LOGOUT_URL = 'logout/'
-# LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = os.environ.get('LOGIN_URL')
 LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
 LOGOUT_URL = os.environ.get('LOGOUT_URL')
 LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL')
+# LOGIN_URL = '/login/auth0'
+# LOGIN_REDIRECT_URL = '/home'
+# LOGOUT_URL = 'logout/'
+# LOGOUT_REDIRECT_URL = '/'
 # GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
 
 # QuantumAdminApp
-# QUANTUMADMIN_REGISTER_URL = 'register/'
 QUANTUMADMIN_REGISTER_URL = os.environ.get('QUANTUMADMIN_REGISTER_URL')
 
 # Social Auth Configs (For Django full stack app)

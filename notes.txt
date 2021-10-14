@@ -5,6 +5,12 @@ sudo docker run -it -d --name quantumapp --env-file .env -p 80:8000 mgcrook11/qu
 IP of loadbalancer: 35.239.130.209:80
 URI of vercel: https://quantum-application.vercel.app/
 URI of app engine: https://quantum-coasters.uc.r.appspot.com/
+QuantumApp: https://quantum-coasters.uc.r.appspot.com
+
+
+
+AppEngine websockets:
+https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible/websockets
 
 
 run docker container image for django channels
@@ -101,3 +107,11 @@ env_variables:
   POSTGRES_PASSWORD: [DB PASSWORD]
   POSTGRES_USER: [DB USER]
   POSTGRES_HOST: [DB HOST]
+
+
+
+AppEngine Instructions for cloud sql instance:
+https://cloud.google.com/python/django/flexible-environment
+
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+chmod +x cloud_sql_proxy
