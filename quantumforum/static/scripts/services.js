@@ -1,5 +1,5 @@
-// const remoteUrl = process.env.REMOTE_API_URL;
-const remoteUrl = "http://localhost:8000";
+const remoteUrl = process.env.REMOTE_API_URL;
+
 
 const getCookie = (name) => {
   let cookieValue = null;

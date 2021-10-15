@@ -14,6 +14,7 @@ load_dotenv()
 # ToDo: Create separate Settings.py files and depending on env (dev or deployed) use different settings (and env files),
 # To have localhost as dev urls and the deployed URLs as urls
 
+# ENVIRONMENT = 'production'
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -37,6 +38,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
 ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['https://quantum-coasters.uc.r.appspot.com', 'https://api-dot-quantum-coasters.uc.r.appspot.com']
 
 
 INSTALLED_APPS = [
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_framework_jwt',
@@ -58,7 +61,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # Included providers for allauth
     # 'allauth.socialaccount.providers.auth0',
-    'corsheaders',
     'social_django',
     'django_filters',
     'django.contrib.sessions.middleware',
@@ -243,13 +245,25 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'quantumapp.urls'
 
+# if ENVIRONMENT == 'local':
+#     CORS_ORIGIN_WHITELIST = (
+#         'http://127.0.0.1:3000',
+#         'http://localhost:3000',
+#         'http://localhost:8000',
+#         'http://127.0.0.1:8000',
+#     )
+
+# elif ENVIRONMENT == 'production':
+#     CORS_ORIGIN_WHITELIST = (
+#         'https://quantum-coasters.uc.r.appspot.com',
+#         'https://api-dot-quantum-coasters.uc.r.appspot.com',
+#     )
 
 CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:3000',
-    'http://localhost:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
     'https://quantum-coasters.uc.r.appspot.com',
+    'https://api-dot-quantum-coasters.uc.r.appspot.com',
+    'https://108.177.122.153:443',
+    'https://64.233.176.153:443',
 )
 
 TEMPLATES = [
@@ -278,7 +292,7 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 # Use django-environ to parse the connection string
 # DATABASES = {"default": env.db()}
-print(env.db())
+# print(env.db())
 
 # # If the flag as been set, configure to use proxy
 # if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
@@ -286,7 +300,7 @@ print(env.db())
 #     DATABASES["default"]["PORT"] = 5432
 
 
-if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+if os.environ.get("USE_CLOUD_SQL_AUTH_PROXY") and ENVIRONMENT == 'local':
     DATABASE_URL=os.environ.get('DATABASE_URL')
     DATABASES = {
         'default' : {
@@ -304,11 +318,11 @@ else:
     DATABASES = {
     'default' : {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
+        'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
         'USER': os.environ.get('CLOUD_SQL_USERNAME'),
         'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
-        'HOST': '/cloudsql',
-        'PORT': 5432,
+        'HOST': os.environ.get('CLOUD_SQL_HOST'),
+        # 'PORT': 5432,
         }
     }
 
@@ -506,3 +520,12 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # When doing dumpdata, specifies fixture dir to put fixture in. *Comment out when running loaddata or will throw error bc it duplicates.
 FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
+
+# Setting Django's primary key type creation (this will exempt migrations)
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Same but is a 64-bit integer, much like an AutoField except that it is guaranteed to fit numbers from 1 to 9223372036854775807.
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True

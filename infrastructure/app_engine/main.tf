@@ -14,8 +14,8 @@ data "google_project" "project" {
 
 
 resource "google_app_engine_application" "quantumapp" {
-  project     = google_project.project.project_id
-  location_id = "us-central"
-  auth_domain = "gmail.com"
+  project       = google_project.project.project_id
+  location_id   = "us-central"
+  auth_domain   = "gmail.com"
   database_type =  "CLOUD_DATASTORE_COMPATIBILITY"
 }
