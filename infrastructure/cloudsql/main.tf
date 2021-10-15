@@ -9,7 +9,7 @@ terraform {
 
 resource "google_sql_database_instance" "master" {
   project          = var.project_id
-  name             = "quantumcoastersdb"
+  name             = "quantumcoastersdb2"
   database_version = "POSTGRES_13"
   region           = "us-central1"
   deletion_protection = false
@@ -35,7 +35,7 @@ resource "google_sql_database_instance" "master" {
 
 resource "google_sql_database" "master" {
   project   = var.project_id
-  name      = "quantumcoastersdb"
+  name      = "quantumcoastersdb2"
   charset   = "UTF8"
   collation = "en_US.UTF8"
   instance  = google_sql_database_instance.master.name
@@ -43,7 +43,7 @@ resource "google_sql_database" "master" {
 
 resource "google_sql_user" "users" {
   project         = var.project_id
-  name            = "quantumcoastersdb"
+  name            = "quantumcoastersdb2"
   instance        = google_sql_database_instance.master.name
   password        = "password"
   # password = random_string.password.result

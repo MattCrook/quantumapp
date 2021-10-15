@@ -5,18 +5,25 @@ import socket
 # from django.conf import settings
 # from django.core.exceptions import ImproperlyConfigured
 # from datetime import timedelta
-# import environ
 # import dotenv
+import environ
 from dotenv import load_dotenv
-from dotenv.main import dotenv_values
+# from dotenv.main import dotenv_values
+# config = dotenv_values(".env")
 load_dotenv()
 # ToDo: Create separate Settings.py files and depending on env (dev or deployed) use different settings (and env files),
 # To have localhost as dev urls and the deployed URLs as urls
-# config = dotenv_values(".env")
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 
@@ -273,30 +280,30 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 # Use django-environ to parse the connection string
-# DATABASES = {"default": env.db()}
+DATABASES = {"default": env.db()}
 
 # # If the flag as been set, configure to use proxy
-# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-#     DATABASES["default"]["HOST"] = "127.0.0.1"
-#     DATABASES["default"]["PORT"] = 5432
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+    DATABASES["default"]["HOST"] = "127.0.0.1"
+    DATABASES["default"]["PORT"] = 5432
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'TEST': {
-            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
-        }
-    },
-    'postgres': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('POSTGRES_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         'TEST': {
+#             'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
+#         }
+#     },
+#     'postgres': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.environ.get('POSTGRES_NAME'),
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#         'HOST': os.environ.get('POSTGRES_HOST'),
+#         'PORT': os.environ.get('POSTGRES_PORT'),
+#     }
+# }
 
 
 # Password validation
