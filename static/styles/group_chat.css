@@ -1,0 +1,719 @@
+.group_chat_main_container {
+  /* margin-top: 2%; */
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.search_container {
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+}
+
+/*************** Current Groups *************/
+.current_group_chats_container {
+  /* display: flex;
+  justify-content: center;
+  flex-direction: column; */
+  position: absolute;
+  width: 22%;
+  background-color: rgba(32, 32, 32, 0.904);
+  box-shadow: 2px 6px 4px 0px rgb(190, 190, 190);
+  color: white;
+}
+
+.current_group_chats_title_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8%;
+  border-bottom: 1px solid rgb(192, 192, 192);
+  margin-left: 3%;
+  margin-right: 3%;
+}
+
+.current_group_chats_title {
+  margin-bottom: 5%;
+  font: 150 1em helvetica neue, open sans, sans-serif;
+}
+
+.no_chat_item {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 15px;
+  color: rgb(173, 173, 173);
+  margin-bottom: 10%;
+  letter-spacing: 1px;
+  /* font-family: "Roboto", "Helvetica", "Arial", sans-serif; */
+  /* text-transform: uppercase; */
+}
+
+.current_group_chats_title i {
+  margin-left: 5px;
+}
+/****************************/
+/*************** New Group Form *************/
+
+.add_new_group_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 30%;
+  margin-left: 36%;
+  margin-top: 5%;
+}
+
+.create_new_group_btn_wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.new_group_create_form_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.new_group_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.create_new_group_chat_btn i {
+  margin-left: 8px;
+}
+
+.create_new_group_chat_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin-top: 8%; */
+  cursor: pointer;
+  /* width: 15%; */
+  /* margin-left: 42%; */
+  text-decoration: none;
+  padding: 7px 30px;
+  color: rgb(92, 92, 92);
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 13px;
+  position: relative;
+  cursor: pointer;
+}
+
+.create_new_group_chat_btn {
+  border: 1px solid transparent;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+
+.create_new_group_chat_btn::before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 0%;
+  height: 1px;
+  background: #01318a;
+  box-shadow: inset 0px 0px 0px #1f2b41;
+  display: block;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+
+.create_new_group_chat_btn:hover::before {
+  width: 100%;
+}
+
+.create_new_group_chat_btn::after {
+  content: "";
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 0%;
+  height: 1px;
+  background: #1f2b41;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+.create_new_group_chat_btn:hover::after {
+  width: 100%;
+}
+.create_new_group_chat_btn:hover {
+  text-decoration: none;
+  color: black;
+  border-left: 1px solid #1f2b41;
+  border-right: 1px solid #1f2b41;
+}
+
+.group_form_label {
+  display: flex;
+  justify-content: center;
+  font: 400 1.1em helvetica neue, open sans, sans-serif;
+  margin-top: 5%;
+  margin-bottom: 1%;
+}
+
+.group_chat_input {
+  /* background-color: #e8eeef; */
+  text-align: center;
+  margin-top: 10px;
+  outline: 0;
+  padding: 8px;
+  width: 60%;
+  margin-left: 20%;
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid rgb(109, 108, 108);
+}
+
+.new_group_form {
+  border-radius: 5px;
+  text-align: center;
+  padding-bottom: 20px;
+  margin-top: 5%;
+  border: 1px solid rgb(109, 108, 108);
+  /* background-color: #393a3a; */
+}
+
+.group_chat_input_search {
+  width: 60%;
+  margin-left: 22%;
+  margin-top: 10px;
+  outline: 0;
+  padding: 8px;
+  width: 60%;
+  margin-left: 20%;
+  border-radius: 3px 3px 3px 3px;
+  border: 1px solid rgb(109, 108, 108);
+}
+
+#create_group {
+  margin-top: 10%;
+  margin-left: 37%;
+  cursor: pointer;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font: 400 0.9em helvetica neue, open sans, sans-serif;
+  background-color: #020202;
+  color: #fff;
+  width: 25%;
+}
+
+#create_group:hover {
+  box-shadow: 3px 3px 3px 3px rgb(212, 212, 212);
+}
+
+/************************** New Create Group Chat Form ***********************/
+
+#new_group_create_form_container {
+  margin-top: 6%;
+  margin-bottom: 5%;
+}
+.login-wrap {
+  width: 100%;
+  margin: auto;
+  max-width: 525px;
+  min-height: 670px;
+  position: relative;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.089), 0 17px 50px 0 rgba(0, 0, 0, 0.075);
+  border-radius: 4px;
+  /* background: url(https://i.redd.it/4sm1yg5rhq131.jpg) no-repeat center; */
+  /* border: 1px solid rgb(0, 0, 0); */
+}
+
+.login-html {
+  width: 100%;
+  height: 100%;
+  padding: 58px 54px 30px 50px;
+  border-radius: 4px 4px 4px 4px;
+  overflow-y: auto;
+  /* position: absolute; */
+  /* padding: 90px 70px 50px 70px; */
+  /* background:rgba(40,57,101,.9); */
+  /* background: rgb(0, 0, 0); */
+  /* background: rgba(243, 243, 243, 0.904); */
+}
+
+.login-html .sign-in,
+.login-form .group .check {
+  display: none;
+}
+
+.login-html .tab,
+.login-form .group .label,
+.login-form .group .button {
+  text-transform: uppercase;
+}
+
+#form_title {
+  font: 150 1.2em helvetica neue, open sans, sans-serif;
+  color: black;
+}
+
+.login-html .tab {
+  font-size: 22px;
+  margin-right: 15px;
+  padding-bottom: 5px;
+  margin: 0 0px 35px 33%;
+  display: inline-block;
+  border-bottom: 2px solid transparent;
+}
+
+.login-html .sign-in:checked + .tab {
+  color: rgb(228, 228, 228);
+  border-color: #8f8f8f;
+}
+
+.login-form {
+  min-height: 345px;
+  position: relative;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.login-form .group {
+  margin-bottom: 5%;
+}
+
+.login-form .group .label,
+.login-form .group .input,
+.login-form .group .button {
+  width: 100%;
+  color: rgb(189, 189, 189);
+  display: block;
+}
+
+.login-form .group .input,
+.login-form .group .button {
+  border: none;
+  padding: 15px 20px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.login-form .group input:focus {
+  border: 1px solid rgb(26, 26, 26);
+  outline: none;
+}
+
+#group_name, #participants {
+  border: 1px solid rgb(105, 105, 105);
+  color: rgb(20, 20, 20);
+}
+
+.login-form .group .label {
+  color: rgb(131, 131, 131);
+  font-size: 12px;
+}
+
+.login-form .group .button {
+  background: #000000f6;
+  color: #d6d6d6f6;
+  font: 250 1em helvetica neue, open sans, sans-serif;
+  /* border: 1px solid rgb(124, 123, 123); */
+}
+
+.login-form .group .button:hover {
+  color: rgb(238, 238, 238);
+  /* border: 1px solid rgb(170, 170, 170); */
+}
+
+.hr {
+  height: 2px;
+  margin: 44px 0 12px 0;
+  background: rgb(77, 77, 77);
+}
+.foot-lnk {
+  text-align: center;
+}
+
+.invitee_list_title {
+  color: rgb(82, 82, 82);
+  font: 150 1em helvetica neue, open sans, sans-serif;
+}
+.participant_item {
+  color: rgb(73, 73, 73);
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 300;
+}
+
+.participant_item_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+}
+
+.participant_item_wrapper_1 {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.participant_item_wrapper_2 {
+  display: flex;
+  align-items: center;
+}
+
+#participants:focus::placeholder {
+  color: transparent;
+}
+
+.list_of_participants_title_wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.clear_all_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 7px 20px;
+  color: rgb(114, 114, 114);
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.clear_all_button {
+  border: 1px solid transparent;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+
+.clear_all_button::before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 0%;
+  height: 1px;
+  background: #7e3434;
+  box-shadow: inset 0px 0px 0px #7e3434;
+  display: block;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+
+.clear_all_button:hover::before {
+  width: 100%;
+}
+
+.clear_all_button::after {
+  content: "";
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 0%;
+  height: 1px;
+  background: #7e3434;
+  -webkit-transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+  transition: all 0.4s cubic-bezier(0.5, 0.24, 0, 1);
+}
+.clear_all_button:hover::after {
+  width: 100%;
+}
+.clear_all_button:hover {
+  text-decoration: none;
+  color: black;
+  border-left: 1px solid #7e3434;
+  border-right: 1px solid #7e3434;
+}
+
+.add_new_participant_btn {
+  margin-top: 4%;
+  margin-left: 2%;
+  cursor: pointer;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font: 250 0.9em helvetica neue, open sans, sans-serif;
+  background-color: #020202;
+  color: rgb(211, 211, 211);
+  width: 25%;
+}
+
+.add_new_participant_btn:hover {
+  color: white;
+}
+
+.add_new_participant_btn i {
+  margin-left: 8px;
+}
+
+
+#submit_group_btn {
+  margin-top: 11%;
+  letter-spacing: 2px;
+}
+
+#button_submit_group {
+  letter-spacing: 1px;
+}
+
+.close_form {
+  background: transparent;
+  border: 0;
+  color: #f06d6d;
+  margin-left: 95%;
+  margin-top: 2px;
+}
+.close_form::before {
+  content: "\2715";
+}
+
+.remove_participant {
+  background: transparent;
+  border: 0;
+  color: #a77777d5;
+  margin-left: 51%;
+}
+
+.remove_participant::before {
+  content: "\2715";
+}
+
+.remove_participant:hover {
+  color: rgb(185, 40, 40);
+}
+/*************************************************/
+/**********************Signature***************************/
+
+.signature_group {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 5%;
+}
+
+.signature_group p {
+  text-align: center;
+  font-family: Helvetica, Arial, Sans-Serif;
+  font-size: 0.85em;
+  color: #818181;
+}
+
+.signature_group a {
+  color: #414141;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#signature_font_group {
+  font: 260 0.65em helvetica neue, open sans, sans-serif;
+  letter-spacing: 2px;
+  color: rgb(54, 54, 54);
+}
+
+/*************************************************/
+/**********************Friends***************************/
+
+.friends_master_container {
+  width: 22%;
+}
+
+.friends_title_container {
+  margin-top: 5%;
+  border-bottom: 1px solid black;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.friends_title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: 150 1em helvetica neue, open sans, sans-serif;
+  margin-bottom: 3%;
+}
+
+.friends_title i {
+  margin-left: 7px;
+}
+
+.active_friends_list_container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.no_active_friends {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 15px;
+  color: rgb(173, 173, 173);
+  margin-bottom: 10%;
+}
+
+.active_friend_row_wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 2%;
+  margin-right: 3%;
+  margin-top: 2%;
+  margin-bottom: 1%;
+}
+
+.active_friends_pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 3px;
+  object-fit: cover;
+}
+
+#i_active_friends_end {
+  padding-left: 22%;
+}
+
+#fas_circle {
+  color: rgb(33, 97, 33);
+  font-size: 14px;
+}
+
+
+/******************** Add Participants Modal **********/
+
+.search_quantum_friends {
+  display: flex;
+  align-items: center;
+  width: 70%;
+  border: 1px solid rgb(151, 151, 151);
+  border-radius: 4px 4px 4px 4px;
+  margin-bottom: 5px;
+}
+
+.search_quantum_friends i {
+  color: rgb(223, 223, 223);
+  margin-left: 6%;
+  margin-right: 5%;
+  cursor: pointer;
+}
+
+.search_quantum_friends_input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  color: rgb(207, 207, 207);
+  font-size: 13px;
+}
+
+.divider {
+  border-left: 1px solid rgb(129, 128, 128);
+  height: 25px;
+}
+
+.search_quantum_friends_input::placeholder {
+  color: rgba(185, 185, 185, 0.719);
+  font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  font-size: 13px;
+  padding-left: 5px;
+}
+
+.search_quantum_friends_input:focus {
+  outline: none;
+}
+
+/* .search_quantum_friends_input:focus::placeholder {
+  color: transparent;
+} */
+
+#add_friend_group_chat_header {
+  border-bottom: none;
+}
+
+#fa_plus_add_user {
+  cursor: pointer;
+}
+
+#add_friend_card_container_1 {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  flex-direction: row;
+  width: 50%;
+  max-width: 50%;
+}
+
+#add_friend_card_container_2 {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: row;
+  width: 50%;
+  max-width: 50%;
+}
+.add_friend_card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: rgb(212, 212, 212);
+  border-bottom: 1px solid rgb(83, 83, 83);
+}
+
+.add_friend_profile_pic {
+  padding-right: 5%;
+}
+
+.add_friend_card_img {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  margin-right: 3px;
+  object-fit: cover;
+}
+
+/**************************** Group Chats User Is In List/ Side Nav ***********/
+
+.group_chat_list {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 5%;
+  font-size: 15px;
+  color: rgb(173, 173, 173);
+  margin-bottom: 14%;
+  margin-right: 2%;
+}
+
+.chat_item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6%;
+}
+
+.chat_item:hover {
+  color: rgb(236, 236, 236);
+  cursor: pointer;
+
+}

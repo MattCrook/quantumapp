@@ -5,6 +5,13 @@ sudo docker run -it -d --name quantumapp --env-file .env -p 80:8000 mgcrook11/qu
 IP of loadbalancer: 35.239.130.209:80
 URI of vercel: https://quantum-application.vercel.app/
 URI of app engine: https://quantum-coasters.uc.r.appspot.com/
+QuantumApp: https://quantum-coasters.uc.r.appspot.com
+
+services:
+sqladmin.googleapis.com
+
+AppEngine websockets:
+https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/appengine/flexible/websockets
 
 
 run docker container image for django channels
@@ -101,3 +108,22 @@ env_variables:
   POSTGRES_PASSWORD: [DB PASSWORD]
   POSTGRES_USER: [DB USER]
   POSTGRES_HOST: [DB HOST]
+
+
+
+AppEngine Instructions for cloud sql instance:
+https://cloud.google.com/python/django/flexible-environment
+
+Linux: wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+Mac: curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
+chmod +x cloud_sql_proxy
+mv cloud_sql_proxy /usr/local/bin
+
+Connect to DB:
+GOOGLE_CLOUD_PROJECT=quantum-coasters
+USE_CLOUD_SQL_AUTH_PROXY=true
+cloud_sql_proxy -instances="PROJECT_ID:REGION:INSTANCE_NAME"=tcp:5432
+
+gcloud sql connect quantumcoastersdb --user postgres
+or
+gcloud sql connect quantumcoastersdb --user DB_USERNAME

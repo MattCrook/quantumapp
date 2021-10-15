@@ -108,6 +108,7 @@ celerybeat.pid
 # Environments
 .env
 .env.deploy
+.env.dev
 .venv
 env/
 .env/
@@ -177,3 +178,5 @@ notes.txt*
 datadump.json
 Dockerfile.no-compose.example
 quantumappenv
+old.deploy.yaml
+deploy.yaml.env.vars
