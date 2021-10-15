@@ -17,18 +17,3 @@
 __pycache__/
 # Ignored by the build system
 /setup.cfg
-
-db.sqlite3
-quantumadminapp/node_modules
-old.deploy.yaml
-notes.txt
-Dockerfile.production.example
-foritfy-analysis.yml
-quantumappenv
-Pipfile
-Pipfile.lock
-requirements.old.txt
-requirements.dev.txt
-requirements.prod.txt
-infrastructure
-.vscode

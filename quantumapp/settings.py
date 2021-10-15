@@ -19,19 +19,16 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in production
 DEBUG = True
 
 # To set as env, must put into a startup script check if env var DEBUG is true, then export ALLOWED_HOSTS=localhost
@@ -280,15 +277,55 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 # Use django-environ to parse the connection string
-DATABASES = {"default": env.db()}
+# DATABASES = {"default": env.db()}
+print(env.db())
 
 # # If the flag as been set, configure to use proxy
+# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+#     DATABASES["default"]["HOST"] = "127.0.0.1"
+#     DATABASES["default"]["PORT"] = 5432
+
+
 if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-    DATABASES["default"]["HOST"] = "127.0.0.1"
-    DATABASES["default"]["PORT"] = 5432
+    DATABASE_URL=os.environ.get('DATABASE_URL')
+    DATABASES = {
+        'default' : {
+            'ENGINE': 'django.db.backends.postgresql',
+            # 'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
+            'NAME': os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
+            'USER': os.environ.get('CLOUD_SQL_USERNAME'),
+            'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
+            'HOST': "127.0.0.1",
+            'PORT': 5432,
+        }
+    }
+else:
+    DATABASE_URL=os.environ.get('DATABASE_URL')
+    DATABASES = {
+    'default' : {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
+        'USER': os.environ.get('CLOUD_SQL_USERNAME'),
+        'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
+        'HOST': '/cloudsql',
+        'PORT': 5432,
+        }
+    }
+
+# ToDo: to make use of different envs or settings file....at top put global variable like: ENVIRONMENT = 'whatever' and DATABASE = 'sqlite' or 'postgres' or 'cloudsql' etc...
+# Or just have the relavant database as default...
+
 
 # DATABASES = {
-#     'default': {
+#     'default' : {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
+#         'USER': os.environ.get('CLOUD_SQL_USERNAME'),
+#         'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
+#         'HOST': os.environ.get('CLOUD_SQL_HOST'),
+#         'PORT': os.environ.get('CLOUD_SQL_PORT'),
+#     },
+#     'sqlite': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #         'TEST': {

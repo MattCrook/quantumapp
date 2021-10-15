@@ -49,3 +49,32 @@ resource "google_sql_user" "users" {
   # password = random_string.password.result
   deletion_policy = "ABANDON"
 }
+
+
+resource "random_id" "secret" {
+  byte_length = 4
+}
+
+resource "google_secret_manager_secret" "django_secret" {
+  provider  = google-beta
+  project   = var.project_id
+  secret_id = "django-settings-${random_id.secret.hex}"
+
+  labels = {
+    label = "django-settings"
+  }
+}
+
+resource "google_secret_manager_secret_version" "django_secret" {
+  project     = var.project_id
+  provider    = google-beta
+  secret      = google_secret_manager_secret.my-secret.id
+  secret_data = file("../../.env")
+}
+
+resource "google_secret_manager_secret_iam_member" "my-app" {
+  provider  = google-beta
+  secret_id = google_secret_manager_secret.django_secret.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "user:mattcrook11@gmail.com"
+}
