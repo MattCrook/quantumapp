@@ -32,6 +32,7 @@ variable "iam_members" {
     description = "List of Service Accounts, Users, etc..to give IAM memebership to a new member tf_state bucket. Updates the IAM policy to grant a role to a new member."
     type        = list(string)
     default     = ["user:matt.crook11@gmail.com"]
+}
 
 
 variable acl { type = "list" default = [] }

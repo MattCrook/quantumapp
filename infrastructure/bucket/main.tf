@@ -6,8 +6,8 @@ provider "google" {
 
 // terraform {
 //     backend "remote" {
-//         bucket      = "quantum-core-tf-state"
-//         prefix      = "global/terraform.tfstate"
+//         bucket      = "tf-quantum-core-tf-state"
+//         prefix      = "infrastructure/bucket/terraform.tfstate"
 //     }
 // }
 
@@ -146,7 +146,7 @@ resource "google_storage_bucket" "quantumapp_gae_storage" {
 
     labels {
         env = "prod"
-        bucket = "gae-storage"
+        bucket = "quantumapp-gae-storage"
     }
 
     logging {

@@ -180,6 +180,7 @@ Dockerfile.no-compose.example
 quantumappenv
 old.deploy.yaml
 deploy.yaml.env.vars
+requirements.old.txt
 
 # Local Database file password
 .sql_user_password.txt
