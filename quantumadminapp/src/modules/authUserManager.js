@@ -1,6 +1,7 @@
 // import '@babel/preset-env'
-import env from "../../env-config.json";
-const remoteURL = env.API_URL;
+import env from "../../env-config";
+const remoteURL = window._env_.API_URL;
+
 
 function getCookie(cookieName) {
   let name = cookieName + "=";

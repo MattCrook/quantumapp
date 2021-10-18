@@ -1,5 +1,7 @@
-import env from "../../env-config.json";
-const remoteURL = env.API_URL;
+// import env from "../../env-config.json";
+// const remoteURL = env.API_URL;
+const remoteURL = window._env_.API_URL
+
 
 export async function healthCheck() {
   try {

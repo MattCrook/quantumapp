@@ -3,5 +3,6 @@
   "DJANGO_ADMIN_URI": "http://localhost:8000/admin/",
   "REST_FRAMEWORK_ADMIN_URI": "http://localhost:8000/api-auth/login/?next=/rest-auth/login/",
   "REST_FRAMEWORK_ADMIN_URI_USER_DETAILS": "http://localhost:8000/rest-auth/user/",
-  "REST_FRAMEWORK_API_ROOT": "http://localhost:8000/api/"
+  "REST_FRAMEWORK_API_ROOT": "http://localhost:8000/api/",
+  "ADMIN_LOGOUT": "http://localhost:8000/quantumadmin/admin_logout/"
 }

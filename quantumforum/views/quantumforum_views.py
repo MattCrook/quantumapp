@@ -5,7 +5,7 @@ from quantumapi.models import UserProfile as UserProfileModel
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.sessions.models import Session
 from quantumforum.models import Friendships, FriendRequest, GroupChat, GroupMembersJoin
-from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, REACT_APP_FORUM_URL, REACT_APP_HOME
+from quantumapp.settings import API_IDENTIFIER, AUTH0_DOMAIN, CLIENT_URL, REACT_APP_FORUM_URL, REACT_APP_HOME
 from django.contrib.auth import authenticate, get_backends
 # from social_django.context_processors import backends
 from django.contrib.auth import get_user_model
@@ -176,6 +176,7 @@ def error(request):
     error = 'Oops! Something went wrong.'
     context = {
             'error': error,
+            'CLIENT_URL': CLIENT_URL
         }
     return render(request, template, context)
 

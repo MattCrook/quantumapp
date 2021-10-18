@@ -9,7 +9,7 @@ import LanguageOutlinedIcon from '@material-ui/icons/LanguageOutlined';
 import StorageIcon from '@material-ui/icons/Storage';
 // import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
-import env from "../../../env-config.json";
+// import env from "../../../env-config.json";
 import "./Nav.css";
 
 const NavBar = (props) => {
@@ -22,22 +22,22 @@ const NavBar = (props) => {
   };
 
   const redirectToDjangoAdmin = () => {
-    const adminURI = env.DJANGO_ADMIN_URI;
+    const adminURI = window._env_.DJANGO_ADMIN_URI;
     window.location.href = adminURI
   };
 
   const redirectToRestFrameworkAdmin = () => {
-    const drfURI = env.REST_FRAMEWORK_ADMIN_URI;
+    const drfURI = window._env_.REST_FRAMEWORK_ADMIN_URI;
     window.location.href = drfURI
   };
 
   const redirectToRestFrameworkUserDetails = () => {
-    const drfURI = env.REST_FRAMEWORK_ADMIN_URI_USER_DETAILS;
+    const drfURI = window._env_.REST_FRAMEWORK_ADMIN_URI_USER_DETAILS;
     window.location.href = drfURI
   };
 
 const redirectToRestAPIRoot = () => {
-  const apiRootURI = env.REST_FRAMEWORK_API_ROOT;
+  const apiRootURI = window._env_.REST_FRAMEWORK_API_ROOT;
   window.location.href = apiRootURI
 };
 

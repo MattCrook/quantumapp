@@ -54,11 +54,13 @@ export const AuthUserProvider = ({ children }) => {
   }, []);
 
   const adminLogout = async () => {
+    setIsLoading(true);
     sessionStorage.removeItem("QuantumToken");
     sessionStorage.removeItem("email");
+    var adminLogoutUrl = window._env_.ADMIN_LOGOUT
     try {
       const csrf = getCookie('csrftoken');
-      const response = await fetch("http://localhost:8000/quantumadmin/admin_logout/", {
+      const response = await fetch(`${adminLogoutUrl}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,11 +68,12 @@ export const AuthUserProvider = ({ children }) => {
         },
       });
       if (response.ok) {
+        setIsLoading(false);
         const origin = window.location.origin;
         window.location.href = origin + '/quantumadmin/'
       }
-      throw new Error("Request Failed");
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
   };

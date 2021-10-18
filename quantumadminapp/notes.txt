@@ -90,3 +90,6 @@ https://www.freecodecamp.org/news/how-to-implement-runtime-environment-variables
 
 
 {% endcomment %}
+
+Create a .env file in project root and the npm run watch script will copy those values over to
+a env-config.js file

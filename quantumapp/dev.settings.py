@@ -5,8 +5,7 @@ from dotenv import load_dotenv
 from dotenv.main import dotenv_values
 load_dotenv()
 
-config = dotenv_values(".env")
-print(config)
+# config = dotenv_values(".env")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,12 +103,7 @@ REST_FRAMEWORK = {
 REACT_APP_FORUM_URL = os.environ.get('REACT_APP_FORUM_URL')
 REACT_APP_HOME = os.environ.get('REACT_APP_HOME')
 REACT_APP_USER_PROFILE = os.environ.get('REACT_APP_USER_PROFILE')
-CLIENT_URL = os.environ.get('CLIENT_URL')
-FORUM_URL = os.environ.get('FORUM_URL')
-ADMIN_URL = os.environ.get('ADMIN_URL')
 CLIENT_URL = 'http://localhost:3000'
-
-FORUM_URL = 'http://localhost:8000/quantumforum/'
 FORUM_URL = 'http://localhost:8000/index'
 ADMIN_URL = 'http://localhost:8000/quantumadmin/'
 

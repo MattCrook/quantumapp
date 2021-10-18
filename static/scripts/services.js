@@ -1,4 +1,4 @@
-const remoteUrl = process.env.REMOTE_API_URL;
+const remoteUrl = window.origin;
 
 
 const getCookie = (name) => {

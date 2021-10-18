@@ -108,7 +108,7 @@ class Users(viewsets.ViewSet):
 @api_view(['GET', 'POST'])
 def get_user_session(request):
     if request.method == 'POST':
-        req_body = json.loads(request.body.decode())
+        # req_body = json.loads(request.body.decode())
         token = request.auth
         auth_user_token = TokenModel.objects.get(key=token.key)
         if auth_user_token.user_id == request.user.id:
@@ -132,7 +132,7 @@ def get_user_session(request):
             auth_user = request.user
             session_key = request.session.session_key
             session = Session.objects.get(session_key=session_key)
-            session_store_class = session.get_session_store_class()
+            # session_store_class = session.get_session_store_class()
             decoded_session_data = session.get_decoded()
             auth_user_token = TokenModel.objects.get(user_id=auth_user.id)
             auth_session_hash_data = auth_user.get_session_data(session)

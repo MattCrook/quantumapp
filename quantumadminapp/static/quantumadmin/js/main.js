@@ -12978,36 +12978,53 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "api_endpoints_config": () => (/* binding */ api_endpoints_config)
 /* harmony export */ });
-/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./env-config.json */ "./env-config.json");
-
+// import env from "./env-config.json";
+var URL = window._env_.API_URL;
 var api_endpoints_config = {
-  "parks": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/parks"),
-  "tracktypes": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/tracktypes"),
-  "manufacturers": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/manufacturers"),
-  "rollercoasters": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/rollercoasters"),
-  "userprofiles": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/userprofiles"),
-  "credits": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/credits"),
-  "messages": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/messages"),
-  "users": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/users"),
-  "images": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/images"),
-  "credentials": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/credentials"),
-  "news": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/news"),
-  "contributor_applications": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/contributor_applications"),
-  "activity_log": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/activity_log"),
-  "login_info": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/login_info"),
-  "calendar_events": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/calendar_events"),
-  "error_logs": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/error_logs"),
-  "user_feedback": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/user_feedback"),
-  "bug_reports": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/bug_reports"),
-  "status_code": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/status_code"),
-  "friend_requests": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/friend_requests"),
-  "friendships": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/friendships"),
-  "app_login_data": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/app_login_data"),
-  "group_chats": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/group_chats"),
-  "friends": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/friends"),
-  "friends_join": "".concat(_env_config_json__WEBPACK_IMPORTED_MODULE_0__.API_URL, "/api/friends_join")
+  "parks": "".concat(URL, "/api/parks"),
+  "tracktypes": "".concat(URL, "/api/tracktypes"),
+  "manufacturers": "".concat(URL, "/api/manufacturers"),
+  "rollercoasters": "".concat(URL, "/api/rollercoasters"),
+  "userprofiles": "".concat(URL, "/api/userprofiles"),
+  "credits": "".concat(URL, "/api/credits"),
+  "messages": "".concat(URL, "/api/messages"),
+  "users": "".concat(URL, "/api/users"),
+  "images": "".concat(URL, "/api/images"),
+  "credentials": "".concat(URL, "/api/credentials"),
+  "news": "".concat(URL, "/api/news"),
+  "contributor_applications": "".concat(URL, "/api/contributor_applications"),
+  "activity_log": "".concat(URL, "/api/activity_log"),
+  "login_info": "".concat(URL, "/api/login_info"),
+  "calendar_events": "".concat(URL, "/api/calendar_events"),
+  "error_logs": "".concat(URL, "/api/error_logs"),
+  "user_feedback": "".concat(URL, "/api/user_feedback"),
+  "bug_reports": "".concat(URL, "/api/bug_reports"),
+  "status_code": "".concat(URL, "/api/status_code"),
+  "friend_requests": "".concat(URL, "/api/friend_requests"),
+  "friendships": "".concat(URL, "/api/friendships"),
+  "app_login_data": "".concat(URL, "/api/app_login_data"),
+  "group_chats": "".concat(URL, "/api/group_chats"),
+  "friends": "".concat(URL, "/api/friends"),
+  "friends_join": "".concat(URL, "/api/friends_join")
 };
 
+
+/***/ }),
+
+/***/ "./env-config.js":
+/*!***********************!*\
+  !*** ./env-config.js ***!
+  \***********************/
+/***/ (() => {
+
+window._env_ = {
+  API_URL: "https://api-dot-quantum-coasters.uc.r.appspot.com/",
+  DJANGO_ADMIN_URI: "https://api-dot-quantum-coasters.uc.r.appspot.com/admin/",
+  REST_FRAMEWORK_ADMIN_URI: "https://api-dot-quantum-coasters.uc.r.appspot.com/api-auth/login/?next=/rest-auth/login/",
+  REST_FRAMEWORK_ADMIN_URI_USER_DETAILS: "https://api-dot-quantum-coasters.uc.r.appspot.com/rest-auth/user/",
+  REST_FRAMEWORK_API_ROOT: "https://api-dot-quantum-coasters.uc.r.appspot.com/api/",
+  ADMIN_LOGOUT: "https://api-dot-quantum-coasters.uc.r.appspot.com/quantumadmin/admin_logout/"
+};
 
 /***/ }),
 
@@ -14458,16 +14475,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _contexts_AuthUserContext__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../contexts/AuthUserContext */ "./src/contexts/AuthUserContext.js");
-/* harmony import */ var _material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @material-ui/icons/LockOpen */ "./node_modules/@material-ui/icons/LockOpen.js");
-/* harmony import */ var _material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/icons/Lock */ "./node_modules/@material-ui/icons/Lock.js");
-/* harmony import */ var _material_ui_icons_HomeOutlined__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/icons/HomeOutlined */ "./node_modules/@material-ui/icons/HomeOutlined.js");
-/* harmony import */ var _material_ui_icons_AccountCircle__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/icons/AccountCircle */ "./node_modules/@material-ui/icons/AccountCircle.js");
-/* harmony import */ var _material_ui_icons_VerticalSplitOutlined__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/icons/VerticalSplitOutlined */ "./node_modules/@material-ui/icons/VerticalSplitOutlined.js");
-/* harmony import */ var _material_ui_icons_LanguageOutlined__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/icons/LanguageOutlined */ "./node_modules/@material-ui/icons/LanguageOutlined.js");
-/* harmony import */ var _material_ui_icons_Storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/icons/Storage */ "./node_modules/@material-ui/icons/Storage.js");
-/* harmony import */ var _material_ui_icons_PermIdentity__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/icons/PermIdentity */ "./node_modules/@material-ui/icons/PermIdentity.js");
-/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../env-config.json */ "./env-config.json");
-/* harmony import */ var _Nav_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Nav.css */ "./src/components/nav/Nav.css");
+/* harmony import */ var _material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @material-ui/icons/LockOpen */ "./node_modules/@material-ui/icons/LockOpen.js");
+/* harmony import */ var _material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @material-ui/icons/Lock */ "./node_modules/@material-ui/icons/Lock.js");
+/* harmony import */ var _material_ui_icons_HomeOutlined__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/icons/HomeOutlined */ "./node_modules/@material-ui/icons/HomeOutlined.js");
+/* harmony import */ var _material_ui_icons_AccountCircle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/icons/AccountCircle */ "./node_modules/@material-ui/icons/AccountCircle.js");
+/* harmony import */ var _material_ui_icons_VerticalSplitOutlined__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/icons/VerticalSplitOutlined */ "./node_modules/@material-ui/icons/VerticalSplitOutlined.js");
+/* harmony import */ var _material_ui_icons_LanguageOutlined__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/icons/LanguageOutlined */ "./node_modules/@material-ui/icons/LanguageOutlined.js");
+/* harmony import */ var _material_ui_icons_Storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/icons/Storage */ "./node_modules/@material-ui/icons/Storage.js");
+/* harmony import */ var _material_ui_icons_PermIdentity__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/icons/PermIdentity */ "./node_modules/@material-ui/icons/PermIdentity.js");
+/* harmony import */ var _Nav_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Nav.css */ "./src/components/nav/Nav.css");
 
 
 
@@ -14479,7 +14495,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 
-
+ // import env from "../../../env-config.json";
 
 
 
@@ -14503,22 +14519,22 @@ var NavBar = function NavBar(props) {
   };
 
   var redirectToDjangoAdmin = function redirectToDjangoAdmin() {
-    var adminURI = _env_config_json__WEBPACK_IMPORTED_MODULE_3__.DJANGO_ADMIN_URI;
+    var adminURI = window._env_.DJANGO_ADMIN_URI;
     window.location.href = adminURI;
   };
 
   var redirectToRestFrameworkAdmin = function redirectToRestFrameworkAdmin() {
-    var drfURI = _env_config_json__WEBPACK_IMPORTED_MODULE_3__.REST_FRAMEWORK_ADMIN_URI;
+    var drfURI = window._env_.REST_FRAMEWORK_ADMIN_URI;
     window.location.href = drfURI;
   };
 
   var redirectToRestFrameworkUserDetails = function redirectToRestFrameworkUserDetails() {
-    var drfURI = _env_config_json__WEBPACK_IMPORTED_MODULE_3__.REST_FRAMEWORK_ADMIN_URI_USER_DETAILS;
+    var drfURI = window._env_.REST_FRAMEWORK_ADMIN_URI_USER_DETAILS;
     window.location.href = drfURI;
   };
 
   var redirectToRestAPIRoot = function redirectToRestAPIRoot() {
-    var apiRootURI = _env_config_json__WEBPACK_IMPORTED_MODULE_3__.REST_FRAMEWORK_API_ROOT;
+    var apiRootURI = window._env_.REST_FRAMEWORK_API_ROOT;
     window.location.href = apiRootURI;
   };
 
@@ -14574,7 +14590,7 @@ var NavBar = function NavBar(props) {
     className: "dropdown_row_wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "dropdown_item"
-  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_HomeOutlined__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, "Home"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_HomeOutlined__WEBPACK_IMPORTED_MODULE_4__["default"], {
     style: {
       color: 'rgb(206, 206, 206)',
       fontSize: 17,
@@ -14584,7 +14600,7 @@ var NavBar = function NavBar(props) {
     className: "dropdown_row_wrapper"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("div", {
     className: "dropdown_item"
-  }, "Account"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_AccountCircle__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, "Account"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_AccountCircle__WEBPACK_IMPORTED_MODULE_5__["default"], {
     style: {
       color: 'rgb(206, 206, 206)',
       fontSize: 17,
@@ -14597,7 +14613,7 @@ var NavBar = function NavBar(props) {
     onClick: function onClick() {
       return redirectToDjangoAdmin();
     }
-  }, "Django Admin"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_VerticalSplitOutlined__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, "Django Admin"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_VerticalSplitOutlined__WEBPACK_IMPORTED_MODULE_6__["default"], {
     style: {
       color: 'rgb(206, 206, 206)',
       fontSize: 17,
@@ -14613,7 +14629,7 @@ var NavBar = function NavBar(props) {
     onClick: function onClick() {
       return redirectToRestFrameworkAdmin();
     }
-  }, "Rest Framework Admin"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_Storage__WEBPACK_IMPORTED_MODULE_8__["default"], {
+  }, "Rest Framework Admin"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_Storage__WEBPACK_IMPORTED_MODULE_7__["default"], {
     style: {
       color: 'rgb(206, 206, 206)',
       fontSize: 17,
@@ -14629,7 +14645,7 @@ var NavBar = function NavBar(props) {
     onClick: function onClick() {
       return redirectToRestFrameworkUserDetails();
     }
-  }, "Rest Framework Admin User Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_PermIdentity__WEBPACK_IMPORTED_MODULE_9__["default"], {
+  }, "Rest Framework Admin User Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_PermIdentity__WEBPACK_IMPORTED_MODULE_8__["default"], {
     style: {
       color: 'rgb(206, 206, 206)',
       fontSize: 17,
@@ -14645,7 +14661,7 @@ var NavBar = function NavBar(props) {
     onClick: function onClick() {
       return redirectToRestAPIRoot();
     }
-  }, "Rest Framework API Root"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_LanguageOutlined__WEBPACK_IMPORTED_MODULE_10__["default"], {
+  }, "Rest Framework API Root"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_LanguageOutlined__WEBPACK_IMPORTED_MODULE_9__["default"], {
     style: {
       color: 'rgb(206, 206, 206)',
       fontSize: 17,
@@ -14658,7 +14674,7 @@ var NavBar = function NavBar(props) {
     onClick: function onClick() {
       return adminLogout();
     }
-  }, "Logout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_11__["default"], {
+  }, "Logout"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_Lock__WEBPACK_IMPORTED_MODULE_10__["default"], {
     style: {
       color: 'white',
       fontSize: 18,
@@ -14670,7 +14686,7 @@ var NavBar = function NavBar(props) {
     onClick: function onClick() {
       return props.history.push("/quantumadmin/login");
     }
-  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_12__["default"], {
+  }, "Login"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_material_ui_icons_LockOpen__WEBPACK_IMPORTED_MODULE_11__["default"], {
     style: {
       color: 'white',
       fontSize: 18,
@@ -14842,17 +14858,19 @@ var AuthUserProvider = function AuthUserProvider(_ref) {
 
   var adminLogout = /*#__PURE__*/function () {
     var _ref3 = (0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__["default"])( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().mark(function _callee2() {
-      var csrf, response, origin;
+      var adminLogoutUrl, csrf, response, origin;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              setIsLoading(true);
               sessionStorage.removeItem("QuantumToken");
               sessionStorage.removeItem("email");
-              _context2.prev = 2;
+              adminLogoutUrl = window._env_.ADMIN_LOGOUT;
+              _context2.prev = 4;
               csrf = getCookie('csrftoken');
-              _context2.next = 6;
-              return fetch("http://localhost:8000/quantumadmin/admin_logout/", {
+              _context2.next = 8;
+              return fetch("".concat(adminLogoutUrl), {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -14860,27 +14878,30 @@ var AuthUserProvider = function AuthUserProvider(_ref) {
                 }
               });
 
-            case 6:
+            case 8:
               response = _context2.sent;
 
               if (response.ok) {
+                setIsLoading(false);
                 origin = window.location.origin;
                 window.location.href = origin + '/quantumadmin/';
               }
 
-              throw new Error("Request Failed");
+              _context2.next = 16;
+              break;
 
-            case 11:
-              _context2.prev = 11;
-              _context2.t0 = _context2["catch"](2);
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](4);
+              setIsLoading(false);
               console.log(_context2.t0);
 
-            case 14:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 11]]);
+      }, _callee2, null, [[4, 12]]);
     }));
 
     return function adminLogout() {
@@ -14948,12 +14969,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../env-config.json */ "./env-config.json");
+/* harmony import */ var _env_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../env-config */ "./env-config.js");
+/* harmony import */ var _env_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_env_config__WEBPACK_IMPORTED_MODULE_2__);
 
 
 // import '@babel/preset-env'
 
-var remoteURL = _env_config_json__WEBPACK_IMPORTED_MODULE_2__.API_URL;
+var remoteURL = window._env_.API_URL;
 
 function getCookie(cookieName) {
   var name = cookieName + "=";
@@ -15180,11 +15202,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _env_config_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../env-config.json */ "./env-config.json");
 
 
-
-var remoteURL = _env_config_json__WEBPACK_IMPORTED_MODULE_2__.API_URL;
+// import env from "../../env-config.json";
+// const remoteURL = env.API_URL;
+var remoteURL = window._env_.API_URL;
 function healthCheck() {
   return _healthCheck.apply(this, arguments);
 }
@@ -56758,7 +56780,7 @@ function _unsupportedIterableToArray(o, minLen) {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"API_URL":"https://api-dot-quantum-coasters.uc.r.appspot.com/","DJANGO_ADMIN_URI":"https://api-dot-quantum-coasters.uc.r.appspot.com/admin/","REST_FRAMEWORK_ADMIN_URI":"https://api-dot-quantum-coasters.uc.r.appspot.com/api-auth/login/?next=/rest-auth/login/","REST_FRAMEWORK_ADMIN_URI_USER_DETAILS":"https://api-dot-quantum-coasters.uc.r.appspot.com/rest-auth/user/","REST_FRAMEWORK_API_ROOT":"https://api-dot-quantum-coasters.uc.r.appspot.com/api/"}');
+module.exports = JSON.parse('{"API_URL":"https://api-dot-quantum-coasters.uc.r.appspot.com","DJANGO_ADMIN_URI":"https://api-dot-quantum-coasters.uc.r.appspot.com/admin/","REST_FRAMEWORK_ADMIN_URI":"https://api-dot-quantum-coasters.uc.r.appspot.com/api-auth/login/?next=/rest-auth/login/","REST_FRAMEWORK_ADMIN_URI_USER_DETAILS":"https://api-dot-quantum-coasters.uc.r.appspot.com/rest-auth/user/","REST_FRAMEWORK_API_ROOT":"https://api-dot-quantum-coasters.uc.r.appspot.com/api/"}');
 
 /***/ })
 

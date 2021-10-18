@@ -1,10 +1,10 @@
 import {
-  useQuantumFriends,
   useLoading,
-  useGroupChatParticipants,
-  useUserList,
-  useGroup,
-  useAddedToGroup,
+  // useQuantumFriends,
+  // useGroupChatParticipants,
+  // useUserList,
+  // useGroup,
+  // useAddedToGroup,
 } from "./hooks.js";
 import { getAllUsersFriends, retrieveUserProfile } from "./services.js";
 

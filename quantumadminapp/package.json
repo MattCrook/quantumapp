@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "chmod +x ./env.sh && ./env.sh && cp env-config.js ./public/ && webpack --mode development --entry ./src/index.js --output-path ./static/quantumadminapp",
-    "watch": "webpack --config webpack.config.js --watch",
+    "watch": "chmod +x ./env.sh && ./env.sh && webpack --config webpack.config.js --watch",
     "build": "webpack --mode production",
     "start": "webpack serve --config webpack.config.js --open",
     "test": "jest"

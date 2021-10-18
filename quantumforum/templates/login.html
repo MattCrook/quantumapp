@@ -20,7 +20,7 @@
             {% csrf_token %}
             {{ login_form.as_p }}
             <button class="login_btn" type="submit">Login</button>
-            <button class="register_btn"><a class="register_btn" href="{'#'}">Register New SysAdmin
+            <button class="register_btn"><a class="register_btn" href="{% url 'quantumforum:error' %}">Register New SysAdmin
                     Account</a></button>
             {% if messages %}
             <ul class="messages">

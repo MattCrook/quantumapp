@@ -4,14 +4,15 @@ import os
 import sys
 # import dotenv
 
-def get_environ():
-    if os.getenv("DJANGO_ENV") == 'local':
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.dev_settings')
-    else:
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.settings')
+# def get_environ():
+#     if os.getenv("DJANGO_ENV") == 'local':
+#         print(os.getenv("DJANGO_ENV"))
+#         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.dev_settings')
+#     else:
+#         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.settings')
 
 def main():
-    get_environ()
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.settings')
 
     try:
         from django.core.management import execute_from_command_line

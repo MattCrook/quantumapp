@@ -1,7 +1,7 @@
 from django.urls import reverse
-from django.http import HttpResponseRedirect
+# from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
-from django.contrib.auth import login, admin
+# from django.contrib.auth import login, admin
 from quantumforum.models import LoginForm
 from django.contrib.auth import authenticate
 from django.contrib import messages
@@ -9,13 +9,13 @@ from django.contrib.messages import error, success, INFO
 from rest_auth.models import TokenModel
 from quantumapp.settings import REACT_APP_FORUM_URL, SOCIAL_AUTH_LOGIN_REDIRECT_URL, AUTH0_DOMAIN
 from django.contrib.auth import get_user_model
-import json
-
-from social_django.views import auth, do_auth, complete, do_complete
-from social_django.context_processors import backends, user_backends_data, login_redirect
 from social_core.actions import user_is_authenticated
+# import json
 
-from quantumapi.views.auth.management_api_services import get_open_id_config, management_api_oath_endpoint, get_management_api_grants, get_management_api_client_grants, get_management_api_connections, retrieve_user_logs, resource_servers, management_api_keys, device_credentials
+# from social_django.views import auth, do_auth, complete, do_complete
+# from social_django.context_processors import backends, user_backends_data, login_redirect
+
+# from quantumapi.views.auth.management_api_services import get_open_id_config, management_api_oath_endpoint, get_management_api_grants, get_management_api_client_grants, get_management_api_connections, retrieve_user_logs, resource_servers, management_api_keys, device_credentials
 
 # We know the user is already authenticted with auth0, so there is no way to get to this point
 # without going thru auth0 first from the FE.

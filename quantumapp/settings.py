@@ -1,44 +1,22 @@
 import os
 import json
 import socket
-# import datetime
-# from django.conf import settings
-# from django.core.exceptions import ImproperlyConfigured
-# from datetime import timedelta
-# import dotenv
-import environ
 from dotenv import load_dotenv
-# from dotenv.main import dotenv_values
-# config = dotenv_values(".env")
+from dotenv.main import dotenv_values
 load_dotenv()
-# ToDo: Create separate Settings.py files and depending on env (dev or deployed) use different settings (and env files),
-# To have localhost as dev urls and the deployed URLs as urls
 
-# ENVIRONMENT = 'production'
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+# config = dotenv_values(".env")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-# To set as env, must put into a startup script check if env var DEBUG is true, then export ALLOWED_HOSTS=localhost
-# When DEBUG is True and ALLOWED_HOSTS is empty, the host is validated against ['.localhost', '127.0.0.1', '[::1]'].
-# https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts
 
 # ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['https://quantum-coasters.uc.r.appspot.com', 'https://api-dot-quantum-coasters.uc.r.appspot.com']
 
 
 INSTALLED_APPS = [
@@ -49,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_framework_jwt',
@@ -61,6 +38,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # Included providers for allauth
     # 'allauth.socialaccount.providers.auth0',
+    'corsheaders',
     'social_django',
     'django_filters',
     'django.contrib.sessions.middleware',
@@ -125,28 +103,9 @@ REST_FRAMEWORK = {
 REACT_APP_FORUM_URL = os.environ.get('REACT_APP_FORUM_URL')
 REACT_APP_HOME = os.environ.get('REACT_APP_HOME')
 REACT_APP_USER_PROFILE = os.environ.get('REACT_APP_USER_PROFILE')
-# CLIENT_URL = os.environ.get('CLIENT_URL')
-# FORUM_URL = os.environ.get('FORUM_URL')
-# ADMIN_URL = os.environ.get('ADMIN_URL')
-# CLIENT_URL = 'http://localhost:3000'
-
-
-
-CLIENT_URL = 'https://quantum-coasters.uc.r.appspot.com'
-# FORUM_URL = 'http://localhost:8000/quantumforum/'
-# FORUM_URL = 'http://localhost:8000/index'
-# ADMIN_URL = 'http://localhost:8000/quantumadmin/'
-
-# For if deployed on VM to GCP
-# BACKEND_IP = os.environ.get('BACKEND_URL')
-# BACKEND_URL = str('http://{BACKEND_IP}')
-# FORUM_URL = '{BACKEND_URL}/index'
-# ADMIN_URL = '{BACKEND_URL}/quantumadmin/'
-
-# For if deployed to App Engine
-FORUM_URL = "https://api-dot-quantum-coasters.uc.r.appspot.com/index"
-ADMIN_URL = "https://api-dot-quantum-coasters.uc.r.appspot.com/quantumadmin/"
-
+CLIENT_URL = 'http://localhost:3000'
+FORUM_URL = 'http://localhost:8000/index'
+ADMIN_URL = 'http://localhost:8000/quantumadmin/'
 
 # Quantum API - Auth0 Credentials (Management API APP(Test Application))
 AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID')
@@ -209,8 +168,6 @@ CSRF_COOKIE_SECURE = False
 # # Use with Ngnix configuration
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
-
-
 # Custom User Model - models.User/ views.UserViewset
 AUTH_USER_MODEL = 'quantumapi.User'
 
@@ -245,25 +202,12 @@ AUTHENTICATION_BACKENDS = (
 
 ROOT_URLCONF = 'quantumapp.urls'
 
-# if ENVIRONMENT == 'local':
-#     CORS_ORIGIN_WHITELIST = (
-#         'http://127.0.0.1:3000',
-#         'http://localhost:3000',
-#         'http://localhost:8000',
-#         'http://127.0.0.1:8000',
-#     )
-
-# elif ENVIRONMENT == 'production':
-#     CORS_ORIGIN_WHITELIST = (
-#         'https://quantum-coasters.uc.r.appspot.com',
-#         'https://api-dot-quantum-coasters.uc.r.appspot.com',
-#     )
 
 CORS_ORIGIN_WHITELIST = (
-    'https://quantum-coasters.uc.r.appspot.com',
-    'https://api-dot-quantum-coasters.uc.r.appspot.com',
-    'https://108.177.122.153:443',
-    'https://64.233.176.153:443',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 )
 
 TEMPLATES = [
@@ -290,75 +234,24 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-# Use django-environ to parse the connection string
-# DATABASES = {"default": env.db()}
-# print(env.db())
 
-# # If the flag as been set, configure to use proxy
-# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-#     DATABASES["default"]["HOST"] = "127.0.0.1"
-#     DATABASES["default"]["PORT"] = 5432
-
-
-if os.environ.get("USE_CLOUD_SQL_AUTH_PROXY") and ENVIRONMENT == 'local':
-    DATABASE_URL=os.environ.get('DATABASE_URL')
-    DATABASES = {
-        'default' : {
-            'ENGINE': 'django.db.backends.postgresql',
-            # 'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
-            'NAME': os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
-            'USER': os.environ.get('CLOUD_SQL_USERNAME'),
-            'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
-            'HOST': "127.0.0.1",
-            'PORT': 5432,
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
         }
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT'),
     }
-else:
-    DATABASE_URL=os.environ.get('DATABASE_URL')
-    DATABASES = {
-    'default' : {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
-        'USER': os.environ.get('CLOUD_SQL_USERNAME'),
-        'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
-        'HOST': os.environ.get('CLOUD_SQL_HOST'),
-        # 'PORT': 5432,
-        }
-    }
-
-# ToDo: to make use of different envs or settings file....at top put global variable like: ENVIRONMENT = 'whatever' and DATABASE = 'sqlite' or 'postgres' or 'cloudsql' etc...
-# Or just have the relavant database as default...
-
-
-# DATABASES = {
-#     'default' : {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
-#         'USER': os.environ.get('CLOUD_SQL_USERNAME'),
-#         'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
-#         'HOST': os.environ.get('CLOUD_SQL_HOST'),
-#         'PORT': os.environ.get('CLOUD_SQL_PORT'),
-#     },
-#     'sqlite': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#         'TEST': {
-#             'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3')
-#         }
-#     },
-#     'postgres': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.environ.get('POSTGRES_NAME'),
-#         'USER': os.environ.get('POSTGRES_USER'),
-#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-#         'HOST': os.environ.get('POSTGRES_HOST'),
-#         'PORT': os.environ.get('POSTGRES_PORT'),
-#     }
-# }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -375,10 +268,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -390,22 +279,10 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
-
-STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, "media")
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, '/quantumadminapp/'),
-#     os.path.join(BASE_DIR, '/quantumforum/static/'),
-# ]
-
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 
 # For Quantum Coasters React app
@@ -413,11 +290,6 @@ LOGIN_URL = os.environ.get('LOGIN_URL')
 LOGIN_REDIRECT_URL = os.environ.get('LOGIN_REDIRECT_URL')
 LOGOUT_URL = os.environ.get('LOGOUT_URL')
 LOGOUT_REDIRECT_URL = os.environ.get('LOGOUT_REDIRECT_URL')
-# LOGIN_URL = '/login/auth0'
-# LOGIN_REDIRECT_URL = '/home'
-# LOGOUT_URL = 'logout/'
-# LOGOUT_REDIRECT_URL = '/'
-# GROUP_CHAT_REDIRECT_FIELD_NAME = '/group_chat/'
 
 # QuantumAdminApp
 QUANTUMADMIN_REGISTER_URL = os.environ.get('QUANTUMADMIN_REGISTER_URL')
@@ -432,16 +304,11 @@ QUANTUMADMIN_REGISTER_URL = os.environ.get('QUANTUMADMIN_REGISTER_URL')
 # SOCIAL_AUTH_FEDORA_USERNAME_KEY = 'email'
 
 # authorize endpoint in Auth0 backend to authorize user.
-# SOCIAL_AUTH_LOGIN_URL = '/authorize/'
-# SOCIAL_AUTH_LOGIN_URL = '/forum/login/'
 SOCIAL_AUTH_LOGIN_URL = os.environ.get('SOCIAL_AUTH_LOGIN_URL')
 
 
 
 # Redirect url that Auth0 will redirect to after auth0/complete
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/complete/auth0'
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/group_chat/'
-# SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/index/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = os.environ.get('SOCIAL_AUTH_LOGIN_REDIRECT_URL')
 SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = os.environ.get('SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL')
 
@@ -520,12 +387,3 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # When doing dumpdata, specifies fixture dir to put fixture in. *Comment out when running loaddata or will throw error bc it duplicates.
 FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
-
-# Setting Django's primary key type creation (this will exempt migrations)
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
-# Same but is a 64-bit integer, much like an AutoField except that it is guaranteed to fit numbers from 1 to 9223372036854775807.
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
