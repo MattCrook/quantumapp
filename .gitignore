@@ -147,16 +147,6 @@ cython_debug/
 #Retired Code Backup Dir
 CodeBackup/
 
-# misc
-.vscode/
-/.vscode
-vscode/
-node_modules/
-/node_modules
-.node_modules/
-node_modules/*
-.DS_Store
-.DS_Store/
 
 # Terraform
 creds.json
@@ -172,6 +162,16 @@ creds.json
 *.key
 
 
+# misc
+.vscode/
+/.vscode
+vscode/
+node_modules/
+/node_modules
+.node_modules/
+node_modules/*
+.DS_Store
+.DS_Store/
 
 old-docker-compose-example.yaml
 notes.txt*
@@ -180,3 +180,6 @@ Dockerfile.no-compose.example
 quantumappenv
 old.deploy.yaml
 deploy.yaml.env.vars
+
+# Local Database file password
+.sql_user_password.txt
