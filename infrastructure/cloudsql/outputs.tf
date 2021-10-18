@@ -4,3 +4,8 @@ output "db_ip_address_type" { value = "${google_sql_database_instance.master.ip_
 output "public_db_ip_address" { value = "${google_sql_database_instance.master.public_ip_address}" }
 output "private_db_ip_address" { value = "${google_sql_database_instance.master.private_ip_address}" }
 output "connection_name" { value = "${google_sql_database_instance.master.connection_name }" }
+
+output "db_password" {
+  sensitive = true
+  value     = "${random_string.password.result}"
+}

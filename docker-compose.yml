@@ -1,63 +1,28 @@
 version: '3.8'
 
 services:
+  # If have Postgres locally, uncomment and fill in env vars, if not, will use local sqlite database.
   # db:
   #   image: postgres
   #   environment:
-  #     - POSTGRES_DB=quantumcoastersdb
-  #     - POSTGRES_USER=matthewcrook
-  #     - POSTGRES_PASSWORD=password
-  quantumapp:
-    # container_name: quantumapp
+  #     - POSTGRES_DB=${}
+  #     - POSTGRES_USER=${}
+  #     - POSTGRES_PASSWORD=${}
+  app:
+    container_name: quantumapp
     build:
         context: .
         dockerfile: Dockerfile
-        # args:
-          # Pass env variables thorugh to container like this, then in .env file fill the env variable.
-          # - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
     env_file: .env
     volumes:
       - .:/usr/src/app/
       - db_data:/db.sqlite3
-      # - quantumforum_static:/usr/src/app/quantumforum/static
-      # - quantumforum_images:/usr/src/app/quantumforum/images
-    environment:
-      # ENV STATIC_ROOT: var/www/html/quantumforum/static
-      # ENV MEDIA_ROOT: var/www/html/media
-      ENV DJANGO_SETTINGS_MODULE: quantumapp.settings
-      ENV STATIC_ROOT: quantumapp/quantumforum/static
-      ENV MEDIA_ROOT: quantumapp/media
-    # command: ['bash', 'run.sh']
     command: python3 manage.py runserver 0.0.0.0:8000
     # command to run with gunicorn as web server
     # command: gunicorn quantumapp.wsgi --bind 0.0.0.0:8000
     ports:
       - 8000:8000
 
-  # quantumadminapp:
-    # container_name: quantumadminapp
-    # build:
-    #   context: ./quantumadminapp
-    # volumes:
-    #   - .:/usr/src/app/quantumadminapp/
-    #   - quantumadmin_static:/quantumadminapp/static
-    #   - quantumadmin_images:/quantumadminapp/images
-    # environment:
-    #   API_URL: http://localhost:8000
-    #   NODE_ENV: "development"
-    #   NPM_EXECUTABLE: npm
-    #   RUN_EXECUTABLE: npm run watch
-
 volumes:
   db_data:
   quantumapp:
-  # static_volume:
-  # media_volume:
-  # images_volume:
-  # quantumapi:
-  # quantumadminapp:
-  # quantumadmin_static:
-  # quantumadmin_images:
-  # quantumforum:
-  # quantumforum_static:
-  # quantumforum_images:

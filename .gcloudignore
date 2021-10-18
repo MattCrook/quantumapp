@@ -32,3 +32,4 @@ requirements.dev.txt
 requirements.prod.txt
 infrastructure
 .vscode
+.sql_user_password.txt
