@@ -34,6 +34,7 @@ lock:
 	pipenv lock
 
 start_dev:
+	pipenv run export DJANGO_ENV=local
 	pipenv run python3 manage.py runserver
 
 docker_build_local:
@@ -62,3 +63,7 @@ venv_test:
 
 test:
 	pipenv run python3 manage.py test
+
+run_local:
+	export DJANGO_ENV=local
+	python3 manage.py runserver

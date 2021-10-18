@@ -5,6 +5,7 @@ cd ./quantumadminapp && npm init -y
 npm i webpack webpack-cli --save-dev
 npm i @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
 npm i react react-dom --save-dev
+npm install --save react-router-dom
 npm install @material-ui/core --save -dev
 npm install @material-ui/icons --save -dev
 
@@ -49,7 +50,13 @@ https://www.toptal.com/react/webpack-react-tutorial-pt-1
 
 
 Optimizing:
-npm install -D terser-webpack-plugin optimize-css-assets-webpack-plugin
+Old: need higher version of css-assets plugin: npm install -D terser-webpack-plugin optimize-css-assets-webpack-plugin
+npm install terser-webpack-plugin --save-dev
+npm install css-minimizer-webpack-plugin --save-dev
+
+Maybes:
+@testing-library/react
+npm install --save-dev clean-webpack-plugin
 
 
 in package.json

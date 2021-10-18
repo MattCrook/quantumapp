@@ -3,9 +3,10 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleTracker = require("webpack-bundle-tracker");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserWebpackPlugin = require("terser-webpack-plugin");
-const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+//const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 // outputPath is place where your want to save files
 // Webpack uses `publicPath` to determine where the app is being served from.
 // module.exports = {
@@ -128,8 +129,9 @@ module.exports = function (_env, argv) {
             warnings: false,
           },
         }),
-        new OptimizeCssAssetsPlugin(),
+        //new CssMinimizerPlugin(),
       ],
+      //plugins: [new MiniCssExtractPlugin()],
     },
     resolve: {
       extensions: ["*", ".js", ".jsx"],
