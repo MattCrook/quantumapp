@@ -1,8 +1,8 @@
-from django.http import HttpResponse, HttpResponseServerError
+from django.http import HttpResponse
 from django.contrib.auth import login
 from django.contrib.auth import authenticate
 
-from quantumapi.models import UserProfile, Credential
+from quantumapi.models import Credential
 from rest_auth.models import TokenModel
 from django.contrib.sessions.models import Session
 from rest_framework.response import Response
@@ -17,7 +17,7 @@ from allauth.account.models import EmailAddress
 # from allauth.account.models import EmailConfirmation
 from social_django.models import UserSocialAuth, Association, Nonce, DjangoAssociationMixin, DjangoUserMixin, Code, DjangoCodeMixin
 
-from .management_api_services import management_api_oath_endpoint, get_management_api_user, get_open_id_config, get_management_api_grants, jwks_endpoint
+from .management_api_services import management_api_oath_endpoint, get_management_api_user, retrieve_user_logs
 
 # from django.contrib.auth.views import auth_login
 from rest_framework.authentication import authenticate
@@ -28,14 +28,14 @@ from rest_framework.authentication import authenticate
 
 # from django.contrib.auth.backends import AllowAllUsersRemoteUserBackend, AllowAllUsersModelBackend, RemoteUserBackend
 # from social_core.strategy import OpenIdStore, DEFAULT_AUTH_PIPELINE, BaseStrategy
-from social_core.backends.auth0 import Auth0OAuth2
+# from social_core.backends.auth0 import Auth0OAuth2
 
 from social_core.actions import user_is_authenticated, user_is_active
 
 # from social_core.pipeline.social_auth import associate_user
 from django.middleware.csrf import get_token
-from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_OPEN_ID_SERVER_URL, SOCIAL_AUTH_STRATEGY, SOCIAL_AUTH_AUTH0_KEY, SOCIAL_AUTH_AUTH0_SECRET
-from jose import jwt
+from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_OPEN_ID_SERVER_URL, SOCIAL_AUTH_AUTH0_KEY, SOCIAL_AUTH_AUTH0_SECRET
+# from jose import jwt
 import json
 import datetime
 
@@ -90,7 +90,7 @@ def login_user(request):
                         provider = social_user.provider
                         extra_data = req_body['extra_data']
                         extra_data['access_token'] = request.auth
-                        # nonce = id_token['nonce']
+                        nonce = id_token['nonce']
                         exp = id_token['exp']
                         iat = id_token['iat']
                         connection = management_api_user.get('identities')[0]
@@ -153,17 +153,19 @@ def login_user(request):
                             # credentials = Credential.objects.get(user_id=authenticated_user.id)
 
                             if credentials is not None:
-                                all_transactions = json.loads(credentials.transactions)
+                                # all_transactions = json.loads(credentials.transactions)
                                 # transaction_items_keys = all_transactions['transactions'].keys()
-                                transactions_values = all_transactions['transactions'].values()
+                                # transactions_values = all_transactions['transactions'].values()
 
                                 # codes = [c for c in transaction_items_keys]
-                                transactions = [t for t in transactions_values]
+                                # transactions = [t for t in transactions_values]
 
                                 #handles = [handle for handle in codes] if len(codes) > 0 else {}
                                 #code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
-                                handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
-                                code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                                # handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
+                                # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                                code_verifier = retrieve_user_logs(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
+                                code = code_verifier['details']['code']
 
                                 #all_backends = backends(request)
                                 #user_backends = all_backends.get('backends')
@@ -171,10 +173,10 @@ def login_user(request):
                                 #openId_backend = user_backends['backends'][0]
                                 #user_assoc_backends = user_backends.get('associated')
 
-                                if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
-                                    user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
+                                if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=nonce).exists():
+                                    Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=nonce)
                                 else:
-                                    user_association = Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle, secret=code_verifier, issued=iat, lifetime=exp, assoc_type=assoc_type)
+                                    Association.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=nonce, secret=code, issued=iat, lifetime=exp, assoc_type=assoc_type)
 
                                 auth_user = {
                                         "valid": True,

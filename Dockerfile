@@ -17,8 +17,8 @@ ENV PATH "/venv/bin:$PATH"
 
 RUN pip3 install --upgrade pip
 
-COPY requirements.prod.txt .
-RUN pip3 install -r requirements.prod.txt --no-cache-dir
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt --no-cache-dir
 
 # install redis
 RUN python3 -m pip install channels_redis
@@ -31,7 +31,7 @@ RUN python3 -m pip install selenium
 FROM python:3.8-slim-buster AS app
 
 # ARGS for URLs of the deployed applications. Passed in as arguments when running docker build, or (could..) in docker run:
-ARG DEPLOYED_FRONTEND_URI=https://quantum-coasters.uc.r.appspot.com/
+# ARG DEPLOYED_FRONTEND_URI=https://quantum-coasters.uc.r.appspot.com/
 # ARG DEPLOYED_BACKEND_URL=http://35.239.130.209
 
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -44,10 +44,10 @@ WORKDIR /usr/src/app
 # copy in Python environment
 COPY --from=builder /venv /venv
 
-ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
+# ENV DJANGO_SETTINGS_MODULE=quantumapp.settings
 
 # URLs of the deployed applications. Passed in as arguments when running docker build, or docker run:
-ENV FRONTEND_URI=$DEPLOYED_FRONTEND_URI
+# ENV FRONTEND_URI=$DEPLOYED_FRONTEND_URI
 # ENV BACKEND_URL=$DEPLOYED_BACKEND_URL
 
 COPY . .

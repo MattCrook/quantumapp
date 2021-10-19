@@ -33,3 +33,6 @@ requirements.prod.txt
 infrastructure
 .vscode
 .sql_user_password.txt
+dev.settings.py
+og.settings.py
+prod.settings.py

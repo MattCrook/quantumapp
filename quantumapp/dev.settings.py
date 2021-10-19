@@ -14,6 +14,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+from django.contrib.messages import constants as message_constants
+MESSAGE_LEVEL = message_constants.DEBUG
 
 # ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
 ALLOWED_HOSTS = ['*']

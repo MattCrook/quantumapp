@@ -10,7 +10,7 @@ terraform {
 
 resource "google_sql_database_instance" "master" {
   project             = var.project_id
-  name                = "quantumcoastersdb2"
+  name                = "quantumcoastersdb3"
   database_version    = "POSTGRES_13"
   region              = "us-central1"
   deletion_protection = false
@@ -44,7 +44,7 @@ resource "local_file" "password" {
 
 resource "google_sql_database" "master" {
   project   = var.project_id
-  name      = "quantumcoastersdb2"
+  name      = "quantumcoastersdb3"
   charset   = "UTF8"
   collation = "en_US.UTF8"
   instance  = google_sql_database_instance.master.name
@@ -52,13 +52,12 @@ resource "google_sql_database" "master" {
 
 resource "google_sql_user" "users" {
   project         = var.project_id
-  name            = "quantumcoastersdb2"
+  name            = "quantumcoastersdb3"
   instance        = google_sql_database_instance.master.name
-  # password        = "password"
-  password        = random_string.password.result
+  password        = "password"
+  # password        = random_string.password.result
   deletion_policy = "ABANDON"
 }
-
 
 resource "random_id" "secret" {
   byte_length = 4
@@ -68,15 +67,28 @@ resource "google_secret_manager_secret" "django_secret" {
   provider  = google-beta
   project   = var.project_id
   secret_id = "django-settings-${random_id.secret.hex}"
-
   labels = {
     label = "django-settings"
   }
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+      replicas {
+        location = "us-east1"
+        // customer_managed_encryption {
+        //   kms_key_name = google_sql_database_instance.master.server_ca_cert.0.cert
+        // }
+      }
+    }
+  }
 }
+
 
 resource "google_secret_manager_secret_version" "django_secret" {
   provider    = google-beta
-  project     = var.project_id
   secret      = google_secret_manager_secret.django_secret.id
   secret_data = file("../../.env")
 }

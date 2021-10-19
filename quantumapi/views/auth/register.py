@@ -25,7 +25,7 @@ from django.middleware.csrf import get_token
 from social_core.pipeline.social_auth import associate_user
 from quantumapp.settings import AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_OPEN_ID_SERVER_URL, SOCIAL_AUTH_AUTH0_SECRET, SOCIAL_AUTH_AUTH0_KEY
 from social_django.context_processors import backends, user_backends_data
-from .management_api_services import management_api_oath_endpoint, get_management_api_user
+from .management_api_services import management_api_oath_endpoint, get_management_api_user, retrieve_user_logs
 
 from django.contrib.auth.views import auth_login
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -105,17 +105,20 @@ def register_user(request):
                     # The 'connection' in the auth0 returned result
                     assoc_type = identities.get('connection')
 
-                    all_transactions = req_body['transactions']
-                    transaction_items_keys = all_transactions.keys()
-                    transactions_values = all_transactions.values()
+                    # all_transactions = req_body['transactions']
+                    # transaction_items_keys = all_transactions.keys()
+                    # transactions_values = all_transactions.values()
 
-                    codes = [c for c in transaction_items_keys]
-                    transactions = [t for t in transactions_values]
+                    # codes = [c for c in transaction_items_keys]
+                    # transactions = [t for t in transactions_values]
 
                     # handles = [handle for handle in codes] if len(codes) > 0 else {}
                     # code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
-                    handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
-                    code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                    # When using deployed app, transactions don't come through, they come in with transactionManager
+                    # handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
+                    # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
+                    code_verifier = retrieve_user_logs(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
+                    code = code_verifier['details']['code']
 
                     # code = codes[0] if len(codes) > 0 else {}
 
@@ -124,13 +127,13 @@ def register_user(request):
                     social_user = remote_authenticated_user[0].social_auth.get_or_create(user_id=remote_authenticated_user[0].id, provider=provider, extra_data=extra_data, uid=req_body['auth0_identifier'].replace(".", "|"))
                     # is_association = Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists()
 
-                    if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle).exists():
-                        user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=handle)
+                    if Association.objects.filter(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=nonce).exists():
+                        user_association = Association.objects.get(server_url=AUTH0_OPEN_ID_SERVER_URL, handle=nonce)
                     else:
                         user_association = Association.objects.create(
                             server_url=AUTH0_OPEN_ID_SERVER_URL,
-                            handle=handle,
-                            secret=code_verifier,
+                            handle=nonce,
+                            secret=code,
                             issued=iat,
                             lifetime=exp,
                             assoc_type=assoc_type
@@ -150,8 +153,8 @@ def register_user(request):
                         primary=True
                         )
 
-                    social_auth_nonce = Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
-                    user_socialauth_code = Code.objects.create(email=account_email[0], code=codes[0], verified=True)
+                    Nonce.objects.create(server_url=AUTH0_OPEN_ID_SERVER_URL, timestamp=iat, salt=nonce)
+                    Code.objects.create(email=account_email[0], code=code, verified=True)
 
                     social_app = SocialApp.objects.get_or_create(
                         provider=provider,
@@ -185,7 +188,7 @@ def register_user(request):
                         session = Session.objects.create(user=authenticated_user)
                         # session.save()
 
-                    email_confirmation = EmailConfirmation.objects.get_or_create(
+                    EmailConfirmation.objects.get_or_create(
                         email_address=account_email[0],
                         key=session.session_key,
                         sent=datetime.datetime.now()
