@@ -19,7 +19,7 @@ import quantumforum.routing
 
 
 application = ProtocolTypeRouter({
-  "http": get_wsgi_application(),
+  "http": get_asgi_application(),
   "https": get_asgi_application(),
   "websocket": AuthMiddlewareStack(
         URLRouter(

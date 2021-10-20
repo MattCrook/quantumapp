@@ -83,9 +83,19 @@ def register_user(request):
 
                     extra_data = req_body['extra_data']
                     extra_data['access_token'] = remote_authenticated_user[1]
+                    id_token = json.loads(req_body['id_token'])
+                    extra_data['id_token__raw'] = id_token['__raw']
+                    nonce = id_token['nonce']
+                    identities = management_api_user.get('identities')[0]
+                    provider = identities.get('provider')
 
-                    # backend_data = backends(request)
-                    #user_current_backend = authenticated_user.backend
+                    # The 'connection' in the auth0 returned result
+                    assoc_type = identities.get('connection')
+                    exp = id_token['exp']
+                    iat = id_token['iat']
+
+                    backend_data = backends(request)
+                    user_current_backend = authenticated_user.backend
 
                     #auth0_backend = backend_data['backends']['backends'][1]
                     #openId_backend = backend_data['backends']['backends'][0]
@@ -93,34 +103,16 @@ def register_user(request):
 
                     # return csrf token for POST form. side effect is have @csrf_protect
                     csrf = req_body['csrf_token'] if 'csrf_token' in req_body and req_body['csrf_token'] else get_token(request)
-                    id_token = json.loads(req_body['id_token'])
-                    nonce = id_token['nonce']
-                    exp = id_token['exp']
-                    iat = id_token['iat']
-                    extra_data = req_body['extra_data']
-                    extra_data['access_token'] = id_token['__raw']
-                    identities = management_api_user.get('identities')[0]
-                    provider = identities.get('provider')
 
-                    # The 'connection' in the auth0 returned result
-                    assoc_type = identities.get('connection')
+                    auth0_user_logs = retrieve_user_logs(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
 
-                    # all_transactions = req_body['transactions']
-                    # transaction_items_keys = all_transactions.keys()
-                    # transactions_values = all_transactions.values()
+                    seacft = [l for l in auth0_user_logs if l['type'] == 'seacft']
+                    seacft_details = seacft[0].get('details')
+                    code = seacft_details.get('code')
 
-                    # codes = [c for c in transaction_items_keys]
-                    # transactions = [t for t in transactions_values]
-
-                    # handles = [handle for handle in codes] if len(codes) > 0 else {}
-                    # code_verifiers = [code['code_verifier'] for code in transactions] if len(transactions) > 0 else {}
-                    # When using deployed app, transactions don't come through, they come in with transactionManager
-                    # handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
-                    # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
-                    code_verifier = retrieve_user_logs(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
-                    code = code_verifier['details']['code']
-
-                    # code = codes[0] if len(codes) > 0 else {}
+                    # ss = [l for l in auth0_user_logs if l['type'] == 'ss']
+                    # ss_details = ss[0].get('details')
+                    # transaction = ss_details['body']['transaction']
 
 
                     # associate_user('openid', social_user.uid, authenticated_user, social_user)

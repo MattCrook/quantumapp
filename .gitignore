@@ -109,6 +109,7 @@ celerybeat.pid
 .env
 .env.deploy
 .env.dev
+.env.prod
 .venv
 env/
 .env/

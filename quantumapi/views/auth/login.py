@@ -87,14 +87,15 @@ def login_user(request):
                             token = TokenModel.objects.create(user=authenticated_user)
 
                         key = token.key
-                        provider = social_user.provider
                         extra_data = req_body['extra_data']
-                        extra_data['access_token'] = request.auth
+                        extra_data['access_token'] = remote_authenticated_user[1]
+                        extra_data['id_token__raw'] = id_token['__raw']
                         nonce = id_token['nonce']
                         exp = id_token['exp']
                         iat = id_token['iat']
                         connection = management_api_user.get('identities')[0]
                         assoc_type = connection.get('connection')
+                        provider = social_user.provider
 
                         if 'csrf_token' in req_body and req_body['csrf_token']:
                             csrf = req_body['csrf_token']
@@ -165,7 +166,9 @@ def login_user(request):
                                 # handle = transactions[0]['nonce'] if len(transactions) > 0 else {}
                                 # code_verifier = transactions[0]['code_verifier'] if len(transactions) > 0 else {}
                                 code_verifier = retrieve_user_logs(AUTH0_DOMAIN, management_api_jwt, req_body['uid'])
-                                code = code_verifier['details']['code']
+                                seacft = [l for l in code_verifier if l['type'] == 'seacft']
+                                seacft_details = seacft[0].get('details')
+                                code = seacft_details.get('code')
 
                                 #all_backends = backends(request)
                                 #user_backends = all_backends.get('backends')

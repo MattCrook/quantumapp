@@ -127,3 +127,11 @@ cloud_sql_proxy -instances="PROJECT_ID:REGION:INSTANCE_NAME"=tcp:5432
 gcloud sql connect quantumcoastersdb --user postgres
 or
 gcloud sql connect quantumcoastersdb --user DB_USERNAME
+
+set ENVIRONMENT to local or production
+this will use either local db, local connection to db, or remote db
+set env vars (not in deployment.yaml or .env, in session or terminal env) GOOGLE_CLOUD_PROJECT=quantum-coasters and USE_CLOUD_SQL_AUTH_PROXY=true
+set debug to false or true
+set .env to env.dev or env.deploy
+set settings.pu file to dev or prod
+Set .env vars in quantumadminapp

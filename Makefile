@@ -34,8 +34,8 @@ lock:
 	pipenv lock
 
 start_dev:
-	pipenv run export DJANGO_ENV=local
-	pipenv run python3 manage.py runserver
+	# pipenv run export DJANGO_ENV=local
+	pipenv run python3 manage.py runserver --settings=quantumapp.dev_settings
 
 docker_build_local:
 	docker build -t quantumapp:latest .
@@ -65,5 +65,5 @@ test:
 	pipenv run python3 manage.py test
 
 run_local:
-	export DJANGO_ENV=local
-	python3 manage.py runserver
+	# export DJANGO_ENV=local
+	python3 manage.py runserver --settings=quantumapp.dev_settings
