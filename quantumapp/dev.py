@@ -1,8 +1,9 @@
 import os
 import json
-import socket
+# import socket
 from dotenv import load_dotenv
-from dotenv.main import dotenv_values
+# from dotenv.main import dotenv_values
+
 load_dotenv()
 
 # config = dotenv_values(".env")
@@ -17,8 +18,8 @@ DEBUG = True
 from django.contrib.messages import constants as message_constants
 MESSAGE_LEVEL = message_constants.DEBUG
 
-# ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '8000', '127.0.0.1']
+# ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
@@ -28,11 +29,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_framework_jwt',
-    'rest_framework_jwt.blacklist',
+    # 'rest_framework_jwt.blacklist',
     'django.contrib.sites',
     'rest_auth.registration',
     'allauth',
@@ -40,7 +42,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     # Included providers for allauth
     # 'allauth.socialaccount.providers.auth0',
-    'corsheaders',
     'social_django',
     'django_filters',
     'django.contrib.sessions.middleware',
@@ -352,7 +353,27 @@ SOCIAL_AUTH_PIPELINE = (
 SOCIALACCOUNT_PROVIDERS = {
     'auth0': {
         'AUTH0_URL': os.environ.get('SOCIALACCOUNT_DOMAIN'),
-    }
+        "VERIFIED_EMAIL": True
+    },
+    # "google": {
+    #     # For each OAuth based provider, either add a ``SocialApp``
+    #     # (``socialaccount`` app) containing the required client
+    #     # credentials, or list them here:
+    #     "APP": {
+    #         "client_id": "123",
+    #         "secret": "456",
+    #         "key": ""
+    #     },
+    #     # These are provider-specific settings that can only be
+    #     # listed here:
+    #     "SCOPE": [
+    #         "profile",
+    #         "email",
+    #     ],
+    #     "AUTH_PARAMS": {
+    #         "access_type": "online",
+    #     }
+    # }
 }
 
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'email'
@@ -390,5 +411,6 @@ SESSION_SAVE_EVERY_REQUEST = True
 # When doing dumpdata, specifies fixture dir to put fixture in. *Comment out when running loaddata or will throw error bc it duplicates.
 FIXTURE_DIRS = '/Users/matthewcrook/code/nss/frontEnd/quantumapp/quantumapi/fixtures'
 
-
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

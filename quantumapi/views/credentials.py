@@ -159,14 +159,11 @@ class Credentials(ViewSet):
                     decoded_session = ''
 
                 if 'transactions' in request.data and request.data['transactions']:
-                    all_transactions = request.data['transactions']
-                    transaction_items_keys = all_transactions['transactions'].keys()
-                    transactions_values = all_transactions['transactions'].values()
-                    transactions = [t for t in transactions_values]
-                    codes = [c for c in transaction_items_keys]
+                    transactions_manager = request.data['transactions']
+                    storage_key = transactions_manager['storageKey']
 
                 else:
-                    transactions = {}
+                    transactions_manager = {}
 
                 user = request.user
                 new_credential_instance = CredentialModel.objects.create(
@@ -177,8 +174,8 @@ class Credentials(ViewSet):
                     redirect_uri=request.data["redirect_uri"],
                     audience=request.data["audience"],
                     scope=request.data["scope"],
-                    transactions=json.dumps(all_transactions),
-                    codes=json.dumps({"transaction_codes": codes}),
+                    transactions=json.dumps(transactions_manager),
+                    codes=json.dumps({"storage_key": storage_key}),
                     nonce=request.data["nonce"],
                     access_token=request.data["access_token"],
                     django_token=request.data["django_token"],
@@ -198,8 +195,8 @@ class Credentials(ViewSet):
                     "redirect_uri": request.data["redirect_uri"],
                     "audience": request.data["audience"],
                     "scope": request.data["scope"],
-                    "transactions": all_transactions,
-                    "codes": {"transaction_codes": codes},
+                    "transactions": transactions_manager,
+                    "codes": {"storage_key": storage_key},
                     "nonce": request.data["nonce"],
                     "access_token": request.data["access_token"],
                     "django_token": request.data["django_token"],
@@ -222,7 +219,7 @@ class Credentials(ViewSet):
         except Exception as ex:
             return Response({'Error': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except AssertionError as ass:
-            return HttpResponse({'message': ex.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return HttpResponse({'message': ass.args}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def update(self, request, pk=None):

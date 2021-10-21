@@ -17,7 +17,7 @@ from .page_monitoring import ActivityLog, LoginHistory, AppLoginData
 from .CalendarEvent import CalendarEvent
 from .error_logging import ErrorLog
 from .user_submissions import Feedback, BugReport
-#from .Site import QuantumSite
+from .Site import QuantumSite
 
 
 # from .forms import SignUpForm

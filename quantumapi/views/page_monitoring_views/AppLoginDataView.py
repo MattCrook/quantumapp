@@ -1,21 +1,22 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status, authentication, permissions
-from django.http import HttpResponse, HttpResponseServerError
+# from django.http import HttpResponse, HttpResponseServerError
 from quantumapi.models import AppLoginData as AppLoginDataModel
-from quantumapi.views import UserSerializer
+# from quantumapi.views import UserSerializer
 from rest_auth.models import TokenModel
-from social_django.models import UserSocialAuth
+# from social_django.models import UserSocialAuth
 
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
+from rest_framework.authentication import SessionAuthentication
+# from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from quantumapp.settings import AUTH0_DOMAIN
 from quantumapi.views.auth.management_api_services import get_management_api_user, get_open_id_config, management_api_oath_endpoint, get_management_api_grants, get_management_api_client_grants, get_management_api_connections, retrieve_user_logs, resource_servers, management_api_keys, device_credentials, management_tenant_settings
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 import datetime
 import socket
-import os
+# import os
 import json
 
 
@@ -175,10 +176,10 @@ class AppLoginDataView(ViewSet):
             success_logins = [l for l in all_user_logs if l['type'] == 's']
             # success_exchange_authorization_codes = [l for l in all_user_logs if l['type'] == 'seacft']
             # success_logouts = [l for l in all_user_logs if l['type'] == 'slo']
+            # success_exchange_authorization_code = success_exchange_authorization_codes[0]
             success_silent_authentications = [l for l in all_user_logs if l['type'] == 'ssa']
             success_login = success_logins[0]
-            # success_exchange_authorization_code = success_exchange_authorization_codes[0]
-            latest_success_silent_authentication = success_silent_authentications[0]
+            latest_success_silent_authentication = success_silent_authentications[0] if len(success_silent_authentications) > 0 else success_login
 
             # login_exchange_details = success_exchange_authorization_code.get('details')
             # login_exchange_code = login_exchange_details.get('code')
@@ -213,7 +214,6 @@ class AppLoginDataView(ViewSet):
                 prompts=json.dumps({"all_prompts": prompts}),
                 recent_attempts=request.data['recent_attempts'],
                 total_logins=management_user.get('logins_count'),
-                # ip_address=log_ip,
                 ip_address=latest_success_silent_authentication.get('ip'),
                 oauth_endpoint_scopes=scopes,
                 openid_configuration=json.dumps(open_id_config),

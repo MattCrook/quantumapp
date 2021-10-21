@@ -14,8 +14,8 @@ def get_environ():
         os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.settings')
 
 def main():
-    # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.settings')
-    get_environ()
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quantumapp.settings')
+    # get_environ()
 
     try:
         from django.core.management import execute_from_command_line

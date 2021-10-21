@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 
 
 def logout_user(request):
-    logout(request)
+    # logout(request)
     return HttpResponseRedirect(REACT_APP_FORUM_URL)
 
 def redirect_home(request):

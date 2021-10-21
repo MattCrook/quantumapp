@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.auth0',
     'social_django',
     'django_filters',
-    # 'django.contrib.sessions.middleware',
+    'django.contrib.sessions.middleware',
     'channels',
     'quantumapi',
     'quantumforum',
@@ -227,14 +227,26 @@ ROOT_URLCONF = 'quantumapp.urls'
 #     'Access-Control-Allow-Origin',
 # )
 
-CORS_ORIGIN_WHITELIST = (
+# CORS_ORIGIN_WHITELIST = (
+#     'https://quantum-coasters.uc.r.appspot.com',
+#     'https://api-dot-quantum-coasters.uc.r.appspot.com',
+#     'https://quantum-coasters.uc.r.appspot.com/',
+#     'https://api-dot-quantum-coasters.uc.r.appspot.com/',
+# )
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
     'https://quantum-coasters.uc.r.appspot.com',
     'https://api-dot-quantum-coasters.uc.r.appspot.com',
-    'https://quantum-coasters.uc.r.appspot.com/',
-    'https://api-dot-quantum-coasters.uc.r.appspot.com/',
-    'https://quantum-coasters.uc.r.appspot.com:443',
-    'https://api-dot-quantum-coasters.uc.r.appspot.com:443',
-)
+]
+
+# To allow some domains to make "POST" requests
+CSRF_TRUSTED_ORIGINS = [
+    'https://quantum-coasters.uc.r.appspot.com',
+]
 
 TEMPLATES = [
     {
@@ -275,13 +287,13 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 #     }
 # }
 
-DATABASE_URL=os.environ.get('DATABASE_URL')
-DATABASES = {"default": env.db()}
+# DATABASE_URL=os.environ.get('DATABASE_URL')
+# DATABASES = {"default": env.db()}
 
-# If the flag as been set, configure to use proxy
-if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-    DATABASES["default"]["HOST"] = "127.0.0.1"
-    DATABASES["default"]["PORT"] = 5432
+# # If the flag as been set, configure to use proxy
+# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+#     DATABASES["default"]["HOST"] = "127.0.0.1"
+#     DATABASES["default"]["PORT"] = 5432
 
 
 if os.environ.get("USE_CLOUD_SQL_AUTH_PROXY") and ENVIRONMENT == 'local':

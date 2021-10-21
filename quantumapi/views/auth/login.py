@@ -88,7 +88,7 @@ def login_user(request):
 
                         key = token.key
                         extra_data = req_body['extra_data']
-                        extra_data['access_token'] = remote_authenticated_user[1]
+                        extra_data['access_token'] = remote_user_auth[1]
                         extra_data['id_token__raw'] = id_token['__raw']
                         nonce = id_token['nonce']
                         exp = id_token['exp']
@@ -201,7 +201,8 @@ def login_user(request):
                                         "social_app": social_app[0].id,
                                         "email_confirmation": True,
                                         "has_credentials": True,
-                                        "credentials_id": credentials.id
+                                        "credentials_id": credentials.id,
+                                        # "user_profile_id": user.user_id,
                                     }
                                 data = json.dumps(auth_user)
                                 return HttpResponse(data, content_type='application/json')
@@ -227,6 +228,7 @@ def login_user(request):
                                     "social_app": social_app[0].id,
                                     "email_confirmation": True,
                                     "has_credentials": False,
+                                    # "user_profile_id": user.user_id,
                                 }
 
                                 data = json.dumps(auth_user)

@@ -1,25 +1,24 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers, status, authentication, permissions
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseServerError
-from django.conf import settings
-from .user import UserSerializer
+from django.http import HttpResponse
+# from django.conf import settings
+# from .user import UserSerializer
+from django.contrib.auth import get_user_model
 from quantumapi.models import UserProfile, Credit, Image, User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import RemoteUserAuthentication, TokenAuthentication, SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-import json
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        url = serializers.HyperlinkedIdentityField(view_name='userprofile', lookup_field='id')
+        # url = serializers.HyperlinkedIdentityField(view_name='userprofile', lookup_field='id')
         fields = ('id', 'address', 'image', 'credits', 'user', )
         depth = 2
-        extra_kwargs = {'password': {'write_only': True}}
+        # extra_kwargs = {'password': {'write_only': True}}
 
 
 class UserProfiles(ViewSet):
@@ -30,19 +29,25 @@ class UserProfiles(ViewSet):
     def list(self, request):
         try:
             userprofiles = UserProfile.objects.all()
-            serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
+
             email = self.request.query_params.get('email', None)
             user_id = self.request.query_params.get('userId', None)
 
+            # email = self.request.GET.get('email', None)
+            # user_id = self.request.GET.get('user_id', None)
+            # email = self.request.resolver_match.kwargs.get('email', None)
+            # user_id = self.request.resolver_match.kwargs.get('user_id', None)
+
+
             if email is not None:
-                auth_user_data = User.objects.get(email=email)
-                userprofiles = UserProfile.objects.get(user_id=auth_user_data.id)
-                serializer = UserProfileSerializer(userprofiles, context={'request': request})
+                userprofiles = UserProfile.objects.filter(user_id=request.user.id)
+                # serializer = UserProfileSerializer(userprofile, context={'request': request})
 
-            elif user_id is not None:
-                userprofiles = UserProfile.objects.get(user_id=user_id)
-                serializer = UserProfileSerializer(userprofiles, context={'request': request})
+            if user_id is not None:
+                userprofiles = UserProfile.objects.filter(user_id=request.user.id)
+                # serializer = UserProfileSerializer(userprofile, context={'request': request})
 
+            serializer = UserProfileSerializer(userprofiles, many=True, context={'request': request})
             return Response(serializer.data)
 
         except:
@@ -55,6 +60,11 @@ class UserProfiles(ViewSet):
     def retrieve(self, request, pk=None):
         try:
             userprofile = UserProfile.objects.get(pk=pk)
+            email = self.request.query_params.get('email', None)
+
+            if email is not None:
+                userprofile = UserProfile.objects.filter(user_id=request.user.id)
+
             serializer = UserProfileSerializer(userprofile, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
