@@ -23,7 +23,7 @@ ENVIRONMENT = 'production'
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 
-DEBUG = True
+DEBUG = False
 # from django.contrib.messages import constants as message_constants
 # MESSAGE_LEVEL = message_constants.DEBUG
 
@@ -287,40 +287,40 @@ WSGI_APPLICATION = 'quantumapp.wsgi.application'
 #     }
 # }
 
-# DATABASE_URL=os.environ.get('DATABASE_URL')
-# DATABASES = {"default": env.db()}
+DATABASE_URL=os.environ.get('DATABASE_URL')
+DATABASES = {"default": env.db()}
 
-# # If the flag as been set, configure to use proxy
-# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-#     DATABASES["default"]["HOST"] = "127.0.0.1"
-#     DATABASES["default"]["PORT"] = 5432
+# If the flag as been set, configure to use proxy
+if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+    DATABASES["default"]["HOST"] = "127.0.0.1"
+    DATABASES["default"]["PORT"] = 5432
 
 
-if os.environ.get("USE_CLOUD_SQL_AUTH_PROXY") and ENVIRONMENT == 'local':
-    DATABASE_URL=os.environ.get('DATABASE_URL')
-    DATABASES = {
-        'default' : {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
-            # 'NAME': os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
-            'USER': os.environ.get('CLOUD_SQL_USERNAME'),
-            'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
-            'HOST': "127.0.0.1",
-            'PORT': 5432,
-        }
-    }
-else:
-    DATABASE_URL=os.environ.get('DATABASE_URL')
-    DATABASES = {
-    'default' : {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
-        'USER': os.environ.get('CLOUD_SQL_USERNAME'),
-        'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
-        'HOST': os.environ.get('CLOUD_SQL_HOST'),
-        # 'PORT': 5432,
-        }
-    }
+# if os.environ.get("USE_CLOUD_SQL_AUTH_PROXY") and ENVIRONMENT == 'local':
+#     DATABASE_URL=os.environ.get('DATABASE_URL')
+#     DATABASES = {
+#         'default' : {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
+#             # 'NAME': os.environ.get('CLOUD_SQL_CONNECTION_NAME'),
+#             'USER': os.environ.get('CLOUD_SQL_USERNAME'),
+#             'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
+#             'HOST': "127.0.0.1",
+#             'PORT': 5432,
+#         }
+#     }
+# else:
+#     DATABASE_URL=os.environ.get('DATABASE_URL')
+#     DATABASES = {
+#     'default' : {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('CLOUD_SQL_DATABASE_NAME'),
+#         'USER': os.environ.get('CLOUD_SQL_USERNAME'),
+#         'PASSWORD': os.environ.get('CLOUD_SQL_PASSWORD'),
+#         'HOST': os.environ.get('CLOUD_SQL_HOST'),
+#         # 'PORT': 5432,
+#         }
+#     }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
